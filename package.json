@@ -1,0 +1,73 @@
+{
+  "name": "@4site/engrid",
+  "version": "2.0.0",
+  "private": false,
+  "description": "Page Template Framework for Engaging Networks",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack --watch  --config webpack.prod.js",
+    "build": "npm run production & npm run minify",
+    "production": "webpack --config webpack.prod.js",
+    "minify": "webpack --config webpack.min.js",
+    "update": "npm update @4site/engrid-common @4site/engrid-styles",
+    "rebuild": "npm run update;npm run build"
+  },
+  "keywords": [
+    "Engaging Networks",
+    "ENGrid",
+    "4Site Studios",
+    "4Site",
+    "Page Templates",
+    "Non Profit",
+    "Non-Profit",
+    "CRM"
+  ],
+  "author": "4Site Studios",
+  "license": "Unlicense",
+  "url": "https://github.com/4site-interactive-studios/engrid",
+  "devDependencies": {
+    "@4site/engrid-common": "*",
+    "@4site/engrid-styles": "*",
+    "@babel/core": "^7.14.3",
+    "@babel/plugin-proposal-class-properties": "7.13.0",
+    "@babel/plugin-proposal-object-rest-spread": "7.14.2",
+    "@babel/plugin-transform-runtime": "^7.14.3",
+    "@babel/preset-env": "^7.14.2",
+    "@babel/preset-typescript": "7.13.0",
+    "babel-loader": "^8.2.2",
+    "breakpoint-sass": "^2.7.1",
+    "breakpoint-slicer": "^2.0.0",
+    "css-loader": "^5.2.6",
+    "css-minimizer-webpack-plugin": "^3.0.2",
+    "file-loader": "^6.2.0",
+    "fork-ts-checker-webpack-plugin": "6.2.12",
+    "mini-css-extract-plugin": "^1.6.2",
+    "sass": "^1.49.0",
+    "popper.js": "^1.16.1",
+    "postcss-loader": "^6.1.0",
+    "postcss-preset-env": "^6.7.0",
+    "prettier": "2.4.1",
+    "sass-loader": "^12.1.0",
+    "style-loader": "^3.0.0",
+    "typescript": "^3.9.7",
+    "webpack": "^5.37.0",
+    "webpack-cli": "^4.7.0",
+    "webpack-merge": "^5.7.3"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.14.0",
+    "babel": "^6.23.0",
+    "clean-webpack-plugin": "^3.0.0",
+    "sanitize.css": "^12.0.1",
+    "strongly-typed-events": "^1.7.3",
+    "terser-webpack-plugin": "^5.2.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/4site-interactive-studios/engrid.git"
+  },
+  "bugs": {
+    "url": "https://github.com/4site-interactive-studios/engrid/issues"
+  },
+  "homepage": "https://github.com/4site-interactive-studios/engrid#readme"
+}
