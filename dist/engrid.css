@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, March 17, 2022 @ 17:39:09 ET
- *  By: fernando
- *  ENGrid styles: v0.10.12
- *  ENGrid scripts: v0.10.19
+ *  Date: Monday, June 20, 2022 @ 14:56:31 ET
+ *  By: bryancasler
+ *  ENGrid styles: v0.12.12
+ *  ENGrid scripts: v0.12.17
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -3102,14 +3102,19 @@ body:not(#en__pagebuilder) .click-to-expand.expanded .click-to-expand-text-wrapp
 .i1-75 .en__field:first-of-type,.i10-75 .en__field:nth-of-type(10),.i11-75 .en__field:nth-of-type(11),.i2-75 .en__field:nth-of-type(2),.i3-75 .en__field:nth-of-type(3),.i4-75 .en__field:nth-of-type(4),.i5-75 .en__field:nth-of-type(5),.i6-75 .en__field:nth-of-type(6),.i7-75 .en__field:nth-of-type(7),.i8-75 .en__field:nth-of-type(8),.i9-75 .en__field:nth-of-type(9){
   flex-basis:75%;
 }
+
 .i1-center .en__field:first-of-type,.i10-center .en__field:nth-of-type(10),.i11-center .en__field:nth-of-type(11),.i2-center .en__field:nth-of-type(2),.i3-center .en__field:nth-of-type(3),.i4-center .en__field:nth-of-type(4),.i5-center .en__field:nth-of-type(5),.i6-center .en__field:nth-of-type(6),.i7-center .en__field:nth-of-type(7),.i8-center .en__field:nth-of-type(8),.i9-center .en__field:nth-of-type(9){
   align-items:center;
 }
-#en__pagebuilder .hide,#en__pagebuilder .hide-until-client-js-loading-finished,#en__pagebuilder .hide-until-engrid-js-loading-finished,#en__pagebuilder .i1-hide .en__field:first-of-type,#en__pagebuilder .i1-hide-label .en__field:first-of-type>label,#en__pagebuilder .i10-hide .en__field:nth-of-type(10),#en__pagebuilder .i10-hide-label .en__field:nth-of-type(10)>label,#en__pagebuilder .i11-hide .en__field:nth-of-type(11),#en__pagebuilder .i11-hide-label .en__field:nth-of-type(11)>label,#en__pagebuilder .i2-hide .en__field:nth-of-type(2),#en__pagebuilder .i2-hide-label .en__field:nth-of-type(2)>label,#en__pagebuilder .i3-hide .en__field:nth-of-type(3),#en__pagebuilder .i3-hide-label .en__field:nth-of-type(3)>label,#en__pagebuilder .i4-hide .en__field:nth-of-type(4),#en__pagebuilder .i4-hide-label .en__field:nth-of-type(4)>label,#en__pagebuilder .i5-hide .en__field:nth-of-type(5),#en__pagebuilder .i5-hide-label .en__field:nth-of-type(5)>label,#en__pagebuilder .i6-hide .en__field:nth-of-type(6),#en__pagebuilder .i6-hide-label .en__field:nth-of-type(6)>label,#en__pagebuilder .i7-hide .en__field:nth-of-type(7),#en__pagebuilder .i7-hide-label .en__field:nth-of-type(7)>label,#en__pagebuilder .i8-hide .en__field:nth-of-type(8),#en__pagebuilder .i8-hide-label .en__field:nth-of-type(8)>label,#en__pagebuilder .i9-hide .en__field:nth-of-type(9),#en__pagebuilder .i9-hide-label .en__field:nth-of-type(9)>label,[data-engrid-debug] .hide,[data-engrid-debug] .hide-until-client-js-loading-finished,[data-engrid-debug] .hide-until-engrid-js-loading-finished,[data-engrid-debug] .i1-hide .en__field:first-of-type,[data-engrid-debug] .i1-hide-label .en__field:first-of-type>label,[data-engrid-debug] .i10-hide .en__field:nth-of-type(10),[data-engrid-debug] .i10-hide-label .en__field:nth-of-type(10)>label,[data-engrid-debug] .i11-hide .en__field:nth-of-type(11),[data-engrid-debug] .i11-hide-label .en__field:nth-of-type(11)>label,[data-engrid-debug] .i2-hide .en__field:nth-of-type(2),[data-engrid-debug] .i2-hide-label .en__field:nth-of-type(2)>label,[data-engrid-debug] .i3-hide .en__field:nth-of-type(3),[data-engrid-debug] .i3-hide-label .en__field:nth-of-type(3)>label,[data-engrid-debug] .i4-hide .en__field:nth-of-type(4),[data-engrid-debug] .i4-hide-label .en__field:nth-of-type(4)>label,[data-engrid-debug] .i5-hide .en__field:nth-of-type(5),[data-engrid-debug] .i5-hide-label .en__field:nth-of-type(5)>label,[data-engrid-debug] .i6-hide .en__field:nth-of-type(6),[data-engrid-debug] .i6-hide-label .en__field:nth-of-type(6)>label,[data-engrid-debug] .i7-hide .en__field:nth-of-type(7),[data-engrid-debug] .i7-hide-label .en__field:nth-of-type(7)>label,[data-engrid-debug] .i8-hide .en__field:nth-of-type(8),[data-engrid-debug] .i8-hide-label .en__field:nth-of-type(8)>label,[data-engrid-debug] .i9-hide .en__field:nth-of-type(9),[data-engrid-debug] .i9-hide-label .en__field:nth-of-type(9)>label{
+
+.i1-column .en__field:first-of-type .en__field__element,.i10-column .en__field:nth-of-type(10) .en__field__element,.i11-column .en__field:nth-of-type(11) .en__field__element,.i2-column .en__field:nth-of-type(2) .en__field__element,.i3-column .en__field:nth-of-type(3) .en__field__element,.i4-column .en__field:nth-of-type(4) .en__field__element,.i5-column .en__field:nth-of-type(5) .en__field__element,.i6-column .en__field:nth-of-type(6) .en__field__element,.i7-column .en__field:nth-of-type(7) .en__field__element,.i8-column .en__field:nth-of-type(8) .en__field__element,.i9-column .en__field:nth-of-type(9) .en__field__element{
+  align-items:flex-start;
+  flex-direction:column;
+}
+#en__pagebuilder .hide,#en__pagebuilder .hide-until-client-js-loading-finished,#en__pagebuilder .hide-until-engrid-js-loading-finished,#en__pagebuilder .i1-hide .en__field:first-of-type,#en__pagebuilder .i1-hide-label .en__field:first-of-type>label,#en__pagebuilder .i10-hide .en__field:nth-of-type(10),#en__pagebuilder .i10-hide-label .en__field:nth-of-type(10)>label,#en__pagebuilder .i11-hide .en__field:nth-of-type(11),#en__pagebuilder .i11-hide-label .en__field:nth-of-type(11)>label,#en__pagebuilder .i2-hide .en__field:nth-of-type(2),#en__pagebuilder .i2-hide-label .en__field:nth-of-type(2)>label,#en__pagebuilder .i3-hide .en__field:nth-of-type(3),#en__pagebuilder .i3-hide-label .en__field:nth-of-type(3)>label,#en__pagebuilder .i4-hide .en__field:nth-of-type(4),#en__pagebuilder .i4-hide-label .en__field:nth-of-type(4)>label,#en__pagebuilder .i5-hide .en__field:nth-of-type(5),#en__pagebuilder .i5-hide-label .en__field:nth-of-type(5)>label,#en__pagebuilder .i6-hide .en__field:nth-of-type(6),#en__pagebuilder .i6-hide-label .en__field:nth-of-type(6)>label,#en__pagebuilder .i7-hide .en__field:nth-of-type(7),#en__pagebuilder .i7-hide-label .en__field:nth-of-type(7)>label,#en__pagebuilder .i8-hide .en__field:nth-of-type(8),#en__pagebuilder .i8-hide-label .en__field:nth-of-type(8)>label,#en__pagebuilder .i9-hide .en__field:nth-of-type(9),#en__pagebuilder .i9-hide-label .en__field:nth-of-type(9)>label,#en__pagebuilder [hidden-via-url-argument],[data-engrid-debug] .hide,[data-engrid-debug] .hide-until-client-js-loading-finished,[data-engrid-debug] .hide-until-engrid-js-loading-finished,[data-engrid-debug] .i1-hide .en__field:first-of-type,[data-engrid-debug] .i1-hide-label .en__field:first-of-type>label,[data-engrid-debug] .i10-hide .en__field:nth-of-type(10),[data-engrid-debug] .i10-hide-label .en__field:nth-of-type(10)>label,[data-engrid-debug] .i11-hide .en__field:nth-of-type(11),[data-engrid-debug] .i11-hide-label .en__field:nth-of-type(11)>label,[data-engrid-debug] .i2-hide .en__field:nth-of-type(2),[data-engrid-debug] .i2-hide-label .en__field:nth-of-type(2)>label,[data-engrid-debug] .i3-hide .en__field:nth-of-type(3),[data-engrid-debug] .i3-hide-label .en__field:nth-of-type(3)>label,[data-engrid-debug] .i4-hide .en__field:nth-of-type(4),[data-engrid-debug] .i4-hide-label .en__field:nth-of-type(4)>label,[data-engrid-debug] .i5-hide .en__field:nth-of-type(5),[data-engrid-debug] .i5-hide-label .en__field:nth-of-type(5)>label,[data-engrid-debug] .i6-hide .en__field:nth-of-type(6),[data-engrid-debug] .i6-hide-label .en__field:nth-of-type(6)>label,[data-engrid-debug] .i7-hide .en__field:nth-of-type(7),[data-engrid-debug] .i7-hide-label .en__field:nth-of-type(7)>label,[data-engrid-debug] .i8-hide .en__field:nth-of-type(8),[data-engrid-debug] .i8-hide-label .en__field:nth-of-type(8)>label,[data-engrid-debug] .i9-hide .en__field:nth-of-type(9),[data-engrid-debug] .i9-hide-label .en__field:nth-of-type(9)>label,[data-engrid-debug] [hidden-via-url-argument]{
   background-color:#ff00001a !important;
 }
-
-body:not(#en__pagebuilder):not([data-engrid-debug]) .hide,body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide .en__field:first-of-type,body:not(#en__pagebuilder):not([data-engrid-debug]) .i10-hide .en__field:nth-of-type(10),body:not(#en__pagebuilder):not([data-engrid-debug]) .i11-hide .en__field:nth-of-type(11),body:not(#en__pagebuilder):not([data-engrid-debug]) .i2-hide .en__field:nth-of-type(2),body:not(#en__pagebuilder):not([data-engrid-debug]) .i3-hide .en__field:nth-of-type(3),body:not(#en__pagebuilder):not([data-engrid-debug]) .i4-hide .en__field:nth-of-type(4),body:not(#en__pagebuilder):not([data-engrid-debug]) .i5-hide .en__field:nth-of-type(5),body:not(#en__pagebuilder):not([data-engrid-debug]) .i6-hide .en__field:nth-of-type(6),body:not(#en__pagebuilder):not([data-engrid-debug]) .i7-hide .en__field:nth-of-type(7),body:not(#en__pagebuilder):not([data-engrid-debug]) .i8-hide .en__field:nth-of-type(8),body:not(#en__pagebuilder):not([data-engrid-debug]) .i9-hide .en__field:nth-of-type(9),body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-client-js-loading=finished]) .hide-until-client-js-loading-finished,body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-scripts-js-loading=finished]) .hide-until-engrid-js-loading-finished{
+body:not(#en__pagebuilder):not([data-engrid-debug]) .hide,body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide .en__field:first-of-type,body:not(#en__pagebuilder):not([data-engrid-debug]) .i10-hide .en__field:nth-of-type(10),body:not(#en__pagebuilder):not([data-engrid-debug]) .i11-hide .en__field:nth-of-type(11),body:not(#en__pagebuilder):not([data-engrid-debug]) .i2-hide .en__field:nth-of-type(2),body:not(#en__pagebuilder):not([data-engrid-debug]) .i3-hide .en__field:nth-of-type(3),body:not(#en__pagebuilder):not([data-engrid-debug]) .i4-hide .en__field:nth-of-type(4),body:not(#en__pagebuilder):not([data-engrid-debug]) .i5-hide .en__field:nth-of-type(5),body:not(#en__pagebuilder):not([data-engrid-debug]) .i6-hide .en__field:nth-of-type(6),body:not(#en__pagebuilder):not([data-engrid-debug]) .i7-hide .en__field:nth-of-type(7),body:not(#en__pagebuilder):not([data-engrid-debug]) .i8-hide .en__field:nth-of-type(8),body:not(#en__pagebuilder):not([data-engrid-debug]) .i9-hide .en__field:nth-of-type(9),body:not(#en__pagebuilder):not([data-engrid-debug]) [hidden-via-url-argument],body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-client-js-loading=finished]) .hide-until-client-js-loading-finished,body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-scripts-js-loading=finished]) .hide-until-engrid-js-loading-finished{
   display:none;
 }
 body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide-label .en__field:first-of-type>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i10-hide-label .en__field:nth-of-type(10)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i11-hide-label .en__field:nth-of-type(11)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i2-hide-label .en__field:nth-of-type(2)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i3-hide-label .en__field:nth-of-type(3)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i4-hide-label .en__field:nth-of-type(4)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i5-hide-label .en__field:nth-of-type(5)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i6-hide-label .en__field:nth-of-type(6)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i7-hide-label .en__field:nth-of-type(7)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i8-hide-label .en__field:nth-of-type(8)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i9-hide-label .en__field:nth-of-type(9)>label{
@@ -3211,6 +3216,7 @@ body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide-label .en__field:fi
   --donation-amount__button_count:4;
   --donation-amount__flex-grow:initial;
   --give-monthly-donation-amount-appended-label:"/mo";
+  --give-quarterly-donation-amount-appended-label:"/qt";
   --give-annual-donation-amount-appended-label:"/yr";
   --give-by-select__button_font-family:var(--button_font-family);
   --give-by-select__button_font-size:var(--button_font-size);
@@ -3555,6 +3561,9 @@ body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide-label .en__field:fi
 }
 [data-engrid-transaction-recurring-frequency=annual] .radio-to-buttons_donationAmt .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:after{
   content:var(--give-annual-donation-amount-appended-label);
+}
+[data-engrid-transaction-recurring-frequency=quarterly] .radio-to-buttons_donationAmt .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:after{
+  content:var(--give-quarterly-donation-amount-appended-label);
 }
 body:not([data-engrid-transaction-recurring=n]) .recurring-frequency-n-show,body:not([data-engrid-transaction-recurring=n]) .recurring-frequency-onetime-show,body:not([data-engrid-transaction-recurring=y]) .recurring-frequency-y-show,body:not([data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=annual]) .recurring-frequency-annual-show,body:not([data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=monthly]) .recurring-frequency-monthly-show,body:not([data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=quarterly]) .recurring-frequency-quarterly-show,body:not([data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=semi_annual]) .recurring-frequency-semi-annual-show,body[data-engrid-transaction-recurring=n] .recurring-frequency-n-hide,body[data-engrid-transaction-recurring=n] .recurring-frequency-onetime-hide,body[data-engrid-transaction-recurring=y] .recurring-frequency-y-hide,body[data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=annual] .recurring-frequency-annual-hide,body[data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=monthly] .recurring-frequency-monthly-hide,body[data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=quarterly] .recurring-frequency-quarterly-hide,body[data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=semi_annual] .recurring-frequency-semi-annual-hide{
   display:none;
@@ -4951,12 +4960,14 @@ div.en__component.engrid-ticker{
 }
 
 #engrid-ticker{
+  --speed-modifier:1;
   height:5rem;
   margin-bottom:1rem;
   width:100%;
 }
 #engrid-ticker .ticker{
-  animation-duration:250s;
+  --calculated-speed:calc(1s*(var(--ticker-size)/50)*var(--speed-modifier));
+  animation-duration:var(--calculated-speed);
   animation-iteration-count:infinite;
   animation-name:tickerScroll;
   animation-timing-function:linear;
@@ -4989,6 +5000,9 @@ div.en__component.engrid-ticker{
   to{
     transform:translateX(0);
   }
+}
+body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-merge-tags-processed]) .hide-until-merged{
+  visibility:hidden;
 }
 [data-engrid-theme]{
   --engrid__page_padding:0px;
