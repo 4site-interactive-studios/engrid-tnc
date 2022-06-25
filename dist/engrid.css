@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, June 24, 2022 @ 22:32:32 ET
+ *  Date: Friday, June 24, 2022 @ 22:36:06 ET
  *  By: bryancasler
  *  ENGrid styles: v0.12.12
  *  ENGrid scripts: v0.12.17
@@ -6906,7 +6906,7 @@ body:not([data-engrid-debug]) #debug-bar{
   --engrid__body_padding:0 115px;
   --click-to-expand__copy-area_height:200px;
 }
-[data-engrid-theme=tnc] .body-footerOutside,[data-engrid-theme=tnc] .body-headerOutside,[data-engrid-theme=tnc] .content-footer,[data-engrid-theme=tnc] .content-header,[data-engrid-theme=tnc] .content-preFooter,[data-engrid-theme=tnc] .page-alert{
+[data-engrid-theme=tnc] .body-footerOutside,[data-engrid-theme=tnc] .body-headerOutside,[data-engrid-theme=tnc] .content-footer,[data-engrid-theme=tnc] .content-footerSpacer,[data-engrid-theme=tnc] .content-header,[data-engrid-theme=tnc] .content-preFooter,[data-engrid-theme=tnc] .page-alert,[data-engrid-theme=tnc] .page-backgroundImageOverlay{
   display:none !important;
 }
 @media screen and (max-width:805px){
@@ -6931,19 +6931,19 @@ body:not([data-engrid-debug]) #debug-bar{
   -webkit-text-decoration-color:#0079314d;
           text-decoration-color:#0079314d;
 }
-[data-engrid-theme=tnc][data-engrid-layout=leftleft1col] .page-backgroundImage{
+[data-engrid-theme=tnc]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage{
   grid-column:rpc /  pc;
 }
-[data-engrid-theme=tnc][data-engrid-layout=leftleft1col] .page-backgroundImage:before{
+[data-engrid-theme=tnc]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage:before{
   background-position:50% !important;
   left:575px;
   right:0;
   width:calc(100% - 575px);
 }
-[data-engrid-theme=tnc][data-engrid-layout=rightright1col] .page-backgroundImage{
+[data-engrid-theme=tnc]:not(#en__pagebuilder)[data-engrid-layout=rightright1col] .page-backgroundImage{
   grid-column:pc /  lpc;
 }
-[data-engrid-theme=tnc][data-engrid-layout=rightright1col] .page-backgroundImage:before{
+[data-engrid-theme=tnc]:not(#en__pagebuilder)[data-engrid-layout=rightright1col] .page-backgroundImage:before{
   background-position:50% !important;
   left:0;
   right:575px;

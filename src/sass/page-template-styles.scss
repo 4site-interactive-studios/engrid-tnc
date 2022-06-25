@@ -136,8 +136,10 @@
   .content-header,
   .body-headerOutside,
   .body-footerOutside,
+  .content-footerSpacer,
   .content-preFooter,
-  .content-footer {
+  .content-footer,
+  .page-backgroundImageOverlay {
     display: none !important;
   }
 
@@ -165,7 +167,7 @@
     text-decoration-color: #0079314d;
   }
 
-  &[data-engrid-layout="leftleft1col"] {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
     .page-backgroundImage {
       grid-column: rpc/pc;
 
@@ -178,7 +180,7 @@
     }
   }
 
-  &[data-engrid-layout="rightright1col"] {
+  &:not(#en__pagebuilder)[data-engrid-layout="rightright1col"] {
     .page-backgroundImage {
       grid-column: pc/lpc;
 
