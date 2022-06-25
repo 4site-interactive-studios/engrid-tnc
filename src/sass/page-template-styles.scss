@@ -209,13 +209,14 @@
       flex-wrap: wrap;
       display: flex;
       flex-grow: 1;
-      color: #007931;
+      color: #cdcdcd;
       border-bottom: 4px solid #cdcdcd;
       padding-bottom: 1px;
       font-size: 14px;
       font-weight: 500;
       line-height: 1.68;
       &.current {
+        color: #007931;
         border-bottom-color: #007931;
       }
     }
