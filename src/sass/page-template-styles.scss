@@ -1,124 +1,298 @@
 // The most broadly used CSS Custom Properties for quick theming.
 // Uncomment to use and reference engrid-scrips SASS files for more CSS Custom Properties.
 // All CSS Custom Properties should be scoped to the theme using CSS Data Attributes.
-[data-engrid-theme="organizational-name"]{
-    // TYPOGRAPHY DEFAULT
-    // --default_font-family: var(--native-fonts__sans-serif);
-    // --default_color: initial;
-    // --default_font-size: var(--root_font-size);
-    // --default_font-weight: initial;
-    // --default_line-height: initial;
+[data-engrid-theme="tnc"] {
+  // TYPOGRAPHY DEFAULT
+  --default_font-family: "Whitney A", "Whitney B", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
+  --default_color: #1a1a1a;
+  // --default_font-size: var(--root_font-size);
+  // --default_font-weight: initial;
+  // --default_line-height: initial;
 
-    // TYPOGRAPHY H1
-    // --h1_font-family: var(--default_font-family);
-    // --h1_color: initial;
-    // --h1_font-size: calc(var(--root_font-size) * var(--scale-up_160pct));
-    // --h1_font-weight: initial;
-    // --h1_line-height: initial;
-        
-    // TYPOGRAPHY P
-    // --p_font-family: var(--default_font-family);
-    // --p_color: initial;
-    // --p_font-size: var(--root_font-size);
-    // --p_font-weight: initial;
-    // --p_line-height: initial;
+  // TYPOGRAPHY H1
+  --h1_font-family: Chronicle Text G2 A, Chronicle Text G2 B, ui-serif, Georgia,
+    Cambria, Times New Roman, Times, serif;
+  // --h1_color: initial;
+  --h1_font-size: 34px;
+  // --h1_font-weight: initial;
+  --h1_line-height: 1.24;
 
-    // TYPOGRAPHY A
-    // --a_font-family: var(--default_font-family);
-    // --a_color: initial;
-    // --a_text-decoration: underline;
+  // TYPOGRAPHY P
+  // --p_font-family: var(--default_font-family);
+  // --p_color: initial;
+  --p_font-size: 16px; // var(--root_font-size)
+  // --p_font-weight: initial;
+  --p_line-height: 1.88;
 
-    // TYPOGRAPHY A:FOCUS
-    // TYPOGRAPHY A:HOVER
-    // --a_color_hover: var(--a_color);
-    // --a_text-decoration_hover: initial;
+  // TYPOGRAPHY A
+  // --a_font-family: var(--default_font-family);
+  --a_color: #007931;
+  // --a_text-decoration: underline;
 
-    // TYPOGRAPHY INPUT
-    // --input_font-family: var(--default_font-family);
-    // --input_color: #000000;
-    // --input_font-size: var(--root_font-size);
-    // --input_font-weight: initial;
-    // --input_line-height: initial;
-    // --input_background-color: #fafafa;
-    // --input_border-width: 1px;
-    // --input_border-color: #dfdfe1;
-    // --input_border-radius: 6px;
-    // --input_placeholder-color: var(--color_light-gray);
-    // --input_box-shadow: inset 0 2px 2px -1px rgba(74, 74, 104, 0.1);
-        
-    // TYPOGRAPHY INPUT:FOCUS
-    // TYPOGRAPHY INPUT:HOVER
-    // --input_color_hover: var(--input_color);
-    // --input_background-color_hover: var(--input_background-color);
-    // --input_border-color_hover: #767677;
-    // --input_border-bottom-color_hover: var(--input_border-color_hover);
-    // --input_box-shadow_hover: --input_box-shadow;
+  // TYPOGRAPHY A:FOCUS
+  // TYPOGRAPHY A:HOVER
+  --a_color_hover: #1a1a1a;
+  --a_text-decoration_hover: underline;
 
-    // TYPOGRAPHY BUTTON
-    // --button_font-family: var(--default_font-family);
-    // --button_color: var(--color_white);
-    // --button_font-size: var(--root_font-size);
-    // --button_font-weight: initial;
-    // --button_line-height: initial;
-    // --button_background-color: #535b61;
-    // --button_border-width: 1px;
-    // --button_border-color: var(--color_black);
-    // --button_border-radius: 6px;
+  // TYPOGRAPHY INPUT
+  // --input_font-family: var(--default_font-family);
+  --input_color: #1a1a1a;
+  // --input_font-size: var(--root_font-size);
+  // --input_font-weight: initial;
+  // --input_line-height: initial;
+  --input_background-color: #ffffff;
+  // --input_border-width: 1px;
+  --input_border-color: #949494;
+  --input_border-radius: 0px;
+  // --input_placeholder-color: var(--color_light-gray);
+  // --input_box-shadow: inset 0 2px 2px -1px rgba(74, 74, 104, 0.1);
 
-    // TYPOGRAPHY BUTTON:HOVER
-    // --button_color_hover: var(--button_color);
-    // --button_background-color_hover: var(--color_black);
-    // --button_border-color_hover: var(--button_background-color_hover);
+  // TYPOGRAPHY INPUT:FOCUS
+  // TYPOGRAPHY INPUT:HOVER
+  // --input_color_hover: var(--input_color);
+  // --input_background-color_hover: var(--input_background-color);
+  // --input_border-color_hover: #767677;
+  // --input_border-bottom-color_hover: var(--input_border-color_hover);
+  // --input_box-shadow_hover: --input_box-shadow;
 
-    // TYPOGRAPHY BUTTON:SELECTED
-    // --button_color_checked: var(--button_color_hover);
-    // --button_background-color_checked: var(--button_background-color_hover);
-    // --button_border-color_checked: var(--button_border-color_hover);
+  --input_padding: 1.5ch 2ch;
 
-    // DONATION PAGE
-    // --give-monthly-donation-amount-appended-label: "/mo";
-    // --give-annual-donation-amount-appended-label: "/yr";  
-    // --recurring-frequency__button_count: 4;
-    // --donation-amount__button_count: 4;
-    // --give-by-select__button_count: 4;
+  // TYPOGRAPHY BUTTON
+  // --button_font-family: var(--default_font-family);
+  // --button_color: var(--color_white);
+  --button_font-size: 14px;
+  --button_font-weight: bold;
+  // --button_line-height: initial;
+  --button_background-color: #007931;
+  // --button_border-width: 1px;
+  // --button_border-color: var(--color_black);
+  --button_border-radius: 0px;
+  --submit__button_padding-top: 1rem;
+  --submit__button_padding-bottom: 1rem;
+
+  // TYPOGRAPHY BUTTON:HOVER
+  // --button_color_hover: var(--button_color);
+  // --button_background-color_hover: var(--color_black);
+  // --button_border-color_hover: var(--button_background-color_hover);
+
+  // TYPOGRAPHY BUTTON:SELECTED
+  // --button_color_checked: var(--button_color_hover);
+  // --button_background-color_checked: var(--button_background-color_hover);
+  // --button_border-color_checked: var(--button_border-color_hover);
+
+  // DONATION PAGE
+  // --give-monthly-donation-amount-appended-label: "/mo";
+  // --give-annual-donation-amount-appended-label: "/yr";
+  // --recurring-frequency__button_count: 4;
+  // --donation-amount__button_count: 4;
+  // --give-by-select__button_count: 4;
+
+  --engrid__body_padding: 0 115px;
+  --click-to-expand__copy-area_height: 200px;
 }
 
 /* Add your custom theme styles here */
-[data-engrid-theme="organizational-name"]{
-    @mixin until-mobile-l {
-        // STYLES
+[data-engrid-theme="tnc"] {
+  @mixin until-mobile-l {
+    // STYLES
+  }
+
+  @mixin from-mobile-l {
+    // STYLES
+  }
+
+  @mixin simplified-header {
+    // STLES
+  }
+
+  // Example Breakpoints Stylings (See engrid-scripts > _engrid-breakpoints.scss for more breakpoints)
+  &[data-engrid-layout] {
+    @include mq($until: mobile-l) {
+      @include until-mobile-l;
     }
 
-    @mixin from-mobile-l {
-        // STYLES
+    @include mq($from: mobile-l) {
+      @include from-mobile-l;
+    }
+  }
+
+  // Example of Shared Layout Stylings
+  &[data-engrid-layout="centerleft1col"] {
+    @media screen and (max-width: $centerleft1col_content-column_min-width) {
+      @include simplified-header;
+    }
+  }
+
+  &[data-engrid-layout="centerright1col"] {
+    @media screen and (max-width: $centerright1col_content-column_min-width) {
+      @include simplified-header;
+    }
+  }
+
+  .page-alert,
+  .content-header,
+  .body-header-outside,
+  .body-footer-outside,
+  .content-pre-footer,
+  .content-footer {
+    display: none !important;
+  }
+
+  @media screen and (max-width: 805px) {
+    --engrid__body_padding: 0 10vw;
+  }
+
+  &:not(#en__pagebuilder) {
+    @media screen and (min-width: 1024px) {
+      .body-banner {
+        display: none;
+      }
     }
 
-    @mixin simplified-header {
-        // STLES
+    @media screen and (max-width: 1023px) {
+      .body-banner {
+        padding-bottom: 1rem;
+      }
     }
 
-    // Example Breakpoints Stylings (See engrid-scripts > _engrid-breakpoints.scss for more breakpoints)
-    &[data-engrid-layout] {
-        @include mq($until: mobile-l){
-            @include until-mobile-l;
-        }
+    margin-bottom: 1rem;
+  }
 
-        @include mq($from: mobile-l){
-            @include from-mobile-l;
-        }
-    }
-    
-    // Example of Shared Layout Stylings
-    &[data-engrid-layout="centerleft1col"]{
-        @media screen and (max-width: $centerleft1col_content-column_min-width) {
-            @include simplified-header;
-        }
-    }
+  a {
+    text-decoration-color: #0079314d;
+  }
 
-    &[data-engrid-layout="centerright1col"]{
-        @media screen and (max-width: $centerright1col_content-column_min-width) {
-            @include simplified-header;
-        }
-    }
+  &[data-engrid-layout="leftleft1col"] {
+    .page-backgroundImage {
+      grid-column: rpc/pc;
 
+      &:before {
+        left: $one_col_body-column_max-width;
+        right: 0;
+        width: calc(100% - $one_col_body-column_max-width);
+        background-position: center !important;
+      }
+    }
+  }
+
+  &[data-engrid-layout="rightright1col"] {
+    .page-backgroundImage {
+      grid-column: pc/lpc;
+
+      &:before {
+        left: 0;
+        right: $one_col_body-column_max-width;
+        width: calc(100% - $one_col_body-column_max-width);
+        background-position: center !important;
+      }
+    }
+  }
+
+  .body-header {
+    img {
+      margin-left: 0;
+      margin-top: 2rem;
+    }
+  }
+
+  #step-indicator {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    .step {
+      flex-basis: calc(100% / 3);
+      justify-content: center;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      display: flex;
+      flex-grow: 1;
+      color: #007931;
+      border-bottom: 4px solid #cdcdcd;
+      padding-bottom: 1px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.68;
+      &.current {
+        border-bottom-color: #007931;
+      }
+    }
+  }
+
+  .en__mandatory > label {
+    justify-content: flex-start !important;
+
+    &:before {
+      content: "*";
+      margin-right: 0.5ch;
+    }
+  }
+
+  .arrow .en__submit button:after {
+    float: none;
+    margin-left: 0.5ch;
+    margin-right: 0;
+  }
+
+  .asterisks-required {
+    font-family: georgia, serif;
+  }
+
+  &:not(#en__pagebuilder) .body-top {
+    padding-bottom: 2rem;
+
+    .click-to-expand:not(.expanded) .click-to-expand-cta {
+      margin-bottom: 1rem;
+      margin-left: 0;
+      background: none;
+      width: auto;
+      height: 10px;
+
+      &:before {
+        content: "Read more";
+        font-family: var(--default_font-family);
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.68;
+        color: #007931;
+        text-decoration: underline;
+        text-decoration-color: #0079314d;
+      }
+    }
+  }
+
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline-color: #007931;
+  }
+
+  .en__submit {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #cdcdcd;
+    margin-bottom: 1rem;
+  }
+
+  .page-backgroundImage .media-with-attribution {
+    visibility: hidden;
+
+    figattribution {
+      visibility: visible;
+    }
+  }
+
+  .media-with-attribution {
+    figattribution {
+      width: 18px;
+      height: 18px;
+      border-radius: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      --media-attribution__background-color: rgb(255 255 255 / 80%);
+      --media-attribution__color: rgb(26 26 26 / 80%);
+    }
+  }
 }
