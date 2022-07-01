@@ -92,6 +92,9 @@
 
   --engrid__body_padding: 0 115px;
   --click-to-expand__copy-area_height: 200px;
+  --engrid__page_background-color: #f1f1f1;
+  --engrid__body-banner_background-color: #f1f1f1;
+  --engrid__page-backgroundImage-color: #f1f1f1;
 }
 
 /* Add your custom theme styles here */
@@ -298,5 +301,16 @@
       --media-attribution__background-color: rgb(255 255 255 / 80%);
       --media-attribution__color: rgb(26 26 26 / 80%);
     }
+  }
+
+  &:not(#en__pagebuilder)
+    .click-to-expand:not(.expanded)
+    .click-to-expand-text-wrapper {
+    mask-image: linear-gradient(
+      to bottom,
+      black 15%,
+      rgba(255, 255, 255, 0)
+        calc(100% - var(--click-to-expand__cta-image_height))
+    );
   }
 }
