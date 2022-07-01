@@ -300,6 +300,13 @@
       align-items: center;
       --media-attribution__background-color: rgb(255 255 255 / 80%);
       --media-attribution__color: rgb(26 26 26 / 80%);
+      a {
+        display: flex;
+        height: 18px;
+        min-width: 18px;
+        justify-content: center;
+        align-items: center;
+      }
     }
   }
 
@@ -312,5 +319,10 @@
       rgba(255, 255, 255, 0)
         calc(100% - var(--click-to-expand__cta-image_height))
     );
+  }
+
+  // @TODO - Move to ENgrid
+  &:not(#en__pagebuilder) .page-backgroundImage {
+    z-index: auto;
   }
 }
