@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, June 30, 2022 @ 23:34:59 ET
+ *  Date: Friday, July 1, 2022 @ 23:47:48 ET
  *  By: bryancasler
  *  ENGrid styles: v0.12.18
  *  ENGrid scripts: v0.12.17
@@ -6989,16 +6989,31 @@ body:not([data-engrid-debug]) #debug-bar{
   content:"*";
   margin-right:.5ch;
 }
-[data-engrid-theme=tnc] .arrow .en__submit button:after{
+[data-engrid-theme=tnc] .arrow .en__submit a,[data-engrid-theme=tnc] .arrow .en__submit button{
+  text-transform:uppercase;
+}
+[data-engrid-theme=tnc] .arrow .en__submit a:after,[data-engrid-theme=tnc] .arrow .en__submit button:after{
   float:none;
   margin-left:.5ch;
   margin-right:0;
+  transition:margin .3s,background-color .3s;
+}
+[data-engrid-theme=tnc] .arrow .en__submit a:after{
+  content:"→";
+  display:inline-block;
+  left:1ch;
+  opacity:.9;
+  position:relative;
+  transform:rotate(90deg);
+}
+[data-engrid-theme=tnc] .arrow .en__submit button:hover:after{
+  margin-left:2ch;
 }
 [data-engrid-theme=tnc] .asterisks-required{
   font-family:georgia,serif;
 }
 [data-engrid-theme=tnc]:not(#en__pagebuilder) .body-top{
-  padding-bottom:2rem;
+  padding-bottom:1.8rem;
 }
 [data-engrid-theme=tnc]:not(#en__pagebuilder) .body-top .click-to-expand:not(.expanded) .click-to-expand-cta{
   background:none;
@@ -7051,6 +7066,27 @@ body:not([data-engrid-debug]) #debug-bar{
   height:18px;
   justify-content:center;
   min-width:18px;
+}
+@media screen and (min-width:1024px){
+  [data-engrid-theme=tnc] #floating-button{
+    display:none;
+  }
+}
+[data-engrid-theme=tnc] #floating-button{
+  bottom:0;
+  opacity:1 !important;
+  padding:var(--engrid__body_padding);
+  position:fixed;
+  transition:opacity 1s;
+  width:100%;
+  z-index:5;
+}
+[data-engrid-theme=tnc] #floating-button .en__submit{
+  border:none;
+  margin-bottom:-51px;
+  padding-bottom:0;
+  position:relative;
+  top:-51px;
 }
 @media screen and (max-width:1023px){
   [data-engrid-theme=tnc][data-engrid-layout=leftleft1col][data-replace-banner-with-background=if-banner-empty-or-background-video][data-engrid-body-banner=empty][data-engrid-page-background=image] .page-backgroundImage figure,[data-engrid-theme=tnc][data-engrid-layout=leftleft1col][data-replace-banner-with-background=if-banner-empty-or-background-video][data-engrid-page-background=video] .page-backgroundImage figure,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-replace-banner-with-background=if-banner-empty-or-background-video][data-engrid-body-banner=empty][data-engrid-page-background=image] .page-backgroundImage figure,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-replace-banner-with-background=if-banner-empty-or-background-video][data-engrid-page-background=video] .page-backgroundImage figure{

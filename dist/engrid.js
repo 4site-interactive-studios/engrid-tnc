@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, June 30, 2022 @ 23:34:59 ET
+ *  Date: Friday, July 1, 2022 @ 23:47:48 ET
  *  By: bryancasler
  *  ENGrid styles: v0.12.18
  *  ENGrid scripts: v0.12.17
@@ -16164,6 +16164,31 @@ const AppVersion = "0.12.17";
 ;// CONCATENATED MODULE: ./src/scripts/main.js
 const customScript = function () {
   console.log("ENGrid client scripts are executing"); // Add your client scripts here
+
+  var checkForServerError = document.querySelector(".en__errorList *");
+
+  if (checkForServerError) {
+    console.log("Has server error!");
+  } else {
+    console.log("Does not have a server error!"); // Check if the first field is in the viewport
+
+    let firstElement = document.querySelector(".en__component--formblock");
+    firstElement.id = "firstElement";
+    let bounding = firstElement.getBoundingClientRect();
+
+    if (bounding.top >= 0 && bounding.left >= 0 && bounding.right <= window.innerWidth && bounding.bottom <= window.innerHeight) {
+      console.log("First field is in the viewport!");
+    } else {
+      console.log("First field is NOT in the viewport! Add hover button");
+      let floatingButton = document.createElement("div");
+      floatingButton.id = "floating-button";
+      floatingButton.className = "arrow";
+      floatingButton.style.opacity = "0";
+      floatingButton.innerHTML = "<div class='en__submit'><a class='pseduo__en__submit_button' href='#firstElement'>Placeholder</a></div>";
+      let advRow = document.querySelector(".en__component--advrow");
+      advRow.append(floatingButton);
+    }
+  }
 };
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
