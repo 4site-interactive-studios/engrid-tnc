@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, July 1, 2022 @ 23:47:48 ET
+ *  Date: Thursday, July 7, 2022 @ 22:11:04 ET
  *  By: bryancasler
  *  ENGrid styles: v0.12.18
  *  ENGrid scripts: v0.12.17
@@ -6904,7 +6904,7 @@ body:not([data-engrid-debug]) #debug-bar{
   --submit__button_padding-top:1rem;
   --submit__button_padding-bottom:1rem;
   --engrid__body_padding:0 115px;
-  --click-to-expand__copy-area_height:200px;
+  --click-to-expand__copy-area_height:210px;
   --engrid__page_background-color:#f1f1f1;
 }
 [data-engrid-theme=tnc] .body-footer,[data-engrid-theme=tnc] .body-footerOutside,[data-engrid-theme=tnc] .body-headerOutside,[data-engrid-theme=tnc] .content-footer,[data-engrid-theme=tnc] .content-header,[data-engrid-theme=tnc] .content-preFooter,[data-engrid-theme=tnc] .page-alert,[data-engrid-theme=tnc] .page-backgroundImageOverlay,[data-engrid-theme=tnc]#en__pagebuilder .content-footerSpacer{
@@ -6921,6 +6921,15 @@ body:not([data-engrid-debug]) #debug-bar{
   }
 }
 @media screen and (max-width:1023px){
+  [data-engrid-theme=tnc]:not(#en__pagebuilder) #engrid>.en__component--advrow,[data-engrid-theme=tnc]:not(#en__pagebuilder) form>.en__component--advrow{
+    grid-template-rows:[page-start page-alert-start] min-content [page-alert-end content-header-start] min-content [content-header-end body-headerOutside-start] min-content [body-headerOutside-end body-banner-start] min-content [body-banner-end body-bannerOverlay-start] min-content [body-bannerOverlay-end body-header-start] min-content [body-header-end body-title-start] min-content [body-title-end body-top-start] min-content [body-top-end body-side-start] min-content [body-side-end body-main-start] min-content [body-main-end body-bottom-start] min-content [body-bottom-end body-footer-start] min-content [body-footer-end body-footerOutside-start] min-content [body-footerOutside-end content-footerSpacer-start] minmax(0, 1fr) [content-footerSpacer-end content-preFooter-start] min-content [content-preFooter-end content-footer-start] min-content [content-footer-end page-backgroundImage-start] min-content [page-backgroundImage-end page-backgroundImageOverlay-start] min-content [page-backgroundImageOverlay-end page-end page-customCode-start] min-content [page-customCode-end];
+  }
+  [data-engrid-theme=tnc]:not(#en__pagebuilder) .body-header img{
+    margin-top:.75rem;
+  }
+  [data-engrid-theme=tnc]:not(#en__pagebuilder) .body-title h1{
+    margin-top:1rem;
+  }
   [data-engrid-theme=tnc]:not(#en__pagebuilder) .body-banner{
     padding-bottom:1rem;
   }
@@ -6958,6 +6967,7 @@ body:not([data-engrid-debug]) #debug-bar{
 [data-engrid-theme=tnc] .body-header img{
   margin-left:0;
   margin-top:2rem;
+  max-width:36vw;
 }
 [data-engrid-theme=tnc] #step-indicator{
   display:flex;

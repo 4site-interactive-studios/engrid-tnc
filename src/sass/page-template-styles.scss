@@ -159,6 +159,25 @@
     }
 
     @media screen and (max-width: 1023px) {
+      // Put the Body Banner at the top of the page
+      #engrid > .en__component--advrow,
+      form > .en__component--advrow {
+        grid-template-rows:
+          [page-start page-alert-start] min-content [page-alert-end content-header-start] min-content [content-header-end body-headerOutside-start] min-content [body-headerOutside-end body-banner-start] min-content [body-banner-end body-bannerOverlay-start] min-content [body-bannerOverlay-end body-header-start] min-content [body-header-end body-title-start] min-content [body-title-end body-top-start] min-content [body-top-end body-side-start] min-content [body-side-end body-main-start] min-content [body-main-end body-bottom-start] min-content [body-bottom-end body-footer-start] min-content [body-footer-end body-footerOutside-start] min-content [body-footerOutside-end content-footerSpacer-start] minmax(
+            0,
+            1fr
+          )
+          [content-footerSpacer-end content-preFooter-start] min-content [content-preFooter-end content-footer-start] min-content [content-footer-end page-backgroundImage-start] min-content [page-backgroundImage-end page-backgroundImageOverlay-start] min-content [page-backgroundImageOverlay-end page-end page-customCode-start] min-content [page-customCode-end];
+      }
+
+      .body-header img {
+        margin-top: 0.75rem;
+      }
+
+      .body-title h1 {
+        margin-top: 1rem;
+      }
+
       .body-banner {
         padding-bottom: 1rem;
       }
@@ -209,6 +228,7 @@
     img {
       margin-left: 0;
       margin-top: 2rem;
+      max-width: 36vw;
     }
   }
 
