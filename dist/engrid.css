@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, July 7, 2022 @ 22:11:04 ET
+ *  Date: Sunday, July 10, 2022 @ 14:02:02 ET
  *  By: bryancasler
  *  ENGrid styles: v0.12.18
  *  ENGrid scripts: v0.12.17
@@ -6904,7 +6904,7 @@ body:not([data-engrid-debug]) #debug-bar{
   --submit__button_padding-top:1rem;
   --submit__button_padding-bottom:1rem;
   --engrid__body_padding:0 115px;
-  --click-to-expand__copy-area_height:210px;
+  --click-to-expand__copy-area_height:200px;
   --engrid__page_background-color:#f1f1f1;
 }
 [data-engrid-theme=tnc] .body-footer,[data-engrid-theme=tnc] .body-footerOutside,[data-engrid-theme=tnc] .body-headerOutside,[data-engrid-theme=tnc] .content-footer,[data-engrid-theme=tnc] .content-header,[data-engrid-theme=tnc] .content-preFooter,[data-engrid-theme=tnc] .page-alert,[data-engrid-theme=tnc] .page-backgroundImageOverlay,[data-engrid-theme=tnc]#en__pagebuilder .content-footerSpacer{

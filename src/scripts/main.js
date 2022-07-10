@@ -32,4 +32,26 @@ export const customScript = function () {
       advRow.append(floatingButton);
     }
   }
+
+  /**
+   * Track data capture submits
+   */
+  var dataCaptureTracking = function dataCaptureTracking() {
+    if (pageJson.pageType === "otherdatacapture") {
+      theForm.addEventListener("submit", function (e) {
+        setTimeout(function () {
+          if (formIsValid() && typeof utag !== "undefined") {
+            utag.link({
+              event_name: "frm_emt_submit",
+              form_type: "otherdatacapture",
+              form_name: utag_data.page_name.slice(0, -2),
+              email_signup_location: "otherdatacapture",
+            });
+          }
+        }, 100);
+      });
+    }
+  };
+
+  dataCaptureTracking();
 };

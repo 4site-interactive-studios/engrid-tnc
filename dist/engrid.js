@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, July 7, 2022 @ 22:11:04 ET
+ *  Date: Sunday, July 10, 2022 @ 14:02:02 ET
  *  By: bryancasler
  *  ENGrid styles: v0.12.18
  *  ENGrid scripts: v0.12.17
@@ -16189,6 +16189,29 @@ const customScript = function () {
       advRow.append(floatingButton);
     }
   }
+  /**
+   * Track data capture submits
+   */
+
+
+  var dataCaptureTracking = function dataCaptureTracking() {
+    if (pageJson.pageType === "otherdatacapture") {
+      theForm.addEventListener("submit", function (e) {
+        setTimeout(function () {
+          if (formIsValid() && typeof utag !== "undefined") {
+            utag.link({
+              event_name: "frm_emt_submit",
+              form_type: "otherdatacapture",
+              form_name: utag_data.page_name.slice(0, -2),
+              email_signup_location: "otherdatacapture"
+            });
+          }
+        }, 100);
+      });
+    }
+  };
+
+  dataCaptureTracking();
 };
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
