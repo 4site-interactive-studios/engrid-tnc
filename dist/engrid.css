@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, July 12, 2022 @ 17:09:05 ET
- *  By: bryancasler
+ *  Date: Tuesday, July 12, 2022 @ 18:12:25 ET
+ *  By: fernando
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.3
  *
@@ -183,12 +183,14 @@ dialog{
   background-color:#fff;
   border:solid;
   color:#000;
+  height:-moz-fit-content;
   height:fit-content;
   left:0;
   margin:auto;
   padding:1em;
   position:absolute;
   right:0;
+  width:-moz-fit-content;
   width:fit-content;
 }
 
@@ -4010,6 +4012,7 @@ input[type=text].en__ticket__quantity{
   border:none !important;
   box-shadow:none !important;
   flex-basis:auto;
+  height:-moz-fit-content !important;
   height:fit-content !important;
   padding-left:0;
   padding-right:0;
@@ -6183,10 +6186,7 @@ body:not(#en__pagebuilder)[data-engrid-no-body-bannerOverlay] .en__component--ad
   display:block;
 }
 [data-engrid-theme=flex2]#en__pagebuilder form{
-  bottom:auto;
-  left:0;
-  right:auto;
-  top:-1px;
+  inset:-1px auto auto 0;
 }
 [data-engrid-theme=flex2]#en__pagebuilder .en__container{
   margin-top:0;
@@ -7146,9 +7146,6 @@ body:not([data-engrid-debug]) #debug-bar{
   text-decoration:underline;
   -webkit-text-decoration-color:#0079314d;
           text-decoration-color:#0079314d;
-}
-[data-engrid-theme=tnc] input.focus-visible,[data-engrid-theme=tnc] select.focus-visible,[data-engrid-theme=tnc] textarea.focus-visible{
-  outline-color:#007931;
 }
 [data-engrid-theme=tnc] input:focus-visible,[data-engrid-theme=tnc] select:focus-visible,[data-engrid-theme=tnc] textarea:focus-visible{
   outline-color:#007931;
