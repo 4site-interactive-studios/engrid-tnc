@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, July 10, 2022 @ 14:02:53 ET
+ *  Date: Tuesday, July 12, 2022 @ 17:09:05 ET
  *  By: bryancasler
  *  ENGrid styles: v0.13.0
- *  ENGrid scripts: v0.13.1
+ *  ENGrid scripts: v0.13.3
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -7206,7 +7206,7 @@ body:not([data-engrid-debug]) #debug-bar{
   [data-engrid-theme=tnc][data-engrid-layout=leftleft1col][data-replace-banner-with-background=if-banner-empty-or-background-video][data-engrid-body-banner=empty][data-engrid-page-background=image] .page-backgroundImage figure,[data-engrid-theme=tnc][data-engrid-layout=leftleft1col][data-replace-banner-with-background=if-banner-empty-or-background-video][data-engrid-page-background=video] .page-backgroundImage figure,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-replace-banner-with-background=if-banner-empty-or-background-video][data-engrid-body-banner=empty][data-engrid-page-background=image] .page-backgroundImage figure,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-replace-banner-with-background=if-banner-empty-or-background-video][data-engrid-page-background=video] .page-backgroundImage figure{
     position:static !important;
   }
-  [data-engrid-theme=tnc] .page-backgroundImage{
+  [data-engrid-theme=tnc][data-engrid-no-body-banner]:not([data-engrid-no-page-backgroundimage]) .page-backgroundImage{
     padding-bottom:1rem;
   }
 }

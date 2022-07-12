@@ -406,7 +406,8 @@
       position: static !important;
     }
 
-    .page-backgroundImage {
+    &[data-engrid-no-body-banner]:not([data-engrid-no-page-backgroundimage])
+      .page-backgroundImage {
       padding-bottom: 1rem;
     }
   }

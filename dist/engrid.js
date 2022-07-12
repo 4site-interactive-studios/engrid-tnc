@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, July 10, 2022 @ 14:02:53 ET
+ *  Date: Tuesday, July 12, 2022 @ 17:09:05 ET
  *  By: bryancasler
  *  ENGrid styles: v0.13.0
- *  ENGrid scripts: v0.13.1
+ *  ENGrid scripts: v0.13.3
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -14068,6 +14068,8 @@ class TranslateFields {
         if (stateField) {
             set("engrid-state", stateField.value, {
                 expires: 1,
+                sameSite: "none",
+                secure: true,
             });
         }
     }
@@ -16668,7 +16670,7 @@ class TidyContact {
         }
     }
     setPhoneDataFromAPI(data, id) {
-        var _a, _b;
+        var _a;
         return tidycontact_awaiter(this, void 0, void 0, function* () {
             if (!this.options)
                 return;
@@ -16677,7 +16679,7 @@ class TidyContact {
             const dateField = engrid_ENGrid.getField(this.options.phone_date_field);
             const statusField = engrid_ENGrid.getField(this.options.phone_status_field);
             let record = {};
-            record["formData"] = `{"${(_b = this.options.address_fields) === null || _b === void 0 ? void 0 : _b.phone}": ${phoneField.value}}`;
+            record["formData"] = { [phoneField.name]: phoneField.value };
             record["formatted"] = data.formatted;
             record["number_type"] = data.number_type;
             if (data.valid === true) {
@@ -16871,7 +16873,7 @@ class TidyContact {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.13.1";
+const AppVersion = "0.13.3";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
