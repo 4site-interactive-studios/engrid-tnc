@@ -24,12 +24,28 @@ export const customScript = function () {
       console.log("First field is NOT in the viewport! Add hover button");
       let floatingButton = document.createElement("div");
       floatingButton.id = "floating-button";
-      floatingButton.className = "arrow";
-      floatingButton.style.opacity = "0";
+      floatingButton.className = "arrow show";
       floatingButton.innerHTML =
         "<div class='en__submit'><a class='pseduo__en__submit_button' href='#firstElement'>Placeholder</a></div>";
       let advRow = document.querySelector(".en__component--advrow");
       advRow.append(floatingButton);
+      floatingButton
+        .querySelector(".pseduo__en__submit_button")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelector("#firstElement").scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        });
+      document.addEventListener("scroll", function (e) {
+        const button = document.querySelector("#floating-button");
+        if (window.scrollY < 100) {
+          button.classList.add("show");
+        } else {
+          button.classList.remove("show");
+        }
+      });
     }
   }
 
@@ -38,6 +54,7 @@ export const customScript = function () {
    */
   var dataCaptureTracking = function dataCaptureTracking() {
     if (pageJson.pageType === "otherdatacapture") {
+      const theForm = document.querySelector("form.en__component");
       theForm.addEventListener("submit", function (e) {
         setTimeout(function () {
           if (formIsValid() && typeof utag !== "undefined") {

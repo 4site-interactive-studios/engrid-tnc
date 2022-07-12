@@ -285,6 +285,7 @@
     display: inline-block;
     position: relative;
     left: 1ch;
+    text-decoration: none;
   }
 
   .arrow .en__submit button:hover:after {
@@ -373,12 +374,14 @@
 
   #floating-button {
     width: 100%;
-    transition: opacity 1s;
-    opacity: 1 !important;
     position: fixed;
-    bottom: 0;
+    bottom: -200px;
     z-index: 5;
     padding: var(--engrid__body_padding);
+    transition: bottom 500ms linear;
+    &.show {
+      bottom: 0;
+    }
 
     .en__submit {
       padding-bottom: 0;
