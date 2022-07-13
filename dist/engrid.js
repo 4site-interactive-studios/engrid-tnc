@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, July 12, 2022 @ 20:25:03 ET
+ *  Date: Tuesday, July 12, 2022 @ 21:35:32 ET
  *  By: fernando
  *  ENGrid styles: v0.13.0
- *  ENGrid scripts: v0.13.3
+ *  ENGrid scripts: v0.13.4
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -12927,6 +12927,7 @@ class iFrame {
   <figure class="media-with-attribution"><img src="https://via.placeholder.com/300x300" data-src="https://via.placeholder.com/300x300" data-attribution-source="Jane Doe 1"><figattribution class="attribution-bottomright">Jane Doe 1</figattribution></figure>
 */
 
+const tippy = (__webpack_require__(3861)/* ["default"] */ .ZP);
 class MediaAttribution {
     constructor() {
         // Find all images with attribution but not with the "data-attribution-hide-overlay" attribute
@@ -12956,6 +12957,18 @@ class MediaAttribution {
                     }
                     else {
                         mediaWithAttributionElement.insertAdjacentHTML("afterend", "<figattribution>" + attributionSource + "</figure>");
+                    }
+                    const attributionSourceTooltip = "attributionSourceTooltip" in mediaWithAttributionElement.dataset
+                        ? mediaWithAttributionElement.dataset.attributionSourceTooltip
+                        : false;
+                    if (attributionSourceTooltip) {
+                        tippy(".media-with-attribution figattribution", {
+                            content: attributionSourceTooltip,
+                            arrow: true,
+                            arrowType: "round",
+                            placement: "left",
+                            trigger: "mouseenter focus",
+                        });
                     }
                 }
             }
@@ -14699,7 +14712,7 @@ class ProgressBar {
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/remember-me.js
 
 
-const tippy = (__webpack_require__(3861)/* ["default"] */ .ZP);
+const remember_me_tippy = (__webpack_require__(3861)/* ["default"] */ .ZP);
 class RememberMe {
     constructor(options) {
         this._form = EnForm.getInstance();
@@ -14891,7 +14904,7 @@ class RememberMe {
                         }
                     });
                 }
-                tippy("#rememberme-learn-more-toggle", { content: rememberMeInfo });
+                remember_me_tippy("#rememberme-learn-more-toggle", { content: rememberMeInfo });
             }
         }
         else if (this.rememberMeOptIn) {
@@ -16873,7 +16886,7 @@ class TidyContact {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.13.3";
+const AppVersion = "0.13.4";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
