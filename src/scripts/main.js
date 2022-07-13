@@ -24,7 +24,7 @@ export const customScript = function () {
       console.log("First field is NOT in the viewport! Add hover button");
       let floatingButton = document.createElement("div");
       floatingButton.id = "floating-button";
-      floatingButton.className = "arrow show";
+      floatingButton.className = "arrow";
       floatingButton.innerHTML =
         "<div class='en__submit'><a class='pseduo__en__submit_button' href='#firstElement'>Placeholder</a></div>";
       let advRow = document.querySelector(".en__component--advrow");
@@ -46,6 +46,11 @@ export const customScript = function () {
           button.classList.remove("show");
         }
       });
+      window.setTimeout(() => {
+        if (window.scrollY < 100) {
+          floatingButton.classList.add("show");
+        }
+      }, 200);
     }
   }
 };

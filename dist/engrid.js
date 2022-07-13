@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, July 12, 2022 @ 21:35:32 ET
+ *  Date: Wednesday, July 13, 2022 @ 09:46:37 ET
  *  By: fernando
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.4
@@ -16958,7 +16958,7 @@ const customScript = function () {
       console.log("First field is NOT in the viewport! Add hover button");
       let floatingButton = document.createElement("div");
       floatingButton.id = "floating-button";
-      floatingButton.className = "arrow show";
+      floatingButton.className = "arrow";
       floatingButton.innerHTML = "<div class='en__submit'><a class='pseduo__en__submit_button' href='#firstElement'>Placeholder</a></div>";
       let advRow = document.querySelector(".en__component--advrow");
       advRow.append(floatingButton);
@@ -16978,6 +16978,11 @@ const customScript = function () {
           button.classList.remove("show");
         }
       });
+      window.setTimeout(() => {
+        if (window.scrollY < 100) {
+          floatingButton.classList.add("show");
+        }
+      }, 200);
     }
   }
 };
