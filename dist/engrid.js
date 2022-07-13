@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, July 13, 2022 @ 09:46:37 ET
+ *  Date: Wednesday, July 13, 2022 @ 10:34:57 ET
  *  By: fernando
  *  ENGrid styles: v0.13.0
- *  ENGrid scripts: v0.13.4
+ *  ENGrid scripts: v0.13.5
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -12965,9 +12965,10 @@ class MediaAttribution {
                         tippy(".media-with-attribution figattribution", {
                             content: attributionSourceTooltip,
                             arrow: true,
-                            arrowType: "round",
+                            arrowType: "default",
                             placement: "left",
-                            trigger: "mouseenter focus",
+                            trigger: "click mouseenter focus",
+                            interactive: true,
                         });
                     }
                 }
@@ -16886,7 +16887,7 @@ class TidyContact {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.13.4";
+const AppVersion = "0.13.5";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
