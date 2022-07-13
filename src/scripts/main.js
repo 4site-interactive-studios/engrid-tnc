@@ -48,27 +48,19 @@ export const customScript = function () {
       });
     }
   }
-
-  /**
-   * Track data capture submits
-   */
-  var dataCaptureTracking = function dataCaptureTracking() {
-    if (pageJson.pageType === "otherdatacapture") {
-      const theForm = document.querySelector("form.en__component");
-      theForm.addEventListener("submit", function (e) {
-        setTimeout(function () {
-          if (formIsValid() && typeof utag !== "undefined") {
-            utag.link({
-              event_name: "frm_emt_submit",
-              form_type: "otherdatacapture",
-              form_name: utag_data.page_name.slice(0, -2),
-              email_signup_location: "otherdatacapture",
-            });
-          }
-        }, 100);
+};
+/**
+ * Track data capture submits
+ */
+export const dataCaptureTracking = function () {
+  if (pageJson.pageType === "otherdatacapture") {
+    if (typeof utag !== "undefined") {
+      utag.link({
+        event_name: "frm_emt_submit",
+        form_type: "otherdatacapture",
+        form_name: utag_data.page_name.slice(0, -2),
+        email_signup_location: "otherdatacapture",
       });
     }
-  };
-
-  dataCaptureTracking();
+  }
 };

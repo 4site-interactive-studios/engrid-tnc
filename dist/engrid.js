@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, July 12, 2022 @ 18:52:01 ET
+ *  Date: Tuesday, July 12, 2022 @ 20:25:03 ET
  *  By: fernando
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.3
@@ -16967,30 +16967,22 @@ const customScript = function () {
       });
     }
   }
-  /**
-   * Track data capture submits
-   */
+};
+/**
+ * Track data capture submits
+ */
 
-
-  var dataCaptureTracking = function dataCaptureTracking() {
-    if (pageJson.pageType === "otherdatacapture") {
-      const theForm = document.querySelector("form.en__component");
-      theForm.addEventListener("submit", function (e) {
-        setTimeout(function () {
-          if (formIsValid() && typeof utag !== "undefined") {
-            utag.link({
-              event_name: "frm_emt_submit",
-              form_type: "otherdatacapture",
-              form_name: utag_data.page_name.slice(0, -2),
-              email_signup_location: "otherdatacapture"
-            });
-          }
-        }, 100);
+const dataCaptureTracking = function () {
+  if (pageJson.pageType === "otherdatacapture") {
+    if (typeof utag !== "undefined") {
+      utag.link({
+        event_name: "frm_emt_submit",
+        form_type: "otherdatacapture",
+        form_name: utag_data.page_name.slice(0, -2),
+        email_signup_location: "otherdatacapture"
       });
     }
-  };
-
-  dataCaptureTracking();
+  }
 };
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
@@ -17011,6 +17003,7 @@ const options = {
   ProgressBar: true,
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
   onLoad: () => customScript(),
+  onSubmit: () => dataCaptureTracking(),
   onResize: () => console.log("Starter Theme Window Resized")
 };
 new App(options);
