@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, July 13, 2022 @ 10:34:57 ET
+ *  Date: Wednesday, July 13, 2022 @ 21:31:51 ET
  *  By: fernando
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.5
@@ -7184,6 +7184,35 @@ body:not([data-engrid-debug]) #debug-bar{
     display:none;
   }
 }
+[data-engrid-theme=tnc]:not(#en__pagebuilder) .floating-button-label{
+  display:none;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .floating-button-label p{
+  -webkit-appearance:none;
+  background-color:var(--submit__button_background-color);
+  border:var(--button_border-width) solid var(--button_border-color);
+  border-color:var(--submit__button_border-color);
+  border-radius:var(--button_border-radius);
+  box-sizing:border-box;
+  color:var(--submit__button_color);
+  cursor:pointer;
+  display:block;
+  font-family:var(--button_font-family);
+  font-size:var(--submit__button_font-size);
+  font-weight:var(--button_font-weight);
+  line-height:var(--button_line-height);
+  margin:2rem 0 1rem;
+  max-width:var(--submit__button_max-width);
+  overflow:visible;
+  padding:var(--button_padding);
+  padding-bottom:var(--submit__button_padding-bottom);
+  padding-top:var(--submit__button_padding-top);
+  text-align:center;
+  text-transform:uppercase;
+  touch-action:manipulation;
+  transition:background-color .2s ease-out,color .2s ease-out,border-color .2s ease-out;
+  width:100%;
+}
 [data-engrid-theme=tnc] #floating-button{
   bottom:-200px;
   padding:var(--engrid__body_padding);
@@ -7201,6 +7230,9 @@ body:not([data-engrid-debug]) #debug-bar{
   padding-bottom:0;
   position:relative;
   top:-51px;
+}
+[data-engrid-theme=tnc] [data-tippy-root]{
+  max-width:calc(100vw - 72px);
 }
 @media screen and (max-width:1023px){
   [data-engrid-theme=tnc][data-engrid-layout=leftleft1col][data-replace-banner-with-background=if-banner-empty-or-background-video][data-engrid-body-banner=empty][data-engrid-page-background=image] .page-backgroundImage figure,[data-engrid-theme=tnc][data-engrid-layout=leftleft1col][data-replace-banner-with-background=if-banner-empty-or-background-video][data-engrid-page-background=video] .page-backgroundImage figure,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-replace-banner-with-background=if-banner-empty-or-background-video][data-engrid-body-banner=empty][data-engrid-page-background=image] .page-backgroundImage figure,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-replace-banner-with-background=if-banner-empty-or-background-video][data-engrid-page-background=video] .page-backgroundImage figure{

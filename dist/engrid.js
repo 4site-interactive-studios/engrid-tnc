@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, July 13, 2022 @ 10:34:57 ET
+ *  Date: Wednesday, July 13, 2022 @ 21:31:51 ET
  *  By: fernando
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.5
@@ -16957,11 +16957,13 @@ const customScript = function () {
       console.log("First field is in the viewport!");
     } else {
       console.log("First field is NOT in the viewport! Add hover button");
-      let floatingButton = document.createElement("div");
+      const floatingButton = document.createElement("div");
+      const floatingButtonLabelElement = document.querySelector(".floating-button-label");
+      const floatingButtonLabel = floatingButtonLabelElement.innerText ?? "Take Action";
       floatingButton.id = "floating-button";
       floatingButton.className = "arrow";
-      floatingButton.innerHTML = "<div class='en__submit'><a class='pseduo__en__submit_button' href='#firstElement'>Placeholder</a></div>";
-      let advRow = document.querySelector(".en__component--advrow");
+      floatingButton.innerHTML = `<div class='en__submit'><a class='pseduo__en__submit_button' href='#firstElement'>${floatingButtonLabel}</a></div>`;
+      const advRow = document.querySelector(".en__component--advrow");
       advRow.append(floatingButton);
       floatingButton.querySelector(".pseduo__en__submit_button").addEventListener("click", function (e) {
         e.preventDefault();

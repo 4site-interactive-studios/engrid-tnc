@@ -371,6 +371,41 @@
       display: none;
     }
   }
+  &:not(#en__pagebuilder) {
+    .floating-button-label {
+      display: none;
+    }
+  }
+  &#en__pagebuilder {
+    .floating-button-label p {
+      box-sizing: border-box;
+      overflow: visible;
+      touch-action: manipulation;
+      -webkit-appearance: none;
+      border: var(--button_border-width) solid var(--button_border-color);
+      border-radius: var(--button_border-radius);
+      display: block;
+      font-family: var(--button_font-family);
+      font-weight: var(--button_font-weight);
+      line-height: var(--button_line-height);
+      margin: 0 0 1rem;
+      padding: var(--button_padding);
+      text-align: center;
+      transition: background-color 0.2s ease-out, color 0.2s ease-out,
+        border-color 0.2s ease-out;
+      cursor: pointer;
+      background-color: var(--submit__button_background-color);
+      border-color: var(--submit__button_border-color);
+      color: var(--submit__button_color);
+      font-size: var(--submit__button_font-size);
+      margin-top: 2rem;
+      max-width: var(--submit__button_max-width);
+      padding-bottom: var(--submit__button_padding-bottom);
+      padding-top: var(--submit__button_padding-top);
+      width: 100%;
+      text-transform: uppercase;
+    }
+  }
 
   #floating-button {
     width: 100%;
@@ -391,6 +426,9 @@
       top: -51px;
       margin-bottom: -51px;
     }
+  }
+  [data-tippy-root] {
+    max-width: calc(100vw - 72px);
   }
 
   @media screen and (max-width: 1023px) {
