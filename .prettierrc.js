@@ -85,7 +85,7 @@ module.exports = {
    * trailingComma: "<es5|none|all>"
    * default: 'es5'
    */
-  trailingComma: 'es5',
+  trailingComma: "es5",
 
   /**
    * Bracket Spacing
@@ -118,7 +118,7 @@ module.exports = {
    * arrowParens: "<always|avoid>"
    * default: "always"
    */
-  arrowParens: 'always',
+  arrowParens: "always",
 
   /**
    * Range
