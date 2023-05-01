@@ -113,11 +113,11 @@
 
   // Example Breakpoints Stylings (See engrid-scripts > _engrid-breakpoints.scss for more breakpoints)
   &[data-engrid-layout] {
-    @include mq($until: mobile-l) {
+    @media (max-width: 425px) {
       @include until-mobile-l;
     }
 
-    @include mq($from: mobile-l) {
+    @media (min-width: 426px) {
       @include from-mobile-l;
     }
   }
