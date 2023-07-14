@@ -98,6 +98,7 @@
 }
 
 /* Add your custom theme styles here */
+//noinspection SassScssResolvedByNameOnly
 [data-engrid-theme="tnc"] {
   @mixin until-mobile-l {
     // STYLES
@@ -135,17 +136,17 @@
     }
   }
 
-  .page-alert,
-  .content-header,
-  .body-headerOutside,
-  .body-footer,
-  .body-footerOutside,
-  &#en__pagebuilder .content-footerSpacer,
-  .content-preFooter,
-  .content-footer,
-  .page-backgroundImageOverlay {
-    display: none !important;
-  }
+  //.page-alert,
+  //.content-header,
+  //.body-headerOutside,
+  //.body-footer,
+  //.body-footerOutside,
+  //&#en__pagebuilder .content-footerSpacer,
+  //.content-preFooter,
+  //.content-footer,
+  //.page-backgroundImageOverlay {
+  //  display: none !important;
+  //}
 
   @media screen and (max-width: 805px) {
     --engrid__body_padding: 0 10vw;
@@ -338,9 +339,8 @@
   //     visibility: visible;
   //   }
   // }
-  &[data-engrid-page-background="image"]
-    .page-backgroundImage
-    figure.media-with-attribution {
+
+  &[data-engrid-page-background="image"] .page-backgroundImage figure.media-with-attribution {
     background-position: 50%;
     left: 575px;
     right: 0;
@@ -388,7 +388,6 @@
       font-family: var(--button_font-family);
       font-weight: var(--button_font-weight);
       line-height: var(--button_line-height);
-      margin: 0 0 1rem;
       padding: var(--button_padding);
       text-align: center;
       transition: background-color 0.2s ease-out, color 0.2s ease-out,
@@ -398,7 +397,7 @@
       border-color: var(--submit__button_border-color);
       color: var(--submit__button_color);
       font-size: var(--submit__button_font-size);
-      margin-top: 2rem;
+      margin: 2rem 0 1rem;
       max-width: var(--submit__button_max-width);
       padding-bottom: var(--submit__button_padding-bottom);
       padding-top: var(--submit__button_padding-top);
@@ -420,7 +419,6 @@
 
     .en__submit {
       padding-bottom: 0;
-      margin-bottom: 0;
       border: none;
       position: relative;
       top: -51px;
@@ -432,35 +430,24 @@
   }
 
   @media screen and (max-width: 1023px) {
-    &[data-engrid-layout="leftleft1col"][data-replace-banner-with-background="if-banner-empty-or-background-video"][data-engrid-body-banner="empty"][data-engrid-page-background="image"]
-      .page-backgroundImage
-      figure,
-    &[data-engrid-layout="leftleft1col"][data-replace-banner-with-background="if-banner-empty-or-background-video"][data-engrid-page-background="video"]
-      .page-backgroundImage
-      figure,
-    &[data-engrid-layout="rightright1col"][data-replace-banner-with-background="if-banner-empty-or-background-video"][data-engrid-body-banner="empty"][data-engrid-page-background="image"]
-      .page-backgroundImage
-      figure,
-    &[data-engrid-layout="rightright1col"][data-replace-banner-with-background="if-banner-empty-or-background-video"][data-engrid-page-background="video"]
-      .page-backgroundImage
-      figure {
+    &[data-engrid-layout="leftleft1col"][data-replace-banner-with-background="if-banner-empty-or-background-video"][data-engrid-body-banner="empty"][data-engrid-page-background="image"] .page-backgroundImage figure,
+    &[data-engrid-layout="leftleft1col"][data-replace-banner-with-background="if-banner-empty-or-background-video"][data-engrid-page-background="video"] .page-backgroundImage figure,
+    &[data-engrid-layout="rightright1col"][data-replace-banner-with-background="if-banner-empty-or-background-video"][data-engrid-body-banner="empty"][data-engrid-page-background="image"] .page-backgroundImage figure,
+    &[data-engrid-layout="rightright1col"][data-replace-banner-with-background="if-banner-empty-or-background-video"][data-engrid-page-background="video"] .page-backgroundImage figure {
       position: static !important;
     }
 
-    &[data-engrid-no-body-banner]:not([data-engrid-no-page-backgroundimage])
-      .page-backgroundImage {
+    &[data-engrid-no-body-banner]:not([data-engrid-no-page-backgroundimage]) .page-backgroundImage {
       padding-bottom: 1rem;
     }
   }
 
-  &:not(#en__pagebuilder)
-    .click-to-expand:not(.expanded)
-    .click-to-expand-text-wrapper {
+  &:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-text-wrapper {
+    //noinspection CssInvalidFunction
     mask-image: linear-gradient(
       to bottom,
       black 15%,
-      rgba(255, 255, 255, 0)
-        calc(100% - var(--click-to-expand__cta-image_height))
+      rgba(255, 255, 255, 0) calc(100% - var(--click-to-expand__cta-image_height))
     );
   }
 
