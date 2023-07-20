@@ -3,10 +3,7 @@
 // All CSS Custom Properties should be scoped to the theme using CSS Data Attributes.
 [data-engrid-theme="tnc"] {
   // TYPOGRAPHY DEFAULT
-  --default_font-family: "Whitney A", "Whitney B", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
-    "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
+  --default_font-family: "Whitney A","Whitney B",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   --default_color: #1a1a1a;
   // --default_font-size: var(--root_font-size);
   // --default_font-weight: initial;
@@ -133,21 +130,6 @@
   &[data-engrid-layout="centerright1col"] {
     @media screen and (max-width: $centerright1col_content-column_min-width) {
       @include simplified-header;
-    }
-  }
-
-  &[data-engrid-layout="centercenter1col"] {
-    .body-title {
-      grid-column: pc-start / lbc-end;
-    }
-
-    .body-top {
-      grid-column: pc-start / lbc-end;
-    }
-
-    .body-banner {
-      grid-column: rbc-start / pc-end;
-      grid-row: body-title-start / body-top-end;
     }
   }
 
@@ -467,5 +449,244 @@
   // @TODO - Move to ENgrid
   &:not(#en__pagebuilder) .page-backgroundImage {
     z-index: auto;
+  }
+
+  // Layout for ENgrid migration
+  &[data-engrid-layout="centercenter1col"] {
+    --engrid__body_box-shadow: none;
+    --engrid__page_background-color: #ffffff;
+    --engrid__content_padding: 1.25rem;
+    --engrid__content-footerSpacer_padding: 0 1.25rem;
+    --engrid__body-title_background-color: #1b75bc;
+    --engrid__body-top_background-color: #1b75bc;
+    --engrid__body_padding: 0 1.25rem;
+    --engrid__body-title_padding: 40px 20px 0;
+    --engrid__body-top_padding: 0px 20px 40px;
+    --h1_font-size: 40px;
+    --h1_font-weight: bold;
+    --p_line-height: 1.5rem;
+
+    -webkit-font-smoothing: antialiased;
+
+    #engrid > .en__component--advrow,
+    form > .en__component--advrow {
+      //Adjust body-title and body-top rows to be a combined max 300px height to match banner image
+      grid-template-rows:
+          [page-start page-alert-start] min-content
+          [page-alert-end content-header-start] min-content
+          [content-header-end body-headerOutside-start] min-content
+          [body-headerOutside-end body-banner-start] min-content
+          [body-banner-end body-bannerOverlay-start] min-content
+          [body-bannerOverlay-end body-header-start] min-content
+          [body-header-end body-title-start] min(150px, 1fr)
+          [body-title-end body-top-start] min(150px, 1fr)
+          [body-top-end body-side-start] min-content
+          [body-side-end body-main-start] min-content
+          [body-main-end body-bottom-start] min-content
+          [body-bottom-end body-footer-start] min-content
+          [body-footer-end body-footerOutside-start] min-content
+          [body-footerOutside-end content-footerSpacer-start] minmax(0, 1fr)
+          [content-footerSpacer-end content-preFooter-start] min-content
+          [content-preFooter-end content-footer-start] min-content
+          [content-footer-end page-backgroundImage-start] min-content
+          [page-backgroundImage-end page-backgroundImageOverlay-start] min-content
+          [page-backgroundImageOverlay-end page-end page-customCode-start] min-content
+          [page-customCode-end];
+
+      @media screen and (min-width: 992px) {
+        // Don't collapse the layout until 991px (instead of $one_col_content-column_min-width)
+        grid-template-columns:
+          [pc-start lpc-start] minmax(0px, 1fr)
+          [lpc-end cc-start lcc-start] minmax(0px, $centercenter1col_body-column_offset-width)
+          [lcc-end bc-start lbc-start] minmax(calc($centercenter1col_body-column_min-width / 2), calc($centercenter1col_body-column_max-width / 2))
+          [lbc-end rbc-start] minmax(calc($centercenter1col_body-column_min-width / 2), calc($centercenter1col_body-column_max-width / 2))
+          [rbc-end bc-end rcc-start] minmax(0px, $centercenter1col_body-column_offset-width-remaining)
+          [rcc-end cc-end rpc-start] minmax(0px, 1fr)
+          [rpc-end pc-end];
+      }
+    }
+
+    .body-title {
+      --h1_color: #ffffff;
+      grid-column: pc-start / lbc-end;
+
+      h1 {
+        font-family: var(--default_font-family);
+        margin: 0 0 .5rem;
+      }
+
+      .en__component--copyblock {
+        max-width: 530px;
+        width: 100%;
+        margin: 0 auto;
+      }
+    }
+
+    .body-top {
+      color: #ffffff;
+      grid-column: pc-start / lbc-end;
+      display: flex;
+      align-items: flex-end;
+
+      .en__component--copyblock {
+        max-width: 530px;
+        width: 100%;
+        margin: 0 auto;
+      }
+    }
+
+    .body-banner {
+      grid-column: rbc-start / pc-end;
+      grid-row: body-title-start / body-top-end;
+      overflow: hidden;
+      @media screen and (max-width: 991px) {
+        display: none;
+      }
+      img {
+        min-height: 100%;
+        max-height: 300px;
+        object-fit: cover;
+      }
+    }
+
+    .content-preFooter {
+      grid-column: pc;
+    }
+
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .header-nav .nav-left {
+      max-width: 200px;
+      width: 36%;
+    }
+
+    .header-nav .nav-right {
+      display: flex;
+      align-items: center;
+      font-size: 1.25rem;
+      color: rgba(0,0,0,0.55);
+      font-family: var(--h1_font-family);
+      a {
+        border-left: 1px solid #cdcdcd;
+        margin-left: 1.875rem;
+        padding-left: 1.25rem;
+      }
+    }
+
+    .body-bottom-content {
+      > h2 {
+        margin: 0 0 .5rem;
+        padding: 1rem 0;
+        text-align: center;
+      }
+
+      padding: 0;
+      border-top: 5px solid #007931;
+      width: 100%;
+
+      .contact-us {
+        border-top: 1px solid #cdcdcd;
+        border-bottom: 1px solid #cdcdcd;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .contact {
+        &:first-of-type {
+          border-right: 1px solid #cdcdcd;
+        }
+        p {
+          margin: 0;
+        }
+        div:first-of-type {
+          margin-right: 20px;
+        }
+        flex: 0 0 50%;
+        display: flex;
+        justify-content: flex-start;
+        padding-left: 30px;
+      }
+    }
+
+    .link-dark {
+      color: #1a1a1a!important;
+      text-decoration: none;
+    }
+
+    .accreditation-images {
+      padding: 30px 0;
+      display: flex;
+      justify-content: center;
+      img {
+        margin: 0;
+      }
+    }
+
+    .accreditations {
+      text-align: center;
+    }
+
+    .pre-footer {
+      max-width: 1290px;
+      width: 100%;
+      margin: 0 auto;
+
+      h2 {
+        font-family: var(--default_font-family);
+        font-size: 2.5rem;
+        font-weight: bold;
+        text-align: center;
+      }
+    }
+
+    .pre-footer-items {
+      display: flex;
+      p {
+        margin: .5rem 0 0;
+        font-size: 1.25rem;
+        line-height: 30px;
+      }
+    }
+
+    .pre-footer-item-header {
+      font-family: var(--h1_font-family);
+      font-size: 60px;
+      img {
+        display: inline;
+        width: 40px;
+        height: auto;
+      }
+    }
+
+    .main-page-footer {
+      max-width: 1290px;
+      width: 100%;
+      margin: 0 auto;
+      border-top: 1px solid #cdcdcd;
+      padding: 2rem 0 6.625rem;
+    }
+
+    .main-page-footer div {
+      display: flex;
+      flex-direction: column;
+      width: 83.33%;
+      font-weight: 500;
+      margin: 0 auto;
+      line-height: 1.5rem;
+
+      p {
+        margin: 0 0 1rem;
+      }
+
+      a {
+        font-weight: bold;
+        text-decoration: none;
+      }
+    }
   }
 }
