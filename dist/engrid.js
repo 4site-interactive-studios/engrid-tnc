@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, July 20, 2023 @ 12:50:20 ET
+ *  Date: Friday, July 21, 2023 @ 13:03:41 ET
  *  By: michael
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.5
@@ -17550,7 +17550,7 @@ const AppVersion = "0.14.12";
 
 
 ;// CONCATENATED MODULE: ./src/scripts/main.js
-const customScript = function () {
+const customScript = function (App) {
   console.log("ENGrid client scripts are executing"); // Add your client scripts here
 
   var checkForServerError = document.querySelector(".en__errorList *");
@@ -17570,7 +17570,7 @@ const customScript = function () {
       console.log("First field is NOT in the viewport! Add hover button");
       const floatingButton = document.createElement("div");
       const floatingButtonLabelElement = document.querySelector(".floating-button-label");
-      const floatingButtonLabel = floatingButtonLabelElement.innerText ?? "Take Action";
+      const floatingButtonLabel = (floatingButtonLabelElement === null || floatingButtonLabelElement === void 0 ? void 0 : floatingButtonLabelElement.innerText) ?? "Take Action";
       floatingButton.id = "floating-button";
       floatingButton.className = "arrow";
       floatingButton.innerHTML = `<div class='en__submit'><a class='pseduo__en__submit_button' href='#firstElement'>${floatingButtonLabel}</a></div>`;
@@ -17598,7 +17598,18 @@ const customScript = function () {
         }
       }, 200);
     }
+  } //ENgrid transition scripts
+
+
+  let inlineMonthlyUpsell = document.querySelector(".move-after--transaction-recurrfreq");
+  let recurrFrequencyField = document.querySelector(".en__field--recurrfreq");
+
+  if (inlineMonthlyUpsell && recurrFrequencyField) {
+    recurrFrequencyField.insertAdjacentElement("beforeend", inlineMonthlyUpsell);
   }
+
+  App.addHtml('<div class="en__field__notice">You\'ll receive email updates from The Nature Conservancy. You can unsubscribe at any time.</div>', '[name="supporter.emailAddress"]', "after");
+  App.addHtml('<div class="en__field__notice">By sharing your phone number, you give The Nature Conservancy permission to contact you with updates via phone and text.</div>', '[name="supporter.phoneNumber2"]', "after");
 };
 /**
  * Track data capture submits
@@ -17634,7 +17645,7 @@ const options = {
   SrcDefer: true,
   ProgressBar: true,
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
-  onLoad: () => customScript(),
+  onLoad: () => customScript(App),
   onSubmit: () => dataCaptureTracking(),
   onResize: () => console.log("Starter Theme Window Resized")
 };

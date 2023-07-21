@@ -16,7 +16,7 @@ const options: Options = {
   SrcDefer: true,
   ProgressBar: true,
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
-  onLoad: () => customScript(),
+  onLoad: () => customScript(App),
   onSubmit: () => dataCaptureTracking(),
   onResize: () => console.log("Starter Theme Window Resized"),
 };

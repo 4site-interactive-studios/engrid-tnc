@@ -453,10 +453,16 @@
 
   // Layout for ENgrid migration
   &[data-engrid-layout="centercenter1col"] {
+    --color-green: #007931;
+    --color-white: #ffffff;
+    --color-gray: #949494;
     --engrid__body_box-shadow: none;
-    --engrid__page_background-color: #ffffff;
+    --engrid__page_background-color: var(--color-white);
     --engrid__content_padding: 1.25rem;
     --engrid__content-footerSpacer_padding: 0 1.25rem;
+    --engrid__content-header_background-color: var(--color-white);
+    --engrid__content-preFooter_background-color: var(--color-white);
+    --engrid__content-footer_background-color: var(--color-white);
     --engrid__body-title_background-color: #1b75bc;
     --engrid__body-top_background-color: #1b75bc;
     --engrid__body_padding: 0 1.25rem;
@@ -465,6 +471,31 @@
     --h1_font-size: 40px;
     --h1_font-weight: bold;
     --p_line-height: 1.5rem;
+    --button_color: var(--color-green);
+    --button_font-size: 1rem;
+    --button_font-weight: bold;
+    --button_background-color: var(--color-white);
+    --button_border-width: 1px;
+    --button_border-color: var(--color-gray);
+    --button_border-radius: 0px;
+    --button_padding: 1.25rem .25rem;
+    --button_line-height: 1.1rem;
+    // BUTTON:HOVER
+    --button_color_hover: var(--color-white);
+    --button_background-color_hover: var(--color-green);
+    --button_border-color_hover: var(--color-green);
+    // BUTTON:SELECTED
+    --button_color_checked: var(--color-white);
+    --button_background-color_checked: var(--color-green);
+    --button_border-color_checked: var(--color-green);
+    // DONATION PAGE
+    --give-monthly-donation-amount-appended-label: "/MONTH";
+    --recurring-frequency__button_count: 2;
+    --donation-amount__button_count: 6;
+    --give-by-select__button_count: 4;
+    // Input
+    --input_padding: 1rem 1.25rem;
+
 
     -webkit-font-smoothing: antialiased;
 
@@ -687,6 +718,99 @@
         font-weight: bold;
         text-decoration: none;
       }
+    }
+
+    .form-heading {
+      margin-top: 4.75rem;
+
+      h3 {
+        font-family: var(--default_font-family);
+        font-size: 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        border-bottom: 1px solid #cdcdcd;
+        color: #007931;
+        padding-bottom: 1rem;
+        margin: 0 0 1.25rem;
+      }
+    }
+
+
+    .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:after {
+      font-size: 100%;
+      opacity: 1;
+    }
+
+    .radio-to-buttons_donationAmt .en__field__item.en__field__item--other {
+      --input_padding: 1rem 1.25rem 1rem 2.83rem;
+      flex-basis: 50%;
+      margin-right: auto;
+      margin-top: 10px;
+      position: relative;
+
+      &:before {
+        color: #707070;
+        content: "$";
+        left: 1.5rem;
+        position: absolute;
+        top: 1.3rem;
+        transition: all .2s ease-in-out;
+        z-index: 1;
+      }
+    }
+
+    .radio-to-buttons_donationAmt .en__field--withOther--active .en__field__item.en__field__item--other {
+      --donation-amount__button_background-color_checked: var(--color-white);
+      --donation-amount__button_border-color_checked: var(--color-gray);
+      --donation-amount__button_color_checked: #1a1a1a;
+
+      &:before {
+        color: #1a1a1a;
+      }
+    }
+
+    .radio-to-buttons_donationAmt .en__field--donationAmt > label {
+      font-weight: bold;
+      margin: 10px 0;
+      &:before {
+        content: '';
+        margin-right: 0;
+      }
+    }
+
+    .donation-nudge {
+      display: flex;
+      max-width: 300px;
+      color: #1b75bc;
+      margin-top: 16px;
+
+      p:first-of-type {
+        font-size: 20px;
+        line-height: 24px;
+        margin-right: 10px;
+        font-family: Kalam,cursive;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      img {
+        width: 49px;
+        height: 36px;
+        max-width: 49px;
+      }
+    }
+
+    .en__field__notice {
+      font-size: 14px;
+      color: #1a1a1a;
+      line-height: 24px;
+      margin-top: -4px;
+    }
+
+    .en__field--give-by-select .en__field__element {
+      justify-content: flex-start;
     }
   }
 }

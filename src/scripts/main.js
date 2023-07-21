@@ -1,4 +1,4 @@
-export const customScript = function () {
+export const customScript = function (App) {
   console.log("ENGrid client scripts are executing");
   // Add your client scripts here
 
@@ -27,7 +27,7 @@ export const customScript = function () {
         ".floating-button-label"
       );
       const floatingButtonLabel =
-        floatingButtonLabelElement.innerText ?? "Take Action";
+        floatingButtonLabelElement?.innerText ?? "Take Action";
       floatingButton.id = "floating-button";
       floatingButton.className = "arrow";
       floatingButton.innerHTML = `<div class='en__submit'><a class='pseduo__en__submit_button' href='#firstElement'>${floatingButtonLabel}</a></div>`;
@@ -57,6 +57,30 @@ export const customScript = function () {
       }, 200);
     }
   }
+
+  //ENgrid transition scripts
+  let inlineMonthlyUpsell = document.querySelector(
+    ".move-after--transaction-recurrfreq"
+  );
+  let recurrFrequencyField = document.querySelector(".en__field--recurrfreq");
+  if (inlineMonthlyUpsell && recurrFrequencyField) {
+    recurrFrequencyField.insertAdjacentElement(
+      "beforeend",
+      inlineMonthlyUpsell
+    );
+  }
+
+  App.addHtml(
+    '<div class="en__field__notice">You\'ll receive email updates from The Nature Conservancy. You can unsubscribe at any time.</div>',
+    '[name="supporter.emailAddress"]',
+    "after"
+  );
+
+  App.addHtml(
+    '<div class="en__field__notice">By sharing your phone number, you give The Nature Conservancy permission to contact you with updates via phone and text.</div>',
+    '[name="supporter.phoneNumber2"]',
+    "after"
+  );
 };
 /**
  * Track data capture submits
