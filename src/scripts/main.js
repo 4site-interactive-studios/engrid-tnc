@@ -1,7 +1,8 @@
+const tippy = require("tippy.js").default;
+
 export const customScript = function (App) {
   console.log("ENGrid client scripts are executing");
   // Add your client scripts here
-
   var checkForServerError = document.querySelector(".en__errorList *");
   if (checkForServerError) {
     console.log("Has server error!");
@@ -81,7 +82,47 @@ export const customScript = function (App) {
     '[name="supporter.phoneNumber2"]',
     "after"
   );
+
+  function addTooltip(labelElement, fieldName, labelText, tooltipText) {
+    if (!labelElement) {
+      return;
+    }
+    let link = document.createElement("a");
+    link.href = "#";
+    link.id = fieldName + "-tooltip";
+    link.className = fieldName + "-tooltip tippy-label";
+    link.tabIndex = -1;
+    link.innerText = labelText;
+    link.addEventListener("click", (e) => e.preventDefault());
+    labelElement.insertAdjacentElement("afterend", link);
+
+    let wrapper = document.createElement("span");
+    wrapper.className = "label-wrapper";
+    labelElement.parentNode.insertBefore(wrapper, labelElement);
+    wrapper.appendChild(labelElement);
+    wrapper.appendChild(link);
+
+    tippy("#" + fieldName + "-tooltip", {
+      content: tooltipText,
+      theme: "light-border",
+    });
+  }
+
+  addTooltip(
+    document.querySelector(".en__field--ccvv > label"),
+    "cvv",
+    "What is a CVV number?",
+    "The CVV is a 3- or 4-digit code printed on your credit card. It's a fraud-prevention measure designed to make it harder to use info stolen in a data breach."
+  );
+
+  addTooltip(
+    document.querySelector(".en__field--bankRoutingNumber > label"),
+    "bankNumber",
+    "What is this?",
+    "Your routing number is the 9-digit number at the bottom left of your check."
+  );
 };
+
 /**
  * Track data capture submits
  */

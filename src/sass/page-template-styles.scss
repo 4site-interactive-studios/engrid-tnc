@@ -456,6 +456,7 @@
     --color-green: #007931;
     --color-white: #ffffff;
     --color-gray: #949494;
+    --color-orange: #c85c19;
     --engrid__body_box-shadow: none;
     --engrid__page_background-color: var(--color-white);
     --engrid__content_padding: 1.25rem;
@@ -493,11 +494,50 @@
     --recurring-frequency__button_count: 2;
     --donation-amount__button_count: 6;
     --give-by-select__button_count: 4;
+    --give-by-select__button_font-size: 14px;
+    --give-by-select__button_padding: 9px 5px;
+    --give-by-select__button_background-color_hover: #ffffff;
+    --give-by-select__button_color_hover: var(--color-green);
     // Input
     --input_padding: 1rem 1.25rem;
+    // Submit button
+    --submit__button_color: #ffffff;
+    --submit__button_color_hover: #ffffff;
+    --submit__button_text-transform: uppercase;
+    --submit__button_background-color: var(--color-orange);
+    --submit__button_background-color_hover: #000000;
+    --submit__button_border-color: var(--color-orange);
+    --submit__button_border-color_hover: #000000;
 
 
     -webkit-font-smoothing: antialiased;
+
+    .tippy-box[data-theme="light-border"] {
+      background-color: #ffffff;
+      color: #1a1a1a;
+      border-radius: 0;
+      padding: 15px;
+      border: 1px solid #979797;
+      font-size: 1rem;
+      line-height: 1.5rem;
+      box-shadow: none;
+
+      &[data-placement^="top"] .tippy-arrow:after {
+        border-top-color: #6f6f6f;
+      }
+
+      &[data-placement^="bottom"] .tippy-arrow:after {
+        border-bottom-color: #6f6f6f;
+      }
+
+      &[data-placement^="left"] .tippy-arrow:after {
+        border-left-color: #6f6f6f;
+      }
+
+      &[data-placement^="right"] .tippy-arrow:after {
+        border-right-color: #6f6f6f;
+      }
+    }
 
     #engrid > .en__component--advrow,
     form > .en__component--advrow {
@@ -735,6 +775,13 @@
       }
     }
 
+    .en__field--recurrfreq.en__field .en__field__element.en__field__element--radio .en__field__item {
+      padding-left: 0;
+      padding-right: 0;
+      label {
+        outline: none;
+      }
+    }
 
     .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:after {
       font-size: 100%;
@@ -811,6 +858,69 @@
 
     .en__field--give-by-select .en__field__element {
       justify-content: flex-start;
+    }
+
+    .en__submit {
+      border-bottom: none;
+      padding-bottom: 64px;
+      margin-bottom: 0;
+      button {
+        width: auto;
+        padding: 1.3rem 2.8rem;
+      }
+    }
+
+    .give-by-select {
+      padding-top: 75px;
+      margin-bottom: 20px;
+      .en__field__item label {
+        position: relative;
+        outline: none;
+        &:after {
+          content: '';
+          background-color: var(--give-by-select__button_background-color);
+          position: absolute;
+          display: block;
+          top: calc(-75px - var(--give-by-select__button_border-width));
+          width: 100%;
+          height: 75px;
+          background-repeat: no-repeat;
+          background-position: center;
+          outline: var(--give-by-select__button_border-width) solid var(--give-by-select__button_border-color);
+
+        }
+        &[for="en__field_transaction_giveBySelect1"] {
+          &:after {
+            background-image: url('https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Icon_CCs.png');
+            background-size: 90%;
+          }
+        }
+        &[for="en__field_transaction_giveBySelect2"] {
+          &:after {
+            background-image: url('https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Icon_E-Check.svg');
+          }
+        }
+        &[for="en__field_transaction_giveBySelect3"] {
+          &:after {
+            background-image: url('https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/PayPal_logo.svg');
+          }
+        }
+      }
+
+      .en__field__item input:checked + label:after {
+        border: 4px solid var(--give-by-select__button_background-color_checked);
+        border-bottom: none;
+      }
+    }
+
+    .tippy-label {
+      font-weight: bold;
+      text-decoration-color: var(--a_color);
+      &:hover,
+      &:active,
+      &:focus {
+        color: var(--a_color);
+      }
     }
   }
 }

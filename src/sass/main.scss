@@ -1,5 +1,6 @@
 /* CLIENT THEME SASS VARIABLES, MUST COME BEFORE ENGRID ASSETS */
 @import "./page-template-variables";
+@import "tippy.js/themes/light-border.css";
 
 /* ENGRID ASSETS */
 //@import "@4site/engrid-styles"; // Uses ENGrid via NPM
