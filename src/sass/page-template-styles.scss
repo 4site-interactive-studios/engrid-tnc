@@ -457,6 +457,7 @@
     --color-white: #ffffff;
     --color-gray: #949494;
     --color-orange: #c85c19;
+    --error__color: #c5351c;
     --engrid__body_box-shadow: none;
     --engrid__page_background-color: var(--color-white);
     --engrid__content_padding: 1.25rem;
@@ -508,9 +509,20 @@
     --submit__button_background-color_hover: #000000;
     --submit__button_border-color: var(--color-orange);
     --submit__button_border-color_hover: #000000;
+    // Checkbox / Radio
+    --checkbox_background-color_checked: #000000;
+    --checkbox_color_checked: #ffffff;
 
 
     -webkit-font-smoothing: antialiased;
+
+    input[type=checkbox] + label {
+      align-items: flex-start;
+      &:before {
+        font-weight: bold;
+        margin-top: 2px;
+      }
+    }
 
     .tippy-box[data-theme="light-border"] {
       background-color: #ffffff;
@@ -920,6 +932,90 @@
       &:active,
       &:focus {
         color: var(--a_color);
+      }
+    }
+
+    &:not([data-engrid-premium-donation="active"]) {
+      .showif--premium-donation--active {
+        display: none;
+      }
+    }
+
+    .engrid-premium-container {
+      margin-top: 20px;
+      border: 1px solid #cdcdcd;
+      display: grid;
+      grid-template-areas:
+        "image text"
+        "image form";
+      grid-column-gap: 20px;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      justify-content: center;
+
+      @media (max-width: 600px) {
+        grid-template-areas:
+          "image"
+          "text"
+          "form";
+
+        grid-template-columns: 100%;
+      }
+
+      > img {
+        grid-area: image;
+      }
+
+      .en__component--copyblock {
+        grid-area: text;
+        align-self: flex-end;
+        padding-right: 20px;
+
+        @media (max-width: 600px) {
+          padding: 0 15px;
+        }
+      }
+
+      .en__component--formblock {
+        grid-area: form;
+        align-self: flex-start;
+        padding-right: 20px;
+
+        @media (max-width: 600px) {
+          padding: 0 15px;
+        }
+      }
+    }
+
+    .body-banner .media-with-attribution {
+      figattribution {
+        --media-attribution__background-color: #ffffff;
+        --media-attribution__color: #000000;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999999;
+        cursor: pointer;
+      }
+
+      [data-tippy-root] {
+        inset: 0 !important;
+        transform: none !important;
+        bottom: 0 !important;
+        width: 100% !important;
+
+        .tippy-box {
+          max-width: 100% !important;
+          width: 100%;
+          position: absolute;
+          padding: 20px 10% 20px 20px;
+          background-color: rgba(0, 0, 0, 0.75);
+          font-size: 14px;
+          bottom: 0;
+        }
+
+        .tippy-arrow {
+          display: none;
+        }
       }
     }
   }

@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, July 27, 2023 @ 12:56:04 ET
+ *  Date: Friday, July 28, 2023 @ 12:50:46 ET
  *  By: michael
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.5
@@ -22000,7 +22000,9 @@ const AppVersion = "0.14.12";
 ;// CONCATENATED MODULE: ./src/scripts/main.js
 const main_tippy = (__webpack_require__(3861)/* ["default"] */ .ZP);
 
-const customScript = function (App) {
+const customScript = function (App, DonationFrequency, DonationAmount) {
+  var _document$querySelect;
+
   console.log("ENGrid client scripts are executing"); // Add your client scripts here
 
   var checkForServerError = document.querySelector(".en__errorList *");
@@ -22048,7 +22050,10 @@ const customScript = function (App) {
         }
       }, 200);
     }
-  } //ENgrid transition scripts
+  } ////////////////////////////////////////////
+  // START ENGRID TRANSITION SCRIPTS
+  ////////////////////////////////////////////
+  // Position monthly upsell after the recurring frequency field
 
 
   let inlineMonthlyUpsell = document.querySelector(".move-after--transaction-recurrfreq");
@@ -22056,10 +22061,19 @@ const customScript = function (App) {
 
   if (inlineMonthlyUpsell && recurrFrequencyField) {
     recurrFrequencyField.insertAdjacentElement("beforeend", inlineMonthlyUpsell);
-  }
+  } // Add a notice to the email field
 
-  App.addHtml('<div class="en__field__notice">You\'ll receive email updates from The Nature Conservancy. You can unsubscribe at any time.</div>', '[name="supporter.emailAddress"]', "after");
+
+  App.addHtml('<div class="en__field__notice">You\'ll receive email updates from The Nature Conservancy. You can unsubscribe at any time.</div>', '[name="supporter.emailAddress"]', "after"); // Add a notice to the phone number field
+
   App.addHtml('<div class="en__field__notice">By sharing your phone number, you give The Nature Conservancy permission to contact you with updates via phone and text.</div>', '[name="supporter.phoneNumber2"]', "after");
+  /**
+   * Add a Tippy tooltip to a field
+   * @param {HTMLElement} labelElement
+   * @param {string} fieldName
+   * @param {string} labelText
+   * @param {string} tooltipText
+   */
 
   function addTooltip(labelElement, fieldName, labelText, tooltipText) {
     if (!labelElement) {
@@ -22083,10 +22097,79 @@ const customScript = function (App) {
       content: tooltipText,
       theme: "light-border"
     });
-  }
+  } // Add a tooltip for the CVV number
 
-  addTooltip(document.querySelector(".en__field--ccvv > label"), "cvv", "What is a CVV number?", "The CVV is a 3- or 4-digit code printed on your credit card. It's a fraud-prevention measure designed to make it harder to use info stolen in a data breach.");
+
+  addTooltip(document.querySelector(".en__field--ccvv > label"), "cvv", "What is a CVV number?", "The CVV is a 3- or 4-digit code printed on your credit card. It's a fraud-prevention measure designed to make it harder to use info stolen in a data breach."); // Add a tooltip for the bank routing number
+
   addTooltip(document.querySelector(".en__field--bankRoutingNumber > label"), "bankNumber", "What is this?", "Your routing number is the 9-digit number at the bottom left of your check.");
+  /**
+   * Set the visibility of the premium field based on the donation frequency and amount
+   * Visibility is set by adding/removing the "engrid-premium-donation" data attr on the body
+   * @param {string} frequency
+   * @param {number} amount
+   */
+
+  function setPremiumVisibility(frequency, amount) {
+    const monthlyPremiumMinimum = window.donationSettings.monthlyPremiumMinimum;
+    const onetimePremiumMinimum = window.donationSettings.onetimePremiumMinimum;
+
+    if (!monthlyPremiumMinimum || !onetimePremiumMinimum) {
+      return;
+    }
+
+    const monthlyPremiumField = App.getField("supporter.questions.1362488");
+    const premiumVisibleField = App.getField("supporter.questions.1366068");
+
+    if (frequency === "monthly" && amount >= monthlyPremiumMinimum) {
+      App.setBodyData("premium-donation", "active");
+      monthlyPremiumField.checked = true;
+      premiumVisibleField.checked = true;
+      App.enParseDependencies();
+    } else if (frequency === "onetime" && amount >= onetimePremiumMinimum) {
+      App.setBodyData("premium-donation", "active");
+      monthlyPremiumField.checked = false;
+      premiumVisibleField.checked = true;
+      App.enParseDependencies();
+    } else {
+      App.setBodyData("premium-donation", "inactive");
+      monthlyPremiumField.checked = false;
+      premiumVisibleField.checked = false;
+      App.enParseDependencies();
+    }
+  } // Listen for changes to the donation frequency and amount
+
+
+  const freq = DonationFrequency.getInstance();
+  const amt = DonationAmount.getInstance();
+  freq.onFrequencyChange.subscribe(frequency => {
+    setPremiumVisibility(frequency, amt.amount);
+  });
+  amt.onAmountChange.subscribe(amount => {
+    setPremiumVisibility(freq.frequency, amount);
+  }); // Move Premium donation elements into their container
+
+  let premiumDonationEls = document.querySelectorAll(".move-into--engrid-premium-container");
+  let premiumDonationContainer = document.querySelector(".engrid-premium-container");
+
+  if (premiumDonationEls.length > 0 && premiumDonationContainer) {
+    premiumDonationEls.forEach(el => {
+      premiumDonationContainer.appendChild(el);
+    });
+  } // Make body-banner attribution clickable
+
+
+  const bbTippy = (_document$querySelect = document.querySelector(".body-banner figattribution")) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect._tippy;
+
+  if (bbTippy) {
+    bbTippy.setProps({
+      arrow: false,
+      trigger: "click"
+    });
+  } ////////////////////////////////////////////
+  // END ENGRID TRANSITION SCRIPTS
+  ////////////////////////////////////////////
+
 };
 /**
  * Track data capture submits
@@ -22110,6 +22193,7 @@ const dataCaptureTracking = function () {
 
 
 
+const minimumAmount = window.donationSettings.minimumDonationAmount ?? 5;
 const options = {
   applePay: false,
   CapitalizeFields: true,
@@ -22121,8 +22205,11 @@ const options = {
   SkipToMainContentLink: true,
   SrcDefer: true,
   ProgressBar: true,
-  Debug: App.getUrlParameter("debug") == "true" ? true : false,
-  onLoad: () => customScript(App),
+  Debug: App.getUrlParameter("debug") == "true",
+  MinAmount: minimumAmount,
+  MaxAmount: 50000,
+  MinAmountMessage: `Your donation must be between $${minimumAmount} and $50,000`,
+  onLoad: () => customScript(App, DonationFrequency, DonationAmount),
   onSubmit: () => dataCaptureTracking(),
   onResize: () => console.log("Starter Theme Window Resized")
 };
