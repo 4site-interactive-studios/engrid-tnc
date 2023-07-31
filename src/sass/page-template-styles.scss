@@ -524,6 +524,10 @@
       }
     }
 
+    #floating-button {
+      display: none;
+    }
+
     .tippy-box[data-theme="light-border"] {
       background-color: #ffffff;
       color: #1a1a1a;
@@ -960,6 +964,9 @@
           "form";
 
         grid-template-columns: 100%;
+        margin: 0 -20px;
+        border-style: solid none;
+        border-width: 3px;
       }
 
       > img {
@@ -973,6 +980,15 @@
 
         @media (max-width: 600px) {
           padding: 0 15px;
+        }
+
+        > h4,
+        > h4 span {
+          font-size: 25px!important;
+        }
+
+        > p {
+          margin-top: 0;
         }
       }
 
@@ -1016,6 +1032,121 @@
         .tippy-arrow {
           display: none;
         }
+      }
+    }
+
+    // Mobile styles
+    @media screen and (max-width: 600px) {
+      --engrid__content-header_padding: 5px 20px;
+      --engrid__body-title_padding: 30px 14px 0;
+      --engrid__body-top_padding: 0 14px 30px;
+      --h1_font-size: 30px;
+      --donation-amount__button_count: 2;
+      --give-by-select__button_count: 3;
+      --engrid__body_padding: 0 14px;
+      --engrid__content_padding: 0 14px;
+      --engrid__body-bottom_padding: 0;
+      --engrid__content-preFooter_padding: 0;
+      --engrid__content-footer_padding: 0;
+
+
+
+      .header-nav {
+        align-items: center;
+
+        .nav-right {
+          span {
+            display: none;
+          }
+
+          a {
+            border-left: none;
+            margin-left: 0;
+            padding-left: 0;
+          }
+        }
+      }
+
+      .form-heading {
+        margin-top: 45px;
+      }
+
+      .radio-to-buttons_donationAmt .en__field__item.en__field__item--other {
+        flex-basis: 100%;
+        margin-top: 0;
+      }
+
+
+      .give-by-select {
+        padding-top: 0;
+        margin-bottom: 0;
+      }
+
+      .give-by-select .en__field--radio.en__field--give-by-select {
+        .en__field__element--radio {
+          margin: 0;
+        }
+
+        .en__field__item {
+          padding-left: 0;
+          padding-right: 0;
+          label {
+            padding-left: 0;
+            padding-right: 0;
+          }
+          label:after {
+            display: none;
+          }
+        }
+      }
+
+      .body-bottom-content {
+        .contact-us {
+          flex-direction: column;
+          padding: 0;
+        }
+
+        .contact:first-of-type {
+          border-right: none;
+          border-bottom: 1px solid #cdcdcd;
+        }
+
+        .contact {
+          padding: 30px 14px;
+        }
+
+        .accreditations {
+          border-bottom: 1px solid #cdcdcd;
+          padding: 0 14px 14px;
+        }
+      }
+
+      .pre-footer {
+        > h2 {
+          padding: 0 14px;
+          font-weight: normal;
+          text-align: left;
+          font-size: 30px;
+        }
+
+        .pre-footer-items {
+          flex-direction: column;
+          padding: 0 14px;
+
+          > div {
+            margin-bottom: 15px;
+          }
+        }
+
+        .pre-footer-item-header + p {
+          margin-top: 0;
+        }
+      }
+
+      .main-page-footer > div {
+        width: 100%;
+        margin: 0;
+        padding: 0 20px;
       }
     }
   }
