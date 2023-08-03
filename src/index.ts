@@ -19,7 +19,7 @@ declare global {
   }
 }
 
-const minimumAmount = window.donationSettings.minimumDonationAmount ?? 5;
+const minimumAmount = window?.donationSettings?.minimumDonationAmount ?? 5;
 
 const options: Options = {
   applePay: false,

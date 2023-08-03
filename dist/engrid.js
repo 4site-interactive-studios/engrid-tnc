@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 31, 2023 @ 12:33:14 ET
+ *  Date: Thursday, August 3, 2023 @ 11:07:57 ET
  *  By: michael
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.5
@@ -22166,6 +22166,11 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
       arrow: false,
       trigger: "click"
     });
+  } // Add data-thank-you attribute to body of final page
+
+
+  if (pageJson && pageJson.pageNumber === pageJson.pageCount) {
+    App.setBodyData("thank-you", "true");
   } ////////////////////////////////////////////
   // END ENGRID TRANSITION SCRIPTS
   ////////////////////////////////////////////
@@ -22188,12 +22193,14 @@ const dataCaptureTracking = function () {
   }
 };
 ;// CONCATENATED MODULE: ./src/index.ts
+var _window, _window$donationSetti;
+
 // import { Options, App } from "@4site/engrid-common"; // Uses ENGrid via NPM
  // Uses ENGrid via Visual Studio Workspace
 
 
 
-const minimumAmount = window.donationSettings.minimumDonationAmount ?? 5;
+const minimumAmount = ((_window = window) === null || _window === void 0 ? void 0 : (_window$donationSetti = _window.donationSettings) === null || _window$donationSetti === void 0 ? void 0 : _window$donationSetti.minimumDonationAmount) ?? 5;
 const options = {
   applePay: false,
   CapitalizeFields: true,

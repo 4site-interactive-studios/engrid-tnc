@@ -205,6 +205,11 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     });
   }
 
+  // Add data-thank-you attribute to body of final page
+  if (pageJson && pageJson.pageNumber === pageJson.pageCount) {
+    App.setBodyData("thank-you", "true");
+  }
+
   ////////////////////////////////////////////
   // END ENGRID TRANSITION SCRIPTS
   ////////////////////////////////////////////
