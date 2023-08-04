@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, August 4, 2023 @ 12:14:30 ET
+ *  Date: Friday, August 4, 2023 @ 12:22:26 ET
  *  By: michael
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.5
@@ -22219,6 +22219,7 @@ const options = {
   MinAmount: minimumAmount,
   MaxAmount: 50000,
   MinAmountMessage: `Your donation must be between $${minimumAmount} and $50,000`,
+  PageLayouts: ["centercenter1col"],
   onLoad: () => customScript(App, DonationFrequency, DonationAmount),
   onSubmit: () => dataCaptureTracking(),
   onResize: () => console.log("Starter Theme Window Resized")
