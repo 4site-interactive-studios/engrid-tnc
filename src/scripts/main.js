@@ -11,51 +11,53 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
 
     // Check if the first field is in the viewport
     let firstElement = document.querySelector(".en__component--formblock");
-    firstElement.id = "firstElement";
-    let bounding = firstElement.getBoundingClientRect();
+    if (firstElement) {
+      firstElement.id = "firstElement";
+      let bounding = firstElement.getBoundingClientRect();
 
-    if (
-      bounding.top >= 0 &&
-      bounding.left >= 0 &&
-      bounding.right <= window.innerWidth &&
-      bounding.bottom <= window.innerHeight
-    ) {
-      console.log("First field is in the viewport!");
-    } else {
-      console.log("First field is NOT in the viewport! Add hover button");
-      const floatingButton = document.createElement("div");
-      const floatingButtonLabelElement = document.querySelector(
-        ".floating-button-label"
-      );
-      const floatingButtonLabel =
-        floatingButtonLabelElement?.innerText ?? "Take Action";
-      floatingButton.id = "floating-button";
-      floatingButton.className = "arrow";
-      floatingButton.innerHTML = `<div class='en__submit'><a class='pseduo__en__submit_button' href='#firstElement'>${floatingButtonLabel}</a></div>`;
-      const advRow = document.querySelector(".en__component--advrow");
-      advRow.append(floatingButton);
-      floatingButton
-        .querySelector(".pseduo__en__submit_button")
-        .addEventListener("click", function (e) {
-          e.preventDefault();
-          document.querySelector("#firstElement").scrollIntoView({
-            behavior: "smooth",
-            block: "center",
+      if (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.right <= window.innerWidth &&
+        bounding.bottom <= window.innerHeight
+      ) {
+        console.log("First field is in the viewport!");
+      } else {
+        console.log("First field is NOT in the viewport! Add hover button");
+        const floatingButton = document.createElement("div");
+        const floatingButtonLabelElement = document.querySelector(
+          ".floating-button-label"
+        );
+        const floatingButtonLabel =
+          floatingButtonLabelElement?.innerText ?? "Take Action";
+        floatingButton.id = "floating-button";
+        floatingButton.className = "arrow";
+        floatingButton.innerHTML = `<div class='en__submit'><a class='pseduo__en__submit_button' href='#firstElement'>${floatingButtonLabel}</a></div>`;
+        const advRow = document.querySelector(".en__component--advrow");
+        advRow.append(floatingButton);
+        floatingButton
+          .querySelector(".pseduo__en__submit_button")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            document.querySelector("#firstElement").scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
           });
+        document.addEventListener("scroll", function (e) {
+          const button = document.querySelector("#floating-button");
+          if (window.scrollY < 100) {
+            button.classList.add("show");
+          } else {
+            button.classList.remove("show");
+          }
         });
-      document.addEventListener("scroll", function (e) {
-        const button = document.querySelector("#floating-button");
-        if (window.scrollY < 100) {
-          button.classList.add("show");
-        } else {
-          button.classList.remove("show");
-        }
-      });
-      window.setTimeout(() => {
-        if (window.scrollY < 100) {
-          floatingButton.classList.add("show");
-        }
-      }, 200);
+        window.setTimeout(() => {
+          if (window.scrollY < 100) {
+            floatingButton.classList.add("show");
+          }
+        }, 200);
+      }
     }
   }
 
@@ -206,7 +208,11 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
   }
 
   // Add data-thank-you attribute to body of final page
-  if (pageJson && pageJson.pageNumber === pageJson.pageCount) {
+  if (
+    pageJson &&
+    pageJson.pageNumber === pageJson.pageCount &&
+    pageJson.pageCount > 1
+  ) {
     App.setBodyData("thank-you", "true");
   }
 
