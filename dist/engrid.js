@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, August 4, 2023 @ 12:22:26 ET
+ *  Date: Thursday, August 10, 2023 @ 11:46:07 ET
  *  By: michael
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.5
@@ -12221,6 +12221,8 @@ const UpsellOptionsDefaults = {
   minAmount: 0,
   canClose: true,
   submitOnClose: false,
+  oneTime: true,
+  annual: false,
   disablePaymentMethods: [],
   skipUpsell: false
 };
@@ -13329,11 +13331,12 @@ class engrid_ENGrid {
 
       if (paymentTypeOption) {
         paymentTypeOption.selected = true;
-        const event = new Event("change");
-        enFieldPaymentType.dispatchEvent(event);
       } else {
         enFieldPaymentType.value = paymentType;
       }
+
+      const event = new Event("change");
+      enFieldPaymentType.dispatchEvent(event);
     }
   }
 
@@ -15497,10 +15500,10 @@ class UpsellLightbox {
   }
 
   renderLightbox() {
-    const title = this.options.title.replace("{new-amount}", "<span class='upsell_suggestion'></span>").replace("{old-amount}", "<span class='upsell_amount'></span>");
-    const paragraph = this.options.paragraph.replace("{new-amount}", "<span class='upsell_suggestion'></span>").replace("{old-amount}", "<span class='upsell_amount'></span>");
-    const yes = this.options.yesLabel.replace("{new-amount}", "<span class='upsell_suggestion'></span>").replace("{old-amount}", "<span class='upsell_amount'></span>");
-    const no = this.options.noLabel.replace("{new-amount}", "<span class='upsell_suggestion'></span>").replace("{old-amount}", "<span class='upsell_amount'></span>");
+    const title = this.options.title.replace("{new-amount}", "<span class='upsell_suggestion'></span>").replace("{old-amount}", "<span class='upsell_amount'></span>").replace("{old-frequency}", "<span class='upsell_frequency'></span>");
+    const paragraph = this.options.paragraph.replace("{new-amount}", "<span class='upsell_suggestion'></span>").replace("{old-amount}", "<span class='upsell_amount'></span>").replace("{old-frequency}", "<span class='upsell_frequency'></span>");
+    const yes = this.options.yesLabel.replace("{new-amount}", "<span class='upsell_suggestion'></span>").replace("{old-amount}", "<span class='upsell_amount'></span>").replace("{old-frequency}", "<span class='upsell_frequency'></span>");
+    const no = this.options.noLabel.replace("{new-amount}", "<span class='upsell_suggestion'></span>").replace("{old-amount}", "<span class='upsell_amount'></span>").replace("{old-frequency}", "<span class='upsell_frequency'></span>");
     const markup = `
             <div class="upsellLightboxContainer" id="goMonthly">
               <!-- ideal image size is 480x650 pixels -->
@@ -15617,6 +15620,11 @@ class UpsellLightbox {
 
     live_upsell_amount.forEach(elem => elem.innerHTML = this.getAmountTxt(suggestedAmount));
     live_amount.forEach(elem => elem.innerHTML = this.getAmountTxt(this._amount.amount + this._fees.fee));
+  }
+
+  liveFrequency() {
+    const live_upsell_frequency = document.querySelectorAll(".upsell_frequency");
+    live_upsell_frequency.forEach(elem => elem.innerHTML = this.getFrequencyTxt());
   } // Return the Suggested Upsell Amount
 
 
@@ -15652,14 +15660,13 @@ class UpsellLightbox {
   }
 
   shouldOpen() {
-    const freq = this._frequency.frequency;
     const upsellAmount = this.getUpsellAmount();
     const paymenttype = engrid_ENGrid.getFieldValue("transaction.paymenttype") || ""; // If frequency is not onetime or
     // the modal is already opened or
     // there's no suggestion for this donation amount,
     // we should not open
 
-    if (freq == "onetime" && !this.shouldSkip() && !this.options.disablePaymentMethods.includes(paymenttype.toLowerCase()) && !this.overlay.classList.contains("is-submitting") && upsellAmount > 0) {
+    if (this.freqAllowed() && !this.shouldSkip() && !this.options.disablePaymentMethods.includes(paymenttype.toLowerCase()) && !this.overlay.classList.contains("is-submitting") && upsellAmount > 0) {
       this.logger.log("Upsell Frequency " + this._frequency.frequency);
       this.logger.log("Upsell Amount " + this._amount.amount);
       this.logger.log("Upsell Suggested Amount " + upsellAmount);
@@ -15667,6 +15674,15 @@ class UpsellLightbox {
     }
 
     return false;
+  } // Return true if the current frequency is allowed by the options
+
+
+  freqAllowed() {
+    const freq = this._frequency.frequency;
+    const allowed = [];
+    if (this.options.oneTime) allowed.push("onetime");
+    if (this.options.annual) allowed.push("annual");
+    return allowed.includes(freq);
   }
 
   open() {
@@ -15687,6 +15703,7 @@ class UpsellLightbox {
     }
 
     this.liveAmounts();
+    this.liveFrequency();
     this.overlay.classList.remove("is-hidden");
     this._form.submit = false;
     engrid_ENGrid.setBodyData("has-lightbox", "");
@@ -15766,6 +15783,16 @@ class UpsellLightbox {
     const dec_places = amount % 1 == 0 ? 0 : (_d = engrid_ENGrid.getOption("DecimalPlaces")) !== null && _d !== void 0 ? _d : 2;
     const amountTxt = engrid_ENGrid.formatNumber(amount, dec_places, dec_separator, thousands_separator);
     return amount > 0 ? symbol + amountTxt : "";
+  }
+
+  getFrequencyTxt() {
+    const freqTxt = {
+      onetime: "one-time",
+      monthly: "monthly",
+      annual: "annual"
+    };
+    const frequency = this._frequency.frequency;
+    return frequency in freqTxt ? freqTxt[frequency] : frequency;
   }
 
   checkOtherAmount(value) {
@@ -21924,7 +21951,7 @@ class ExitIntentLightbox {
 
 }
 ;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/version.js
-const AppVersion = "0.14.12";
+const AppVersion = "0.14.15";
 ;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
 
@@ -22174,6 +22201,34 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
 
   if (pageJson && pageJson.pageNumber === pageJson.pageCount && pageJson.pageCount > 1) {
     App.setBodyData("thank-you", "true");
+  } // Auto renew
+
+
+  const autoRenew = document.getElementById("en__field_auto_renew");
+
+  if (autoRenew) {
+    const annualFrequencyOption = document.querySelector('input[name="transaction.recurrfreq"][value="ANNUAL"]');
+
+    if (!annualFrequencyOption) {
+      // if recurring frequency option for annual is not found, we remove the auto renew checkbox and stop here
+      console.error("ENgrid: Annual frequency option not found. Removing Auto Renew checkbox to prevent failed donations.");
+      autoRenew.closest(".en__field--auto-renew").remove();
+    } else {
+      annualFrequencyOption.parentElement.classList.add("hide");
+      App.setBodyData("auto-renew-on-page", "true");
+      App.setBodyData("auto-renew-active", autoRenew.checked.toString());
+      const extRef2Input = App.createHiddenInput("en_txn2", autoRenew.checked ? "auto_renew" : "");
+      const freq = DonationFrequency.getInstance();
+      freq.onFrequencyChange.subscribe(frequency => {
+        if (frequency === "annual") {
+          App.setBodyData("auto-renew-active", "true");
+          extRef2Input.value = "auto_renew";
+        } else {
+          App.setBodyData("auto-renew-active", "false");
+          extRef2Input.value = "";
+        }
+      });
+    }
   } ////////////////////////////////////////////
   // END ENGRID TRANSITION SCRIPTS
   ////////////////////////////////////////////

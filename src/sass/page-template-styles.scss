@@ -512,6 +512,7 @@
     // Checkbox / Radio
     --checkbox_background-color_checked: #000000;
     --checkbox_color_checked: #ffffff;
+    --give-annual-donation-amount-appended-label: "/YEAR";
 
 
     -webkit-font-smoothing: antialiased;
@@ -821,10 +822,32 @@
         padding-left: 0;
       }
 
+      &:not(:first-of-type):not(:last-of-type) {
+        padding-right: 0;
+        padding-left: 0;
+      }
+
       label {
         outline: none;
       }
     }
+
+    //Auto renew
+    .en__field--auto-renew {
+      padding-bottom: 0;
+      .en__field__item {
+        > label {
+          padding: 20px 15px;
+          border: 1px solid var(--color-green);
+        }
+
+        > input:checked + label {
+          color: white;
+          background-color: var(--color-green);
+        }
+      }
+    }
+
 
     .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:after {
       font-size: 100%;

@@ -216,6 +216,42 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     App.setBodyData("thank-you", "true");
   }
 
+  // Auto renew
+  const autoRenew = document.getElementById("en__field_auto_renew");
+  if (autoRenew) {
+    const annualFrequencyOption = document.querySelector(
+      'input[name="transaction.recurrfreq"][value="ANNUAL"]'
+    );
+
+    if (!annualFrequencyOption) {
+      // if recurring frequency option for annual is not found, we remove the auto renew checkbox and stop here
+      console.error(
+        "ENgrid: Annual frequency option not found. Removing Auto Renew checkbox to prevent failed donations."
+      );
+      autoRenew.closest(".en__field--auto-renew").remove();
+    } else {
+      annualFrequencyOption.parentElement.classList.add("hide");
+      App.setBodyData("auto-renew-on-page", "true");
+      App.setBodyData("auto-renew-active", autoRenew.checked.toString());
+
+      const extRef2Input = App.createHiddenInput(
+        "en_txn2",
+        autoRenew.checked ? "auto_renew" : ""
+      );
+
+      const freq = DonationFrequency.getInstance();
+      freq.onFrequencyChange.subscribe((frequency) => {
+        if (frequency === "annual") {
+          App.setBodyData("auto-renew-active", "true");
+          extRef2Input.value = "auto_renew";
+        } else {
+          App.setBodyData("auto-renew-active", "false");
+          extRef2Input.value = "";
+        }
+      });
+    }
+  }
+
   ////////////////////////////////////////////
   // END ENGRID TRANSITION SCRIPTS
   ////////////////////////////////////////////
