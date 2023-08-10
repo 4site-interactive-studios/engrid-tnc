@@ -222,22 +222,19 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     const annualFrequencyOption = document.querySelector(
       'input[name="transaction.recurrfreq"][value="ANNUAL"]'
     );
+    const extRef2Input = document.querySelector('[name="en_txn2"]');
 
-    if (!annualFrequencyOption) {
+    if (!annualFrequencyOption || !extRef2Input) {
       // if recurring frequency option for annual is not found, we remove the auto renew checkbox and stop here
       console.error(
-        "ENgrid: Annual frequency option not found. Removing Auto Renew checkbox to prevent failed donations."
+        "ENgrid: Annual frequency option or external reference field not found. Removing Auto Renew checkbox to prevent failed donations."
       );
       autoRenew.closest(".en__field--auto-renew").remove();
     } else {
       annualFrequencyOption.parentElement.classList.add("hide");
       App.setBodyData("auto-renew-on-page", "true");
       App.setBodyData("auto-renew-active", autoRenew.checked.toString());
-
-      const extRef2Input = App.createHiddenInput(
-        "en_txn2",
-        autoRenew.checked ? "auto_renew" : ""
-      );
+      extRef2Input.value = autoRenew.checked ? "auto_renew" : "";
 
       const freq = DonationFrequency.getInstance();
       freq.onFrequencyChange.subscribe((frequency) => {

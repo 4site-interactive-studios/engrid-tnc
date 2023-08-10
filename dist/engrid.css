@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, August 10, 2023 @ 11:46:07 ET
+ *  Date: Friday, August 11, 2023 @ 19:31:39 ET
  *  By: michael
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.5
@@ -7948,15 +7948,18 @@ body[data-engrid-debug]:before{
   outline:none;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--auto-renew{
+  margin-bottom:30px;
+  margin-top:30px;
   padding-bottom:0;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--auto-renew .en__field__item>label{
   border:1px solid var(--color-green);
+  outline:none;
   padding:20px 15px;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--auto-renew .en__field__item>input:checked+label{
-  background-color:var(--color-green);
-  color:#fff;
+  border-width:4px;
+  font-weight:700;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:after{
   font-size:100%;
