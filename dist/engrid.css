@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, August 11, 2023 @ 19:31:39 ET
+ *  Date: Sunday, August 13, 2023 @ 12:39:56 ET
  *  By: michael
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.5
@@ -7692,6 +7692,8 @@ body[data-engrid-debug]:before{
   --give-by-select__button_background-color_hover:#fff;
   --give-by-select__button_color_hover:var(--color-green);
   --input_padding:1rem 1.25rem;
+  --label_font-weight:500;
+  --radio_font-weight:500;
   --submit__button_color:#fff;
   --submit__button_color_hover:#fff;
   --submit__button_text-transform:uppercase;
@@ -7703,6 +7705,24 @@ body[data-engrid-debug]:before{
   --checkbox_color_checked:#fff;
   --give-annual-donation-amount-appended-label:"/YEAR";
   -webkit-font-smoothing:antialiased;
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__component .en__field__error{
+  font-size:14px;
+  font-style:italic;
+  font-weight:500;
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] [class*=validationFail]:not(.has-value) [type],[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] [class*=validationFail]:not(.has-value) select,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] [class*=validationFail]:not(.has-value) textarea{
+  --input_padding:15px 1.25rem;
+  background-color:initial;
+  border-color:var(--error__color);
+  border-width:2px;
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--calendar,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--email,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--number,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--other,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--password,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--splittext,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--telephone,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--text,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--textarea,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--tripletext{
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='18'%3E%3Cpath fill='%23C5351C' d='M19.908 16.98 10.629.348a.743.743 0 0 0-1.258 0L.093 16.98a.652.652 0 0 0 .005.68.73.73 0 0 0 .623.34H19.28a.73.73 0 0 0 .623-.34.654.654 0 0 0 .006-.68zM11.042 16H8.958v-2h2.084zm0-3.5H8.958V6h2.084z'/%3E%3C/svg%3E");
+  background-position:right 1.25rem center;
+  background-repeat:no-repeat;
+  background-size:20px 18px;
+  padding-right:1rem;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] input[type=checkbox]+label{
   align-items:flex-start;
@@ -7744,12 +7764,22 @@ body[data-engrid-debug]:before{
     grid-template-columns:[pc-start lpc-start] minmax(0, 1fr) [lpc-end cc-start lcc-start] minmax(0, 275px) [lcc-end bc-start lbc-start] minmax(445px, 445px) [lbc-end rbc-start] minmax(445px, 445px) [rbc-end bc-end rcc-start] minmax(0, 275px) [rcc-end cc-end rpc-start] minmax(0, 1fr) [rpc-end pc-end];
   }
 }
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] #engrid>.en__component--advrow,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] form>.en__component--advrow{
+    grid-template-rows:[page-start page-alert-start] min-content [page-alert-end content-header-start] min-content [content-header-end body-headerOutside-start] min-content [body-headerOutside-end body-banner-start] min-content [body-banner-end body-bannerOverlay-start] min-content [body-bannerOverlay-end body-header-start] min-content [body-header-end body-title-start] min-content [body-title-end body-top-start] min-content [body-top-end body-side-start] min-content [body-side-end body-main-start] min-content [body-main-end body-bottom-start] min-content [body-bottom-end body-footer-start] min-content [body-footer-end body-footerOutside-start] min-content [body-footerOutside-end content-footerSpacer-start] minmax(0, 1fr) [content-footerSpacer-end content-preFooter-start] min-content [content-preFooter-end content-footer-start] min-content [content-footer-end page-backgroundImage-start] min-content [page-backgroundImage-end page-backgroundImageOverlay-start] min-content [page-backgroundImageOverlay-end page-end page-customCode-start] min-content [page-customCode-end];
+  }
+}
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .body-title{
   --h1_color:#fff;
   display:flex;
   flex-direction:column;
   grid-column:pc-start /  lbc-end;
   justify-content:flex-end;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .body-title{
+    padding:40px 20px 0;
+  }
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .body-title h1{
   font-family:var(--default_font-family);
@@ -7761,6 +7791,11 @@ body[data-engrid-debug]:before{
   padding:40px 20px 0;
   width:100%;
 }
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .body-title .en__component--copyblock{
+    padding:0;
+  }
+}
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .body-top{
   color:#fff;
   display:flex;
@@ -7769,11 +7804,25 @@ body[data-engrid-debug]:before{
   justify-content:flex-start;
   padding-bottom:0 !important;
 }
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .body-top{
+    padding:0 20px 40px !important;
+  }
+}
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .body-top .en__component--copyblock{
+  font-weight:500;
   margin:0 auto;
   max-width:570px;
   padding:0 20px 24px;
   width:100%;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .body-top .en__component--copyblock{
+    padding:0;
+  }
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .body-top .en__component--copyblock>:last-child{
+    margin-bottom:0;
+  }
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .body-banner{
   grid-column:rbc-start /  pc-end;
@@ -7990,7 +8039,7 @@ body[data-engrid-debug]:before{
   color:#1a1a1a;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .radio-to-buttons_donationAmt .en__field--donationAmt>label{
-  font-weight:700;
+  font-weight:600;
   margin:10px 0;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .radio-to-buttons_donationAmt .en__field--donationAmt>label:before{
@@ -8081,7 +8130,7 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .tippy-label:active,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .tippy-label:focus,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .tippy-label:hover{
   color:var(--a_color);
 }
-[data-engrid-theme=tnc][data-engrid-layout=centercenter1col]:not([data-engrid-premium-donation=active]) .showif--premium-donation--active{
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col]:not([data-engrid-premium-donation=active]):not([data-engrid-debug]) .showif--premium-donation--active{
   display:none;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .engrid-premium-container{
@@ -8105,6 +8154,7 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .engrid-premium-container>img{
   grid-area:image;
+  height:100% !important;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .engrid-premium-container .en__component--copyblock{
   align-self:flex-end;

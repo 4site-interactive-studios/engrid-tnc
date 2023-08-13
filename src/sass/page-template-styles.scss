@@ -501,6 +501,8 @@
     --give-by-select__button_color_hover: var(--color-green);
     // Input
     --input_padding: 1rem 1.25rem;
+    --label_font-weight: 500;
+    --radio_font-weight: 500;
     // Submit button
     --submit__button_color: #ffffff;
     --submit__button_color_hover: #ffffff;
@@ -516,6 +518,41 @@
 
 
     -webkit-font-smoothing: antialiased;
+
+    .en__component .en__field__error {
+      font-size: 14px;
+      font-style: italic;
+      font-weight: 500;
+    }
+
+    [class*=validationFail]:not(.has-value) [type],
+    [class*=validationFail]:not(.has-value) select,
+    [class*=validationFail]:not(.has-value) textarea {
+      --input_padding: 15px 1.25rem;
+      background-color: initial;
+      border-color: var(--error__color);
+      border-width: 2px;
+    }
+
+    .en__field--validationFailed:not(.en__field--ccnumber) {
+      .en__field__input--calendar,
+      .en__field__input--email,
+      .en__field__input--number,
+      .en__field__input--other,
+      .en__field__input--password,
+      .en__field__input--splittext,
+      .en__field__input--telephone,
+      .en__field__input--text,
+      .en__field__input--textarea,
+      .en__field__input--tripletext {
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='18'%3E%3Cpath fill='%23C5351C' d='M19.908 16.98L10.629.348a.743.743 0 00-1.258 0L.093 16.98a.652.652 0 00.005.68.73.73 0 00.623.34H19.28a.73.73 0 00.623-.34.654.654 0 00.006-.68zM11.042 16H8.958v-2h2.084zm0-3.5H8.958V6h2.084z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1.25rem center;
+        background-size: 20px 18px;
+        padding-right: 1rem;
+      }
+    }
+
 
     input[type=checkbox] + label {
       align-items: flex-start;
@@ -592,6 +629,31 @@
           [rcc-end cc-end rpc-start] minmax(0px, 1fr)
           [rpc-end pc-end];
       }
+
+      @media screen and (max-width: 992px) {
+        //Adjust body-title and body-top to be min-content
+        grid-template-rows:
+          [page-start page-alert-start] min-content
+          [page-alert-end content-header-start] min-content
+          [content-header-end body-headerOutside-start] min-content
+          [body-headerOutside-end body-banner-start] min-content
+          [body-banner-end body-bannerOverlay-start] min-content
+          [body-bannerOverlay-end body-header-start] min-content
+          [body-header-end body-title-start] min-content
+          [body-title-end body-top-start] min-content
+          [body-top-end body-side-start] min-content
+          [body-side-end body-main-start] min-content
+          [body-main-end body-bottom-start] min-content
+          [body-bottom-end body-footer-start] min-content
+          [body-footer-end body-footerOutside-start] min-content
+          [body-footerOutside-end content-footerSpacer-start] minmax(0, 1fr)
+          [content-footerSpacer-end content-preFooter-start] min-content
+          [content-preFooter-end content-footer-start] min-content
+          [content-footer-end page-backgroundImage-start] min-content
+          [page-backgroundImage-end page-backgroundImageOverlay-start] min-content
+          [page-backgroundImageOverlay-end page-end page-customCode-start] min-content
+          [page-customCode-end];
+      }
     }
 
     .body-title {
@@ -600,6 +662,10 @@
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
+
+      @media screen and (max-width: 992px) {
+        padding: 40px 20px 0;
+      }
 
       h1 {
         font-family: var(--default_font-family);
@@ -611,6 +677,9 @@
         width: 100%;
         margin: 0 auto;
         padding: 40px 20px 0;
+        @media screen and (max-width: 992px) {
+          padding: 0;
+        }
       }
     }
 
@@ -622,11 +691,25 @@
       justify-content: flex-start;
       padding-bottom: 0!important;
 
+      @media screen and (max-width: 992px) {
+        padding: 0 20px 40px!important;
+      }
+
       .en__component--copyblock {
+        font-weight: 500;
         max-width: 570px;
         width: 100%;
         margin: 0 auto;
         padding: 0 20px 24px;
+        @media screen and (max-width: 992px) {
+          padding: 0;
+        }
+
+        > *:last-child {
+          @media screen and (max-width: 992px) {
+            margin-bottom: 0;
+          }
+        }
       }
     }
 
@@ -886,7 +969,7 @@
     }
 
     .radio-to-buttons_donationAmt .en__field--donationAmt > label {
-      font-weight: bold;
+      font-weight: 600;
       margin: 10px 0;
       &:before {
         content: '';
@@ -998,7 +1081,7 @@
       }
     }
 
-    &:not([data-engrid-premium-donation="active"]) {
+    &:not([data-engrid-premium-donation="active"]):not([data-engrid-debug]) {
       .showif--premium-donation--active {
         display: none;
       }
@@ -1030,6 +1113,7 @@
 
       > img {
         grid-area: image;
+        height: 100%!important;
       }
 
       .en__component--copyblock {
