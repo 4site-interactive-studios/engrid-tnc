@@ -519,6 +519,38 @@
 
     -webkit-font-smoothing: antialiased;
 
+    &#en__pagebuilder .page-backgroundImage {
+      display: none !important;
+    }
+
+    .i-required .en__field > label,
+    .i-required .en__field > .label-wrapper > label {
+      justify-content: flex-start!important;
+      &:before {
+        content: "*";
+        margin-right: .5ch;
+      }
+    }
+
+    @for $i from 1 through 11 {
+      .i#{$i}-required .en__field:nth-of-type(#{$i}) > label,
+      .i#{$i}-required .en__field:nth-of-type(#{$i}) > .label-wrapper > label {
+        justify-content: flex-start!important;
+        &:before {
+          content: "*";
+          margin-right: .5ch;
+        }
+      }
+    }
+
+    select, select.en__field__input--select,
+    select.en__field__input--splitselect,
+    select.en__field__input--tripleselect {
+      background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11.414' height='7.121'%3E%3Cpath d='M10.707.707l-5 5-5-5' fill='none' stroke='%23007931' stroke-miterlimit='10' stroke-width='2'/%3E%3C/svg%3E");
+      background-position: right center;
+      background-size: 12px 7px;
+    }
+
     .en__component .en__field__error {
       font-size: 14px;
       font-style: italic;

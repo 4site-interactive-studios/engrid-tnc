@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, August 13, 2023 @ 12:39:56 ET
+ *  Date: Wednesday, August 16, 2023 @ 09:08:28 ET
  *  By: michael
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.5
@@ -22150,6 +22150,10 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
 
     const monthlyPremiumField = App.getField("supporter.questions.1362488");
     const premiumVisibleField = App.getField("supporter.questions.1366068");
+
+    if (!monthlyPremiumField || !premiumVisibleField) {
+      return;
+    }
 
     if (frequency === "monthly" && amount >= monthlyPremiumMinimum) {
       App.setBodyData("premium-donation", "active");

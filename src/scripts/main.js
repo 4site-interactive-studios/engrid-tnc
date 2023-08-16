@@ -156,6 +156,10 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     const monthlyPremiumField = App.getField("supporter.questions.1362488");
     const premiumVisibleField = App.getField("supporter.questions.1366068");
 
+    if (!monthlyPremiumField || !premiumVisibleField) {
+      return;
+    }
+
     if (frequency === "monthly" && amount >= monthlyPremiumMinimum) {
       App.setBodyData("premium-donation", "active");
       monthlyPremiumField.checked = true;
