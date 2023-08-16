@@ -165,7 +165,10 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       monthlyPremiumField.checked = true;
       premiumVisibleField.checked = true;
       App.enParseDependencies();
-    } else if (frequency === "onetime" && amount >= onetimePremiumMinimum) {
+    } else if (
+      (frequency === "onetime" || frequency === "annual") &&
+      amount >= onetimePremiumMinimum
+    ) {
       App.setBodyData("premium-donation", "active");
       monthlyPremiumField.checked = false;
       premiumVisibleField.checked = true;
