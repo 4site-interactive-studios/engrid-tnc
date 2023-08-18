@@ -519,6 +519,16 @@
 
     -webkit-font-smoothing: antialiased;
 
+
+    #en__digitalWallet__stripeButtons__container,
+    #en__digitalWallet__paypalTouch__container {
+      max-width: 100%;
+      width: 100%;
+      @media screen and (min-width: 600px) {
+        width: 500px;
+      }
+    }
+
     &#en__pagebuilder .page-backgroundImage {
       display: none !important;
     }
@@ -560,9 +570,11 @@
     [class*=validationFail]:not(.has-value) [type],
     [class*=validationFail]:not(.has-value) select,
     [class*=validationFail]:not(.has-value) textarea {
-      --input_padding: 15px 1.25rem;
+      //--input_padding: 15px 1.25rem;
+      padding-top: 15px;
+      padding-bottom: 15px;
       background-color: initial;
-      border-color: var(--error__color);
+      border-color: var(--error__color)!important;
       border-width: 2px;
     }
 

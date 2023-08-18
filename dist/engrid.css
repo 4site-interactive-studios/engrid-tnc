@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, August 16, 2023 @ 11:39:17 ET
+ *  Date: Friday, August 18, 2023 @ 13:16:13 ET
  *  By: michael
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.5
@@ -7706,6 +7706,15 @@ body[data-engrid-debug]:before{
   --give-annual-donation-amount-appended-label:"/YEAR";
   -webkit-font-smoothing:antialiased;
 }
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] #en__digitalWallet__paypalTouch__container,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] #en__digitalWallet__stripeButtons__container{
+  max-width:100%;
+  width:100%;
+}
+@media screen and (min-width:600px){
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] #en__digitalWallet__paypalTouch__container,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] #en__digitalWallet__stripeButtons__container{
+    width:500px;
+  }
+}
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col]#en__pagebuilder .page-backgroundImage{
   display:none !important;
 }
@@ -7804,10 +7813,11 @@ body[data-engrid-debug]:before{
   font-weight:500;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] [class*=validationFail]:not(.has-value) [type],[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] [class*=validationFail]:not(.has-value) select,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] [class*=validationFail]:not(.has-value) textarea{
-  --input_padding:15px 1.25rem;
   background-color:initial;
-  border-color:var(--error__color);
+  border-color:var(--error__color) !important;
   border-width:2px;
+  padding-bottom:15px;
+  padding-top:15px;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--calendar,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--email,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--number,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--other,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--password,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--splittext,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--telephone,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--text,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--textarea,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__field--validationFailed:not(.en__field--ccnumber) .en__field__input--tripletext{
   background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='18'%3E%3Cpath fill='%23C5351C' d='M19.908 16.98 10.629.348a.743.743 0 0 0-1.258 0L.093 16.98a.652.652 0 0 0 .005.68.73.73 0 0 0 .623.34H19.28a.73.73 0 0 0 .623-.34.654.654 0 0 0 .006-.68zM11.042 16H8.958v-2h2.084zm0-3.5H8.958V6h2.084z'/%3E%3C/svg%3E");
