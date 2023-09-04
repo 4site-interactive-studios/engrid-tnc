@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, September 4, 2023 @ 09:59:39 ET
+ *  Date: Monday, September 4, 2023 @ 11:02:13 ET
  *  By: michael
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.5
@@ -8323,6 +8323,42 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] #en__digitalWallet #en__digitalWallet__paypalTouch__container,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] #en__digitalWallet #en__digitalWallet__stripeButtons__container{
   padding-bottom:64px;
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content h2,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content h3,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content h4,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content h5,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content h6{
+  font-family:var(--default_font-family);
+  font-size:1.625rem;
+  font-weight:600;
+  line-height:1.3076;
+  margin-bottom:.8125rem;
+  margin-top:0;
+}
+@media screen and (max-width:600px){
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content h2,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content h3,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content h4,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content h5,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content h6{
+    font-size:1.25rem;
+    line-height:1.2;
+    margin-bottom:1rem;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content p{
+  font-family:var(--h1_font-family);
+  font-size:20px;
+  line-height:34px;
+  margin-top:0;
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content #en__upsellModal__buttons button{
+  border:1px solid #007931;
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content #en__upsellModal__yes button{
+  background-color:#007931;
+  color:#fff;
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content #en__upsellModal__yes button:hover{
+  background-color:#1a1a1a;
+  border:1px solid #1a1a1a;
+  color:#fff;
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .en__upsellModal__content #en__upsellModal__no button{
+  margin-bottom:0;
 }
 @media screen and (max-width:992px){
   [data-engrid-theme=tnc][data-engrid-layout=centercenter1col]{

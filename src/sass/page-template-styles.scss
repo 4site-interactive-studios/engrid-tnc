@@ -1231,6 +1231,49 @@
       }
     }
 
+    .en__upsellModal__content {
+      h2,h3,h4,h5,h6 {
+        @media screen and (max-width: 600px) {
+          font-size: 1.25rem;
+          line-height: 1.2;
+          margin-bottom: 1rem;
+        }
+
+        font-family: var(--default_font-family);
+        font-size: 1.625rem;
+        line-height: 1.3076;
+        margin-bottom: .8125rem;
+        margin-top: 0;
+        font-weight: 600;
+      }
+
+      p {
+        font-family: var(--h1_font-family);
+        font-size: 20px;
+        line-height: 34px;
+        margin-top: 0;
+      }
+
+      #en__upsellModal__buttons button {
+        border: 1px solid #007931;
+      }
+
+      #en__upsellModal__yes button {
+        color: #fff;
+        background-color: #007931;
+
+        &:hover {
+          color: #fff;
+          background-color: #1a1a1a;
+          border: 1px solid #1a1a1a;
+        }
+      }
+
+      #en__upsellModal__no button {
+        margin-bottom: 0;
+      }
+    }
+
     @media screen and (max-width: 992px) {
       --donation-amount__button_count: 3;
       --engrid__body_padding: 0 14px;
