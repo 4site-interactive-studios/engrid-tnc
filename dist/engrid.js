@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, August 18, 2023 @ 13:16:13 ET
+ *  Date: Monday, September 4, 2023 @ 09:59:39 ET
  *  By: michael
  *  ENGrid styles: v0.13.0
  *  ENGrid scripts: v0.13.5
@@ -13780,7 +13780,9 @@ class App extends engrid_ENGrid {
 
     new CountryDisable(); // Premium Gift Features
 
-    new PremiumGift(); // Digital Wallets Features
+    new PremiumGift(); // Supporter Hub Features
+
+    new SupporterHub(); // Digital Wallets Features
 
     if (engrid_ENGrid.getPageType() === "DONATION") {
       new DigitalWallets();
@@ -13801,7 +13803,9 @@ class App extends engrid_ENGrid {
     this.setDataAttributes(); //Exit Intent Lightbox
 
     new ExitIntentLightbox();
-    new UrlParamsToBodyAttrs(); //Debug panel
+    new UrlParamsToBodyAttrs();
+    new FastFormFill();
+    new SetAttr(); //Debug panel
 
     if (this.options.Debug || window.sessionStorage.hasOwnProperty(DebugPanel.debugSessionStorageKey)) {
       new DebugPanel(this.options.PageLayouts);
@@ -21950,10 +21954,161 @@ class ExitIntentLightbox {
   }
 
 }
+;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/supporter-hub.js
+// Component that adds 4Site Special Features to the Supporter Hub Page
+
+class SupporterHub {
+  constructor() {
+    this.logger = new EngridLogger("SupporterHub", "black", "pink", "🛖");
+    this._form = EnForm.getInstance();
+    if (!this.shoudRun()) return;
+    this.logger.log("Enabled");
+    this.watch();
+  }
+
+  shoudRun() {
+    return "pageJson" in window && "pageType" in window.pageJson && window.pageJson.pageType === "supporterhub";
+  }
+
+  watch() {
+    const form = engrid_ENGrid.enForm; // Create a observer to watch the Form for overlays
+
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.type === "childList") {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeName === "DIV") {
+              const overlay = node;
+
+              if (overlay.classList.contains("en__hubOverlay")) {
+                this.logger.log("Overlay found");
+                this.creditCardUpdate(node);
+              }
+            }
+          });
+        }
+      });
+    }); // Start observing the Link ID #plaid-link-button
+
+    observer.observe(form, {
+      childList: true,
+      subtree: true
+    }); // Run the Credit Card Update function in case the overlay is already present on page load
+
+    const hubOverlay = document.querySelector(".en__hubOverlay");
+
+    if (hubOverlay) {
+      this.creditCardUpdate(hubOverlay);
+    }
+  }
+
+  creditCardUpdate(overlay) {
+    window.setTimeout(() => {
+      // Check if the overlay has Credit Card field and Update Button
+      const ccField = overlay.querySelector("#en__hubPledge__field--ccnumber"),
+            updateButton = overlay.querySelector(".en__hubUpdateCC__toggle");
+
+      if (ccField && updateButton) {
+        // When field gets focus, click the update button
+        ccField.addEventListener("focus", () => {
+          this.logger.log("Credit Card field focused");
+          updateButton.click();
+        });
+      }
+    }, 300);
+  }
+
+}
+;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/fast-form-fill.js
+/**
+ * This class add body data attributes if all mandatory inputs are filled.
+ * Related styling (to hide elements) can be found in "fast-form-fill.scss".
+ *
+ * To activate add the custom class "fast-personal-details" or "fast-address-details"
+ * to the relevant form block.
+ */
+
+class FastFormFill {
+  constructor() {
+    this.logger = new EngridLogger("FastFormFill", "white", "magenta", "📌");
+    const fastPersonalDetailsFormBlock = document.querySelector(".en__component--formblock.fast-personal-details");
+
+    if (fastPersonalDetailsFormBlock) {
+      if (this.allMandatoryInputsAreFilled(fastPersonalDetailsFormBlock)) {
+        this.logger.log("Personal details - All mandatory inputs are filled");
+        engrid_ENGrid.setBodyData("hide-fast-personal-details", "true");
+      } else {
+        this.logger.log("Personal details - Not all mandatory inputs are filled");
+        engrid_ENGrid.setBodyData("hide-fast-personal-details", "false");
+      }
+    }
+
+    const fastAddressDetailsFormBlock = document.querySelector(".en__component--formblock.fast-address-details");
+
+    if (fastAddressDetailsFormBlock) {
+      if (this.allMandatoryInputsAreFilled(fastAddressDetailsFormBlock)) {
+        this.logger.log("Address details - All mandatory inputs are filled");
+        engrid_ENGrid.setBodyData("hide-fast-address-details", "true");
+      } else {
+        this.logger.log("Address details - Not all mandatory inputs are filled");
+        engrid_ENGrid.setBodyData("hide-fast-address-details", "false");
+      }
+    }
+  }
+
+  allMandatoryInputsAreFilled(formBlock) {
+    const fields = formBlock.querySelectorAll(".en__mandatory input, .en__mandatory select, .en__mandatory textarea");
+    return [...fields].every(input => {
+      if (input.type === "radio" || input.type === "checkbox") {
+        const inputs = document.querySelectorAll('[name="' + input.name + '"]');
+        return [...inputs].some(radioOrCheckbox => radioOrCheckbox.checked);
+      } else {
+        return input.value !== null && input.value.trim() !== "";
+      }
+    });
+  }
+
+}
+;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/set-attr.js
+/*+
+  The class is used to set body attributes via click handlers.
+  The format is "setattr--{attribute}--{value}".
+  e.g. setattr--data-engrid-hide-fast-address-details--true
+ */
+
+class SetAttr {
+  constructor() {
+    this.logger = new EngridLogger("SetAttr", "black", "yellow", "📌");
+    const enGrid = document.getElementById("engrid");
+
+    if (enGrid) {
+      enGrid.addEventListener("click", e => {
+        const clickedEl = e.target;
+        const clickedElClassNames = clickedEl.className.split(" ");
+
+        if (clickedElClassNames.some(className => className.startsWith("setattr--"))) {
+          clickedEl.classList.forEach(className => {
+            //Check element has class with format "setattr--attribute--value"
+            const match = className.match(/^setattr--(.+)--(.+)$/i);
+
+            if (match && match[1] && match[2]) {
+              this.logger.log(`Clicked element with class "${className}". Setting body attribute "${match[1]}" to "${match[2]}"`);
+              engrid_ENGrid.setBodyData(match[1].replace("data-engrid-", ""), match[2]);
+            }
+          });
+        }
+      });
+    }
+  }
+
+}
 ;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/version.js
-const AppVersion = "0.14.15";
+const AppVersion = "0.14.16";
 ;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
+
+
 
 
 
@@ -22234,6 +22389,39 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         }
       });
     }
+  } // Translate recurring status
+
+
+  const recurringStatus = document.querySelector(".js-recurring-status");
+
+  if (recurringStatus) {
+    if (window.navigator.language === "es-MX" || window.location.href.indexOf("locale=es-MX") > -1 || pageJson.locale === "es-MX") {
+      switch (recurringStatus.textContent) {
+        case "MONTHLY":
+          recurringStatus.textContent = "Mensual";
+          break;
+
+        case "ANNUAL":
+          recurringStatus.textContent = "Anual";
+          break;
+
+        default:
+          recurringStatus.textContent = "Una vez";
+      }
+    } else {
+      switch (recurringStatus.textContent) {
+        case "MONTHLY":
+          recurringStatus.textContent = "Monthly";
+          break;
+
+        case "ANNUAL":
+          recurringStatus.textContent = "Annual";
+          break;
+
+        default:
+          recurringStatus.textContent = "One-time";
+      }
+    }
   } ////////////////////////////////////////////
   // END ENGRID TRANSITION SCRIPTS
   ////////////////////////////////////////////
@@ -22279,6 +22467,7 @@ const options = {
   MinAmount: minimumAmount,
   MaxAmount: 50000,
   MinAmountMessage: `Your donation must be between $${minimumAmount} and $50,000`,
+  MaxAmountMessage: `Your donation must be between $${minimumAmount} and $50,000`,
   PageLayouts: ["centercenter1col"],
   onLoad: () => customScript(App, DonationFrequency, DonationAmount),
   onSubmit: () => dataCaptureTracking(),

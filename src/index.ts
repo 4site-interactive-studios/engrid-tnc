@@ -36,6 +36,7 @@ const options: Options = {
   MinAmount: minimumAmount,
   MaxAmount: 50000,
   MinAmountMessage: `Your donation must be between $${minimumAmount} and $50,000`,
+  MaxAmountMessage: `Your donation must be between $${minimumAmount} and $50,000`,
   PageLayouts: ["centercenter1col"],
   onLoad: () => customScript(App, DonationFrequency, DonationAmount),
   onSubmit: () => dataCaptureTracking(),
