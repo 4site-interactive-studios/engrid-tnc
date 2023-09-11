@@ -1,10 +1,15 @@
-// import { Options, App } from "@4site/engrid-common"; // Uses ENGrid via NPM
 import {
   Options,
   App,
   DonationFrequency,
   DonationAmount,
-} from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
+} from "@4site/engrid-common"; // Uses ENGrid via NPM
+// import {
+//   Options,
+//   App,
+//   DonationFrequency,
+//   DonationAmount,
+// } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
 import { customScript, dataCaptureTracking } from "./scripts/main";
@@ -38,6 +43,7 @@ const options: Options = {
   MinAmountMessage: `Your donation must be between $${minimumAmount} and $50,000`,
   MaxAmountMessage: `Your donation must be between $${minimumAmount} and $50,000`,
   PageLayouts: ["centercenter1col"],
+  TranslateFields: false,
   onLoad: () => customScript(App, DonationFrequency, DonationAmount),
   onSubmit: () => dataCaptureTracking(),
   onResize: () => console.log("Starter Theme Window Resized"),

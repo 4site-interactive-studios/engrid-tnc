@@ -493,6 +493,8 @@
     // DONATION PAGE
     --give-monthly-donation-amount-appended-label: "/MONTH";
     --recurring-frequency__button_count: 2;
+    --recurring-frequency__button_background-color_hover: #ffffff;
+    --recurring-frequency__button_color_hover: var(--color-green);
     --donation-amount__button_count: 6;
     --give-by-select__button_count: 4;
     --give-by-select__button_font-size: 14px;
@@ -519,6 +521,10 @@
 
     -webkit-font-smoothing: antialiased;
 
+    #generate-social-share:hover {
+      background-color: #000000;
+      color: #ffffff
+    }
 
     #en__digitalWallet__stripeButtons__container,
     #en__digitalWallet__paypalTouch__container {
