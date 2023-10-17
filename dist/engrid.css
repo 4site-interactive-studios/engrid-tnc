@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, September 11, 2023 @ 10:25:10 ET
- *  By: michael
- *  ENGrid styles: v0.15.0
- *  ENGrid scripts: v0.15.2
+ *  Date: Tuesday, October 17, 2023 @ 16:31:54 ET
+ *  By: fernando
+ *  ENGrid styles: v0.15.3
+ *  ENGrid scripts: v0.15.9
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -3268,6 +3268,9 @@ body:not(#en__pagebuilder):not([data-engrid-debug]) .hide-labels .en__field:not(
 }
 [data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements][data-engrid-payment-type=paypaltouch] .hideif-paypaltouch-selected,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements][data-engrid-payment-type=stripedigitalwallet] .hideif-stripedigitalwallet-selected,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements][data-engrid-transaction-recurring=n][data-engrid-payment-type-option-paypal-one-touch=true] .en__field--giveBySelect.paypal,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements][data-engrid-transaction-recurring=y] .en__field--giveBySelect.paypaltouch{
   display:none;
+}
+[data-engrid-theme] iframe.plaid-link-iframe,[data-engrid-theme] iframe[id^=plaid-link-iframe]{
+  background-color:#909090fa;
 }
 
 [data-engrid-theme]{
@@ -7391,7 +7394,10 @@ body[data-engrid-debug]:before{
   background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj48cGF0aCBmaWxsPSIjY2NjIiBkPSJNMCAwaDQwMHYzMDBIMHoiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIyNiIgZmlsbD0iIzMzMyI+TGF6eSBMb2FkZWQgVmlkZW88L3RleHQ+PC9zdmc+);
 }
 [data-engrid-theme=tnc]{
-  --default_font-family:"Whitney A","Whitney B",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  --default_font-family:"Whitney A", "Whitney B", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
   --default_color:#1a1a1a;
   --h1_font-family:Chronicle Text G2 A, Chronicle Text G2 B, ui-serif, Georgia,
     Cambria, Times New Roman, Times, serif;
@@ -7683,7 +7689,7 @@ body[data-engrid-debug]:before{
   --button_border-width:1px;
   --button_border-color:var(--color-gray);
   --button_border-radius:0px;
-  --button_padding:1.25rem .25rem;
+  --button_padding:1.25rem 0.25rem;
   --button_line-height:1.1rem;
   --button_color_hover:var(--color-white);
   --button_background-color_hover:var(--color-green);
@@ -8153,6 +8159,9 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .radio-to-buttons_donationAmt .en__field--withOther--active .en__field__item.en__field__item--other:before{
   color:#1a1a1a;
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__element{
+  justify-content:flex-start;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .radio-to-buttons_donationAmt .en__field--donationAmt>label{
   font-weight:600;

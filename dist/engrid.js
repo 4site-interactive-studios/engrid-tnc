@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, September 11, 2023 @ 10:25:10 ET
- *  By: michael
- *  ENGrid styles: v0.15.0
- *  ENGrid scripts: v0.15.2
+ *  Date: Tuesday, October 17, 2023 @ 16:31:54 ET
+ *  By: fernando
+ *  ENGrid styles: v0.15.3
+ *  ENGrid scripts: v0.15.9
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10313,6 +10313,7 @@ const OptionsDefaults = {
     CountryDisable: [],
     Plaid: false,
     Placeholders: false,
+    ENValidators: false,
     MobileCTA: false,
     PageLayouts: [
         "leftleft1col",
@@ -10758,8 +10759,15 @@ class DonationAmount {
         }
         else {
             const otherField = document.querySelector('input[name="' + this._other + '"]');
-            otherField.focus();
-            otherField.value = parseFloat(amount.toString()).toFixed(2);
+            if (otherField) {
+                const enFieldOtherAmountRadio = document.querySelector('input[name="' + this._radios + '"][value="other" i]');
+                if (enFieldOtherAmountRadio) {
+                    enFieldOtherAmountRadio.checked = true;
+                }
+                otherField.value = parseFloat(amount.toString()).toFixed(2);
+                const otherWrapper = otherField.parentNode;
+                otherWrapper.classList.remove("en__field__item--hidden");
+            }
         }
         // Set the new amount and trigger all live variables
         this.amount = amount;
@@ -11701,6 +11709,8 @@ class App extends engrid_ENGrid {
         new UrlToForm();
         // Required if Visible Fields
         new RequiredIfVisible();
+        // EN Custom Validators (behind a feature flag, off by default)
+        new ENValidators();
         //Debug hidden fields
         if (this.options.Debug)
             new DebugHiddenFields();
@@ -11739,6 +11749,7 @@ class App extends engrid_ENGrid {
         new UrlParamsToBodyAttrs();
         new FastFormFill();
         new SetAttr();
+        new ShowIfPresent();
         //Debug panel
         if (this.options.Debug ||
             window.sessionStorage.hasOwnProperty(DebugPanel.debugSessionStorageKey)) {
@@ -12086,7 +12097,9 @@ class CreditCard {
                 return;
             const current_date = new Date();
             const current_month = current_date.getMonth() + 1;
-            const current_year = current_date.getFullYear() - 2000;
+            const current_year = parseInt(this.field_expiration_year[this.field_expiration_year.length - 1].value) > 2000
+                ? current_date.getFullYear()
+                : current_date.getFullYear() - 2000;
             // handle if year is changed to current year (disable all months less than current month)
             // handle if month is changed to less than current month (disable current year)
             if (e == "month") {
@@ -12879,10 +12892,10 @@ class InputPlaceholders {
             ".en__mandatory input#en__field_supporter_phoneNumber2": "000-000-0000",
             "input#en__field_supporter_country": "Country",
             "input#en__field_supporter_address1": "Street Address",
-            "input#en__field_supporter_address2": "Apt., ste., bldg.",
+            "input#en__field_supporter_address2": "Apt., Ste., Bldg.",
             "input#en__field_supporter_city": "City",
             "input#en__field_supporter_region": "Region",
-            "input#en__field_supporter_postcode": "Zip Code",
+            "input#en__field_supporter_postcode": "ZIP Code",
             ".en__field--donationAmt.en__field--withOther .en__field__input--other": "Other",
             "input#en__field_transaction_ccnumber": "•••• •••• •••• ••••",
             "input#en__field_transaction_ccexpire": "MM / YY",
@@ -12894,7 +12907,7 @@ class InputPlaceholders {
             "input#en__field_transaction_infemail": "Recipient Email Address",
             "input#en__field_transaction_infcountry": "Country",
             "input#en__field_transaction_infadd1": "Recipient Street Address",
-            "input#en__field_transaction_infadd2": "Recipient Apt., ste., bldg.",
+            "input#en__field_transaction_infadd2": "Recipient Apt., Ste., Bldg.",
             "input#en__field_transaction_infcity": "Recipient City",
             "input#en__field_transaction_infpostcd": "Recipient Postal Code",
             "input#en__field_transaction_gftrsn": "Reason for your gift",
@@ -12903,13 +12916,13 @@ class InputPlaceholders {
             "input#en__field_transaction_shipemail": "Shipping Email Address",
             "input#en__field_transaction_shipcountry": "Shipping Country",
             "input#en__field_transaction_shipadd1": "Shipping Street Address",
-            "input#en__field_transaction_shipadd2": "Shipping Apt., ste., bldg.",
+            "input#en__field_transaction_shipadd2": "Shipping Apt., Ste., Bldg.",
             "input#en__field_transaction_shipcity": "Shipping City",
             "input#en__field_transaction_shipregion": "Shipping Region",
             "input#en__field_transaction_shippostcode": "Shipping Postal Code",
             "input#en__field_supporter_billingCountry": "Billing Country",
             "input#en__field_supporter_billingAddress1": "Billing Street Address",
-            "input#en__field_supporter_billingAddress2": "Billing Apt., ste., bldg.",
+            "input#en__field_supporter_billingAddress2": "Billing Apt., Ste., Bldg.",
             "input#en__field_supporter_billingCity": "Billing City",
             "input#en__field_supporter_billingRegion": "Billing Region",
             "input#en__field_supporter_billingPostcode": "Billing Postal Code",
@@ -12944,7 +12957,7 @@ class InputPlaceholders {
 /*
   Looks for specially crafted <img> links and will transform its markup to display an attribution overlay on top of the image
   Depends on "_engrid-media-attribution.scss" for styling
-  
+
   Example Image Input
   <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAQAAABeK7cBAAAADUlEQVR42mO8/5+BAQAGgwHgbKwW2QAAAABJRU5ErkJggg==" data-src="https://via.placeholder.com/300x300" data-attribution-source="© Jane Doe 1">
   <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAQAAABeK7cBAAAADUlEQVR42mO8/5+BAQAGgwHgbKwW2QAAAABJRU5ErkJggg==" data-src="https://via.placeholder.com/300x300" data-attribution-source="© John Doe 2" data-attribution-source-link="https://www.google.com/">
@@ -12993,7 +13006,7 @@ class MediaAttribution {
                         ? mediaWithAttributionElement.dataset.attributionSourceTooltip
                         : false;
                     if (attributionSourceTooltip) {
-                        tippy(".media-with-attribution figattribution", {
+                        tippy(mediaWithAttributionElement.nextSibling, {
                             content: attributionSourceTooltip,
                             arrow: true,
                             arrowType: "default",
@@ -19170,11 +19183,186 @@ class SetAttr {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/show-if-present.js
+/**
+ * This class contains the logic for special classes that can be used to hide elements if
+ * certain supporter questions are present or absent.
+ * Typically, this can be used to hide elements when an opt in question is not rendered on the page
+ * because the supporter came from a campaign link and is already opted in, so EN doesn't render
+ * the question on the page.
+ *
+ * The class names are of the format:
+ * engrid__supporterquestions{id}-present -- show this element when the supporter question is present
+ * engrid__supporterquestions{id}-absent -- show this element when the supporter question is absent
+ *
+ * The {id} is the id of the supporter question. This can be found by inspecting the element on the page.
+ *
+ * It's also possible to combine multiple questions using the following format. These examples show 2 questions,
+ * but you can use as many as you like:
+ * engrid__supporterquestions{id1}__supporterquestions{id2}-present -- show this element when EITHER question is present
+ * engrid__supporterquestions{id1}__supporterquestions{id2}-absent -- show this element when EITHER question is absent
+ */
+
+class ShowIfPresent {
+    constructor() {
+        this.logger = new EngridLogger("ShowIfPresent", "yellow", "black", "👀");
+        this.elements = [];
+        if (this.shouldRun()) {
+            this.run();
+        }
+    }
+    shouldRun() {
+        // Check if we have any elements on the page that match the pattern for this functionality
+        // e.g. engrid__supporterquestions{id}__supporterquestions{id}-present, etc.
+        this.elements = [
+            ...document.querySelectorAll('[class*="engrid__supporterquestions"]'),
+        ].filter((el) => {
+            const classNames = el.className.split(" ");
+            return classNames.some((className) => /^engrid__supporterquestions\d+(__supporterquestions\d+)*-(present|absent)$/.test(className));
+        });
+        return this.elements.length > 0;
+    }
+    run() {
+        const actions = [];
+        // Create an array of actions for each element we have
+        this.elements.forEach((el) => {
+            // Mapping to an object with the class name, field name(s), and type
+            const classNames = el.className.split(" ");
+            const matchingClass = classNames.find((className) => /^engrid__supporterquestions\d+(__supporterquestions\d+)*-(present|absent)$/.test(className));
+            if (!matchingClass)
+                return null;
+            const typeIndex = matchingClass.lastIndexOf("-");
+            const type = matchingClass.substring(typeIndex + 1);
+            // Getting an array of the matching input names
+            // e.g. engrid__supporterquestions12345-present => ['supporter.questions.12345']
+            // e.g. engrid__supporterquestions12345__supporterquestions67890-present => ['supporter.questions.12345', 'supporter.questions.67890']
+            const inputIds = matchingClass
+                .substring(8, typeIndex)
+                .split("__")
+                .map((id) => `supporter.questions.${id.substring(18)}`);
+            actions.push({
+                class: matchingClass,
+                fieldNames: inputIds,
+                type: type,
+            });
+        });
+        //Process the actions
+        actions.forEach((action) => {
+            const inputElements = action.fieldNames.map((fieldName) => document.getElementsByName(fieldName)[0]);
+            const elements = document.querySelectorAll(`.${action.class}`);
+            const areAllInputsPresent = inputElements.every((input) => !!input);
+            const areAllInputsAbsent = inputElements.every((input) => !input);
+            // Hide the elements based on AND conditions
+            if ((action.type === "present" && areAllInputsAbsent) ||
+                (action.type === "absent" && areAllInputsPresent)) {
+                this.logger.log(`Conditions not met, hiding elements with class ${action.class}`);
+                elements.forEach((el) => {
+                    el.style.display = "none";
+                });
+            }
+        });
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/en-validators.js
+// This component uses EN's Custom Validators on the client side to validate form fields.
+// It's currently behind a feature flag, so it's not enabled by default.
+// To enable it, add the following to your options:
+// ENValidators: true
+
+class ENValidators {
+    constructor() {
+        this._form = EnForm.getInstance();
+        this._enElements = null;
+        this.logger = new EngridLogger("ENValidators", "white", "darkolivegreen", "🧐");
+        if (!this.loadValidators()) {
+            // This is an error to flag a racing condition. If the script is loaded before the validators are loaded, it will not work.
+            this.logger.error("Not Loaded");
+            return;
+        }
+        if (!this.shouldRun()) {
+            // If there's no custom validators, get out
+            this.logger.log("Not Needed");
+            console.log(this._enElements);
+            return;
+        }
+        this._form.onValidate.subscribe(this.enOnValidate.bind(this));
+    }
+    loadValidators() {
+        if (!engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enValidation", "validation", "validators")) {
+            return false;
+        }
+        // Loop through the array validators and add them to this._enElements
+        const validators = window.EngagingNetworks.require._defined.enValidation.validation
+            .validators;
+        this._enElements = validators.reduce((acc, validator) => {
+            if ("type" in validator && validator.type === "CUST") {
+                const container = document.querySelector(".en__field--" + validator.field);
+                const field = container
+                    ? container.querySelector("input, select, textarea")
+                    : null;
+                if (field) {
+                    field.addEventListener("input", this.liveValidate.bind(this, container, field, validator.regex, validator.message));
+                    acc.push({
+                        container: container,
+                        field: field,
+                        regex: validator.regex,
+                        message: validator.message,
+                    });
+                }
+            }
+            return acc;
+        }, []);
+        return true;
+    }
+    // Should we run the script?
+    shouldRun() {
+        return (engrid_ENGrid.getOption("ENValidators") &&
+            this._enElements &&
+            this._enElements.length > 0);
+    }
+    // Don't submit the form if any of the fields are invalid
+    enOnValidate() {
+        if (!this._enElements || this._form.validate === false) {
+            return;
+        }
+        this._enElements.forEach((element) => {
+            const fieldValidation = this.liveValidate(element.container, element.field, element.regex, element.message);
+            if (!fieldValidation) {
+                this._form.validate = false;
+                element.field.focus();
+                return;
+            }
+        });
+        this._form.validate = true;
+    }
+    // Validate the field on the fly
+    liveValidate(container, field, regex, message) {
+        const value = engrid_ENGrid.getFieldValue(field.getAttribute("name") || "");
+        // Do not validate empty fields, that's the job of the required validator
+        if (value === "") {
+            return true;
+        }
+        this.logger.log(`Live Validate ${field.getAttribute("name")} with ${regex}`);
+        // compare the value of the field with the regex
+        if (!value.match(regex)) {
+            // If the value is not valid, add the error message
+            engrid_ENGrid.setError(container, message);
+            return false;
+        }
+        // If the value is valid, remove the error message
+        engrid_ENGrid.removeError(container);
+        return true;
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.15.2";
+const AppVersion = "0.15.9";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
+
 
 
 
