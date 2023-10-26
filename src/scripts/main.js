@@ -292,19 +292,3 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
   // END ENGRID TRANSITION SCRIPTS
   ////////////////////////////////////////////
 };
-
-/**
- * Track data capture submits
- */
-export const dataCaptureTracking = function () {
-  if (pageJson.pageType === "otherdatacapture") {
-    if (typeof utag !== "undefined") {
-      utag.link({
-        event_name: "frm_emt_submit",
-        form_type: "otherdatacapture",
-        form_name: utag_data.page_name.slice(0, -2),
-        email_signup_location: "otherdatacapture",
-      });
-    }
-  }
-};

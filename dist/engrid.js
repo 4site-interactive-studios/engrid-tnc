@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, October 17, 2023 @ 16:31:54 ET
- *  By: fernando
- *  ENGrid styles: v0.15.3
- *  ENGrid scripts: v0.15.9
+ *  Date: Thursday, October 26, 2023 @ 12:25:35 ET
+ *  By: michael
+ *  ENGrid styles: v0.15.12
+ *  ENGrid scripts: v0.15.13
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10657,15 +10657,12 @@ class EnForm {
         }
     }
     get onSubmit() {
-        // if(ENGrid.debug) console.log("onSubmit");
         return this._onSubmit.asEvent();
     }
     get onError() {
-        // if(ENGrid.debug) console.log("onError");
         return this._onError.asEvent();
     }
     get onValidate() {
-        // if(ENGrid.debug) console.log("onError");
         return this._onValidate.asEvent();
     }
 }
@@ -10918,7 +10915,7 @@ class engrid_ENGrid {
                             if ("actions" in dependency && dependency.actions.length > 0) {
                                 let amountIdFound = false;
                                 dependency.actions.forEach((action) => {
-                                    if ("target" in action && action.target === amountID) {
+                                    if ("target" in action && action.target == amountID) {
                                         amountIdFound = true;
                                     }
                                 });
@@ -11505,7 +11502,46 @@ class ProcessingFees {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/events/remember-me-events.js
+/**
+ * This class is responsible for managing events related to the "Remember Me" functionality.
+ * It uses the Singleton design pattern to ensure only one instance of this class exists.
+ * It provides methods for dispatching load and clear events, and getters for accessing these events.
+ */
+
+
+class RememberMeEvents {
+    constructor() {
+        this.logger = new EngridLogger("RememberMeEvents");
+        this._onLoad = new dist/* SimpleEventDispatcher */.FK();
+        this._onClear = new dist/* SignalDispatcher */.nz();
+        this.hasData = false;
+    }
+    static getInstance() {
+        if (!RememberMeEvents.instance) {
+            RememberMeEvents.instance = new RememberMeEvents();
+        }
+        return RememberMeEvents.instance;
+    }
+    dispatchLoad(hasData) {
+        this.hasData = hasData;
+        this._onLoad.dispatch(hasData);
+        this.logger.log(`dispatchLoad: ${hasData}`);
+    }
+    dispatchClear() {
+        this._onClear.dispatch();
+        this.logger.log("dispatchClear");
+    }
+    get onLoad() {
+        return this._onLoad.asEvent();
+    }
+    get onClear() {
+        return this._onClear.asEvent();
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/events/index.js
+
 
 
 
@@ -11658,6 +11694,8 @@ class App extends engrid_ENGrid {
         // On the end of the script, after all subscribers defined, let's load the current value
         this._amount.load();
         this._frequency.load();
+        // Fast Form Fill
+        new FastFormFill();
         // Auto Country Select
         new AutoCountrySelect();
         // Add Image Attribution
@@ -11689,8 +11727,15 @@ class App extends engrid_ENGrid {
         if (this.options.ProgressBar)
             new ProgressBar();
         // RememberMe
-        if (this.options.RememberMe && typeof this.options.RememberMe === "object")
-            new RememberMe(this.options.RememberMe);
+        try {
+            // Accessing window.localStorage will throw an exception if it isn't permitted due to security reasons
+            // For example, this happens in Firefox when cookies are disabled.  If it isn't available, we shouldn't
+            //  bother with enabling RememberMe
+            if (this.options.RememberMe && typeof this.options.RememberMe === "object" && window.localStorage) {
+                new RememberMe(this.options.RememberMe);
+            }
+        }
+        catch (e) { }
         if (this.options.NeverBounceAPI)
             new NeverBounce(this.options.NeverBounceAPI, this.options.NeverBounceDateField, this.options.NeverBounceStatusField, this.options.NeverBounceDateFormat);
         // FreshAddress
@@ -11747,12 +11792,19 @@ class App extends engrid_ENGrid {
         //Exit Intent Lightbox
         new ExitIntentLightbox();
         new UrlParamsToBodyAttrs();
-        new FastFormFill();
         new SetAttr();
         new ShowIfPresent();
         //Debug panel
-        if (this.options.Debug ||
-            window.sessionStorage.hasOwnProperty(DebugPanel.debugSessionStorageKey)) {
+        let showDebugPanel = this.options.Debug;
+        try {
+            // accessing storage can throw an exception if it isn't available in Firefox
+            if (!showDebugPanel &&
+                window.sessionStorage.hasOwnProperty(DebugPanel.debugSessionStorageKey)) {
+                showDebugPanel = true;
+            }
+        }
+        catch (e) { }
+        if (showDebugPanel) {
             new DebugPanel(this.options.PageLayouts);
         }
         if (engrid_ENGrid.getUrlParameter("development") === "branding") {
@@ -11951,6 +12003,8 @@ class ApplePay {
         });
     }
     onPayClicked() {
+        if (!this._form.submit)
+            return;
         const enFieldPaymentType = document.querySelector("#en__field_transaction_paymenttype");
         const applePayToken = document.getElementById("applePayToken");
         const formClass = this._form;
@@ -13183,6 +13237,9 @@ class UpsellLightbox {
         this.logger = new EngridLogger("UpsellLightbox", "black", "pink", "🪟");
         let options = "EngridUpsell" in window ? window.EngridUpsell : {};
         this.options = Object.assign(Object.assign({}, UpsellOptionsDefaults), options);
+        //Disable for "applepay" via Vantiv payment method. Adding it to the array like this so it persists
+        //even if the client provides custom options.
+        this.options.disablePaymentMethods.push('applepay');
         if (!this.shouldRun()) {
             this.logger.log("Upsell script should NOT run");
             // If we're not on a Donation Page, get out
@@ -15028,6 +15085,7 @@ const remember_me_tippy = (__webpack_require__(3861)/* ["default"] */ .ZP);
 class RememberMe {
     constructor(options) {
         this._form = EnForm.getInstance();
+        this._events = RememberMeEvents.getInstance();
         this.iframe = null;
         this.remoteUrl = options.remoteUrl ? options.remoteUrl : null;
         this.cookieName = options.cookieName
@@ -15163,9 +15221,11 @@ class RememberMe {
                         clearAutofillLink.style.display = "none";
                     }
                     this.rememberMeOptIn = false;
+                    this._events.dispatchClear();
                 });
             }
         }
+        this._events.dispatchLoad(true);
     }
     getElementByFirstSelector(selectorsString) {
         // iterate through the selectors until we find one that exists
@@ -15230,6 +15290,7 @@ class RememberMe {
         else if (this.rememberMeOptIn) {
             rememberMeOptInField.checked = true;
         }
+        this._events.dispatchLoad(false);
     }
     useRemote() {
         return (!!this.remoteUrl &&
@@ -15320,6 +15381,16 @@ class RememberMe {
         }
         this.writeFields(true);
     }
+    /**
+     * Writes the values from the fieldData object to the corresponding HTML input fields.
+     *
+     * This function iterates over the fieldNames array and for each field name, it selects the corresponding HTML input field.
+     * If the field is found and its tag name is "INPUT", it checks if the field name matches certain conditions (like being a donation recurring payment radio button or a donation amount radio button).
+     * Depending on these conditions, it either clicks the field or sets its value using the setFieldValue function.
+     * If the field tag name is "SELECT", it sets its value using the setFieldValue function.
+     *
+     * @param overwrite - A boolean indicating whether to overwrite the existing value of the fields. Defaults to false.
+     */
     writeFields(overwrite = false) {
         for (let i = 0; i < this.fieldNames.length; i++) {
             let fieldSelector = "[name='" + this.fieldNames[i] + "']";
@@ -15817,7 +15888,15 @@ class DataLayer {
             "supporter.billingAddress2",
             "supporter.billingAddress3",
         ];
-        this.onLoad();
+        if (engrid_ENGrid.getOption("RememberMe")) {
+            RememberMeEvents.getInstance().onLoad.subscribe((hasData) => {
+                this.logger.log("Remember me - onLoad", hasData);
+                this.onLoad();
+            });
+        }
+        else {
+            this.onLoad();
+        }
         this._form.onSubmit.subscribe(() => this.onSubmit());
     }
     transformJSON(value) {
@@ -15887,6 +15966,61 @@ class DataLayer {
             this.dataLayer.push({
                 event: "EN_RECURRING_FREQUENCIES",
                 [`'EN_RECURRING_FREQEUENCIES'`]: recurrValues,
+            });
+        }
+        let fastFormFill = false;
+        // Fast Form Fill - Personal Details
+        const fastPersonalDetailsFormBlock = document.querySelector(".en__component--formblock.fast-personal-details");
+        if (fastPersonalDetailsFormBlock) {
+            const allPersonalMandatoryInputsAreFilled = FastFormFill.allMandatoryInputsAreFilled(fastPersonalDetailsFormBlock);
+            const somePersonalMandatoryInputsAreFilled = FastFormFill.someMandatoryInputsAreFilled(fastPersonalDetailsFormBlock);
+            if (allPersonalMandatoryInputsAreFilled) {
+                this.dataLayer.push({
+                    event: "EN_FASTFORMFILL_PERSONALINFO_SUCCESS",
+                });
+                fastFormFill = true;
+            }
+            else if (somePersonalMandatoryInputsAreFilled) {
+                this.dataLayer.push({
+                    event: "EN_FASTFORMFILL_PERSONALINFO_PARTIALSUCCESS",
+                });
+            }
+            else {
+                this.dataLayer.push({
+                    event: "EN_FASTFORMFILL_PERSONALINFO_FAILURE",
+                });
+            }
+        }
+        // Fast Form Fill - Address Details
+        const fastAddressDetailsFormBlock = document.querySelector(".en__component--formblock.fast-address-details");
+        if (fastAddressDetailsFormBlock) {
+            const allAddressMandatoryInputsAreFilled = FastFormFill.allMandatoryInputsAreFilled(fastAddressDetailsFormBlock);
+            const someAddressMandatoryInputsAreFilled = FastFormFill.someMandatoryInputsAreFilled(fastAddressDetailsFormBlock);
+            if (allAddressMandatoryInputsAreFilled) {
+                this.dataLayer.push({
+                    event: "EN_FASTFORMFILL_ADDRESS_SUCCESS",
+                });
+                fastFormFill = fastFormFill ? true : false; // Only set to true if it was true before
+            }
+            else if (someAddressMandatoryInputsAreFilled) {
+                this.dataLayer.push({
+                    event: "EN_FASTFORMFILL_ADDRESS_PARTIALSUCCESS",
+                });
+            }
+            else {
+                this.dataLayer.push({
+                    event: "EN_FASTFORMFILL_ADDRESS_FAILURE",
+                });
+            }
+        }
+        if (fastFormFill) {
+            this.dataLayer.push({
+                event: "EN_FASTFORMFILL_ALL_SUCCESS",
+            });
+        }
+        else {
+            this.dataLayer.push({
+                event: "EN_FASTFORMFILL_ALL_FAILURE",
             });
         }
         this.attachEventListeners();
@@ -19116,9 +19250,25 @@ class SupporterHub {
 class FastFormFill {
     constructor() {
         this.logger = new EngridLogger("FastFormFill", "white", "magenta", "📌");
+        this.rememberMeEvents = RememberMeEvents.getInstance();
+        if (engrid_ENGrid.getOption("RememberMe")) {
+            this.rememberMeEvents.onLoad.subscribe((hasData) => {
+                this.logger.log("Remember me - onLoad", hasData);
+                this.run();
+            });
+            this.rememberMeEvents.onClear.subscribe(() => {
+                // This is a test for the onClear event
+                this.logger.log("Remember me - onClear");
+            });
+        }
+        else {
+            this.run();
+        }
+    }
+    run() {
         const fastPersonalDetailsFormBlock = document.querySelector(".en__component--formblock.fast-personal-details");
         if (fastPersonalDetailsFormBlock) {
-            if (this.allMandatoryInputsAreFilled(fastPersonalDetailsFormBlock)) {
+            if (FastFormFill.allMandatoryInputsAreFilled(fastPersonalDetailsFormBlock)) {
                 this.logger.log("Personal details - All mandatory inputs are filled");
                 engrid_ENGrid.setBodyData("hide-fast-personal-details", "true");
             }
@@ -19129,7 +19279,7 @@ class FastFormFill {
         }
         const fastAddressDetailsFormBlock = document.querySelector(".en__component--formblock.fast-address-details");
         if (fastAddressDetailsFormBlock) {
-            if (this.allMandatoryInputsAreFilled(fastAddressDetailsFormBlock)) {
+            if (FastFormFill.allMandatoryInputsAreFilled(fastAddressDetailsFormBlock)) {
                 this.logger.log("Address details - All mandatory inputs are filled");
                 engrid_ENGrid.setBodyData("hide-fast-address-details", "true");
             }
@@ -19139,9 +19289,21 @@ class FastFormFill {
             }
         }
     }
-    allMandatoryInputsAreFilled(formBlock) {
+    static allMandatoryInputsAreFilled(formBlock) {
         const fields = formBlock.querySelectorAll(".en__mandatory input, .en__mandatory select, .en__mandatory textarea");
         return [...fields].every((input) => {
+            if (input.type === "radio" || input.type === "checkbox") {
+                const inputs = document.querySelectorAll('[name="' + input.name + '"]');
+                return [...inputs].some((radioOrCheckbox) => radioOrCheckbox.checked);
+            }
+            else {
+                return input.value !== null && input.value.trim() !== "";
+            }
+        });
+    }
+    static someMandatoryInputsAreFilled(formBlock) {
+        const fields = formBlock.querySelectorAll(".en__mandatory input, .en__mandatory select, .en__mandatory textarea");
+        return [...fields].some((input) => {
             if (input.type === "radio" || input.type === "checkbox") {
                 const inputs = document.querySelectorAll('[name="' + input.name + '"]');
                 return [...inputs].some((radioOrCheckbox) => radioOrCheckbox.checked);
@@ -19283,7 +19445,6 @@ class ENValidators {
         if (!this.shouldRun()) {
             // If there's no custom validators, get out
             this.logger.log("Not Needed");
-            console.log(this._enElements);
             return;
         }
         this._form.onValidate.subscribe(this.enOnValidate.bind(this));
@@ -19357,7 +19518,7 @@ class ENValidators {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.15.9";
+const AppVersion = "0.15.13";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
@@ -19684,22 +19845,211 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   ////////////////////////////////////////////
 
 };
-/**
- * Track data capture submits
- */
-
-const dataCaptureTracking = function () {
-  if (pageJson.pageType === "otherdatacapture") {
-    if (typeof utag !== "undefined") {
-      utag.link({
-        event_name: "frm_emt_submit",
-        form_type: "otherdatacapture",
-        form_name: utag_data.page_name.slice(0, -2),
-        email_signup_location: "otherdatacapture"
-      });
-    }
+;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
   }
-};
+
+  return obj;
+}
+;// CONCATENATED MODULE: ./src/scripts/tracking.js
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+/**
+ * @typedef {Object} Window
+ * @property {Object} utag
+ * @property {Object} utag_data
+ * @property {String} utag_data.page_name
+ * @property {Object} pageJson
+ * @property {String} pageJson.pageType
+ */
+function trackEvent(eventName, eventData) {
+  if (typeof utag !== "undefined") {
+    utag.link(_objectSpread({
+      event_name: eventName
+    }, eventData));
+  }
+}
+function trackFormSubmit(App, DonationAmount) {
+  //Other Data Capture submits
+  //Need to use pageJson directly here because App.getPageType() returns "SURVEY" for otherdatacapture pages and surveys
+  if (pageJson.pageType === "otherdatacapture") {
+    trackEvent("frm_emt_submit", {
+      form_type: "otherdatacapture",
+      form_name: utag_data.page_name.slice(0, -2),
+      email_signup_location: "otherdatacapture"
+    });
+  } //Donation page submits
+
+
+  if (App.getPageType() === "DONATION" && App.getPageNumber() === 1) {
+    const donationData = {};
+    donationData.productId = utag_data.page_name.slice(0, -2);
+    donationData.campaignId = pageJson.campaignId;
+    donationData.campaignPageId = App.getPageID();
+    donationData.state = App.getFieldValue("supporter.postcode");
+    donationData.zipCode = App.getFieldValue("supporter.postcode");
+    donationData.emailAddress = App.getFieldValue("supporter.emailAddress");
+    donationData.originalDonationAmount = DonationAmount.getInstance().amount;
+    donationData.extraAmount = 0;
+    /** @type {HTMLInputElement} */
+    //If fee cover is checked, set extra amount to 3% of donation amount and subtract from original donation amount
+
+    const feeCoverCheckbox = App.getField("transaction.feeCover");
+
+    if (feeCoverCheckbox && feeCoverCheckbox.checked) {
+      donationData.extraAmount = (DonationAmount.getInstance().amount * 0.03).toFixed(2);
+      donationData.originalDonationAmount = donationData.originalDonationAmount - donationData.extraAmount;
+    } //TODO: add ecard data to donationData when we do ecard implementation
+
+
+    sessionStorage.setItem("donationData", JSON.stringify(donationData));
+  } //Mobile phone data
+
+  /** @type {HTMLInputElement} */
+
+
+  const mobilePhoneNumber = App.getField("supporter.phoneNumber2");
+
+  if (mobilePhoneNumber) {
+    const mobilePhoneData = {};
+    mobilePhoneData.phoneNumber = mobilePhoneNumber.value;
+    /** @type {HTMLInputElement} */
+
+    const mobilePhoneOptIn = App.getField("supporter.questions.848527");
+
+    if (mobilePhoneOptIn && mobilePhoneOptIn.checked) {
+      mobilePhoneData.optIn = "Y";
+    }
+
+    sessionStorage.setItem("mobilePhoneData", JSON.stringify(mobilePhoneData));
+  } //Track ETT and petition submits
+
+
+  if (["ADVOCACY", "EMAILTOTARGET"].includes(App.getPageType())) {
+    let utagData = {};
+    let eventName = "";
+    /** @type {HTMLInputElement} */
+
+    const phoneOptIn = App.getField("supporter.questions.1107654");
+
+    if (phoneOptIn && phoneOptIn.checked) {
+      eventName = "frm_emt_txt_submit";
+      utagData.text_signup_location = pageJson.pageType;
+    } else {
+      eventName = "frm_emt_submit";
+    }
+
+    utagData.form_type = pageJson.pageType;
+    utagData.form_name = utag_data.page_name.slice(0, -2);
+    utagData.action_id = utag_data.form_name;
+    utagData.action_type = pageJson.pageType;
+    utagData.zip_code = App.getFieldValue("supporter.postcode");
+    utagData.email_signup_location = pageJson.pageType;
+    trackEvent(eventName, utagData);
+  }
+}
+function trackFormErrors() {
+  let invalidFields = "";
+  let errors = ""; // Gather invalid fields and error messages
+
+  document.querySelectorAll(".en__field--validationFailed").forEach(el => {
+    if (el.querySelector(".en__field__error")) {
+      invalidFields += `${el.querySelector(".en__field__input").getAttribute("name")}|`;
+      errors += `${el.querySelector(".en__field__error").textContent}|`;
+    }
+  }); // Fire tracking if errors were found
+
+  if (invalidFields !== "") {
+    trackEvent("form_error", {
+      form_field_error_field: invalidFields.slice(0, -1),
+      form_field_error_value: errors.slice(0, -1),
+      form_name: utag_data.page_name.slice(0, -2),
+      form_type: pageJson.pageType
+    });
+  }
+}
+function trackProcessingErrors(App) {
+  const errorList = document.querySelector(".en__errorList");
+
+  if (errorList && errorList.textContent.trim() !== "") {
+    trackEvent("form_error", {
+      form_field_error_field: "payment error",
+      form_field_error_value: "payment error",
+      payment_type: App.getPaymentType(),
+      form_name: utag_data.page_name.slice(0, -2),
+      form_type: pageJson.pageType
+    });
+  }
+}
+function trackUrlParams() {
+  const params = new URLSearchParams(location.search);
+  const trackers = ["src", "vid", "vid2", "en_txn1", "en_txn2", "en_txn3", "en_txn4", "en_txn5", "en_txn7", "en_txn8", "en_txn9", "en_txn10"];
+  let visitData = sessionStorage.getItem("visitData") ? JSON.parse(sessionStorage.getItem("visitData")) : {};
+  trackers.forEach(tracker => {
+    if (params.has(tracker)) {
+      visitData[tracker] = params.get(tracker);
+    }
+  });
+  sessionStorage.setItem("visitData", JSON.stringify(visitData));
+}
+function trackUserInteractions() {
+  // Track clicks on social share buttons
+  document.querySelectorAll(".en__socialShare__image").forEach(el => {
+    el.addEventListener("click", e => {
+      trackEvent("social_share", {
+        social_share_id: `preserve.nature.org.share.${e.target.parentElement.dataset.enshare}`,
+        social_share_platform: e.target.parentElement.dataset.enshare
+      });
+    });
+  }); // Track clicks on footer links
+
+  document.querySelectorAll(".main-page-footer a").forEach(el => {
+    el.addEventListener("click", e => {
+      trackEvent("footer_nav_click", {
+        nav_click_location: `preserve.nature.org.fnav.${e.target.textContent.toLowerCase()}`
+      });
+    });
+  }); // Track en upsell modal opening
+
+  const observer = new MutationObserver((mutationsList, observer) => {
+    for (const mutation of mutationsList) {
+      if (mutation.addedNodes) {
+        mutation.addedNodes.forEach(node => {
+          if (node.firstChild && node.firstChild.id === "en__upsellModal") {
+            //Track lightbox opened
+            trackEvent("lightbox_impression", {
+              lightbox_name: "sustainer upsell"
+            }); //Track if 'yes' is clicked on lightbox
+
+            document.getElementById("en__upsellModal__yes").addEventListener("click", () => {
+              trackEvent("lightbox_click", {
+                lightbox_name: "sustainer upsell"
+              });
+            });
+            observer.disconnect();
+          }
+        });
+      }
+    }
+  });
+  observer.observe(document, {
+    childList: true,
+    subtree: true
+  });
+}
 ;// CONCATENATED MODULE: ./src/index.ts
 var _window, _window$donationSetti;
 
@@ -19710,6 +20060,7 @@ var _window, _window$donationSetti;
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -19732,9 +20083,15 @@ const options = {
   MaxAmountMessage: `Your donation must be between $${minimumAmount} and $50,000`,
   PageLayouts: ["centercenter1col"],
   TranslateFields: false,
-  onLoad: () => customScript(App, DonationFrequency, DonationAmount),
-  onSubmit: () => dataCaptureTracking(),
-  onResize: () => console.log("Starter Theme Window Resized")
+  onLoad: () => {
+    customScript(App, DonationFrequency, DonationAmount);
+    trackUrlParams();
+    trackProcessingErrors(App);
+    trackUserInteractions();
+  },
+  onSubmit: () => trackFormSubmit(App, DonationAmount),
+  onResize: () => console.log("Starter Theme Window Resized"),
+  onError: () => trackFormErrors()
 };
 new App(options);
 })();

@@ -12,7 +12,14 @@ import {
 // } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
-import { customScript, dataCaptureTracking } from "./scripts/main";
+import { customScript } from "./scripts/main";
+import {
+  trackFormSubmit,
+  trackUrlParams,
+  trackFormErrors,
+  trackProcessingErrors,
+  trackUserInteractions,
+} from "./scripts/tracking";
 
 declare global {
   interface Window {
@@ -44,8 +51,14 @@ const options: Options = {
   MaxAmountMessage: `Your donation must be between $${minimumAmount} and $50,000`,
   PageLayouts: ["centercenter1col"],
   TranslateFields: false,
-  onLoad: () => customScript(App, DonationFrequency, DonationAmount),
-  onSubmit: () => dataCaptureTracking(),
+  onLoad: () => {
+    customScript(App, DonationFrequency, DonationAmount);
+    trackUrlParams();
+    trackProcessingErrors(App);
+    trackUserInteractions();
+  },
+  onSubmit: () => trackFormSubmit(App, DonationAmount),
   onResize: () => console.log("Starter Theme Window Resized"),
+  onError: () => trackFormErrors(),
 };
 new App(options);
