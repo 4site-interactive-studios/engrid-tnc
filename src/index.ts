@@ -20,6 +20,7 @@ import {
   trackProcessingErrors,
   trackUserInteractions,
 } from "./scripts/tracking";
+import { BequestLightbox } from "./scripts/bequest-lightbox";
 
 declare global {
   interface Window {
@@ -27,6 +28,13 @@ declare global {
       minimumDonationAmount: number;
       monthlyPremiumMinimum: number;
       onetimePremiumMinimum: number;
+    };
+    bequestUserProfile: {
+      crmConstituency: string;
+      doNotSendSolicitations: string;
+      includeInPlannedGivingSolicitations: string;
+      plannedGiftProspect: string;
+      totalNumberOfGifts: string;
     };
   }
 }
@@ -53,6 +61,7 @@ const options: Options = {
   TranslateFields: false,
   onLoad: () => {
     customScript(App, DonationFrequency, DonationAmount);
+    new BequestLightbox();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();

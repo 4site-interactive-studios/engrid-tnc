@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 1, 2023 @ 18:01:33 ET
+ *  Date: Sunday, November 5, 2023 @ 10:24:12 ET
  *  By: michael
  *  ENGrid styles: v0.15.12
  *  ENGrid scripts: v0.15.15
@@ -20110,6 +20110,134 @@ function trackUserInteractions() {
     subtree: true
   });
 }
+;// CONCATENATED MODULE: ./src/scripts/bequest-lightbox.ts
+
+
+
+class BequestLightbox {
+  constructor() {
+    _defineProperty(this, "logger", new EngridLogger("BequestLightbox", "yellow", "black"));
+
+    _defineProperty(this, "modalContent", null);
+
+    _defineProperty(this, "bequestUserProfile", undefined);
+
+    if (!this.shouldRun()) return;
+    this.addModal();
+
+    if (this.shouldOpen()) {
+      this.open();
+      return;
+    }
+  }
+
+  shouldRun() {
+    this.modalContent = document.querySelector(".modal--bequest"); // @ts-ignore
+
+    this.bequestUserProfile = bequestUserProfile;
+
+    if (this.modalContent && !this.bequestUserProfile) {
+      this.logger.log("Bequest modal found, but no user profile found. Please add the User Profile Script.");
+    }
+
+    return !!this.modalContent && !!this.bequestUserProfile;
+  }
+
+  shouldOpen() {
+    var _this$modalContent;
+
+    if ((_this$modalContent = this.modalContent) !== null && _this$modalContent !== void 0 && _this$modalContent.classList.contains("modal--always-open")) {
+      this.logger.log("Opening bequest modal. Always open trigger found.");
+      return true;
+    }
+
+    this.logger.log("Not opening bequest modal. No conditions met.");
+    return false;
+  }
+
+  addModal() {
+    var _document$querySelect;
+
+    document.body.insertAdjacentHTML("beforeend", `<div class="engrid-modal">
+          <div class="engrid-modal__overlay">
+            <div class="engrid-modal__container">
+              <div class="engrid-modal__close">X</div>
+              <div class="engrid-modal__body">
+              </div>
+            </div>
+          </div>
+        </div>`);
+    (_document$querySelect = document.querySelector(".engrid-modal .engrid-modal__body")) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.appendChild(this.modalContent);
+    this.addEventListeners();
+  }
+
+  open() {
+    engrid_ENGrid.setBodyData("modal", "open");
+    engrid_ENGrid.setBodyData("bequest-lightbox", "open");
+    trackEvent("lightbox_impression", {
+      lightbox_name: "bequest"
+    });
+  }
+
+  addEventListeners() {
+    var _document$querySelect2, _document$querySelect3;
+
+    // Close event on top X
+    (_document$querySelect2 = document.querySelector(".engrid-modal__close")) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.addEventListener("click", () => {
+      this.close();
+    }); // Bounce scale when clicking outside of modal
+
+    (_document$querySelect3 = document.querySelector(".engrid-modal__overlay")) === null || _document$querySelect3 === void 0 ? void 0 : _document$querySelect3.addEventListener("click", event => {
+      if (event.target === event.currentTarget) {
+        const modal = document.querySelector(".engrid-modal");
+
+        if (modal) {
+          modal.classList.remove("engrid-modal--scale");
+          void modal.clientWidth;
+          modal.classList.add("engrid-modal--scale");
+        }
+      }
+    }); // Close on "modal__close" click
+
+    const closeEls = document.querySelectorAll(".modal__close");
+    closeEls.forEach(el => {
+      el.addEventListener("click", () => {
+        this.close();
+      });
+    }); // Resize iframe on load
+
+    const iframe = document.querySelector(".engrid-modal__body iframe");
+
+    if (iframe) {
+      this.resizeIframe(iframe);
+      iframe.addEventListener("load", () => {
+        this.resizeIframe(iframe);
+      });
+    } // Listen for iframe submission message from iframe page 2, and close modal.
+
+
+    window.addEventListener("message", event => {
+      if (event.data === "iframeSubmitted") {
+        this.close();
+        trackEvent("lightbox_click", {
+          lightbox_name: "bequest"
+        });
+      }
+    });
+  }
+
+  close() {
+    engrid_ENGrid.setBodyData("modal", "closed");
+    engrid_ENGrid.setBodyData("bequest-lightbox", "closed");
+  }
+
+  resizeIframe(iframe) {
+    var _iframe$contentWindow;
+
+    iframe.style.height = ((_iframe$contentWindow = iframe.contentWindow) === null || _iframe$contentWindow === void 0 ? void 0 : _iframe$contentWindow.document.body.scrollHeight) + "px";
+  }
+
+}
 ;// CONCATENATED MODULE: ./src/index.ts
 var _window, _window$donationSetti;
 
@@ -20120,6 +20248,7 @@ var _window, _window$donationSetti;
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -20145,6 +20274,7 @@ const options = {
   TranslateFields: false,
   onLoad: () => {
     customScript(App, DonationFrequency, DonationAmount);
+    new BequestLightbox();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();
