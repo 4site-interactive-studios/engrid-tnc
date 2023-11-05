@@ -24,7 +24,7 @@ export class BequestLightbox {
   private shouldRun(): boolean {
     this.modalContent = document.querySelector(".modal--bequest");
     // @ts-ignore
-    this.bequestUserProfile = bequestUserProfile;
+    this.bequestUserProfile = window.bequestUserProfile || undefined;
     if (this.modalContent && !this.bequestUserProfile) {
       this.logger.log(
         "Bequest modal found, but no user profile found. Please add the User Profile Script."

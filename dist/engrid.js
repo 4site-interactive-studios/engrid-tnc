@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, November 5, 2023 @ 10:24:12 ET
+ *  Date: Sunday, November 5, 2023 @ 10:39:52 ET
  *  By: michael
  *  ENGrid styles: v0.15.12
  *  ENGrid scripts: v0.15.15
@@ -20134,7 +20134,7 @@ class BequestLightbox {
   shouldRun() {
     this.modalContent = document.querySelector(".modal--bequest"); // @ts-ignore
 
-    this.bequestUserProfile = bequestUserProfile;
+    this.bequestUserProfile = window.bequestUserProfile || undefined;
 
     if (this.modalContent && !this.bequestUserProfile) {
       this.logger.log("Bequest modal found, but no user profile found. Please add the User Profile Script.");
