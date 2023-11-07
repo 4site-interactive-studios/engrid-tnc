@@ -33,6 +33,20 @@ declare global {
 
 const minimumAmount = window?.donationSettings?.minimumDonationAmount ?? 5;
 
+//Allow banner image with attribution using image block
+//This code is run before the ENgrid script is loaded so that media-attribution.ts will run on this element
+const bannerImageWithAttribution = document.querySelector(
+  ".body-banner .en__component--imageblock img[alt]"
+) as HTMLElement;
+if (
+  bannerImageWithAttribution &&
+  bannerImageWithAttribution.getAttribute("alt")
+) {
+  bannerImageWithAttribution.dataset.attributionSource = "i";
+  bannerImageWithAttribution.dataset.attributionSourceTooltip =
+    bannerImageWithAttribution.getAttribute("alt") ?? "";
+}
+
 const options: Options = {
   applePay: false,
   CapitalizeFields: true,

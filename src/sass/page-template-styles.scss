@@ -807,7 +807,8 @@
         object-fit: cover;
       }
 
-      .en__component--codeblock {
+      .en__component--codeblock,
+      .en__component--imageblock {
         position: absolute;
         top: 0;
         bottom: 0;
