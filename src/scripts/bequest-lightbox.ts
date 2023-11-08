@@ -58,7 +58,7 @@ export class BequestLightbox {
     return false;
   }
 
-  private strictTrigger() {
+  private strictTrigger(): boolean {
     // prettier-ignore
     this.logger.log(`country: ${this.pageJson?.country}
       amount: ${this.pageJson?.amount}
