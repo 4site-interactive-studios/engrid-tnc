@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, November 5, 2023 @ 10:39:52 ET
+ *  Date: Wednesday, November 8, 2023 @ 04:16:10 ET
  *  By: michael
  *  ENGrid styles: v0.15.12
  *  ENGrid scripts: v0.15.15
@@ -20122,20 +20122,25 @@ class BequestLightbox {
 
     _defineProperty(this, "bequestUserProfile", undefined);
 
-    if (!this.shouldRun()) return;
+    _defineProperty(this, "pageJson", void 0);
+
+    this.modalContent = document.querySelector(".modal--bequest");
+    this.bequestUserProfile = window.bequestUserProfile || undefined;
+    this.pageJson = window.pageJson;
+
+    if (!this.shouldRun()) {
+      this.logger.log("Not running bequest modal.");
+      return;
+    }
+
     this.addModal();
 
     if (this.shouldOpen()) {
       this.open();
-      return;
     }
   }
 
   shouldRun() {
-    this.modalContent = document.querySelector(".modal--bequest"); // @ts-ignore
-
-    this.bequestUserProfile = window.bequestUserProfile || undefined;
-
     if (this.modalContent && !this.bequestUserProfile) {
       this.logger.log("Bequest modal found, but no user profile found. Please add the User Profile Script.");
     }
@@ -20151,7 +20156,54 @@ class BequestLightbox {
       return true;
     }
 
+    if (this.strictTrigger()) {
+      this.logger.log("Opening bequest modal. Strict trigger found.");
+      return true;
+    }
+
     this.logger.log("Not opening bequest modal. No conditions met.");
+    return false;
+  }
+
+  strictTrigger() {
+    var _this$pageJson, _this$pageJson2, _this$bequestUserProf, _this$bequestUserProf2, _this$bequestUserProf3, _this$bequestUserProf4, _this$bequestUserProf5, _this$pageJson3, _this$pageJson4, _this$bequestUserProf6, _this$bequestUserProf7, _this$bequestUserProf8, _this$bequestUserProf9, _this$bequestUserProf10, _this$pageJson5, _this$pageJson6, _this$bequestUserProf11, _this$bequestUserProf12, _this$bequestUserProf13, _this$bequestUserProf14, _this$bequestUserProf15, _this$bequestUserProf16, _this$pageJson7, _this$bequestUserProf17, _this$bequestUserProf18, _this$bequestUserProf19, _this$pageJson8;
+
+    // prettier-ignore
+    this.logger.log(`country: ${(_this$pageJson = this.pageJson) === null || _this$pageJson === void 0 ? void 0 : _this$pageJson.country}
+      amount: ${(_this$pageJson2 = this.pageJson) === null || _this$pageJson2 === void 0 ? void 0 : _this$pageJson2.amount}
+      doNotSendSolicitations: ${(_this$bequestUserProf = this.bequestUserProfile) === null || _this$bequestUserProf === void 0 ? void 0 : _this$bequestUserProf.doNotSendSolicitations}
+      crmConstituency: ${(_this$bequestUserProf2 = this.bequestUserProfile) === null || _this$bequestUserProf2 === void 0 ? void 0 : _this$bequestUserProf2.crmConstituency}
+      plannedGiftProspect: ${(_this$bequestUserProf3 = this.bequestUserProfile) === null || _this$bequestUserProf3 === void 0 ? void 0 : _this$bequestUserProf3.plannedGiftProspect}
+      totalNumberOfGifts: ${(_this$bequestUserProf4 = this.bequestUserProfile) === null || _this$bequestUserProf4 === void 0 ? void 0 : _this$bequestUserProf4.totalNumberOfGifts}
+      includeInPlannedGivingSolicitations: ${(_this$bequestUserProf5 = this.bequestUserProfile) === null || _this$bequestUserProf5 === void 0 ? void 0 : _this$bequestUserProf5.includeInPlannedGivingSolicitations}
+      bequest_lb_select: ${this.getCookie("bequest_lb_select")}
+      gp_form_submitted: ${this.getCookie("gp_form_submitted")}
+      per_gp: ${this.getCookie("per_gp")}
+      gp_email: ${this.getCookie("gp_email")}`); // prettier-ignore
+
+    this.logger.log(`country: ${(_this$pageJson3 = this.pageJson) === null || _this$pageJson3 === void 0 ? void 0 : _this$pageJson3.country} = ${((_this$pageJson4 = this.pageJson) === null || _this$pageJson4 === void 0 ? void 0 : _this$pageJson4.country) === "US"}
+      doNotSendSolicitations: ${(_this$bequestUserProf6 = this.bequestUserProfile) === null || _this$bequestUserProf6 === void 0 ? void 0 : _this$bequestUserProf6.doNotSendSolicitations} === "Y" = ${((_this$bequestUserProf7 = this.bequestUserProfile) === null || _this$bequestUserProf7 === void 0 ? void 0 : _this$bequestUserProf7.doNotSendSolicitations) === "Y"}
+      crmConstituency: ${(_this$bequestUserProf8 = this.bequestUserProfile) === null || _this$bequestUserProf8 === void 0 ? void 0 : _this$bequestUserProf8.crmConstituency} includes "Legacy Club" = ${(_this$bequestUserProf9 = this.bequestUserProfile) === null || _this$bequestUserProf9 === void 0 ? void 0 : (_this$bequestUserProf10 = _this$bequestUserProf9.crmConstituency) === null || _this$bequestUserProf10 === void 0 ? void 0 : _this$bequestUserProf10.includes("Legacy Club")}
+      amount: ${(_this$pageJson5 = this.pageJson) === null || _this$pageJson5 === void 0 ? void 0 : _this$pageJson5.amount} >= 100 = ${((_this$pageJson6 = this.pageJson) === null || _this$pageJson6 === void 0 ? void 0 : _this$pageJson6.amount) >= 100}
+      bequest_lb_select: ${this.getCookie("bequest_lb_select")} = ${this.getCookie("bequest_lb_select")}
+      gp_form_submitted: ${this.getCookie("gp_form_submitted")} = ${this.getCookie("gp_form_submitted")}
+      per_gp: ${this.getCookie("per_gp")} = ${this.getCookie("per_gp")}
+      gp_email: ${this.getCookie("gp_email")} = ${this.getCookie("gp_email")}
+      totalNumberOfGifts: ${(_this$bequestUserProf11 = this.bequestUserProfile) === null || _this$bequestUserProf11 === void 0 ? void 0 : _this$bequestUserProf11.totalNumberOfGifts} >= 3 = ${Number((_this$bequestUserProf12 = this.bequestUserProfile) === null || _this$bequestUserProf12 === void 0 ? void 0 : _this$bequestUserProf12.totalNumberOfGifts) >= 3}
+      includeInPlannedGivingSolicitations: ${(_this$bequestUserProf13 = this.bequestUserProfile) === null || _this$bequestUserProf13 === void 0 ? void 0 : _this$bequestUserProf13.includeInPlannedGivingSolicitations} === "Y" = ${((_this$bequestUserProf14 = this.bequestUserProfile) === null || _this$bequestUserProf14 === void 0 ? void 0 : _this$bequestUserProf14.includeInPlannedGivingSolicitations) === "Y"}
+      plannedGiftProspect: ${(_this$bequestUserProf15 = this.bequestUserProfile) === null || _this$bequestUserProf15 === void 0 ? void 0 : _this$bequestUserProf15.plannedGiftProspect} === "Y" = ${((_this$bequestUserProf16 = this.bequestUserProfile) === null || _this$bequestUserProf16 === void 0 ? void 0 : _this$bequestUserProf16.plannedGiftProspect) === "Y"}`);
+
+    if (((_this$pageJson7 = this.pageJson) === null || _this$pageJson7 === void 0 ? void 0 : _this$pageJson7.country) === "US" && ((_this$bequestUserProf17 = this.bequestUserProfile) === null || _this$bequestUserProf17 === void 0 ? void 0 : _this$bequestUserProf17.doNotSendSolicitations) !== "Y" && !((_this$bequestUserProf18 = this.bequestUserProfile) !== null && _this$bequestUserProf18 !== void 0 && (_this$bequestUserProf19 = _this$bequestUserProf18.crmConstituency) !== null && _this$bequestUserProf19 !== void 0 && _this$bequestUserProf19.includes("Legacy Club")) && ((_this$pageJson8 = this.pageJson) === null || _this$pageJson8 === void 0 ? void 0 : _this$pageJson8.amount) >= 100 && !this.getCookie("bequest_lb_select") && !this.getCookie("gp_form_submitted")) {
+      var _this$bequestUserProf20, _this$bequestUserProf21, _this$bequestUserProf22;
+
+      this.logger.log("Strict trigger passed first condition");
+
+      if (this.getCookie("per_gp") === "true" || this.getCookie("gp_email") === "true" || Number((_this$bequestUserProf20 = this.bequestUserProfile) === null || _this$bequestUserProf20 === void 0 ? void 0 : _this$bequestUserProf20.totalNumberOfGifts) >= 3 || ((_this$bequestUserProf21 = this.bequestUserProfile) === null || _this$bequestUserProf21 === void 0 ? void 0 : _this$bequestUserProf21.includeInPlannedGivingSolicitations) === "Y" || ((_this$bequestUserProf22 = this.bequestUserProfile) === null || _this$bequestUserProf22 === void 0 ? void 0 : _this$bequestUserProf22.plannedGiftProspect) === "Y") {
+        this.logger.log("Strict trigger passed second condition");
+        return true;
+      }
+    }
+
     return false;
   }
 
@@ -20162,8 +20214,7 @@ class BequestLightbox {
           <div class="engrid-modal__overlay">
             <div class="engrid-modal__container">
               <div class="engrid-modal__close">X</div>
-              <div class="engrid-modal__body">
-              </div>
+              <div class="engrid-modal__body"></div>
             </div>
           </div>
         </div>`);
@@ -20235,6 +20286,26 @@ class BequestLightbox {
     var _iframe$contentWindow;
 
     iframe.style.height = ((_iframe$contentWindow = iframe.contentWindow) === null || _iframe$contentWindow === void 0 ? void 0 : _iframe$contentWindow.document.body.scrollHeight) + "px";
+  }
+
+  getCookie(cookieName) {
+    const name = `${cookieName}=`;
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookieArray = decodedCookie.split(";");
+
+    for (let i = 0; i < cookieArray.length; i++) {
+      let cookie = cookieArray[i];
+
+      while (cookie.charAt(0) === " ") {
+        cookie = cookie.substring(1);
+      }
+
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+
+    return null;
   }
 
 }

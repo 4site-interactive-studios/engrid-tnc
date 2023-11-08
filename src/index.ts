@@ -30,11 +30,11 @@ declare global {
       onetimePremiumMinimum: number;
     };
     bequestUserProfile: {
-      crmConstituency: string;
-      doNotSendSolicitations: string;
-      includeInPlannedGivingSolicitations: string;
-      plannedGiftProspect: string;
-      totalNumberOfGifts: string;
+      crmConstituency?: string;
+      doNotSendSolicitations?: string;
+      includeInPlannedGivingSolicitations?: string;
+      plannedGiftProspect?: string;
+      totalNumberOfGifts?: string;
     };
   }
 }

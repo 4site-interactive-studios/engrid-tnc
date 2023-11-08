@@ -7,24 +7,36 @@ export class BequestLightbox {
     "yellow",
     "black"
   );
-  private modalContent: Element | null = null;
-  private bequestUserProfile: Object | undefined = undefined;
+  private readonly modalContent: Element | null = null;
+  private readonly bequestUserProfile:
+    | {
+        crmConstituency?: string;
+        doNotSendSolicitations?: string;
+        includeInPlannedGivingSolicitations?: string;
+        plannedGiftProspect?: string;
+        totalNumberOfGifts?: string;
+      }
+    | undefined = undefined;
+  private pageJson: any;
 
   constructor() {
-    if (!this.shouldRun()) return;
+    this.modalContent = document.querySelector(".modal--bequest");
+    this.bequestUserProfile = window.bequestUserProfile || undefined;
+    this.pageJson = (window as any).pageJson;
+
+    if (!this.shouldRun()) {
+      this.logger.log("Not running bequest modal.");
+      return;
+    }
 
     this.addModal();
 
     if (this.shouldOpen()) {
       this.open();
-      return;
     }
   }
 
   private shouldRun(): boolean {
-    this.modalContent = document.querySelector(".modal--bequest");
-    // @ts-ignore
-    this.bequestUserProfile = window.bequestUserProfile || undefined;
     if (this.modalContent && !this.bequestUserProfile) {
       this.logger.log(
         "Bequest modal found, but no user profile found. Please add the User Profile Script."
@@ -38,7 +50,61 @@ export class BequestLightbox {
       this.logger.log("Opening bequest modal. Always open trigger found.");
       return true;
     }
+    if (this.strictTrigger()) {
+      this.logger.log("Opening bequest modal. Strict trigger found.");
+      return true;
+    }
     this.logger.log("Not opening bequest modal. No conditions met.");
+    return false;
+  }
+
+  private strictTrigger() {
+    // prettier-ignore
+    this.logger.log(`country: ${this.pageJson?.country}
+      amount: ${this.pageJson?.amount}
+      doNotSendSolicitations: ${this.bequestUserProfile?.doNotSendSolicitations}
+      crmConstituency: ${this.bequestUserProfile?.crmConstituency}
+      plannedGiftProspect: ${this.bequestUserProfile?.plannedGiftProspect}
+      totalNumberOfGifts: ${this.bequestUserProfile?.totalNumberOfGifts}
+      includeInPlannedGivingSolicitations: ${this.bequestUserProfile?.includeInPlannedGivingSolicitations}
+      bequest_lb_select: ${this.getCookie("bequest_lb_select")}
+      gp_form_submitted: ${this.getCookie("gp_form_submitted")}
+      per_gp: ${this.getCookie("per_gp")}
+      gp_email: ${this.getCookie("gp_email")}`);
+
+    // prettier-ignore
+    this.logger.log(`country: ${this.pageJson?.country} = ${this.pageJson?.country === "US"}
+      doNotSendSolicitations: ${this.bequestUserProfile?.doNotSendSolicitations} === "Y" = ${this.bequestUserProfile?.doNotSendSolicitations === "Y"}
+      crmConstituency: ${this.bequestUserProfile?.crmConstituency} includes "Legacy Club" = ${this.bequestUserProfile?.crmConstituency?.includes("Legacy Club")}
+      amount: ${this.pageJson?.amount} >= 100 = ${this.pageJson?.amount >= 100}
+      bequest_lb_select: ${this.getCookie("bequest_lb_select")} = ${this.getCookie("bequest_lb_select")}
+      gp_form_submitted: ${this.getCookie("gp_form_submitted")} = ${this.getCookie("gp_form_submitted")}
+      per_gp: ${this.getCookie("per_gp")} = ${this.getCookie("per_gp")}
+      gp_email: ${this.getCookie("gp_email")} = ${this.getCookie("gp_email")}
+      totalNumberOfGifts: ${this.bequestUserProfile?.totalNumberOfGifts} >= 3 = ${Number(this.bequestUserProfile?.totalNumberOfGifts) >= 3}
+      includeInPlannedGivingSolicitations: ${this.bequestUserProfile?.includeInPlannedGivingSolicitations} === "Y" = ${this.bequestUserProfile?.includeInPlannedGivingSolicitations === "Y"}
+      plannedGiftProspect: ${this.bequestUserProfile?.plannedGiftProspect} === "Y" = ${this.bequestUserProfile?.plannedGiftProspect === "Y"}`);
+
+    if (
+      this.pageJson?.country === "US" &&
+      this.bequestUserProfile?.doNotSendSolicitations !== "Y" &&
+      !this.bequestUserProfile?.crmConstituency?.includes("Legacy Club") &&
+      this.pageJson?.amount >= 100 &&
+      !this.getCookie("bequest_lb_select") &&
+      !this.getCookie("gp_form_submitted")
+    ) {
+      this.logger.log("Strict trigger passed first condition");
+      if (
+        this.getCookie("per_gp") === "true" ||
+        this.getCookie("gp_email") === "true" ||
+        Number(this.bequestUserProfile?.totalNumberOfGifts) >= 3 ||
+        this.bequestUserProfile?.includeInPlannedGivingSolicitations === "Y" ||
+        this.bequestUserProfile?.plannedGiftProspect === "Y"
+      ) {
+        this.logger.log("Strict trigger passed second condition");
+        return true;
+      }
+    }
     return false;
   }
 
@@ -49,8 +115,7 @@ export class BequestLightbox {
           <div class="engrid-modal__overlay">
             <div class="engrid-modal__container">
               <div class="engrid-modal__close">X</div>
-              <div class="engrid-modal__body">
-              </div>
+              <div class="engrid-modal__body"></div>
             </div>
           </div>
         </div>`
@@ -132,5 +197,23 @@ export class BequestLightbox {
   private resizeIframe(iframe: HTMLIFrameElement): void {
     iframe.style.height =
       iframe.contentWindow?.document.body.scrollHeight + "px";
+  }
+
+  private getCookie(cookieName: string): string | null {
+    const name = `${cookieName}=`;
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookieArray = decodedCookie.split(";");
+
+    for (let i = 0; i < cookieArray.length; i++) {
+      let cookie = cookieArray[i];
+      while (cookie.charAt(0) === " ") {
+        cookie = cookie.substring(1);
+      }
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+
+    return null;
   }
 }
