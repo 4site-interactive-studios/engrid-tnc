@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 15, 2023 @ 12:14:17 ET
+ *  Date: Friday, November 17, 2023 @ 08:14:40 ET
  *  By: michael
  *  ENGrid styles: v0.15.12
  *  ENGrid scripts: v0.15.15
@@ -7660,6 +7660,85 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc]:not(#en__pagebuilder) .page-backgroundImage{
   z-index:auto;
+}
+[data-engrid-theme=tnc][data-engrid-modal=open]{
+  overflow:hidden;
+}
+[data-engrid-theme=tnc][data-engrid-modal=open]:not(#en__pagebuilder) .body-bottom{
+  z-index:7;
+}
+[data-engrid-theme=tnc]:not([data-engrid-bequest-lightbox=open]):not(#en__pagebuilder) .engrid-modal{
+  display:none;
+}
+[data-engrid-theme=tnc] .engrid-modal{
+  height:100%;
+  left:0;
+  overflow-y:auto;
+  position:fixed;
+  top:0;
+  width:100%;
+  z-index:100;
+}
+[data-engrid-theme=tnc] .engrid-modal__overlay{
+  align-items:flex-start;
+  background-color:#00000080;
+  display:flex;
+  height:100%;
+  justify-content:center;
+  left:0;
+  overflow-y:auto;
+  padding:28px 20px;
+  position:absolute;
+  top:0;
+  width:100%;
+}
+[data-engrid-theme=tnc] .engrid-modal__container{
+  background-color:#fff;
+  border:1px solid #cdcdcd;
+  box-shadow:0 .5rem 1rem #00000026;
+  max-width:850px;
+  padding:0;
+  position:relative;
+  width:100%;
+}
+[data-engrid-theme=tnc] .engrid-modal__close{
+  cursor:pointer;
+  font-size:20px;
+  position:absolute;
+  right:15px;
+  top:8px;
+}
+[data-engrid-theme=tnc] .engrid-modal__body{
+  margin:0 auto;
+  max-width:650px;
+  padding:55px 20px;
+  width:100%;
+}
+@media screen and (max-width:600px){
+  [data-engrid-theme=tnc] .engrid-modal__body{
+    padding:20px;
+  }
+}
+[data-engrid-theme=tnc] .engrid-modal__body>:first-child{
+  margin-top:0;
+}
+[data-engrid-theme=tnc] .engrid-modal__body iframe{
+  width:100%;
+}
+@keyframes scaleAnimation{
+  0%{
+    transform:scale(1);
+  }
+  50%{
+    transform:scale(1.02);
+  }
+  to{
+    transform:scale(1);
+  }
+}
+[data-engrid-theme=tnc] .engrid-modal--scale{
+  animation:scaleAnimation .5s ease-in-out;
+  transform-origin:center;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col]{
   --color-green:#007931;
