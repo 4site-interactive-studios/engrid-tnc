@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 8, 2023 @ 04:36:32 ET
+ *  Date: Friday, November 17, 2023 @ 08:13:22 ET
  *  By: michael
  *  ENGrid styles: v0.15.12
  *  ENGrid scripts: v0.15.15
@@ -7664,12 +7664,16 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-modal=open]{
   overflow:hidden;
 }
-[data-engrid-theme=tnc]:not([data-engrid-bequest-lightbox=open]) .engrid-modal{
+[data-engrid-theme=tnc][data-engrid-modal=open]:not(#en__pagebuilder) .body-bottom{
+  z-index:7;
+}
+[data-engrid-theme=tnc]:not([data-engrid-bequest-lightbox=open]):not(#en__pagebuilder) .engrid-modal{
   display:none;
 }
 [data-engrid-theme=tnc] .engrid-modal{
   height:100%;
   left:0;
+  overflow-y:auto;
   position:fixed;
   top:0;
   width:100%;
@@ -7682,7 +7686,8 @@ body[data-engrid-debug]:before{
   height:100%;
   justify-content:center;
   left:0;
-  padding:0 20px;
+  overflow-y:auto;
+  padding:28px 20px;
   position:absolute;
   top:0;
   width:100%;
@@ -7691,7 +7696,6 @@ body[data-engrid-debug]:before{
   background-color:#fff;
   border:1px solid #cdcdcd;
   box-shadow:0 .5rem 1rem #00000026;
-  margin-top:28px;
   max-width:850px;
   padding:0;
   position:relative;
@@ -7709,6 +7713,11 @@ body[data-engrid-debug]:before{
   max-width:650px;
   padding:55px 20px;
   width:100%;
+}
+@media screen and (max-width:600px){
+  [data-engrid-theme=tnc] .engrid-modal__body{
+    padding:20px;
+  }
 }
 [data-engrid-theme=tnc] .engrid-modal__body>:first-child{
   margin-top:0;

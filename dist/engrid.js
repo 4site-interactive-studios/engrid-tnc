@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 8, 2023 @ 04:36:32 ET
+ *  Date: Friday, November 17, 2023 @ 08:13:22 ET
  *  By: michael
  *  ENGrid styles: v0.15.12
  *  ENGrid scripts: v0.15.15
@@ -20211,13 +20211,13 @@ class BequestLightbox {
     var _document$querySelect;
 
     document.body.insertAdjacentHTML("beforeend", `<div class="engrid-modal">
-          <div class="engrid-modal__overlay">
-            <div class="engrid-modal__container">
-              <div class="engrid-modal__close">X</div>
-              <div class="engrid-modal__body"></div>
-            </div>
+        <div class="engrid-modal__overlay">
+          <div class="engrid-modal__container">
+            <div class="engrid-modal__close">X</div>
+            <div class="engrid-modal__body"></div>
           </div>
-        </div>`);
+        </div>
+      </div>`);
     (_document$querySelect = document.querySelector(".engrid-modal .engrid-modal__body")) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.appendChild(this.modalContent);
     this.addEventListeners();
   }
@@ -20262,6 +20262,9 @@ class BequestLightbox {
     if (iframe) {
       this.resizeIframe(iframe);
       iframe.addEventListener("load", () => {
+        this.resizeIframe(iframe);
+      });
+      window.addEventListener("resize", () => {
         this.resizeIframe(iframe);
       });
     } // Listen for iframe submission message from iframe page 2, and close modal.

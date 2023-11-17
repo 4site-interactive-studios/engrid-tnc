@@ -470,9 +470,13 @@
 
   &[data-engrid-modal="open"] {
     overflow: hidden;
+
+    &:not(#en__pagebuilder) .body-bottom {
+      z-index: 7;
+    }
   }
 
-  &:not([data-engrid-bequest-lightbox="open"]) {
+  &:not([data-engrid-bequest-lightbox="open"]):not(#en__pagebuilder) {
     .engrid-modal {
       display: none;
     }
@@ -485,6 +489,7 @@
     width: 100%;
     height: 100%;
     z-index: 100;
+    overflow-y: auto;
   }
 
   .engrid-modal__overlay {
@@ -497,7 +502,8 @@
     justify-content: center;
     align-items: flex-start;
     background-color: rgba(0, 0, 0, 0.5);
-    padding: 0 20px;
+    padding: 28px 20px;
+    overflow-y: auto;
   }
 
   .engrid-modal__container {
@@ -507,7 +513,6 @@
     background-color: #ffffff;
     padding: 0;
     box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
-    margin-top: 28px;
     border: 1px solid #cdcdcd;
   }
 
@@ -524,6 +529,11 @@
     width: 100%;
     padding: 55px 20px;
     margin: 0 auto;
+
+    @media screen and (max-width:600px) {
+      padding: 20px;
+    }
+
 
     > :first-child {
       margin-top: 0;

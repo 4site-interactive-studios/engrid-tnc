@@ -112,13 +112,13 @@ export class BequestLightbox {
     document.body.insertAdjacentHTML(
       "beforeend",
       `<div class="engrid-modal">
-          <div class="engrid-modal__overlay">
-            <div class="engrid-modal__container">
-              <div class="engrid-modal__close">X</div>
-              <div class="engrid-modal__body"></div>
-            </div>
+        <div class="engrid-modal__overlay">
+          <div class="engrid-modal__container">
+            <div class="engrid-modal__close">X</div>
+            <div class="engrid-modal__body"></div>
           </div>
-        </div>`
+        </div>
+      </div>`
     );
 
     document
@@ -174,6 +174,10 @@ export class BequestLightbox {
       this.resizeIframe(iframe);
 
       iframe.addEventListener("load", () => {
+        this.resizeIframe(iframe);
+      });
+
+      window.addEventListener("resize", () => {
         this.resizeIframe(iframe);
       });
     }
