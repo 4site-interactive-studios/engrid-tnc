@@ -138,7 +138,6 @@
 
   .page-alert,
   .body-headerOutside,
-  .body-header,
   .body-footer,
   .body-footerOutside,
   &#en__pagebuilder .content-footerSpacer,
@@ -644,9 +643,13 @@
       }
     }
 
-    &#en__pagebuilder .page-backgroundImage {
-      display: none !important;
+    &#en__pagebuilder {
+      .body-header,
+      .page-backgroundImage {
+        display: none !important;
+      }
     }
+
 
     .i-required .en__field > label,
     .i-required .en__field > .label-wrapper > label {
@@ -900,7 +903,8 @@
         object-fit: cover;
       }
 
-      .en__component--codeblock {
+      .en__component--codeblock,
+      .en__component--imageblock {
         position: absolute;
         top: 0;
         bottom: 0;

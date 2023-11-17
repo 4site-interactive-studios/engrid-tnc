@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, November 17, 2023 @ 08:13:22 ET
+ *  Date: Friday, November 17, 2023 @ 08:14:40 ET
  *  By: michael
  *  ENGrid styles: v0.15.12
  *  ENGrid scripts: v0.15.15
@@ -20327,7 +20327,16 @@ var _window, _window$donationSetti;
 
 
 
-const minimumAmount = ((_window = window) === null || _window === void 0 ? void 0 : (_window$donationSetti = _window.donationSettings) === null || _window$donationSetti === void 0 ? void 0 : _window$donationSetti.minimumDonationAmount) ?? 5;
+const minimumAmount = ((_window = window) === null || _window === void 0 ? void 0 : (_window$donationSetti = _window.donationSettings) === null || _window$donationSetti === void 0 ? void 0 : _window$donationSetti.minimumDonationAmount) ?? 5; //Allow banner image with attribution using image block
+//This code is run before the ENgrid script is loaded so that media-attribution.ts will run on this element
+
+const bannerImageWithAttribution = document.querySelector(".body-banner .en__component--imageblock img[alt]");
+
+if (bannerImageWithAttribution && bannerImageWithAttribution.getAttribute("alt")) {
+  bannerImageWithAttribution.dataset.attributionSource = "i";
+  bannerImageWithAttribution.dataset.attributionSourceTooltip = bannerImageWithAttribution.getAttribute("alt") ?? "";
+}
+
 const options = {
   applePay: false,
   CapitalizeFields: true,
