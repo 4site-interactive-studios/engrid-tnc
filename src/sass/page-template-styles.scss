@@ -1673,4 +1673,13 @@
       }
     }
   }
+
+  .large-submit-button {
+    .en__submit button {
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 4rem;
+      padding: 10%;
+    }
+  }
 }
