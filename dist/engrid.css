@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, November 27, 2023 @ 12:45:11 ET
+ *  Date: Monday, November 27, 2023 @ 12:54:32 ET
  *  By: michael
  *  ENGrid styles: v0.15.12
  *  ENGrid scripts: v0.15.15
@@ -8618,7 +8618,7 @@ body[data-engrid-debug]:before{
   margin-left:auto;
   margin-right:auto;
   margin-top:4rem;
-  padding:10%;
+  padding:2.6rem;
 }
 body{
   opacity:1;
