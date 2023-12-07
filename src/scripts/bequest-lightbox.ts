@@ -34,6 +34,8 @@ export class BequestLightbox {
     if (this.shouldOpen()) {
       this.open();
     }
+
+    this.logConditions();
   }
 
   private shouldRun(): boolean {
@@ -50,15 +52,22 @@ export class BequestLightbox {
       this.logger.log("Opening bequest modal. Always open trigger found.");
       return true;
     }
+
+    if (this.lessRestrictiveTrigger()) {
+      this.logger.log("Opening bequest modal. Less restrictive trigger found.");
+      return true;
+    }
+
     if (this.strictTrigger()) {
       this.logger.log("Opening bequest modal. Strict trigger found.");
       return true;
     }
+
     this.logger.log("Not opening bequest modal. No conditions met.");
     return false;
   }
 
-  private strictTrigger(): boolean {
+  private logConditions() {
     // prettier-ignore
     this.logger.log(`country: ${this.pageJson?.country}
       amount: ${this.pageJson?.amount}
@@ -84,7 +93,26 @@ export class BequestLightbox {
       totalNumberOfGifts: ${this.bequestUserProfile?.totalNumberOfGifts} >= 3 = ${Number(this.bequestUserProfile?.totalNumberOfGifts) >= 3}
       includeInPlannedGivingSolicitations: ${this.bequestUserProfile?.includeInPlannedGivingSolicitations} === "Y" = ${this.bequestUserProfile?.includeInPlannedGivingSolicitations === "Y"}
       plannedGiftProspect: ${this.bequestUserProfile?.plannedGiftProspect} === "Y" = ${this.bequestUserProfile?.plannedGiftProspect === "Y"}`);
+  }
 
+  private lessRestrictiveTrigger() {
+    if (
+      this.modalContent?.classList.contains(
+        "modal--bequest-less-restrictive"
+      ) &&
+      this.pageJson?.country === "US" &&
+      this.bequestUserProfile?.doNotSendSolicitations !== "Y" &&
+      !this.bequestUserProfile?.crmConstituency?.includes("Legacy Club") &&
+      !this.getCookie("bequest_lb_select") &&
+      !this.getCookie("gp_form_submitted")
+    ) {
+      this.logger.log("Less restrictive trigger passed condition");
+      return true;
+    }
+    return false;
+  }
+
+  private strictTrigger(): boolean {
     if (
       this.pageJson?.country === "US" &&
       this.bequestUserProfile?.doNotSendSolicitations !== "Y" &&
