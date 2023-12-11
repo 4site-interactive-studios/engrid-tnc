@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, December 6, 2023 @ 09:25:46 ET
+ *  Date: Thursday, December 7, 2023 @ 11:16:35 ET
  *  By: michael
  *  ENGrid styles: v0.15.12
  *  ENGrid scripts: v0.15.15
@@ -20138,6 +20138,8 @@ class BequestLightbox {
     if (this.shouldOpen()) {
       this.open();
     }
+
+    this.logConditions();
   }
 
   shouldRun() {
@@ -20156,6 +20158,11 @@ class BequestLightbox {
       return true;
     }
 
+    if (this.lessRestrictiveTrigger()) {
+      this.logger.log("Opening bequest modal. Less restrictive trigger found.");
+      return true;
+    }
+
     if (this.strictTrigger()) {
       this.logger.log("Opening bequest modal. Strict trigger found.");
       return true;
@@ -20165,8 +20172,8 @@ class BequestLightbox {
     return false;
   }
 
-  strictTrigger() {
-    var _this$pageJson, _this$pageJson2, _this$bequestUserProf, _this$bequestUserProf2, _this$bequestUserProf3, _this$bequestUserProf4, _this$bequestUserProf5, _this$pageJson3, _this$pageJson4, _this$bequestUserProf6, _this$bequestUserProf7, _this$bequestUserProf8, _this$bequestUserProf9, _this$bequestUserProf10, _this$pageJson5, _this$pageJson6, _this$bequestUserProf11, _this$bequestUserProf12, _this$bequestUserProf13, _this$bequestUserProf14, _this$bequestUserProf15, _this$bequestUserProf16, _this$pageJson7, _this$bequestUserProf17, _this$bequestUserProf18, _this$bequestUserProf19, _this$pageJson8;
+  logConditions() {
+    var _this$pageJson, _this$pageJson2, _this$bequestUserProf, _this$bequestUserProf2, _this$bequestUserProf3, _this$bequestUserProf4, _this$bequestUserProf5, _this$pageJson3, _this$pageJson4, _this$bequestUserProf6, _this$bequestUserProf7, _this$bequestUserProf8, _this$bequestUserProf9, _this$bequestUserProf10, _this$pageJson5, _this$pageJson6, _this$bequestUserProf11, _this$bequestUserProf12, _this$bequestUserProf13, _this$bequestUserProf14, _this$bequestUserProf15, _this$bequestUserProf16;
 
     // prettier-ignore
     this.logger.log(`country: ${(_this$pageJson = this.pageJson) === null || _this$pageJson === void 0 ? void 0 : _this$pageJson.country}
@@ -20192,13 +20199,28 @@ class BequestLightbox {
       totalNumberOfGifts: ${(_this$bequestUserProf11 = this.bequestUserProfile) === null || _this$bequestUserProf11 === void 0 ? void 0 : _this$bequestUserProf11.totalNumberOfGifts} >= 3 = ${Number((_this$bequestUserProf12 = this.bequestUserProfile) === null || _this$bequestUserProf12 === void 0 ? void 0 : _this$bequestUserProf12.totalNumberOfGifts) >= 3}
       includeInPlannedGivingSolicitations: ${(_this$bequestUserProf13 = this.bequestUserProfile) === null || _this$bequestUserProf13 === void 0 ? void 0 : _this$bequestUserProf13.includeInPlannedGivingSolicitations} === "Y" = ${((_this$bequestUserProf14 = this.bequestUserProfile) === null || _this$bequestUserProf14 === void 0 ? void 0 : _this$bequestUserProf14.includeInPlannedGivingSolicitations) === "Y"}
       plannedGiftProspect: ${(_this$bequestUserProf15 = this.bequestUserProfile) === null || _this$bequestUserProf15 === void 0 ? void 0 : _this$bequestUserProf15.plannedGiftProspect} === "Y" = ${((_this$bequestUserProf16 = this.bequestUserProfile) === null || _this$bequestUserProf16 === void 0 ? void 0 : _this$bequestUserProf16.plannedGiftProspect) === "Y"}`);
+  }
 
-    if (((_this$pageJson7 = this.pageJson) === null || _this$pageJson7 === void 0 ? void 0 : _this$pageJson7.country) === "US" && ((_this$bequestUserProf17 = this.bequestUserProfile) === null || _this$bequestUserProf17 === void 0 ? void 0 : _this$bequestUserProf17.doNotSendSolicitations) !== "Y" && !((_this$bequestUserProf18 = this.bequestUserProfile) !== null && _this$bequestUserProf18 !== void 0 && (_this$bequestUserProf19 = _this$bequestUserProf18.crmConstituency) !== null && _this$bequestUserProf19 !== void 0 && _this$bequestUserProf19.includes("Legacy Club")) && ((_this$pageJson8 = this.pageJson) === null || _this$pageJson8 === void 0 ? void 0 : _this$pageJson8.amount) >= 100 && !this.getCookie("bequest_lb_select") && !this.getCookie("gp_form_submitted")) {
-      var _this$bequestUserProf20, _this$bequestUserProf21, _this$bequestUserProf22;
+  lessRestrictiveTrigger() {
+    var _this$modalContent2, _this$pageJson7, _this$bequestUserProf17, _this$bequestUserProf18, _this$bequestUserProf19;
+
+    if ((_this$modalContent2 = this.modalContent) !== null && _this$modalContent2 !== void 0 && _this$modalContent2.classList.contains("modal--bequest-less-restrictive") && ((_this$pageJson7 = this.pageJson) === null || _this$pageJson7 === void 0 ? void 0 : _this$pageJson7.country) === "US" && ((_this$bequestUserProf17 = this.bequestUserProfile) === null || _this$bequestUserProf17 === void 0 ? void 0 : _this$bequestUserProf17.doNotSendSolicitations) !== "Y" && !((_this$bequestUserProf18 = this.bequestUserProfile) !== null && _this$bequestUserProf18 !== void 0 && (_this$bequestUserProf19 = _this$bequestUserProf18.crmConstituency) !== null && _this$bequestUserProf19 !== void 0 && _this$bequestUserProf19.includes("Legacy Club")) && !this.getCookie("bequest_lb_select") && !this.getCookie("gp_form_submitted")) {
+      this.logger.log("Less restrictive trigger passed condition");
+      return true;
+    }
+
+    return false;
+  }
+
+  strictTrigger() {
+    var _this$pageJson8, _this$bequestUserProf20, _this$bequestUserProf21, _this$bequestUserProf22, _this$pageJson9;
+
+    if (((_this$pageJson8 = this.pageJson) === null || _this$pageJson8 === void 0 ? void 0 : _this$pageJson8.country) === "US" && ((_this$bequestUserProf20 = this.bequestUserProfile) === null || _this$bequestUserProf20 === void 0 ? void 0 : _this$bequestUserProf20.doNotSendSolicitations) !== "Y" && !((_this$bequestUserProf21 = this.bequestUserProfile) !== null && _this$bequestUserProf21 !== void 0 && (_this$bequestUserProf22 = _this$bequestUserProf21.crmConstituency) !== null && _this$bequestUserProf22 !== void 0 && _this$bequestUserProf22.includes("Legacy Club")) && ((_this$pageJson9 = this.pageJson) === null || _this$pageJson9 === void 0 ? void 0 : _this$pageJson9.amount) >= 100 && !this.getCookie("bequest_lb_select") && !this.getCookie("gp_form_submitted")) {
+      var _this$bequestUserProf23, _this$bequestUserProf24, _this$bequestUserProf25;
 
       this.logger.log("Strict trigger passed first condition");
 
-      if (this.getCookie("per_gp") === "true" || this.getCookie("gp_email") === "true" || Number((_this$bequestUserProf20 = this.bequestUserProfile) === null || _this$bequestUserProf20 === void 0 ? void 0 : _this$bequestUserProf20.totalNumberOfGifts) >= 3 || ((_this$bequestUserProf21 = this.bequestUserProfile) === null || _this$bequestUserProf21 === void 0 ? void 0 : _this$bequestUserProf21.includeInPlannedGivingSolicitations) === "Y" || ((_this$bequestUserProf22 = this.bequestUserProfile) === null || _this$bequestUserProf22 === void 0 ? void 0 : _this$bequestUserProf22.plannedGiftProspect) === "Y") {
+      if (this.getCookie("per_gp") === "true" || this.getCookie("gp_email") === "true" || Number((_this$bequestUserProf23 = this.bequestUserProfile) === null || _this$bequestUserProf23 === void 0 ? void 0 : _this$bequestUserProf23.totalNumberOfGifts) >= 3 || ((_this$bequestUserProf24 = this.bequestUserProfile) === null || _this$bequestUserProf24 === void 0 ? void 0 : _this$bequestUserProf24.includeInPlannedGivingSolicitations) === "Y" || ((_this$bequestUserProf25 = this.bequestUserProfile) === null || _this$bequestUserProf25 === void 0 ? void 0 : _this$bequestUserProf25.plannedGiftProspect) === "Y") {
         this.logger.log("Strict trigger passed second condition");
         return true;
       }
