@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, December 14, 2023 @ 14:03:51 ET
+ *  Date: Thursday, December 14, 2023 @ 15:57:16 ET
  *  By: michael
  *  ENGrid styles: v0.16.4
- *  ENGrid scripts: v0.16.7
+ *  ENGrid scripts: v0.16.8
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -13299,6 +13299,9 @@ class CreditCard {
         };
         if (!this.ccField)
             return;
+        // Set credit card field to type="tel" to prevent mobile browsers from
+        //  showing a credit card number keyboard
+        this.ccField.type = "tel";
         const expireFiels = document.getElementsByName("transaction.ccexpire");
         if (expireFiels) {
             this.field_expiration_month = expireFiels[0];
@@ -20931,7 +20934,7 @@ class ENValidators {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.16.7";
+const AppVersion = "0.16.8";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
