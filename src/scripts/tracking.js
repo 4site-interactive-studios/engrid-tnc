@@ -13,6 +13,23 @@ export function trackEvent(eventName, eventData) {
       event_name: eventName,
       ...eventData,
     });
+  } else {
+    window.utagQueue = window.utagQueue || [];
+    window.utagQueue.push({
+      event_name: eventName,
+      ...eventData,
+    });
+    const tealiumScript = document.querySelector(
+      'script[src*="//tags.tiqcdn.com/utag/tnc/global/prod/utag.js"]'
+    );
+    if (tealiumScript) {
+      tealiumScript.onload = () => {
+        window.utagQueue.forEach((event) => {
+          utag.link(event);
+        });
+        window.utagQueue = [];
+      };
+    }
   }
 }
 

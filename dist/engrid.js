@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, December 14, 2023 @ 15:57:16 ET
+ *  Date: Friday, December 15, 2023 @ 07:57:39 ET
  *  By: michael
  *  ENGrid styles: v0.16.4
  *  ENGrid scripts: v0.16.8
@@ -21295,6 +21295,21 @@ function trackEvent(eventName, eventData) {
     utag.link(_objectSpread({
       event_name: eventName
     }, eventData));
+  } else {
+    window.utagQueue = window.utagQueue || [];
+    window.utagQueue.push(_objectSpread({
+      event_name: eventName
+    }, eventData));
+    const tealiumScript = document.querySelector('script[src*="//tags.tiqcdn.com/utag/tnc/global/prod/utag.js"]');
+
+    if (tealiumScript) {
+      tealiumScript.onload = () => {
+        window.utagQueue.forEach(event => {
+          utag.link(event);
+        });
+        window.utagQueue = [];
+      };
+    }
   }
 }
 function trackFormSubmit(App, DonationAmount) {
