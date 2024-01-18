@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 18, 2024 @ 10:59:16 ET
+ *  Date: Thursday, January 18, 2024 @ 11:15:31 ET
  *  By: michael
  *  ENGrid styles: v0.16.11
  *  ENGrid scripts: v0.16.13
@@ -21737,6 +21737,7 @@ if (bannerImageWithAttribution && bannerImageWithAttribution.getAttribute("alt")
 
 const options = {
   applePay: false,
+  AutoYear: true,
   CapitalizeFields: true,
   ClickToExpand: true,
   CurrencySymbol: "$",

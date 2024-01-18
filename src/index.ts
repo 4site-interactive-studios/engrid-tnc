@@ -57,6 +57,7 @@ if (
 
 const options: Options = {
   applePay: false,
+  AutoYear: true,
   CapitalizeFields: true,
   ClickToExpand: true,
   CurrencySymbol: "$",
