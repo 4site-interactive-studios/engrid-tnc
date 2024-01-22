@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 18, 2024 @ 11:15:31 ET
+ *  Date: Monday, January 22, 2024 @ 07:35:02 ET
  *  By: michael
  *  ENGrid styles: v0.16.11
  *  ENGrid scripts: v0.16.13
@@ -21095,8 +21095,27 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   } ////////////////////////////////////////////
   // START ENGRID TRANSITION SCRIPTS
   ////////////////////////////////////////////
-  // Position monthly upsell after the recurring frequency field
 
+
+  const texts = {
+    en: {
+      emailFieldNotice: "You'll receive email updates from The Nature Conservancy. You can unsubscribe at any time.",
+      phoneNumberNotice: "By sharing your phone number, you give The Nature Conservancy permission to contact you with updates via phone and text.",
+      cvvTooltipLabel: "What is a CVV number?",
+      cvvTooltip: "The CVV is a 3- or 4-digit code printed on your credit card. It's a fraud-prevention measure designed to make it harder to use info stolen in a data breach.",
+      bankNumberTooltipLabel: "What is this?",
+      bankNumberTooltip: "Your routing number is the 9-digit number at the bottom left of your check."
+    },
+    es: {
+      emailFieldNotice: "Recibirás noticias de TNC periódicamente. Puedes cancelar tu suscripción en cualquier momento.",
+      phoneNumberNotice: "Al compartir tu número telefónico, autorizas a TNC a contactarte y enviarte noticias por teléfono o por mensaje de texto.",
+      cvvTooltipLabel: "¿Qué es un CVV?",
+      cvvTooltip: "El CVV es un código de 3 ó 4 dígitos impreso en su tarjeta de crédito. Es una medida de prevención de fraude diseñada para dificultar el uso de información robada en filtraciones de datos.",
+      bankNumberTooltipLabel: "¿Qué es esto?",
+      bankNumberTooltip: "Su número de ruta es el número de 9 dígitos que aparece en la parte inferior izquierda de su cheque."
+    }
+  };
+  const text = texts[window.pageJson.locale.slice(0, 2)] ?? texts.en; // Position monthly upsell after the recurring frequency field
 
   let inlineMonthlyUpsell = document.querySelector(".move-after--transaction-recurrfreq");
   let recurrFrequencyField = document.querySelector(".en__field--recurrfreq");
@@ -21106,9 +21125,9 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   } // Add a notice to the email field
 
 
-  App.addHtml('<div class="en__field__notice">You\'ll receive email updates from The Nature Conservancy. You can unsubscribe at any time.</div>', '[name="supporter.emailAddress"]', "after"); // Add a notice to the phone number field
+  App.addHtml(`<div class="en__field__notice">${text.emailFieldNotice}</div>`, '[name="supporter.emailAddress"]', "after"); // Add a notice to the phone number field
 
-  App.addHtml('<div class="en__field__notice">By sharing your phone number, you give The Nature Conservancy permission to contact you with updates via phone and text.</div>', '[name="supporter.phoneNumber2"]', "after");
+  App.addHtml(`<div class="en__field__notice">${text.phoneNumberNotice}</div>`, '[name="supporter.phoneNumber2"]', "after");
   /**
    * Add a Tippy tooltip to a field
    * @param {HTMLElement} labelElement
@@ -21142,9 +21161,9 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   } // Add a tooltip for the CVV number
 
 
-  addTooltip(document.querySelector(".en__field--ccvv > label"), "cvv", "What is a CVV number?", "The CVV is a 3- or 4-digit code printed on your credit card. It's a fraud-prevention measure designed to make it harder to use info stolen in a data breach."); // Add a tooltip for the bank routing number
+  addTooltip(document.querySelector(".en__field--ccvv > label"), "cvv", text.cvvTooltipLabel, text.cvvTooltip); // Add a tooltip for the bank routing number
 
-  addTooltip(document.querySelector(".en__field--bankRoutingNumber > label"), "bankNumber", "What is this?", "Your routing number is the 9-digit number at the bottom left of your check.");
+  addTooltip(document.querySelector(".en__field--bankRoutingNumber > label"), "bankNumber", text.bankNumberTooltipLabel, text.bankNumberTooltip);
   /**
    * Set the visibility of the premium field based on the donation frequency and amount
    * Visibility is set by adding/removing the "engrid-premium-donation" data attr on the body
@@ -21153,8 +21172,8 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
    */
 
   function setPremiumVisibility(frequency, amount) {
-    const monthlyPremiumMinimum = window.donationSettings.monthlyPremiumMinimum;
-    const onetimePremiumMinimum = window.donationSettings.onetimePremiumMinimum;
+    const monthlyPremiumMinimum = window?.donationSettings?.monthlyPremiumMinimum;
+    const onetimePremiumMinimum = window?.donationSettings?.onetimePremiumMinimum;
 
     if (!monthlyPremiumMinimum || !onetimePremiumMinimum) {
       return;
@@ -21246,13 +21265,17 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         }
       });
     }
-  } // Translate recurring status
+  } ////////////////////////////////////////////
+  // Spanish translation tweaks
+  // Translate recurring status
 
 
   const recurringStatus = document.querySelector(".js-recurring-status");
 
   if (recurringStatus) {
     if (window.navigator.language === "es-MX" || window.location.href.indexOf("locale=es-MX") > -1 || pageJson.locale === "es-MX") {
+      console.log(recurringStatus.textContent);
+
       switch (recurringStatus.textContent) {
         case "MONTHLY":
           recurringStatus.textContent = "Mensual";
@@ -21279,7 +21302,16 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
           recurringStatus.textContent = "One-time";
       }
     }
-  } ////////////////////////////////////////////
+  }
+
+  if (window?.pageJson?.locale === "es-MX") {
+    const donationAmountField = document.querySelector(".en__field--donationAmt");
+
+    if (donationAmountField) {
+      donationAmountField.style.setProperty("--give-monthly-donation-amount-appended-label", '"/MES"');
+    }
+  } // END Spanish translation tweaks
+  ////////////////////////////////////////////
   // END ENGRID TRANSITION SCRIPTS
   ////////////////////////////////////////////
 
