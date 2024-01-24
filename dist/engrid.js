@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, January 22, 2024 @ 07:35:02 ET
+ *  Date: Wednesday, January 24, 2024 @ 09:53:01 ET
  *  By: michael
- *  ENGrid styles: v0.16.11
- *  ENGrid scripts: v0.16.13
+ *  ENGrid styles: v0.16.14
+ *  ENGrid scripts: v0.16.16
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11775,8 +11775,8 @@ class DonationAmount {
     // Set amount var with currently selected amount
     load() {
         const currentAmountField = document.querySelector('input[name="' + this._radios + '"]:checked');
-        if (currentAmountField && currentAmountField.value) {
-            let currentAmountValue = parseFloat(currentAmountField.value);
+        if (currentAmountField) {
+            let currentAmountValue = parseFloat(currentAmountField.value || "");
             if (currentAmountValue > 0) {
                 this.amount = parseFloat(currentAmountField.value);
             }
@@ -11786,8 +11786,10 @@ class DonationAmount {
                 this.amount = currentAmountValue;
             }
         }
-        else if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "getDonationTotal")) {
-            const total = window.EngagingNetworks.require._defined.enjs.getDonationTotal();
+        else if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "getDonationTotal") &&
+            engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "getDonationFee")) {
+            const total = window.EngagingNetworks.require._defined.enjs.getDonationTotal() -
+                window.EngagingNetworks.require._defined.enjs.getDonationFee();
             if (total) {
                 this.amount = total;
             }
@@ -12768,9 +12770,13 @@ class App extends engrid_ENGrid {
         new EventTickets();
         // Swap Amounts
         new SwapAmounts();
-        // On the end of the script, after all subscribers defined, let's load the current value
-        this._amount.load();
-        this._frequency.load();
+        // On the end of the script, after all subscribers defined, let's load the current frequency
+        // The amount will be loaded by the frequency change event
+        // This timeout is needed because when you have alternative amounts, EN is slower than Engrid
+        // about 20% of the time and we get a race condition if the client is also using the SwapAmounts feature
+        window.setTimeout(() => {
+            this._frequency.load();
+        }, 150);
         // Fast Form Fill
         new FastFormFill();
         // Currency Related Components
@@ -20640,9 +20646,11 @@ class SupporterHub {
                     mutation.addedNodes.forEach((node) => {
                         if (node.nodeName === "DIV") {
                             const overlay = node;
-                            if (overlay.classList.contains("en__hubOverlay")) {
+                            if (overlay.classList.contains("en__hubOverlay") ||
+                                overlay.classList.contains("en__hubPledge__panels")) {
                                 this.logger.log("Overlay found");
                                 this.creditCardUpdate(node);
+                                this.amountLabelUpdate(node);
                             }
                         }
                     });
@@ -20658,6 +20666,7 @@ class SupporterHub {
         const hubOverlay = document.querySelector(".en__hubOverlay");
         if (hubOverlay) {
             this.creditCardUpdate(hubOverlay);
+            this.amountLabelUpdate(hubOverlay);
         }
     }
     creditCardUpdate(overlay) {
@@ -20669,6 +20678,19 @@ class SupporterHub {
                 ccField.addEventListener("focus", () => {
                     this.logger.log("Credit Card field focused");
                     updateButton.click();
+                });
+            }
+        }, 300);
+    }
+    amountLabelUpdate(overlay) {
+        window.setTimeout(() => {
+            // Check if the overlay has Amounts, and set the currency symbol updated attribute
+            const amountContainer = overlay.querySelector(".en__field--donationAmt");
+            if (amountContainer) {
+                amountContainer
+                    .querySelectorAll(".en__field__element--radio .en__field__item")
+                    .forEach((node) => {
+                    node.setAttribute("data-engrid-currency-symbol-updated", "true");
                 });
             }
         }, 300);
@@ -20958,7 +20980,7 @@ class ENValidators {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.16.13";
+const AppVersion = "0.16.16";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires

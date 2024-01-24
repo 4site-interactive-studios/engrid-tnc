@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, January 22, 2024 @ 07:35:02 ET
+ *  Date: Wednesday, January 24, 2024 @ 09:53:01 ET
  *  By: michael
- *  ENGrid styles: v0.16.11
- *  ENGrid scripts: v0.16.13
+ *  ENGrid styles: v0.16.14
+ *  ENGrid scripts: v0.16.16
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -2885,7 +2885,7 @@ a.button,a.button.active,a.button:active,a.button:focus,a.button:hover{
 
 [data-engrid-theme]{
   --click-to-expand__copy-area_height:450px;
-  --click-to-expand__cta-image_url:url(https://e-activist.com/pageassets/images/en_open.png);
+  --click-to-expand__cta-image_url:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAALVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBoCg+AAAAD3RSTlMA8fqeDQWopG9ku5d/fFeqbhOLAAAASElEQVQI12PAA9ZBqFcMSRNANKcaA7skiDGxgIHVsJWBIUI4gIHBWYKBodEEKMpieIFX2AEk765zqASskzVJLQBiBvcGBuIAAGXcCweYv+y6AAAAAElFTkSuQmCC");
   --click-to-expand__cta-image_width:16px;
   --click-to-expand__cta-image_height:16px;
 }
