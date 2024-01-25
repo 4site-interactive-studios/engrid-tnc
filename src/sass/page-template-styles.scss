@@ -145,6 +145,20 @@
     display: none !important;
   }
 
+  // Conditional content via URL parameters
+  &:not(&#en__pagebuilder):not([data-engrid-debug]) {
+    [class*="js-zcc--"],
+    img[class*="js-zcc--"] ~ a.photo-info {
+      display: none!important;
+    }
+  }
+  &[data-engrid-debug] {
+    [class*="js-zcc--"],
+    img[class*="js-zcc--"] ~ a.photo-info {
+      background-color: #0000ff1a !important;
+    }
+  }
+
   @media screen and (max-width: 805px) {
     --engrid__body_padding: 0 10vw;
   }

@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 24, 2024 @ 09:53:01 ET
+ *  Date: Thursday, January 25, 2024 @ 11:53:27 ET
  *  By: michael
  *  ENGrid styles: v0.16.14
  *  ENGrid scripts: v0.16.16
@@ -7432,8 +7432,11 @@ body[data-engrid-debug]:before{
   --click-to-expand__copy-area_height:200px;
   --engrid__page_background-color:#f1f1f1;
 }
-[data-engrid-theme=tnc] .body-footer,[data-engrid-theme=tnc] .body-footerOutside,[data-engrid-theme=tnc] .body-headerOutside,[data-engrid-theme=tnc] .page-alert,[data-engrid-theme=tnc] .page-backgroundImageOverlay,[data-engrid-theme=tnc]#en__pagebuilder .content-footerSpacer{
+[data-engrid-theme=tnc] .body-footer,[data-engrid-theme=tnc] .body-footerOutside,[data-engrid-theme=tnc] .body-headerOutside,[data-engrid-theme=tnc] .page-alert,[data-engrid-theme=tnc] .page-backgroundImageOverlay,[data-engrid-theme=tnc]#en__pagebuilder .content-footerSpacer,[data-engrid-theme=tnc]:not([data-engrid-theme=tnc]#en__pagebuilder):not([data-engrid-debug]) [class*=js-zcc--],[data-engrid-theme=tnc]:not([data-engrid-theme=tnc]#en__pagebuilder):not([data-engrid-debug]) img[class*=js-zcc--]~a.photo-info{
   display:none !important;
+}
+[data-engrid-theme=tnc][data-engrid-debug] [class*=js-zcc--],[data-engrid-theme=tnc][data-engrid-debug] img[class*=js-zcc--]~a.photo-info{
+  background-color:#0000ff1a !important;
 }
 @media screen and (max-width:805px){
   [data-engrid-theme=tnc]{
