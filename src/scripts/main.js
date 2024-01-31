@@ -340,4 +340,32 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
   ////////////////////////////////////////////
   // END ENGRID TRANSITION SCRIPTS
   ////////////////////////////////////////////
+
+  /*
+   * Conditional content via URL parameters
+   * js-zcc--param--value
+   * ?crid=1234
+   * Will reveal all elements with class js-zcc--crid--1234
+   */
+  new URLSearchParams(window.location.search).forEach((value, param) => {
+    value = value.replace(/[^_a-zA-Z0-9-]/g, "_").toLowerCase();
+    param = param.replace(/[^_a-zA-Z0-9-]/g, "_").toLowerCase();
+
+    const conditionalElements = document.querySelectorAll(
+      `.js-zcc--${param}--${value}`
+    );
+
+    if (conditionalElements.length > 0) {
+      conditionalElements.forEach((el) => {
+        el.classList.remove(`js-zcc--${param}--${value}`);
+      });
+    } else {
+      const defaultElements = document.querySelectorAll(
+        `[class="js-zcc--${param}--default"]`
+      );
+      defaultElements.forEach((el) => {
+        el.classList.remove(`js-zcc--${param}--default`);
+      });
+    }
+  });
 };
