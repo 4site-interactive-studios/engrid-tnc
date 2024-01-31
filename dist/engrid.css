@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 25, 2024 @ 11:53:27 ET
+ *  Date: Wednesday, January 31, 2024 @ 12:38:30 ET
  *  By: michael
  *  ENGrid styles: v0.16.14
  *  ENGrid scripts: v0.16.16
@@ -8712,6 +8712,41 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col][data-engrid-subtheme="1col-banner"] .body-main .form-heading{
   margin-top:40px;
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col][data-engrid-subtheme=text-only-banner]{
+  --engrid__body-title_padding:40px 0px;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter1col][data-engrid-subtheme=text-only-banner]{
+    --engrid__body-title_padding:30px 0px;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col][data-engrid-subtheme=text-only-banner] #engrid>.en__component--advrow,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col][data-engrid-subtheme=text-only-banner] form>.en__component--advrow{
+  grid-template-rows:[page-start page-alert-start] min-content [page-alert-end content-header-start] min-content [content-header-end body-headerOutside-start] min-content [body-headerOutside-end body-banner-start] min-content [body-banner-end body-bannerOverlay-start] min-content [body-bannerOverlay-end body-header-start] min-content [body-header-end body-title-start] min-content [body-title-end body-top-start] min-content [body-top-end body-side-start] min-content [body-side-end body-main-start] min-content [body-main-end body-bottom-start] min-content [body-bottom-end body-footer-start] min-content [body-footer-end body-footerOutside-start] min-content [body-footerOutside-end content-footerSpacer-start] minmax(0, 1fr) [content-footerSpacer-end content-preFooter-start] min-content [content-preFooter-end content-footer-start] min-content [content-footer-end page-backgroundImage-start] min-content [page-backgroundImage-end page-backgroundImageOverlay-start] min-content [page-backgroundImageOverlay-end page-end page-customCode-start] min-content [page-customCode-end];
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col][data-engrid-subtheme=text-only-banner] .body-title{
+  grid-column:pc;
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col][data-engrid-subtheme=text-only-banner] .body-title .en__component--copyblock{
+  margin:0 auto;
+  max-width:100%;
+  padding:var(--engrid__body_padding);
+  text-align:center;
+  width:890px;
+}
+@media screen and (max-width:600px){
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter1col][data-engrid-subtheme=text-only-banner] .body-title .en__component--copyblock{
+    text-align:left;
+  }
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter1col][data-engrid-subtheme=text-only-banner] .body-title{
+    --h1_font-size:30px;
+    padding:var(--engrid__body-title_padding);
+  }
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col][data-engrid-subtheme=text-only-banner] .body-banner,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col][data-engrid-subtheme=text-only-banner] .body-top{
+  display:none;
 }
 [data-engrid-theme=tnc] .large-submit-button .en__submit button{
   margin-left:auto;
