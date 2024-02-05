@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, February 5, 2024 @ 07:32:44 ET
+ *  Date: Monday, February 5, 2024 @ 08:56:54 ET
  *  By: michael
  *  ENGrid styles: v0.17.6
  *  ENGrid scripts: v0.17.7
@@ -22072,6 +22072,11 @@ if (bannerImageWithAttribution && bannerImageWithAttribution.getAttribute("alt")
   bannerImageWithAttribution.dataset.attributionSourceTooltip = bannerImageWithAttribution.getAttribute("alt") ?? "";
 }
 
+const placeholderStyles = {
+  color: getComputedStyle(document.body).getPropertyValue("--input_placeholder-color"),
+  opacity: getComputedStyle(document.body).getPropertyValue("--input_placeholder-opacity"),
+  fontWeight: getComputedStyle(document.body).getPropertyValue("--input_placeholder-font-weight")
+};
 const options = {
   applePay: false,
   AutoYear: true,
@@ -22091,6 +22096,26 @@ const options = {
   MaxAmountMessage: `Your donation must be between $${minimumAmount} and $50,000`,
   PageLayouts: ["centercenter1col"],
   TranslateFields: false,
+  VGS: {
+    "transaction.ccnumber": {
+      showCardIcon: true,
+      placeholder: "•••• •••• •••• ••••",
+      icons: {
+        cardPlaceholder: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEwAAABMCAYAAADHl1ErAAAACXBIWXMAABYlAAAWJQFJUiTwAAAB8ElEQVR4nO2c4W3CMBBGz1H/NyNkAzoCo2SDrkI3YJSOABt0g9IJXBnOqUkMyifUqkrek04RlvMjT2c7sc6EGKPBfBpcaSBMBGEiCBNBmAjCRBAmgjARhIkgTARhIggTQZhK2q0Yh5l1ZrYzs0PqsrI4+LN3VTeThkvntUm6Fbuxn2E/LITQmtm7mW08Sb/MbO9tpxhjui6WEMLWzJKDdO3N7Nmf9ZjaYoyn8y8X1o6GXxLV1lJyDeE+9oWPQ/ZRG4b9WkVVpqe+8LLLo7ErM6t248qllZnWBc+uV5+zumGsQjm3f/ic9tb4JGeeXcga4U723rptilVx0avgg2Q3m/JNn+y6zeAm+GSWUi/c7L5yfB77RJhACOHs6WnuLfmGpTI3YditEEGYCMJEECaCMJHZqySvHRfIMBGEiSBMBGEiCBNBmAjCRBAmgjARhIkgTGT2t+R/59EdYXZcfwmEiSBMBGEiCBNZzCr5VzvCZJjIIMxrPKFC6abMsHbaFcZuGq8StqKwDqZkN8emKBbrvawHCtxJ7y1nVxQF34lxUXBupOy8EtWy88jBhknUDjbkPhyd+Xn2l9lHZ8rgcNZVTA5nTYRFjv/dPf7HvzuJ8C0pgjARhIkgTARhIggTQZgIwkQQJoIwEYSJIEwEYQpm9g2Ro5zhLcuLBwAAAABJRU5ErkJggg=="
+      },
+      css: {
+        "&::placeholder": placeholderStyles
+      }
+    },
+    "transaction.ccvv": {
+      showCardIcon: false,
+      placeholder: "CVV",
+      hideValue: false,
+      css: {
+        "&::placeholder": placeholderStyles
+      }
+    }
+  },
   onLoad: () => {
     customScript(App, DonationFrequency, DonationAmount);
     new BequestLightbox();
