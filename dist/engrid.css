@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 31, 2024 @ 12:38:30 ET
+ *  Date: Friday, February 9, 2024 @ 09:32:38 ET
  *  By: michael
  *  ENGrid styles: v0.16.14
  *  ENGrid scripts: v0.16.16
@@ -8753,6 +8753,258 @@ body[data-engrid-debug]:before{
   margin-right:auto;
   margin-top:4rem;
   padding:2.6rem;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey]{
+  --engrid__body-title_background-color:#fff;
+  --engrid__body-top_background-color:#fff;
+  --label_font-size:1.25rem;
+  --label_font-weight:bold;
+  --engrid__body-main_padding:4rem 1.25rem 0;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-page-type=survey]{
+    --engrid__body-main_padding:0 1.25rem;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field__label.en__field__label--positionabove{
+  text-align:center;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect{
+  flex-basis:auto;
+  margin:0 -200px var(--fields_spacing-block);
+  width:calc(100% + 400px);
+}
+@media screen and (max-width:1290px){
+  [data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect{
+    margin:0 -100px var(--fields_spacing-block);
+    width:calc(100% + 200px);
+  }
+}
+@media screen and (max-width:1085px){
+  [data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect{
+    margin:0 0 var(--fields_spacing-block);
+    width:100%;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__field__element--imgselect{
+  align-items:flex-start;
+  justify-content:center;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__field__item{
+  flex-basis:20%;
+  padding:0;
+}
+@media screen and (max-width:1085px){
+  [data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__field__item{
+    flex-basis:33%;
+  }
+}
+@media screen and (max-width:600px){
+  [data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__field__item{
+    flex-basis:50%;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__field__item .en__imageSelectField__image{
+  aspect-ratio:1/1;
+  padding:0;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control{
+  flex-flow:row nowrap;
+  font-size:1rem;
+  font-weight:400;
+  padding-top:8px;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=checkbox],[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=radio]{
+  clip:rect(0 0 0 0);
+  border:0;
+  clip-path:inset(50%);
+  height:1px;
+  margin:-1px;
+  overflow:hidden;
+  padding:0;
+  position:absolute;
+  white-space:nowrap;
+  width:1px;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=checkbox]+span{
+  align-items:center;
+  display:flex;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=checkbox]+span:before{
+  align-items:center;
+  background-color:var(--checkbox_background-color);
+  border:var(--checkbox_border-width) solid var(--checkbox_border-color);
+  border-radius:var(--checkbox_border-radius);
+  color:var(--checkbox_color);
+  content:"";
+  display:flex;
+  flex:0 0 auto;
+  font-weight:700;
+  height:var(--checkbox_height);
+  justify-content:center;
+  margin-right:10px;
+  min-width:var(--checkbox_width);
+  padding-left:var(--checkbox_padding-left);
+  padding-top:var(--checkbox_padding-top);
+  position:relative;
+  top:var(--checkbox_top);
+  width:var(--checkbox_width);
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=checkbox]:focus+span:before,[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=checkbox]:hover+span:before{
+  background-color:var(--checkbox_background-color_hover);
+  border-color:var(--checkbox_border-color_hover);
+  color:var(--checkbox_color_hover);
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=checkbox]:not(:checked)+span:before{
+  color:#0000;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=checkbox]:checked+span:before{
+  background-color:var(--checkbox_background-color_checked);
+  border-color:var(--checkbox_border-color_checked);
+  color:var(--checkbox_color_checked);
+  content:var(--checkbox_content_checked);
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=radio]+span{
+  align-items:center;
+  display:flex;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=radio]+span:before{
+  align-items:center;
+  background-color:var(--radio_background-color);
+  border:var(--radio_border-width) solid var(--radio_border-color);
+  border-radius:var(--radio_border-radius);
+  box-shadow:var(--radio_box-shadow);
+  color:var(--radio_color);
+  content:var(--radio_content);
+  display:flex;
+  font-weight:700;
+  height:var(--radio_height);
+  justify-content:center;
+  margin-right:10px;
+  min-width:var(--radio_width);
+  position:relative;
+  top:var(--radio_top);
+  width:var(--radio_width);
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=radio]:focus+span:before,[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=radio]:hover+span:before{
+  background-color:var(--radio_background-color_hover);
+  border-color:var(--radio_border-color_hover);
+  box-shadow:var(--radio_box-shadow_hover);
+  color:var(--radio_color_hover);
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=radio]:not(:checked)+span:before{
+  color:#0000;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--imgselect .en__imageSelectField__control input[type=radio]:checked+span:before{
+  background-color:var(--radio_background-color_selected);
+  border-color:var(--radio_border-color_selected);
+  box-shadow:var(--radio_box-shadow_selected);
+  color:var(--radio_color_selected);
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .body-title{
+  --h1_color:var(--default_color);
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .body-title h1{
+  font-family:var(--h1_font-family);
+  font-weight:400;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .body-top{
+  color:var(--default_color);
+  font-family:var(--h1_font-family);
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .body-top p{
+  font-family:var(--h1_font-family);
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__component--formblock,[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__field--survey:not(.en__field--imgselect){
+  margin-left:auto;
+  margin-right:auto;
+  max-width:600px;
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__component--formblock .en__field,[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__component--svblock .en__field{
+  margin-bottom:2rem;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey] .en__mandatory>label:before{
+  content:"";
+  margin-right:0;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true]{
+  --engrid__body-main_background-color:#f8f8f8;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] #engrid>.en__component--advrow,[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] form>.en__component--advrow{
+  grid-template-rows:[page-start page-alert-start] min-content [page-alert-end content-header-start] min-content [content-header-end body-headerOutside-start] min-content [body-headerOutside-end body-banner-start] min-content [body-banner-end body-bannerOverlay-start] min-content [body-bannerOverlay-end body-header-start] min-content [body-header-end body-title-start] min-content [body-title-end body-top-start] min-content [body-top-end body-side-start] min-content [body-side-end body-main-start] 1fr [body-main-end body-bottom-start] min-content [body-bottom-end body-footer-start] min-content [body-footer-end body-footerOutside-start] min-content [body-footerOutside-end content-footerSpacer-start] min-content [content-footerSpacer-end content-preFooter-start] min-content [content-preFooter-end content-footer-start] min-content [content-footer-end page-backgroundImage-start] min-content [page-backgroundImage-end page-backgroundImageOverlay-start] min-content [page-backgroundImageOverlay-end page-end page-customCode-start] min-content [page-customCode-end];
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] #engrid>.en__component--advrow,[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] form>.en__component--advrow{
+    grid-template-rows:[page-start page-alert-start] min-content [page-alert-end content-header-start] min-content [content-header-end body-headerOutside-start] min-content [body-headerOutside-end body-banner-start] min-content [body-banner-end body-bannerOverlay-start] min-content [body-bannerOverlay-end body-header-start] min-content [body-header-end body-title-start] min-content [body-title-end body-top-start] min-content [body-top-end body-side-start] min-content [body-side-end body-main-start] min-content [body-main-end body-bottom-start] min-content [body-bottom-end body-footer-start] min-content [body-footer-end body-footerOutside-start] min-content [body-footerOutside-end content-footerSpacer-start] min-content [content-footerSpacer-end content-preFooter-start] min-content [content-preFooter-end content-footer-start] min-content [content-footer-end page-backgroundImage-start] min-content [page-backgroundImage-end page-backgroundImageOverlay-start] min-content [page-backgroundImageOverlay-end page-end page-customCode-start] min-content [page-customCode-end];
+  }
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-banner{
+  grid-column:pc-start /  lbc-end;
+  grid-row:body-main;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-banner{
+    display:block;
+    grid-column:cc;
+    grid-row:body-banner;
+  }
+  [data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-banner .en__component--codeblock,[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-banner .en__component--imageblock{
+    position:static;
+  }
+  [data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-banner .en__component--codeblock [data-tippy-root],[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-banner .en__component--imageblock [data-tippy-root]{
+    max-width:100%;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-main{
+  align-items:center;
+  display:flex;
+  flex-direction:column;
+  grid-column:rbc-start /  pc-end;
+  justify-content:center;
+  padding:1.25rem;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-main{
+    grid-column:cc;
+    justify-content:flex-start;
+    max-width:100%;
+    padding:2.5rem 1.25rem;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-main>*{
+  max-width:500px;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-main>* h1{
+  --h1_font-size:50px;
+  font-weight:400;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-main>* h1{
+    --h1_font-size:36px;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-main>* p{
+  --p_font-size:20px;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-main>* p{
+    --p_font-size:18px;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-main>*>:first-child{
+  margin-top:0;
+  padding-top:0;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-main>*>:last-child{
+  margin-bottom:0;
+  padding-bottom:0;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .content-footer{
+  padding-top:0;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-bottom,[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-title,[data-engrid-theme=tnc][data-engrid-page-type=survey][data-engrid-thank-you=true] .body-top{
+  display:none;
 }
 body{
   opacity:1;

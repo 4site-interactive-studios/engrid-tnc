@@ -105,12 +105,15 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     );
   }
 
-  // Add a notice to the email field
-  App.addHtml(
-    `<div class="en__field__notice">${text.emailFieldNotice}</div>`,
-    '[name="supporter.emailAddress"]',
-    "after"
-  );
+  const emailField = document.querySelector('[name="supporter.emailAddress"]');
+  if (emailField && emailField.type !== "hidden") {
+    // Add a notice to the email field
+    App.addHtml(
+      `<div class="en__field__notice">${text.emailFieldNotice}</div>`,
+      '[name="supporter.emailAddress"]',
+      "after"
+    );
+  }
 
   // Add a notice to the phone number field
   App.addHtml(
@@ -367,5 +370,43 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
         el.classList.remove(`js-zcc--${param}--default`);
       });
     }
+  });
+
+  /*
+   * Make image selects on surveys into checkboxes
+   * "engrid-checkboxes" needs to be somewhere inside the "reference name" field of the question
+   */
+  const imageSelectQuestions = document.querySelectorAll(
+    ".en__field--imgselect[class*='engrid-checkboxes']"
+  );
+
+  imageSelectQuestions.forEach((question, i) => {
+    const inputs = question.querySelectorAll("input[type='radio']");
+    if (inputs.length === 0) return;
+
+    question.className.split(" ").forEach((className) => {
+      // Remove the en__field--numbers class to prevent validation
+      if (className.match(/en__field--\d+/)) {
+        question.classList.remove(className);
+      }
+    });
+
+    const hiddenInput = App.createHiddenInput(inputs[0].name);
+    question.appendChild(hiddenInput);
+
+    inputs.forEach((input) => {
+      input.type = "checkbox";
+      input.name = `${input.name}-${i}`;
+
+      input.addEventListener("change", () => {
+        const checkedValues = [];
+        inputs.forEach((input) => {
+          if (input.checked) {
+            checkedValues.push(input.value);
+          }
+          hiddenInput.value = checkedValues.join(",");
+        });
+      });
+    });
   });
 };

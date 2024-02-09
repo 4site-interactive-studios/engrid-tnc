@@ -1879,4 +1879,344 @@
       padding: 2.6rem;
     }
   }
+
+  // SURVEY PAGE STYLES
+  &[data-engrid-page-type="survey"] {
+    --engrid__body-title_background-color: white;
+    --engrid__body-top_background-color: white;
+    --label_font-size: 1.25rem;
+    --label_font-weight: bold;
+    --engrid__body-main_padding: 4rem 1.25rem 0;
+
+    @media screen and (max-width: 992px) {
+      --engrid__body-main_padding: 0 1.25rem;
+    }
+
+    .en__field__label.en__field__label--positionabove {
+      text-align: center;
+    }
+
+    .en__field--imgselect  {
+      flex-basis: auto;
+      width: calc(100% + 400px);
+      margin: 0 -200px var(--fields_spacing-block);
+
+      @media screen and (max-width: 1290px) {
+        width: calc(100% + 200px);
+        margin: 0 -100px var(--fields_spacing-block);
+      }
+
+      @media screen and (max-width: 1085px) {
+        width: 100%;
+        margin: 0 0 var(--fields_spacing-block);
+      }
+
+
+      .en__field__element--imgselect {
+        align-items: flex-start;
+        justify-content: center;
+      }
+
+      .en__field__item {
+        flex-basis: 20%;
+        padding: 0;
+
+        @media screen and (max-width: 1085px) {
+          flex-basis: 33%;
+        }
+
+        @media screen and (max-width: 600px) {
+          flex-basis: 50%;
+        }
+
+        .en__imageSelectField__image {
+          aspect-ratio: 1 / 1;
+          padding: 0;
+        }
+      }
+
+      .en__imageSelectField__control {
+        flex-flow: row nowrap;
+        font-weight: normal;
+        font-size: 1rem;
+        padding-top: 8px;
+
+        input[type="checkbox"],
+        input[type="radio"] {
+          border: 0;
+          clip: rect(0 0 0 0);
+          clip-path: inset(50%);
+          height: 1px;
+          margin: -1px;
+          overflow: hidden;
+          padding: 0;
+          position: absolute;
+          width: 1px;
+          white-space: nowrap;
+        }
+
+        input[type="checkbox"] {
+          + span {
+            display: flex;
+            align-items: center;
+          }
+
+          + span:before {
+            content: "";
+            justify-content: center;
+            align-items: center;
+            color: var(--checkbox_color);
+            background-color: var(--checkbox_background-color);
+            border-style: solid;
+            border-width: var(--checkbox_border-width);
+            border-color: var(--checkbox_border-color);
+            border-radius: var(--checkbox_border-radius);
+            height: var(--checkbox_height);
+            width: var(--checkbox_width);
+            min-width: var(--checkbox_width);
+            display: flex;
+            flex: 0 0 auto;
+            position: relative;
+            top: var(--checkbox_top);
+            padding-top: var(--checkbox_padding-top);
+            padding-left: var(--checkbox_padding-left);
+            font-weight: bold;
+            margin-right: 10px;
+          }
+
+          &:focus + span:before,
+          &:hover + span:before {
+            color: var(--checkbox_color_hover);
+            background-color: var(--checkbox_background-color_hover);
+            border-color: var(--checkbox_border-color_hover);
+          }
+
+          &:not(:checked) + span:before {
+            color: transparent;
+          }
+
+          &:checked + span:before {
+            content: var(--checkbox_content_checked);
+            color: var(--checkbox_color_checked);
+            background-color: var(--checkbox_background-color_checked);
+            border-color: var(--checkbox_border-color_checked);
+          }
+        }
+
+        input[type="radio"] {
+          + span {
+            display: flex;
+            align-items: center;
+          }
+
+          + span:before {
+            content: var(--radio_content);
+            justify-content: center;
+            align-items: center;
+            color: var(--radio_color);
+            background-color: var(--radio_background-color);
+            border-style: solid;
+            border-width: var(--radio_border-width);
+            border-color: var(--radio_border-color);
+            border-radius: var(--radio_border-radius);
+            height: var(--radio_height);
+            width: var(--radio_width);
+            min-width: var(--radio_width);
+            box-shadow: var(--radio_box-shadow);
+            display: flex;
+            position: relative;
+            top: var(--radio_top);
+            font-weight: bold;
+            margin-right: 10px;
+          }
+
+          &:focus + span:before,
+          &:hover + span:before {
+            color: var(--radio_color_hover);
+            background-color: var(--radio_background-color_hover);
+            border-color: var(--radio_border-color_hover);
+            box-shadow: var(--radio_box-shadow_hover);
+          }
+
+          &:not(:checked) + span:before {
+            color: transparent;
+          }
+
+          &:checked + span:before {
+            color: var(--radio_color_selected);
+            background-color: var(--radio_background-color_selected);
+            border-color: var(--radio_border-color_selected);
+            box-shadow: var(--radio_box-shadow_selected);
+          }
+        }
+      }
+    }
+
+    .body-title {
+      --h1_color: var(--default_color);
+      h1 {
+        font-family: var(--h1_font-family);
+        font-weight: normal;
+      }
+    }
+
+    .body-top {
+      font-family: var(--h1_font-family);
+      color: var(--default_color);
+      p {
+        font-family: var(--h1_font-family);
+      }
+    }
+
+    .en__field--survey:not(.en__field--imgselect),
+    .en__component--formblock {
+      max-width: 600px;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .en__component--formblock .en__field,
+    .en__component--svblock .en__field {
+      margin-bottom: 2rem;
+    }
+
+    .en__mandatory > label:before {
+      content: "";
+      margin-right: 0;
+    }
+
+    //Survey thank you page
+    &[data-engrid-thank-you="true"] {
+      --engrid__body-main_background-color: #f8f8f8;
+
+
+      //adjust layout for 2 columns [body-banner, body-main]
+      //with body-main row being 1fr height
+      #engrid > .en__component--advrow,
+      form > .en__component--advrow {
+        grid-template-rows:
+        [page-start page-alert-start] min-content
+        [page-alert-end content-header-start] min-content
+        [content-header-end body-headerOutside-start] min-content
+        [body-headerOutside-end body-banner-start] min-content
+        [body-banner-end body-bannerOverlay-start] min-content
+        [body-bannerOverlay-end body-header-start] min-content
+        [body-header-end body-title-start] min-content
+        [body-title-end body-top-start] min-content
+        [body-top-end body-side-start] min-content
+        [body-side-end body-main-start] 1fr
+        [body-main-end body-bottom-start] min-content
+        [body-bottom-end body-footer-start] min-content
+        [body-footer-end body-footerOutside-start] min-content
+        [body-footerOutside-end content-footerSpacer-start] min-content
+        [content-footerSpacer-end content-preFooter-start] min-content
+        [content-preFooter-end content-footer-start] min-content
+        [content-footer-end page-backgroundImage-start] min-content
+        [page-backgroundImage-end page-backgroundImageOverlay-start] min-content
+        [page-backgroundImageOverlay-end page-end page-customCode-start] min-content
+        [page-customCode-end];
+
+        @media screen and (max-width: 992px) {
+          grid-template-rows:
+            [page-start page-alert-start] min-content
+            [page-alert-end content-header-start] min-content
+            [content-header-end body-headerOutside-start] min-content
+            [body-headerOutside-end body-banner-start] min-content
+            [body-banner-end body-bannerOverlay-start] min-content
+            [body-bannerOverlay-end body-header-start] min-content
+            [body-header-end body-title-start] min-content
+            [body-title-end body-top-start] min-content
+            [body-top-end body-side-start] min-content
+            [body-side-end body-main-start] min-content
+            [body-main-end body-bottom-start] min-content
+            [body-bottom-end body-footer-start] min-content
+            [body-footer-end body-footerOutside-start] min-content
+            [body-footerOutside-end content-footerSpacer-start] min-content
+            [content-footerSpacer-end content-preFooter-start] min-content
+            [content-preFooter-end content-footer-start] min-content
+            [content-footer-end page-backgroundImage-start] min-content
+            [page-backgroundImage-end page-backgroundImageOverlay-start] min-content
+            [page-backgroundImageOverlay-end page-end page-customCode-start] min-content
+            [page-customCode-end];
+        }
+      }
+
+      .body-banner {
+        grid-column: pc-start /  lbc-end;
+        grid-row: body-main;
+
+        @media screen and (max-width: 992px) {
+          grid-row: body-banner;
+          grid-column: cc;
+          display: block;
+
+          .en__component--codeblock,
+          .en__component--imageblock {
+            position: static;
+
+            [data-tippy-root] {
+              max-width: 100%;
+            }
+          }
+        }
+      }
+
+      .body-main {
+        grid-column: rbc-start /  pc-end;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+
+        @media screen and (max-width: 992px) {
+          justify-content: flex-start;
+          grid-column: cc;
+          max-width: 100%;
+          padding: 2.5rem 1.25rem;
+        }
+
+        > * {
+          max-width: 500px;
+
+          h1 {
+            font-weight: normal;
+            --h1_font-size: 50px;
+            @media screen and (max-width: 992px) {
+              --h1_font-size: 36px;
+            }
+          }
+
+          p {
+            --p_font-size: 20px;
+            @media screen and (max-width: 992px) {
+              --p_font-size: 18px;
+            }
+          }
+
+          > :first-child {
+            margin-top: 0;
+            padding-top: 0;
+          }
+
+          > :last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+          }
+        }
+      }
+
+
+      .content-footer {
+        padding-top: 0;
+      }
+
+      .body-title,
+      .body-top,
+      .body-bottom {
+        display: none;
+      }
+    }
+  }
 }
