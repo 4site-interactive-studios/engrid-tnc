@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, February 9, 2024 @ 09:52:53 ET
+ *  Date: Friday, February 9, 2024 @ 10:02:46 ET
  *  By: michael
  *  ENGrid styles: v0.16.14
  *  ENGrid scripts: v0.16.16
@@ -21263,6 +21263,8 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
 
   if (pageJson && pageJson.pageNumber === pageJson.pageCount && pageJson.pageCount > 1) {
     App.setBodyData("thank-you", "true");
+  } else {
+    App.setBodyData("thank-you", "false");
   } // Auto renew
 
 

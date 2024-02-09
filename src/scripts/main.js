@@ -254,6 +254,8 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     pageJson.pageCount > 1
   ) {
     App.setBodyData("thank-you", "true");
+  } else {
+    App.setBodyData("thank-you", "false");
   }
 
   // Auto renew

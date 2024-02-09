@@ -2219,4 +2219,8 @@
       }
     }
   }
+
+  &:not([data-engrid-thank-you]) {
+    opacity: 0;
+  }
 }
