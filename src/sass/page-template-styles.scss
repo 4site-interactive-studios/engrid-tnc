@@ -1881,7 +1881,7 @@
   }
 
   // SURVEY PAGE STYLES
-  &[data-engrid-layout="centercenter1col"][data-engrid-page-type="survey"] {
+  &[data-engrid-layout="centercenter1col"][data-engrid-subtheme="survey"] {
     --submit__button_background-color: var(--color-green);
     --submit__button_border-color: var(--color-green);
     --engrid__body-title_background-color: white;
