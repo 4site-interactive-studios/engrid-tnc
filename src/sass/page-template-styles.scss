@@ -1882,6 +1882,8 @@
 
   // SURVEY PAGE STYLES
   &[data-engrid-page-type="survey"] {
+    --submit__button_background-color: var(--color-green);
+    --submit__button_border-color: var(--color-green);
     --engrid__body-title_background-color: white;
     --engrid__body-top_background-color: white;
     --label_font-size: 1.25rem;
@@ -2090,7 +2092,6 @@
     &[data-engrid-thank-you="true"] {
       --engrid__body-main_background-color: #f8f8f8;
 
-
       //adjust layout for 2 columns [body-banner, body-main]
       //with body-main row being 1fr height
       #engrid > .en__component--advrow,
@@ -2206,7 +2207,6 @@
           }
         }
       }
-
 
       .content-footer {
         padding-top: 0;

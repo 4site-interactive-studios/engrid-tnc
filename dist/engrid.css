@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, February 9, 2024 @ 09:32:38 ET
+ *  Date: Friday, February 9, 2024 @ 09:36:29 ET
  *  By: michael
  *  ENGrid styles: v0.16.14
  *  ENGrid scripts: v0.16.16
@@ -8755,6 +8755,8 @@ body[data-engrid-debug]:before{
   padding:2.6rem;
 }
 [data-engrid-theme=tnc][data-engrid-page-type=survey]{
+  --submit__button_background-color:var(--color-green);
+  --submit__button_border-color:var(--color-green);
   --engrid__body-title_background-color:#fff;
   --engrid__body-top_background-color:#fff;
   --label_font-size:1.25rem;
