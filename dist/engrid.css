@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, February 5, 2024 @ 11:02:16 ET
+ *  Date: Wednesday, February 21, 2024 @ 07:44:41 ET
  *  By: michael
- *  ENGrid styles: v0.17.6
- *  ENGrid scripts: v0.17.8
+ *  ENGrid styles: v0.17.13
+ *  ENGrid scripts: v0.17.13
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -3961,7 +3961,7 @@ body:not[data-engrid-show-ecard-options] .show-if-ecard{
   border-radius:var(--donation-amount__button_border-radius);
 }
 
-.en__field--validationFailed .en__field__input--vgs:not(.vgs-collect-container__empty).vgs-collect-container__invalid{
+.en__field--validationFailed .en__field__input--vgs:not(.vgs-collect-container__focused).vgs-collect-container__empty,.en__field--validationFailed .en__field__input--vgs:not(.vgs-collect-container__focused).vgs-collect-container__invalid{
   background-color:var(--error__color_faded);
   border-color:var(--error__color);
 }
@@ -5383,6 +5383,44 @@ body[data-engrid-exit-intent-lightbox=open]{
 }
 [data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-hide-fast-address-details=true]) .showif-fast-address-details,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-hide-fast-personal-details=true]) .showif-fast-personal-details,[data-engrid-theme]:not(#en__pagebuilder)[data-engrid-hide-fast-address-details=true] .fast-address-details,[data-engrid-theme]:not(#en__pagebuilder)[data-engrid-hide-fast-address-details=true] .hideif-fast-address-details,[data-engrid-theme]:not(#en__pagebuilder)[data-engrid-hide-fast-personal-details=true] .fast-personal-details,[data-engrid-theme]:not(#en__pagebuilder)[data-engrid-hide-fast-personal-details=true] .hideif-fast-personal-details{
   display:none !important;
+}
+
+.engrid-personal-details-summary{
+  background-color:#f6f5f3;
+  border:2px solid #ccc;
+  margin:1rem 0;
+  padding:1.25rem;
+}
+.engrid-personal-details-summary :first-child{
+  margin-top:0;
+}
+.engrid-personal-details-summary :last-child{
+  margin-bottom:0;
+}
+.engrid-personal-details-summary h1,.engrid-personal-details-summary h2,.engrid-personal-details-summary h3,.engrid-personal-details-summary h4,.engrid-personal-details-summary h5,.engrid-personal-details-summary h6{
+  font-weight:700;
+}
+.engrid-personal-details-summary p:not(.engrid-welcome-back-clear){
+  margin:0;
+  opacity:.8;
+}
+.engrid-personal-details-summary .engrid-welcome-back-clear{
+  margin-top:1rem;
+}
+
+.engrid-reset-welcome-back,.engrid-welcome-back-clear{
+  color:#016da3;
+  cursor:pointer;
+  font-weight:700;
+  -webkit-text-decoration:underline;
+  text-decoration:underline;
+}
+.engrid-reset-welcome-back svg,.engrid-welcome-back-clear svg{
+  bottom:2px;
+  height:15px;
+  margin-left:5px;
+  position:relative;
+  width:15px;
 }
 [data-engrid-theme]{
   --engrid__page_padding:0px;
