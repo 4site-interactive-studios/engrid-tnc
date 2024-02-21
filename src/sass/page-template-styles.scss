@@ -159,6 +159,10 @@
     }
   }
 
+  .en__field__input--vgs.vgs-collect-container__focused {
+    outline-color: var(--color-green);
+  }
+
   @media screen and (max-width: 805px) {
     --engrid__body_padding: 0 10vw;
   }
