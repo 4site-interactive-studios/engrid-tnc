@@ -159,6 +159,17 @@
     }
   }
 
+  .en__field__input--vgs.vgs-collect-container__focused {
+    outline-color: var(--color-green);
+  }
+
+  .en__field--validationFailed .en__field__input--vgs:not(.vgs-collect-container__focused).vgs-collect-container__empty,
+  .en__field--validationFailed .en__field__input--vgs:not(.vgs-collect-container__focused).vgs-collect-container__invalid {
+    background-color: initial;
+    border-color: var(--error__color) !important;
+    border-width: 2px;
+  }
+
   @media screen and (max-width: 805px) {
     --engrid__body_padding: 0 10vw;
   }
@@ -703,7 +714,6 @@
     [class*="validationFail"]:not(.has-value) [type],
     [class*="validationFail"]:not(.has-value) select,
     [class*="validationFail"]:not(.has-value) textarea {
-      //--input_padding: 15px 1.25rem;
       padding-top: 15px;
       padding-bottom: 15px;
       background-color: initial;
