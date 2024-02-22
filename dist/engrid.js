@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, February 21, 2024 @ 11:15:36 ET
+ *  Date: Thursday, February 22, 2024 @ 10:50:52 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -21708,10 +21708,15 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
 
   if (inlineMonthlyUpsell && recurrFrequencyField) {
     recurrFrequencyField.insertAdjacentElement("beforeend", inlineMonthlyUpsell);
-  } // Add a notice to the email field
+  }
 
+  const emailField = document.querySelector('[name="supporter.emailAddress"]');
 
-  App.addHtml(`<div class="en__field__notice">${text.emailFieldNotice}</div>`, '[name="supporter.emailAddress"]', "after"); // Add a notice to the phone number field
+  if (emailField && emailField.type !== "hidden") {
+    // Add a notice to the email field
+    App.addHtml(`<div class="en__field__notice">${text.emailFieldNotice}</div>`, '[name="supporter.emailAddress"]', "after");
+  } // Add a notice to the phone number field
+
 
   App.addHtml(`<div class="en__field__notice">${text.phoneNumberNotice}</div>`, '[name="supporter.phoneNumber2"]', "after");
   /**
@@ -21822,6 +21827,8 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
 
   if (pageJson && pageJson.pageNumber === pageJson.pageCount && pageJson.pageCount > 1) {
     App.setBodyData("thank-you", "true");
+  } else {
+    App.setBodyData("thank-you", "false");
   } // Auto renew
 
 
@@ -21924,6 +21931,38 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         el.classList.remove(`js-zcc--${param}--default`);
       });
     }
+  });
+  /*
+   * Make image selects on surveys into checkboxes
+   * "engrid-checkboxes" needs to be somewhere inside the "reference name" field of the question
+   */
+
+  const imageSelectQuestions = document.querySelectorAll(".en__field--imgselect[class*='engrid-checkboxes']");
+  imageSelectQuestions.forEach((question, i) => {
+    const inputs = question.querySelectorAll("input[type='radio']");
+    if (inputs.length === 0) return;
+    question.className.split(" ").forEach(className => {
+      // Remove the en__field--numbers class to prevent validation
+      if (className.match(/en__field--\d+/)) {
+        question.classList.remove(className);
+      }
+    });
+    const hiddenInput = App.createHiddenInput(inputs[0].name);
+    question.appendChild(hiddenInput);
+    inputs.forEach(input => {
+      input.type = "checkbox";
+      input.name = `${input.name}-${i}`;
+      input.addEventListener("change", () => {
+        const checkedValues = [];
+        inputs.forEach(input => {
+          if (input.checked) {
+            checkedValues.push(input.value);
+          }
+
+          hiddenInput.value = checkedValues.join(",");
+        });
+      });
+    });
   });
 };
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
