@@ -2234,4 +2234,60 @@
   &:not(#en__pagebuilder):not([data-engrid-thank-you]) {
     opacity: 0;
   }
+
+  //Progress bar widget
+  .body-main > .en__component--widgetblock:first-child {
+    margin-top: 4rem;
+  }
+
+  .body-main > .en__component--widgetblock:first-child + .form-heading {
+    margin-top: 2.5rem;
+  }
+
+  .enWidget {
+    font-family: var(--default_font-family);
+    padding: 0
+  }
+
+  .enWidget .enWidget__copy--above {
+    margin-bottom: 1rem;
+  }
+
+  .enWidget .enWidget__copy--above h5 {
+    text-transform: uppercase;
+    font-family: var(--default_font-family);
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  .enWidget__copy--below {
+    margin-top: 1rem;
+  }
+
+  .enWidget--progressBar .enWidget__fill {
+    background-color: #007931 !important
+  }
+
+  .enWidget--progressBar .enWidget__progress {
+    border: 1px solid #949494 !important;
+    border-radius: 0;
+    min-height: 1rem;
+  }
+
+  //Match copy
+  &:not(#en__pagebuilder):not([data-engrid-debug]) {
+    .match-met-copy,
+    .match-not-met-copy {
+      display: none;
+    }
+  }
+
+  &#en__pagebuilder,
+  &[data-engrid-debug] {
+    .match-met-copy,
+    .match-not-met-copy {
+      display: block !important;
+      background-color: #0000ff1a !important;
+    }
+  }
 }

@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, February 22, 2024 @ 10:50:52 ET
+ *  Date: Monday, March 11, 2024 @ 08:46:30 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -9052,6 +9052,43 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc]:not(#en__pagebuilder):not([data-engrid-thank-you]){
   opacity:0;
+}
+[data-engrid-theme=tnc] .body-main>.en__component--widgetblock:first-child{
+  margin-top:4rem;
+}
+[data-engrid-theme=tnc] .body-main>.en__component--widgetblock:first-child+.form-heading{
+  margin-top:2.5rem;
+}
+[data-engrid-theme=tnc] .enWidget{
+  font-family:var(--default_font-family);
+  padding:0;
+}
+[data-engrid-theme=tnc] .enWidget .enWidget__copy--above{
+  margin-bottom:1rem;
+}
+[data-engrid-theme=tnc] .enWidget .enWidget__copy--above h5{
+  font-family:var(--default_font-family);
+  font-size:1rem;
+  font-weight:700;
+  text-transform:uppercase;
+}
+[data-engrid-theme=tnc] .enWidget__copy--below{
+  margin-top:1rem;
+}
+[data-engrid-theme=tnc] .enWidget--progressBar .enWidget__fill{
+  background-color:#007931 !important;
+}
+[data-engrid-theme=tnc] .enWidget--progressBar .enWidget__progress{
+  border:1px solid #949494 !important;
+  border-radius:0;
+  min-height:1rem;
+}
+[data-engrid-theme=tnc]:not(#en__pagebuilder):not([data-engrid-debug]) .match-met-copy,[data-engrid-theme=tnc]:not(#en__pagebuilder):not([data-engrid-debug]) .match-not-met-copy{
+  display:none;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .match-met-copy,[data-engrid-theme=tnc]#en__pagebuilder .match-not-met-copy,[data-engrid-theme=tnc][data-engrid-debug] .match-met-copy,[data-engrid-theme=tnc][data-engrid-debug] .match-not-met-copy{
+  background-color:#0000ff1a !important;
+  display:block !important;
 }
 body{
   opacity:1;
