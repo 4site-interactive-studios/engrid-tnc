@@ -1283,9 +1283,13 @@
       }
     }
 
-    .tippy-label {
+    .tippy-label,
+    [data-engrid-tooltip] {
       font-weight: bold;
       text-decoration-color: var(--a_color);
+      text-decoration: var(--a_text-decoration);
+      color: var(--a_color);
+      cursor: pointer;
       &:hover,
       &:active,
       &:focus {

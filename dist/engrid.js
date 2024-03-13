@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, March 11, 2024 @ 08:46:30 ET
+ *  Date: Wednesday, March 13, 2024 @ 11:07:35 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -22393,6 +22393,40 @@ class BequestLightbox {
   }
 
 }
+// EXTERNAL MODULE: ./node_modules/tippy.js/dist/tippy.esm.js + 52 modules
+var tippy_esm = __webpack_require__(3861);
+;// CONCATENATED MODULE: ./src/scripts/tooltip.ts
+
+
+class Tooltip {
+  constructor() {
+    _defineProperty(this, "Els", void 0);
+
+    this.Els = document.querySelectorAll("[data-engrid-tooltip]");
+    if (!this.shouldRun()) return;
+    this.addTooltips();
+  }
+
+  shouldRun() {
+    return this.Els.length > 0;
+  }
+
+  addTooltips() {
+    this.Els.forEach(el => {
+      const content = el.getAttribute("data-engrid-tooltip");
+      const trigger = el.getAttribute("data-engrid-tooltip-trigger") || "click";
+      if (!content) return;
+      (0,tippy_esm/* default */.ZP)(el, {
+        content: content,
+        theme: "light-border",
+        allowHTML: true,
+        trigger: trigger,
+        hideOnClick: "toggle"
+      });
+    });
+  }
+
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -22401,6 +22435,7 @@ class BequestLightbox {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -22464,6 +22499,7 @@ const options = {
   onLoad: () => {
     customScript(App, DonationFrequency, DonationAmount);
     new BequestLightbox();
+    new Tooltip();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();

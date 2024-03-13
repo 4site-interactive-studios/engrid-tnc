@@ -21,6 +21,7 @@ import {
   trackUserInteractions,
 } from "./scripts/tracking";
 import { BequestLightbox } from "./scripts/bequest-lightbox";
+import { Tooltip } from "./scripts/tooltip";
 
 declare global {
   interface Window {
@@ -103,6 +104,7 @@ const options: Options = {
   onLoad: () => {
     customScript(App, DonationFrequency, DonationAmount);
     new BequestLightbox();
+    new Tooltip();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();
