@@ -411,4 +411,17 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       });
     });
   });
+
+  // Select donation amount based on URL parameter
+  const donationIndex = new URLSearchParams(window.location.search).get(
+    "donationIndex"
+  );
+  if (donationIndex) {
+    const donationAmounts = document.querySelectorAll(
+      'input[name="transaction.donationAmt"]'
+    );
+    if (donationAmounts[donationIndex]) {
+      amt.setAmount(donationAmounts[donationIndex].value);
+    }
+  }
 };
