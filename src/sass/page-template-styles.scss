@@ -2294,4 +2294,8 @@
       background-color: #0000ff1a !important;
     }
   }
+
+  &[data-engrid-page-type="e-card"] {
+    @import 'ecard.scss';
+  }
 }

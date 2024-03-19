@@ -1,0 +1,12 @@
+&[data-engrid-embedded] {
+  background-color: #ffffff!important;
+
+  .en__errorHeader,
+  .en__errorList {
+    display: none;
+  }
+
+  .en__component--advrow > div:not(.body-main) {
+    display: none;
+  }
+}

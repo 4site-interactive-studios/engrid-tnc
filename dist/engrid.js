@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 13, 2024 @ 11:26:55 ET
+ *  Date: Tuesday, March 19, 2024 @ 08:54:48 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -22437,6 +22437,22 @@ class Tooltip {
   }
 
 }
+;// CONCATENATED MODULE: ./src/scripts/ecard.ts
+
+
+class ecard_Ecard {
+  constructor() {
+    _defineProperty(this, "logger", new EngridLogger("TNC Ecard", "yellow", "black", "📧"));
+
+    if (!this.pageIsEmbeddedEcard()) return;
+    this.logger.log("Running Ecard component");
+  }
+
+  pageIsEmbeddedEcard() {
+    return engrid_ENGrid.getPageType() === "ECARD" && engrid_ENGrid.hasBodyData("embedded");
+  }
+
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -22445,6 +22461,7 @@ class Tooltip {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -22510,6 +22527,7 @@ const options = {
     customScript(App, DonationFrequency, DonationAmount);
     new BequestLightbox();
     new Tooltip();
+    new ecard_Ecard();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();

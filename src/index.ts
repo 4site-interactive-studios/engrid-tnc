@@ -22,6 +22,7 @@ import {
 } from "./scripts/tracking";
 import { BequestLightbox } from "./scripts/bequest-lightbox";
 import { Tooltip } from "./scripts/tooltip";
+import { Ecard } from "./scripts/ecard";
 
 declare global {
   interface Window {
@@ -105,6 +106,7 @@ const options: Options = {
     customScript(App, DonationFrequency, DonationAmount);
     new BequestLightbox();
     new Tooltip();
+    new Ecard();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();
