@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, March 19, 2024 @ 08:54:48 ET
+ *  Date: Wednesday, March 20, 2024 @ 07:52:48 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -21972,6 +21972,31 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
 
     if (donationAmounts[donationIndex]) {
       amt.setAmount(donationAmounts[donationIndex].value);
+    }
+  } // When doing E-Check payment, make the bank account agreement field visible. Otherwise, it should be hidden
+  // so that there is not a validation error when the form is submitted.
+
+
+  const giveBySelectInputs = document.querySelectorAll("[name='transaction.giveBySelect']");
+  const bankAccountAgreementField = document.querySelector(".en__field--879592");
+
+  if (bankAccountAgreementField) {
+    giveBySelectInputs.forEach(input => {
+      input.addEventListener("change", () => {
+        if (input.value === "ACH") {
+          bankAccountAgreementField.classList.remove("en__hidden");
+        } else {
+          bankAccountAgreementField.classList.add("en__hidden");
+        }
+      });
+    }); // Set the initial state of the bank account agreement field
+
+    const initialGiveBySelect = document.querySelector("[name='transaction.giveBySelect']:checked");
+
+    if (initialGiveBySelect && initialGiveBySelect.value === "ACH") {
+      bankAccountAgreementField.classList.remove("en__hidden");
+    } else {
+      bankAccountAgreementField.classList.add("en__hidden");
     }
   }
 };
