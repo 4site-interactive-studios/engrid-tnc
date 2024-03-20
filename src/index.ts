@@ -1,15 +1,15 @@
-import {
-  Options,
-  App,
-  DonationFrequency,
-  DonationAmount,
-} from "@4site/engrid-common"; // Uses ENGrid via NPM
 // import {
 //   Options,
 //   App,
 //   DonationFrequency,
 //   DonationAmount,
-// } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
+// } from "@4site/engrid-common"; // Uses ENGrid via NPM
+import {
+  Options,
+  App,
+  DonationFrequency,
+  DonationAmount,
+} from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
 import { customScript } from "./scripts/main";
@@ -22,7 +22,6 @@ import {
 } from "./scripts/tracking";
 import { BequestLightbox } from "./scripts/bequest-lightbox";
 import { Tooltip } from "./scripts/tooltip";
-import { Ecard } from "./scripts/ecard";
 
 declare global {
   interface Window {
@@ -106,7 +105,6 @@ const options: Options = {
     customScript(App, DonationFrequency, DonationAmount);
     new BequestLightbox();
     new Tooltip();
-    new Ecard();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();
