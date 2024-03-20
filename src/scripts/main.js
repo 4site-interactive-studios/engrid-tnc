@@ -437,9 +437,29 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     giveBySelectInputs.forEach((input) => {
       input.addEventListener("change", () => {
         if (input.value === "ACH") {
-          bankAccountAgreementField.classList.remove("en__hidden");
+          if (
+            App.checkNested(
+              window.EngagingNetworks,
+              "require",
+              "_defined",
+              "enjs",
+              "showField"
+            )
+          ) {
+            window.EngagingNetworks.require._defined.enjs.showField("879592");
+          }
         } else {
-          bankAccountAgreementField.classList.add("en__hidden");
+          if (
+            App.checkNested(
+              window.EngagingNetworks,
+              "require",
+              "_defined",
+              "enjs",
+              "hideField"
+            )
+          ) {
+            window.EngagingNetworks.require._defined.enjs.hideField("879592");
+          }
         }
       });
     });
@@ -449,9 +469,29 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       "[name='transaction.giveBySelect']:checked"
     );
     if (initialGiveBySelect && initialGiveBySelect.value === "ACH") {
-      bankAccountAgreementField.classList.remove("en__hidden");
+      if (
+        App.checkNested(
+          window.EngagingNetworks,
+          "require",
+          "_defined",
+          "enjs",
+          "showField"
+        )
+      ) {
+        window.EngagingNetworks.require._defined.enjs.showField("879592");
+      }
     } else {
-      bankAccountAgreementField.classList.add("en__hidden");
+      if (
+        App.checkNested(
+          window.EngagingNetworks,
+          "require",
+          "_defined",
+          "enjs",
+          "hideField"
+        )
+      ) {
+        window.EngagingNetworks.require._defined.enjs.hideField("879592");
+      }
     }
   }
 };
