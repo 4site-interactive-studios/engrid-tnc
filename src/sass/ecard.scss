@@ -1,4 +1,57 @@
 &[data-engrid-page-type="e-card"] {
+
+  .en__ecardrecipients__detail input {
+    width: 100%;
+    padding: var(--input_padding);
+    margin-bottom: var(--fields_spacing-block);
+    margin-top: calc(var(--fields_spacing-inline) * 0.5);
+  }
+
+  .en__ecardrecipients__email {
+    position: relative;
+
+    input {
+      width: calc(100% - 45px);
+    }
+
+    .en__ecarditems__addrecipient {
+      position: absolute;
+      right: 0;
+      top: 37px;
+    }
+  }
+
+  .en__ecardrecipients__recipient {
+    align-items: center;
+    padding: 10px 0px 10px 15px;
+
+    &:nth-child(odd) {
+      background-color: #e2e2e2;
+
+      input.ecardrecipient__name,
+      input.ecardrecipient__email {
+        background-color: #e2e2e2;
+      }
+    }
+
+    input.ecardrecipient__name,
+    input.ecardrecipient__email {
+      width: 47.5%!important;
+    }
+  }
+
+  .ecardrecipient__remove button {
+    margin: 0;
+
+    background: var(--error__color);
+    color: white;
+
+    &:hover {
+      color: white;
+    }
+  }
+
+  //Embedded ecard styles
   &[data-engrid-embedded] {
     background-color: #ffffff!important;
 
@@ -7,8 +60,26 @@
       display: none;
     }
 
+    // Hide all page sections except body-main
     .en__component--advrow > div:not(.body-main) {
+      display: none;
+    }
+
+    // Hide all elements in body-main except the ecard component.
+    .body-main > *:not(.en__component--ecardblock) {
       display: none;
     }
   }
 }
+
+.engrid--embedded-ecard-heading {
+  border-bottom: 1px solid #cdcdcd;
+  color: #007931;
+  font-family: var(--default_font-family);
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 3.5rem 0 1.25rem;
+  padding-bottom: 1rem;
+  text-transform: uppercase;
+}
+

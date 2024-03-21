@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 20, 2024 @ 08:13:49 ET
+ *  Date: Friday, March 22, 2024 @ 19:36:27 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -31574,26 +31574,129 @@ class EcardToTarget {
   }
 
 }
+;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/interfaces/embedded-ecard-options.js
+const EmbeddedEcardOptionsDefaults = {
+  pageUrl: "",
+  headerText: "Send an Ecard notification of your gift",
+  checkboxText: "Yes, I would like to send an ecard to announce my gift.",
+  anchor: ".en__field--donationAmt",
+  placement: "afterend"
+};
 ;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/embedded-ecard.js
+
 
 class EmbeddedEcard {
   constructor() {
     this.logger = new logger_EngridLogger("Embedded Ecard", "#D95D39", "#0E1428", "📧");
-    this.logger.log("Running Embedded Ecard component");
-    if (!this.shouldRun()) return;
-    this.logger.log("Running Embedded Ecard component");
+    this.options = EmbeddedEcardOptionsDefaults;
+    this._form = en_form_EnForm.getInstance(); // For the page hosting the embedded ecard
+
+    if (this.isHostPage()) {
+      this.logger.log("Running Embedded Ecard component", this.options);
+      this.options = Object.assign(Object.assign({}, EmbeddedEcardOptionsDefaults), window.EngridEmbeddedEcard);
+      this.embedEcard();
+      this.addEventListeners();
+    } // For the page that is embedded
+
+
+    if (this.pageIsEmbeddedEcard()) {
+      this.addPostMessageListener();
+    }
   }
 
-  shouldRun() {
-    return window.hasOwnProperty("EngridEmbeddedEcard") && typeof window.EngridEmbeddedEcard === "object";
+  isHostPage() {
+    return window.hasOwnProperty("EngridEmbeddedEcard") && typeof window.EngridEmbeddedEcard === "object" && window.EngridEmbeddedEcard.hasOwnProperty("pageUrl") && window.EngridEmbeddedEcard.pageUrl !== "";
   }
 
   pageIsEmbeddedEcard() {
     return engrid_ENGrid.getPageType() === "ECARD" && engrid_ENGrid.hasBodyData("embedded");
   }
 
-  pageIsEcard() {
-    return engrid_ENGrid.getPageType() === "ECARD";
+  embedEcard() {
+    var _a;
+
+    const container = document.createElement("div");
+    container.classList.add("engrid--embedded-ecard");
+    const heading = document.createElement("h3");
+    heading.textContent = this.options.headerText;
+    heading.classList.add("engrid--embedded-ecard-heading");
+    container.appendChild(heading);
+    const checkbox = document.createElement("div");
+    checkbox.classList.add("pseudo-en-field", "en__field", "en__field--checkbox", "en__field--000000", "en__field--embedded-ecard");
+    checkbox.innerHTML = `
+      <div class="en__field__element en__field__element--checkbox">
+        <div class="en__field__item">
+          <input class="en__field__input en__field__input--checkbox" id="en__field_embedded-ecard" name="engrid.embedded-ecard" type="checkbox" value="Y">
+          <label class="en__field__label en__field__label--item" for="en__field_embedded-ecard">${this.options.checkboxText}</label>
+        </div>
+      </div>`;
+    container.appendChild(checkbox);
+    const iframe = document.createElement("iframe");
+    iframe.src = this.options.pageUrl;
+    iframe.setAttribute("src", this.options.pageUrl);
+    iframe.setAttribute("width", "100%");
+    iframe.setAttribute("scrolling", "no");
+    iframe.setAttribute("frameborder", "0");
+    iframe.classList.add("engrid-iframe", "engrid-iframe--embedded-ecard");
+    iframe.style.display = "none";
+    container.appendChild(iframe);
+    (_a = document.querySelector(this.options.anchor)) === null || _a === void 0 ? void 0 : _a.insertAdjacentElement(this.options.placement, container);
+  }
+
+  addEventListeners() {
+    const iframe = document.querySelector(".engrid-iframe--embedded-ecard");
+    const sendEcardCheckbox = document.getElementById("en__field_embedded-ecard");
+    sendEcardCheckbox === null || sendEcardCheckbox === void 0 ? void 0 : sendEcardCheckbox.addEventListener("change", e => {
+      const checkbox = e.target;
+
+      if (checkbox === null || checkbox === void 0 ? void 0 : checkbox.checked) {
+        iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: block");
+      } else {
+        iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: none");
+      }
+    });
+    /*
+    TODO: fix - this is not working. Potential issue with order of operations causing either form to fail to submit or the ecard to not be sent.
+         This is a potential solution:
+    - Save ecard data to sessionStorage
+    - Submit form
+    - On thank you page, add ecard iframe, and send ecard data to iframe, submit iframe.
+     */
+
+    this._form.onSubmit.subscribe(() => {
+      var _a;
+
+      if (!this._form.submit) return;
+      if (!sendEcardCheckbox || !(sendEcardCheckbox === null || sendEcardCheckbox === void 0 ? void 0 : sendEcardCheckbox.checked)) return;
+      const emailField = document.getElementById("en__field_supporter_emailAddress");
+      const firstNameField = document.getElementById("en__field_supporter_firstName");
+      const lastNameField = document.getElementById("en__field_supporter_lastName");
+      (_a = iframe === null || iframe === void 0 ? void 0 : iframe.contentWindow) === null || _a === void 0 ? void 0 : _a.postMessage({
+        messageType: "submit_embedded_ecard",
+        email: emailField === null || emailField === void 0 ? void 0 : emailField.value,
+        firstName: firstNameField === null || firstNameField === void 0 ? void 0 : firstNameField.value,
+        lastName: lastNameField === null || lastNameField === void 0 ? void 0 : lastNameField.value
+      }, location.origin); //test dont submit
+
+      this._form.submit = false;
+    });
+  }
+
+  addPostMessageListener() {
+    window.addEventListener("message", e => {
+      var _a, _b, _c;
+
+      if (e.origin !== location.origin) return;
+      console.log(e.data);
+
+      if (e.data.messageType === "submit_embedded_ecard") {
+        (_a = document.getElementById("en__field_supporter_emailAddress")) === null || _a === void 0 ? void 0 : _a.setAttribute("value", e.data.email);
+        (_b = document.getElementById("en__field_supporter_firstName")) === null || _b === void 0 ? void 0 : _b.setAttribute("value", e.data.firstName);
+        (_c = document.getElementById("en__field_supporter_lastName")) === null || _c === void 0 ? void 0 : _c.setAttribute("value", e.data.lastName);
+
+        this._form.submitForm();
+      }
+    });
   }
 
 }
