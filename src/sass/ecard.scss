@@ -126,50 +126,7 @@
 
   //Embedded ecard styles
   &[data-engrid-embedded] {
-    background-color: #ffffff!important;
-
-    .en__errorHeader,
-    .en__errorList {
-      display: none;
-    }
-
-    // Hide all page sections except body-main
-    .en__component--advrow > div:not(.body-main) {
-      display: none;
-    }
-
-    // Hide all elements in body-main except the ecard component.
-    .body-main > *:not(.en__component--ecardblock) {
-      display: none;
-    }
-
-    .body-main {
-      padding: 0;
-      grid-row: 1 / -1;
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .en__component--ecardblock {
-      width: 100%;
-      max-width: 100%;
-    }
-
-    .en__ecardrecipients__name,
-    .en__ecardrecipients__email {
-      input {
-        width: 100%
-      }
-
-      .en__ecarditems__addrecipient {
-        display: none;
-      }
-    }
-
-    .en__ecardrecipients__list {
-      display: none;
-    }
-
+    // Hide cookie consent in iframe
     #onetrust-consent-sdk {
       display: none;
     }

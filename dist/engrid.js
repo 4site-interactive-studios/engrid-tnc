@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, March 28, 2024 @ 12:14:28 ET
+ *  Date: Thursday, March 28, 2024 @ 13:06:49 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -31593,6 +31593,9 @@ class EmbeddedEcard {
 
     if (this.onHostPage()) {
       this.options = Object.assign(Object.assign({}, EmbeddedEcardOptionsDefaults), window.EngridEmbeddedEcard);
+      const pageUrl = new URL(this.options.pageUrl);
+      pageUrl.searchParams.append("data-engrid-embedded-ecard", "true");
+      this.options.pageUrl = pageUrl.href;
       this.logger.log("Running Embedded Ecard component", this.options);
       this.embedEcard();
       this.addEventListeners();
