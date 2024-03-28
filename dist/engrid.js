@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, March 28, 2024 @ 13:06:49 ET
+ *  Date: Thursday, March 28, 2024 @ 13:25:56 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -31700,6 +31700,7 @@ class EmbeddedEcard {
             pageUrl.searchParams.append("chain", "");
           }
 
+          pageUrl.searchParams.append("data-engrid-embedded-ecard-sent", "true");
           sessionStorage.setItem("engrid-embedded-ecard", JSON.stringify({
             pageUrl: pageUrl.href,
             formData: {
