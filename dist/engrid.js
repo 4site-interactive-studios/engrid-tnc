@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, March 25, 2024 @ 13:01:53 ET
+ *  Date: Thursday, March 28, 2024 @ 12:14:28 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -32217,9 +32217,13 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     giveBySelectInputs.forEach(input => {
       input.addEventListener("change", () => {
         if (input.value === "ACH") {
-          bankAccountAgreementField.classList.remove("en__hidden");
+          if (App.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "showField")) {
+            window.EngagingNetworks.require._defined.enjs.showField("879592");
+          }
         } else {
-          bankAccountAgreementField.classList.add("en__hidden");
+          if (App.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "hideField")) {
+            window.EngagingNetworks.require._defined.enjs.hideField("879592");
+          }
         }
       });
     }); // Set the initial state of the bank account agreement field
@@ -32227,9 +32231,13 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     const initialGiveBySelect = document.querySelector("[name='transaction.giveBySelect']:checked");
 
     if (initialGiveBySelect && initialGiveBySelect.value === "ACH") {
-      bankAccountAgreementField.classList.remove("en__hidden");
+      if (App.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "showField")) {
+        window.EngagingNetworks.require._defined.enjs.showField("879592");
+      }
     } else {
-      bankAccountAgreementField.classList.add("en__hidden");
+      if (App.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "hideField")) {
+        window.EngagingNetworks.require._defined.enjs.hideField("879592");
+      }
     }
   }
 };
