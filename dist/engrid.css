@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, March 28, 2024 @ 13:25:56 ET
+ *  Date: Monday, April 15, 2024 @ 06:13:30 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -2521,7 +2521,7 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
   display:block;
   width:100% !important;
 }
-input[disabled],input[readonly],textarea[disabled],textarea[readonly]{
+input[disabled],input[readonly],select[disabled],textarea[disabled],textarea[readonly]{
   cursor:not-allowed;
 }
 .en__captcha{
@@ -3199,10 +3199,10 @@ body:not(#en__pagebuilder):not([data-engrid-debug]) .hide-labels .en__field:not(
   padding-right:var(--fields_spacing-inline);
   padding-top:0;
 }
-[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type-option-apple-pay=true]) .showif-apple-pay-available,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type-option-google-pay=true]) .showif-google-pay-available,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type-option-paypal-one-touch=true]) .showif-paypal-one-touch-available,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type-option-venmo=true]) .showif-venmo-available,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type=paypaltouch]) .showif-paypaltouch-selected,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type=stripedigitalwallet]) .showif-stripedigitalwallet-selected{
+[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type-option-apple-pay=true]) .showif-apple-pay-available,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type-option-daf=true]) .showif-daf-available,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type-option-google-pay=true]) .showif-google-pay-available,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type-option-paypal-one-touch=true]) .showif-paypal-one-touch-available,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type-option-venmo=true]) .showif-venmo-available,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type=daf]) .showif-daf-selected,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type=paypaltouch]) .showif-paypaltouch-selected,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements]:not([data-engrid-payment-type=stripedigitalwallet]) .showif-stripedigitalwallet-selected{
   display:none;
 }
-[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements][data-engrid-payment-type=paypaltouch] .hideif-paypaltouch-selected,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements][data-engrid-payment-type=stripedigitalwallet] .hideif-stripedigitalwallet-selected,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements][data-engrid-transaction-recurring=n][data-engrid-payment-type-option-paypal-one-touch=true] .en__field--giveBySelect.paypal,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements][data-engrid-transaction-recurring=y] .en__field--giveBySelect.paypaltouch{
+[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements][data-engrid-payment-type=daf] .hideif-daf-selected,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements][data-engrid-payment-type=paypaltouch] .hideif-paypaltouch-selected,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements][data-engrid-payment-type=stripedigitalwallet] .hideif-stripedigitalwallet-selected,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements][data-engrid-transaction-recurring=n][data-engrid-payment-type-option-paypal-one-touch=true] .en__field--giveBySelect.paypal,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-debug])[data-conditonally-hide-show-digital-wallet-elements][data-engrid-transaction-recurring=y] .en__field--giveBySelect.paypaltouch{
   display:none;
 }
 [data-engrid-theme] iframe.plaid-link-iframe,[data-engrid-theme] iframe[id^=plaid-link-iframe]{
