@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 20, 2024 @ 13:29:54 ET
+ *  Date: Tuesday, April 16, 2024 @ 12:56:41 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -21916,7 +21916,8 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
    */
 
 
-  new URLSearchParams(window.location.search).forEach((value, param) => {
+  const urlParams = new URLSearchParams(window.location.search);
+  urlParams.forEach((value, param) => {
     value = value.replace(/[^_a-zA-Z0-9-]/g, "_").toLowerCase();
     param = param.replace(/[^_a-zA-Z0-9-]/g, "_").toLowerCase();
     const conditionalElements = document.querySelectorAll(`.js-zcc--${param}--${value}`);
@@ -21926,11 +21927,29 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         el.classList.remove(`js-zcc--${param}--${value}`);
       });
     } else {
+      // If there no elements with the specified value, reveal all default elements for that parameter.
       const defaultElements = document.querySelectorAll(`[class="js-zcc--${param}--default"]`);
       defaultElements.forEach(el => {
         el.classList.remove(`js-zcc--${param}--default`);
       });
     }
+  }); // If there is no URL parameter, reveal all elements with class js-zcc--paramName--default class
+
+  const conditionalElements = document.querySelectorAll(`[class*="js-zcc--"]`);
+  conditionalElements.forEach(el => {
+    const className = [...el.classList].find(className => className.startsWith("js-zcc--") && className.endsWith("--default"));
+    if (!className) return;
+    const paramName = className.split("--")[1];
+
+    if (!urlParams.has(paramName)) {
+      el.classList.remove(className);
+    }
+  }); // If there are any extra banner image elements being controlled by the URL parameters,
+  // we will remove them from the page (extra banner images inside body-banner will prevent the image showing)
+
+  const extraBannerImages = document.querySelectorAll(".body-banner img[class*='js-zcc--']");
+  extraBannerImages.forEach(img => {
+    img?.closest(".en__component--imageblock")?.remove();
   });
   /*
    * Make image selects on surveys into checkboxes
@@ -22487,13 +22506,12 @@ class Tooltip {
 const minimumAmount = window?.donationSettings?.minimumDonationAmount ?? 5; //Allow banner image with attribution using image block
 //This code is run before the ENgrid script is loaded so that media-attribution.ts will run on this element
 
-const bannerImageWithAttribution = document.querySelector(".body-banner .en__component--imageblock img[alt]");
-
-if (bannerImageWithAttribution && bannerImageWithAttribution.getAttribute("alt")) {
-  bannerImageWithAttribution.dataset.attributionSource = "i";
-  bannerImageWithAttribution.dataset.attributionSourceTooltip = bannerImageWithAttribution.getAttribute("alt") ?? "";
-}
-
+const bannerImagesWithAttribution = document.querySelectorAll(".body-banner .en__component--imageblock img[alt]");
+bannerImagesWithAttribution.forEach(img => {
+  if (!img.getAttribute("alt")) return;
+  img.dataset.attributionSource = "i";
+  img.dataset.attributionSourceTooltip = img.getAttribute("alt")?.replace("&copy;", "©") ?? "";
+});
 const options = {
   applePay: false,
   AutoYear: true,

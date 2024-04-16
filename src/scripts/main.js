@@ -352,7 +352,8 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
    * ?crid=1234
    * Will reveal all elements with class js-zcc--crid--1234
    */
-  new URLSearchParams(window.location.search).forEach((value, param) => {
+  const urlParams = new URLSearchParams(window.location.search);
+  urlParams.forEach((value, param) => {
     value = value.replace(/[^_a-zA-Z0-9-]/g, "_").toLowerCase();
     param = param.replace(/[^_a-zA-Z0-9-]/g, "_").toLowerCase();
 
@@ -365,6 +366,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
         el.classList.remove(`js-zcc--${param}--${value}`);
       });
     } else {
+      // If there no elements with the specified value, reveal all default elements for that parameter.
       const defaultElements = document.querySelectorAll(
         `[class="js-zcc--${param}--default"]`
       );
@@ -372,6 +374,27 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
         el.classList.remove(`js-zcc--${param}--default`);
       });
     }
+  });
+  // If there is no URL parameter, reveal all elements with class js-zcc--paramName--default class
+  const conditionalElements = document.querySelectorAll(`[class*="js-zcc--"]`);
+  conditionalElements.forEach((el) => {
+    const className = [...el.classList].find(
+      (className) =>
+        className.startsWith("js-zcc--") && className.endsWith("--default")
+    );
+    if (!className) return;
+    const paramName = className.split("--")[1];
+    if (!urlParams.has(paramName)) {
+      el.classList.remove(className);
+    }
+  });
+  // If there are any extra banner image elements being controlled by the URL parameters,
+  // we will remove them from the page (extra banner images inside body-banner will prevent the image showing)
+  const extraBannerImages = document.querySelectorAll(
+    ".body-banner img[class*='js-zcc--']"
+  );
+  extraBannerImages.forEach((img) => {
+    img?.closest(".en__component--imageblock")?.remove();
   });
 
   /*
