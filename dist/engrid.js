@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 16, 2024 @ 12:56:41 ET
+ *  Date: Wednesday, April 17, 2024 @ 07:54:02 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -21952,9 +21952,28 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     img?.closest(".en__component--imageblock")?.remove();
   });
   /*
+   * Lock gift designation field when a specific value is passed in the URL
+   * and we are using the gift designation form block
+   */
+
+  const giftDesignationField = document.querySelector(".engrid-gift-designation #en__field_supporter_appealCode");
+  const appealCode = urlParams.get("supporter.appealCode");
+
+  if (giftDesignationField && appealCode) {
+    giftDesignationField.value = appealCode;
+    giftDesignationField.disabled = true;
+    App.createHiddenInput("supporter.appealCode", appealCode);
+    const giftDesignationCheckbox = document.querySelector("#en__field_supporter_questions_8785940");
+
+    if (giftDesignationCheckbox) {
+      giftDesignationCheckbox.disabled = true;
+    }
+  }
+  /*
    * Make image selects on surveys into checkboxes
    * "engrid-checkboxes" needs to be somewhere inside the "reference name" field of the question
    */
+
 
   const imageSelectQuestions = document.querySelectorAll(".en__field--imgselect[class*='engrid-checkboxes']");
   imageSelectQuestions.forEach((question, i) => {

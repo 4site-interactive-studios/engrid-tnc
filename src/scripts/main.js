@@ -398,6 +398,26 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
   });
 
   /*
+   * Lock gift designation field when a specific value is passed in the URL
+   * and we are using the gift designation form block
+   */
+  const giftDesignationField = document.querySelector(
+    ".engrid-gift-designation #en__field_supporter_appealCode"
+  );
+  const appealCode = urlParams.get("supporter.appealCode");
+  if (giftDesignationField && appealCode) {
+    giftDesignationField.value = appealCode;
+    giftDesignationField.disabled = true;
+    App.createHiddenInput("supporter.appealCode", appealCode);
+    const giftDesignationCheckbox = document.querySelector(
+      "#en__field_supporter_questions_8785940"
+    );
+    if (giftDesignationCheckbox) {
+      giftDesignationCheckbox.disabled = true;
+    }
+  }
+
+  /*
    * Make image selects on surveys into checkboxes
    * "engrid-checkboxes" needs to be somewhere inside the "reference name" field of the question
    */
