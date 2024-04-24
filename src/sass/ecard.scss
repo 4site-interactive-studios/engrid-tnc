@@ -65,19 +65,25 @@
   }
 
   .en__ecarditems__thumb {
-    &.thumb--active {
+    text-align: center;
+
+    &.thumb--active img {
       border: 5px solid var(--color-green);
       padding: 5px;
     }
+
 
     img {
       border: none;
       filter: none;
       opacity: 1;
+      height: 200px;
+      width: auto;
+      margin: 0 auto;
     }
 
     &:hover img {
-      border: none;
+      //border: none;
       box-shadow: none;
     }
   }
