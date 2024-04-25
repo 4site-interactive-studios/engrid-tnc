@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 23, 2024 @ 07:26:02 ET
+ *  Date: Wednesday, April 24, 2024 @ 11:53:29 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -22523,6 +22523,21 @@ class Tooltip {
   }
 
 }
+;// CONCATENATED MODULE: ./src/scripts/ihmo.ts
+
+class IHMO {
+  constructor() {
+    _defineProperty(this, "ihmoCheckbox", document.querySelector('[name="transaction.inmem"]'));
+
+    if (!this.shouldRun()) return;
+    console.log("hello from IHMO!");
+  }
+
+  shouldRun() {
+    return !!this.ihmoCheckbox;
+  }
+
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -22531,6 +22546,7 @@ class Tooltip {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -22595,6 +22611,7 @@ const options = {
     customScript(App, DonationFrequency, DonationAmount);
     new BequestLightbox();
     new Tooltip();
+    new IHMO();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();
