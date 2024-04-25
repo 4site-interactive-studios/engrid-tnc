@@ -1,0 +1,152 @@
+&[data-engrid-page-type="e-card"] {
+  .en__ecardrecipients__futureDelivery {
+    width: calc(50% - 1rem);
+
+    @media screen and (max-width: 600px) {
+      width: 100%;
+    }
+  }
+
+  .en__ecardrecipients__detail input {
+    width: 100%;
+    padding: var(--input_padding);
+    margin-bottom: var(--fields_spacing-block);
+    margin-top: calc(var(--fields_spacing-inline) * 0.5);
+  }
+
+  .en__ecardrecipients__email {
+    position: relative;
+
+    input {
+      width: calc(100% - 45px);
+    }
+
+    .en__ecarditems__addrecipient {
+      position: absolute;
+      right: 0;
+      top: 37px;
+    }
+  }
+
+  .en__ecardrecipients__recipient {
+    align-items: center;
+    padding: 10px 0px 10px 15px;
+
+    &:nth-child(odd) {
+      background-color: #e2e2e2;
+
+      input.ecardrecipient__name,
+      input.ecardrecipient__email {
+        background-color: #e2e2e2;
+      }
+    }
+
+    input.ecardrecipient__name,
+    input.ecardrecipient__email {
+      @media screen and (min-width: 600px) {
+        width: 47.5%!important;
+      }
+    }
+  }
+
+  .ecardrecipient__remove button {
+    margin: 0;
+
+    background: var(--error__color);
+    color: white;
+
+    &:hover {
+      color: white;
+    }
+  }
+
+  .en__ecarditems__action {
+    display: none;
+  }
+
+  .en__ecarditems__thumb {
+    text-align: center;
+
+    &.thumb--active img {
+      border: 5px solid var(--color-green);
+      padding: 5px;
+    }
+
+
+    img {
+      border: none;
+      filter: none;
+      opacity: 1;
+      height: 200px;
+      width: auto;
+      margin: 0 auto;
+    }
+
+    &:hover img {
+      //border: none;
+      box-shadow: none;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .en__ecarditems__list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .en__ecarditems__thumb {
+      max-width: 400px;
+      width: calc(100% - 20px);
+    }
+
+    .en__ecardrecipients__detail {
+      flex-direction: column;
+
+      .en__ecardrecipients__name,
+      .en__ecardrecipients__email {
+        width: 100%!important;
+
+        input {
+          width: calc(100% - 45px);
+        }
+      }
+    }
+
+    .en__ecardrecipients__recipient {
+      position: relative;
+      flex-direction: column;
+
+      .ecardrecipient__remove {
+        position: absolute;
+        right: 15px;
+        top: calc(50% - 15px)
+      }
+
+      .ecardrecipient__name,
+      .ecardrecipient__email {
+        width: 100%!important;
+      }
+    }
+  }
+
+  //Embedded ecard styles
+  &[data-engrid-embedded] {
+    // Hide cookie consent in iframe
+    #onetrust-consent-sdk {
+      display: none;
+    }
+  }
+}
+
+.engrid--embedded-ecard-heading {
+  border-bottom: 1px solid #cdcdcd;
+  color: #007931;
+  font-family: var(--default_font-family);
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 3.5rem 0 1.25rem;
+  padding-bottom: 1rem;
+  text-transform: uppercase;
+}
+
