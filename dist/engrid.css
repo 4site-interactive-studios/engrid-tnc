@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 20, 2024 @ 13:29:54 ET
+ *  Date: Thursday, April 25, 2024 @ 06:25:30 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -9093,6 +9093,117 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc]#en__pagebuilder .match-met-copy,[data-engrid-theme=tnc]#en__pagebuilder .match-not-met-copy,[data-engrid-theme=tnc][data-engrid-debug] .match-met-copy,[data-engrid-theme=tnc][data-engrid-debug] .match-not-met-copy{
   background-color:#0000ff1a !important;
   display:block !important;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__futureDelivery{
+  width:calc(50% - 1rem);
+}
+@media screen and (max-width:600px){
+  [data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__futureDelivery{
+    width:100%;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__detail input{
+  margin-bottom:var(--fields_spacing-block);
+  margin-top:calc(var(--fields_spacing-inline)*.5);
+  padding:var(--input_padding);
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__email{
+  position:relative;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__email input{
+  width:calc(100% - 45px);
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__email .en__ecarditems__addrecipient{
+  position:absolute;
+  right:0;
+  top:37px;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__recipient{
+  align-items:center;
+  padding:10px 0 10px 15px;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__recipient:nth-child(odd),[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__recipient:nth-child(odd) input.ecardrecipient__email,[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__recipient:nth-child(odd) input.ecardrecipient__name{
+  background-color:#e2e2e2;
+}
+@media screen and (min-width:600px){
+  [data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__recipient input.ecardrecipient__email,[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__recipient input.ecardrecipient__name{
+    width:47.5% !important;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .ecardrecipient__remove button{
+  background:var(--error__color);
+  color:#fff;
+  margin:0;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .ecardrecipient__remove button:hover{
+  color:#fff;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecarditems__action{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecarditems__thumb{
+  text-align:center;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecarditems__thumb.thumb--active img{
+  border:5px solid var(--color-green);
+  padding:5px;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecarditems__thumb img{
+  border:none;
+  filter:none;
+  height:200px;
+  margin:0 auto;
+  opacity:1;
+  width:auto;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecarditems__thumb:hover img{
+  box-shadow:none;
+}
+@media screen and (max-width:600px){
+  [data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecarditems__list{
+    align-items:center;
+    display:flex;
+    flex-direction:column;
+  }
+  [data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecarditems__thumb{
+    max-width:400px;
+    width:calc(100% - 20px);
+  }
+  [data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__detail{
+    flex-direction:column;
+  }
+  [data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__detail .en__ecardrecipients__email,[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__detail .en__ecardrecipients__name{
+    width:100% !important;
+  }
+  [data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__detail .en__ecardrecipients__email input,[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__detail .en__ecardrecipients__name input{
+    width:calc(100% - 45px);
+  }
+  [data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__recipient{
+    flex-direction:column;
+    position:relative;
+  }
+  [data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__recipient .ecardrecipient__remove{
+    position:absolute;
+    right:15px;
+    top:calc(50% - 15px);
+  }
+  [data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__recipient .ecardrecipient__email,[data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__recipient .ecardrecipient__name{
+    width:100% !important;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card][data-engrid-embedded] #onetrust-consent-sdk{
+  display:none;
+}
+[data-engrid-theme=tnc] .engrid--embedded-ecard-heading{
+  border-bottom:1px solid #cdcdcd;
+  color:#007931;
+  font-family:var(--default_font-family);
+  font-size:1rem;
+  font-weight:700;
+  margin:3.5rem 0 1.25rem;
+  padding-bottom:1rem;
+  text-transform:uppercase;
 }
 body{
   opacity:1;
