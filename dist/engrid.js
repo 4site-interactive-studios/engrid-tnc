@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 25, 2024 @ 06:34:49 ET
+ *  Date: Tuesday, April 30, 2024 @ 14:38:03 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -30301,6 +30301,11 @@ class EmbeddedEcard {
           form.submitForm();
           sessionStorage.removeItem("engrid-embedded-ecard");
           break;
+
+        case "set_recipient":
+          recipientName.value = e.data.name;
+          recipientEmail.value = e.data.email;
+          break;
       }
     });
     this.sendPostMessage("parent", "ecard_form_ready");
@@ -41262,14 +41267,271 @@ class Tooltip {
 
 class IHMO {
   constructor() {
+    _defineProperty(this, "giftType", "HONORARY");
+
+    _defineProperty(this, "giftNotification", "ECARD");
+
+    _defineProperty(this, "formLayouts", {
+      HONORARY: {
+        ECARD: {
+          topFields: [".en__field--honname", ".en__field--othamt2"],
+          bottomFields: [".en__field--infemail"]
+        },
+        MAIL: {
+          topFields: [".en__field--honname", ".en__field--othamt2"],
+          bottomFields: [".en__field--NOT_TAGGED_38", ".en__field--NOT_TAGGED_33", ".en__field--NOT_TAGGED_34", ".en__field--NOT_TAGGED_36", ".en__field--NOT_TAGGED_35", ".en__field--NOT_TAGGED_37"]
+        },
+        NONE: {
+          topFields: [".en__field--honname", ".en__field--othamt2"],
+          bottomFields: []
+        }
+      },
+      MEMORIAL: {
+        ECARD: {
+          topFields: [".en__field--honname", ".en__field--othamt2", ".en__field--NOT_TAGGED_36", ".en__field--NOT_TAGGED_35"],
+          bottomFields: [".en__field--infname", ".en__field--othamt3", ".en__field--infemail"]
+        },
+        MAIL: {
+          topFields: [".en__field--honname", ".en__field--othamt2", ".en__field--NOT_TAGGED_36", ".en__field--NOT_TAGGED_35"],
+          bottomFields: [".en__field--infname", ".en__field--othamt3", ".en__field--infcountry", ".en__field--infadd1", ".en__field--infadd2", ".en__field--infcity", ".en__field--infreg", ".en__field--infpostcd"]
+        },
+        NONE: {
+          topFields: [".en__field--honname", ".en__field--othamt2", ".en__field--NOT_TAGGED_36", ".en__field--NOT_TAGGED_35"],
+          bottomFields: []
+        }
+      }
+    });
+
     _defineProperty(this, "ihmoCheckbox", document.querySelector('[name="transaction.inmem"]'));
 
+    _defineProperty(this, "topForm", document.querySelector(".ihmo-top-form"));
+
+    _defineProperty(this, "bottomForm", document.querySelector(".ihmo-bottom-form"));
+
     if (!this.shouldRun()) return;
-    console.log("hello from IHMO!");
+    this.createPageLayout();
+    this.configureForm(this.giftType, this.giftNotification);
+    this.addEventListeners();
+    this.hideAllFields();
   }
 
   shouldRun() {
     return !!this.ihmoCheckbox;
+  }
+
+  createPageLayout() {
+    const ihmoWrapper = document.createElement("div");
+    ihmoWrapper.classList.add("engrid--ihmo-wrapper", "hide");
+    const ihmoContent = document.querySelectorAll(".ihmo-content");
+    ihmoContent.forEach(content => {
+      ihmoWrapper.appendChild(content);
+    });
+    this.ihmoCheckbox?.closest(".en__component--formblock")?.insertAdjacentElement("afterend", ihmoWrapper);
+    const embeddedEcard = document.querySelector(".engrid--embedded-ecard");
+
+    if (embeddedEcard) {
+      embeddedEcard.classList.add("ihmo-content");
+      const ecardAnchor = document.querySelector(".en__field--select-notification-option")?.closest(".en__component--formblock");
+
+      if (ecardAnchor) {
+        ecardAnchor.insertAdjacentElement("afterend", embeddedEcard);
+      }
+
+      const ecardIframe = embeddedEcard.querySelector("iframe");
+
+      if (ecardIframe) {
+        ecardIframe.setAttribute("src", ecardIframe.src + "&data-engrid-embedded-ihmo=true");
+      }
+    }
+  }
+
+  addEventListeners() {
+    // When "This gift is in honor or memory of someone" checkbox is changed
+    this.ihmoCheckbox?.addEventListener("change", e => {
+      const checkbox = e.target;
+
+      if (checkbox.checked) {
+        document.querySelector(".engrid--ihmo-wrapper")?.classList.remove("hide");
+        this.configureForm(this.giftType, this.giftNotification);
+      } else {
+        document.querySelector(".engrid--ihmo-wrapper")?.classList.add("hide");
+        this.displayEcard(false);
+        this.hideAllFields();
+      }
+    }); // When the "Gift Type" radio button is changed
+
+    document.getElementsByName("transaction.trbopts").forEach(el => {
+      el.addEventListener("change", e => {
+        const radio = e.target;
+        const giftType = radio.value === "In Honor" ? "HONORARY" : "MEMORIAL";
+        this.configureForm(giftType, this.giftNotification);
+      });
+    }); // When the "Select Notification option" radio button is changed
+
+    document.getElementsByName("supporter.questions.1381061").forEach(el => {
+      el.addEventListener("change", e => {
+        const radio = e.target;
+        let giftNotification;
+
+        if (radio.value === "Send an ecard") {
+          giftNotification = "ECARD";
+        } else if (radio.value === "Notify by mail") {
+          giftNotification = "MAIL";
+        } else {
+          giftNotification = "NONE";
+        }
+
+        this.configureForm(this.giftType, giftNotification);
+      });
+    });
+    const firstNameField = document.getElementById("en__field_transaction_infname");
+    const lastNameField = document.getElementById("en__field_transaction_othamt3");
+    const emailField = document.getElementById("en__field_transaction_infemail");
+    const honorFirstNameField = document.getElementById("en__field_transaction_honname");
+    const honorLastNameField = document.getElementById("en__field_transaction_othamt2");
+    const ecardIframe = document.querySelector(".engrid-iframe--embedded-ecard"); // Setting the recipient name and email in the ecard iframe
+
+    [firstNameField, lastNameField, emailField, honorFirstNameField, honorLastNameField].forEach(field => {
+      field.addEventListener("input", () => {
+        const fullName = this.giftType === "HONORARY" ? `${honorFirstNameField.value} ${honorLastNameField.value}` : `${firstNameField.value} ${lastNameField.value}`;
+        ecardIframe.contentWindow?.postMessage({
+          action: "set_recipient",
+          name: fullName,
+          email: emailField.value
+        }, location.origin);
+      });
+    });
+  }
+
+  configureForm(giftType, notificationType) {
+    this.giftType = giftType;
+    this.giftNotification = notificationType;
+    this.setFormLayout();
+    this.setFormHeadings();
+    this.setFieldLabels();
+    this.displayEcard(this.giftNotification === "ECARD");
+  }
+
+  setFormLayout() {
+    const formLayout = this.formLayouts[this.giftType][this.giftNotification]; // Add fields to the top form section
+
+    formLayout.topFields.forEach(field => {
+      const el = document.querySelector(field);
+
+      if (el) {
+        this.topForm?.appendChild(el);
+        this.showField(el);
+      }
+    }); // Add fields to the bottom form section
+
+    formLayout.bottomFields.forEach(field => {
+      const el = document.querySelector(field);
+
+      if (el) {
+        this.bottomForm?.appendChild(el);
+        this.showField(el);
+      }
+    }); // Hide unused fields in the top form section
+
+    const topFormFields = this.topForm?.children || [];
+    [...topFormFields].forEach(el => {
+      const classList = Array.from(el.classList);
+      const isActiveField = formLayout.topFields.some(field => classList.includes(field.slice(1)));
+
+      if (!isActiveField) {
+        this.hideField(el);
+      }
+    }); // Hide unused fields in the bottom form section
+
+    const bottomFormFields = this.bottomForm?.children || [];
+    [...bottomFormFields].forEach(el => {
+      const classList = Array.from(el.classList);
+      const isActiveField = formLayout.bottomFields.some(field => classList.includes(field.slice(1)));
+
+      if (!isActiveField) {
+        this.hideField(el);
+      }
+    });
+  }
+
+  setFormHeadings() {
+    const firstHeading = document.querySelector(".form-heading.ihmo-content h3");
+    const thirdHeading = document.querySelectorAll(".form-heading.ihmo-content h3")[2];
+    if (!firstHeading || !thirdHeading) return;
+
+    if (this.giftType === "HONORARY") {
+      firstHeading.textContent = "PERSON TO BE HONORED";
+      thirdHeading.textContent = "HONOREE'S PERSONAL INFORMATION";
+
+      if (this.giftNotification === "ECARD" || this.giftNotification === "NONE") {
+        thirdHeading.closest(".form-heading")?.classList.add("hide");
+      } else {
+        thirdHeading.closest(".form-heading")?.classList.remove("hide");
+      }
+    } else {
+      firstHeading.textContent = "PERSON TO BE REMEMBERED";
+      thirdHeading.textContent = "PERSON TO BE NOTIFIED";
+
+      if (this.giftNotification === "NONE") {
+        thirdHeading.closest(".form-heading")?.classList.add("hide");
+      } else {
+        thirdHeading.closest(".form-heading")?.classList.remove("hide");
+      }
+    }
+  }
+
+  setFieldLabels() {
+    const firstNameFieldLabel = document.querySelector(".en__field--honname > label");
+    const lastNameFieldLabel = document.querySelector(".en__field--othamt2 > label");
+    const cityFieldLabel = document.querySelector(".en__field--NOT_TAGGED_36 > label");
+    const stateFieldLabel = document.querySelector(".en__field--NOT_TAGGED_35 > label");
+
+    if (!firstNameFieldLabel || !lastNameFieldLabel || !cityFieldLabel || !stateFieldLabel) {
+      return;
+    }
+
+    if (this.giftType === "HONORARY") {
+      firstNameFieldLabel.textContent = "Honoree First Name";
+      lastNameFieldLabel.textContent = "Honoree Last Name";
+      cityFieldLabel.textContent = "Honoree City";
+      stateFieldLabel.textContent = "Honoree State";
+    } else {
+      firstNameFieldLabel.textContent = "Deceased Person's First Name";
+      lastNameFieldLabel.textContent = "Deceased Person's Last Name";
+      cityFieldLabel.textContent = "Deceased Person's City";
+      stateFieldLabel.textContent = "Deceased Person's State";
+    }
+  }
+
+  displayEcard() {
+    let show = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+    const eCardCheckbox = document.getElementById("en__field_embedded-ecard");
+    eCardCheckbox.checked = show;
+    eCardCheckbox.dispatchEvent(new Event("change"));
+  }
+
+  hideAllFields() {
+    [".en__field--honname", ".en__field--othamt2", ".en__field--NOT_TAGGED_36", ".en__field--NOT_TAGGED_35", ".en__field--infname", ".en__field--othamt3", ".en__field--infcountry", ".en__field--infadd1", ".en__field--infadd2", ".en__field--infcity", ".en__field--infreg", ".en__field--infpostcd", ".en__field--infemail", ".en__field--NOT_TAGGED_38", ".en__field--NOT_TAGGED_33", ".en__field--NOT_TAGGED_34", ".en__field--NOT_TAGGED_37"].forEach(field => {
+      this.hideField(field);
+    });
+  }
+
+  hideField(field) {
+    const el = field instanceof Element ? field : document.querySelector(field);
+
+    if (el) {
+      el.classList.add("en__hidden");
+      el.querySelector(".en__field__input")?.setAttribute("disabled", "disabled");
+    }
+  }
+
+  showField(field) {
+    const el = field instanceof Element ? field : document.querySelector(field);
+
+    if (el) {
+      el.classList.remove("en__hidden");
+      el.querySelector(".en__field__input")?.removeAttribute("disabled");
+    }
   }
 
 }

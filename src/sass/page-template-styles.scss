@@ -2316,5 +2316,20 @@
     box-shadow: none;
   }
 
-  @import 'ecard.scss';
+  @for $i from 12 through 15 {
+    .i#{$i}-50 .en__field:nth-of-type(#{$i}) {
+      flex-basis: 50%;
+    }
+  }
+
+  @media screen and (max-width: 992px) {
+    @for $i from 12 through 15 {
+      .i#{$i}-m100 .en__field:nth-of-type(#{$i}) {
+        flex-basis: 100%;
+      }
+    }
+  }
+
+  @import "ihmo.scss";
+  @import "ecard.scss";
 }

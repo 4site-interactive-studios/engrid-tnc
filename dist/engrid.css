@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 25, 2024 @ 06:34:49 ET
+ *  Date: Tuesday, April 30, 2024 @ 14:38:03 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -9326,6 +9326,33 @@ body[data-engrid-debug]:before{
   box-shadow:none;
   color:var(--radio_color);
 }
+[data-engrid-theme=tnc] .i12-50 .en__field:nth-of-type(12),[data-engrid-theme=tnc] .i13-50 .en__field:nth-of-type(13),[data-engrid-theme=tnc] .i14-50 .en__field:nth-of-type(14),[data-engrid-theme=tnc] .i15-50 .en__field:nth-of-type(15){
+  flex-basis:50%;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc] .i12-m100 .en__field:nth-of-type(12),[data-engrid-theme=tnc] .i13-m100 .en__field:nth-of-type(13),[data-engrid-theme=tnc] .i14-m100 .en__field:nth-of-type(14),[data-engrid-theme=tnc] .i15-m100 .en__field:nth-of-type(15){
+    flex-basis:100%;
+  }
+}
+[data-engrid-theme=tnc] .engrid--ihmo-wrapper{
+  border:1px solid #cdcdcd;
+  margin-top:10px;
+  padding:36px;
+}
+[data-engrid-theme=tnc] .form-heading.ihmo-content{
+  margin-top:8px !important;
+}
+[data-engrid-theme=tnc] .en__field--select-notification-option .en__field__element{
+  display:flex !important;
+  max-width:none !important;
+  width:100% !important;
+}
+[data-engrid-theme=tnc] .en__field--select-notification-option .en__field__element label{
+  text-transform:uppercase !important;
+}
+[data-engrid-theme=tnc] .engrid--embedded-ecard.ihmo-content>.en__field--embedded-ecard,[data-engrid-theme=tnc] .engrid--embedded-ecard.ihmo-content>h3{
+  display:none;
+}
 [data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__futureDelivery{
   width:calc(50% - 1rem);
 }
@@ -9424,8 +9451,23 @@ body[data-engrid-debug]:before{
     width:100% !important;
   }
 }
-[data-engrid-theme=tnc][data-engrid-page-type=e-card][data-engrid-embedded] #onetrust-consent-sdk{
+[data-engrid-theme=tnc][data-engrid-page-type=e-card][data-engrid-embedded-ihmo=true] .en__ecardrecipients,[data-engrid-theme=tnc][data-engrid-page-type=e-card][data-engrid-embedded] #onetrust-consent-sdk{
   display:none;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card][data-engrid-embedded-ihmo=true] .en__component--ecardblock h2{
+  font-family:var(--default_font-family);
+  font-size:1rem;
+  font-weight:500;
+  line-height:1.375;
+  margin:0 0 10px;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card][data-engrid-embedded-ihmo=true] .en__ecardrecipients__futureDelivery{
+  margin:20px 0;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card][data-engrid-embedded-ihmo=true] .en__ecardmessage__default{
+  height:7rem;
+  margin-bottom:0;
+  min-height:7rem;
 }
 [data-engrid-theme=tnc] .engrid--embedded-ecard-heading{
   border-bottom:1px solid #cdcdcd;

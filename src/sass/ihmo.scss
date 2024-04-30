@@ -1,0 +1,24 @@
+.engrid--ihmo-wrapper  {
+  border: 1px solid #cdcdcd;
+  padding: 36px;
+  margin-top: 10px;
+}
+
+.form-heading.ihmo-content {
+  margin-top: 8px!important;
+}
+
+.en__field--select-notification-option .en__field__element {
+  display: flex!important;
+  width: 100%!important;
+  max-width: none!important;
+}
+
+.en__field--select-notification-option .en__field__element label {
+  text-transform: uppercase!important;
+}
+
+.engrid--embedded-ecard.ihmo-content > h3,
+.engrid--embedded-ecard.ihmo-content > .en__field--embedded-ecard {
+  display: none;
+}
