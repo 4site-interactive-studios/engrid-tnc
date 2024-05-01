@@ -406,12 +406,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
   );
   const appealCode = urlParams.get("supporter.appealCode");
   if (giftDesignationField && appealCode) {
-    giftDesignationField.value = appealCode;
     giftDesignationField.disabled = true;
-    let hiddenAppealCodeField = App.createHiddenInput(
-      "supporter.appealCode",
-      appealCode
-    );
     const giftDesignationNeededMostCheckbox = document.querySelector(
       "#en__field_supporter_questions_8785940"
     );
@@ -422,19 +417,8 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       giftDesignationChooseCheckbox.addEventListener("change", () => {
         if (giftDesignationChooseCheckbox.checked) {
           giftDesignationField.value = appealCode;
-          hiddenAppealCodeField.value = appealCode;
         }
       });
-      giftDesignationNeededMostCheckbox.addEventListener("change", () => {
-        if (giftDesignationNeededMostCheckbox.checked) {
-          setTimeout(() => {
-            // set this to the default "Select a Program" appeal code.
-            // after the "field dependency" runs and sets the select field to that value.
-            hiddenAppealCodeField.value = giftDesignationField.value;
-          }, 500);
-        }
-      });
-      //giftDesignationCheckbox.disabled = true; // disable switching to "use my gift where it's needed most"
     }
   }
 

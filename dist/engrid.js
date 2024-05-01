@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, May 1, 2024 @ 12:13:46 ET
+ *  Date: Wednesday, May 1, 2024 @ 13:54:21 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -30802,9 +30802,7 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   const appealCode = urlParams.get("supporter.appealCode");
 
   if (giftDesignationField && appealCode) {
-    giftDesignationField.value = appealCode;
     giftDesignationField.disabled = true;
-    let hiddenAppealCodeField = App.createHiddenInput("supporter.appealCode", appealCode);
     const giftDesignationNeededMostCheckbox = document.querySelector("#en__field_supporter_questions_8785940");
     const giftDesignationChooseCheckbox = document.querySelector("#en__field_supporter_questions_8785941");
 
@@ -30812,18 +30810,8 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
       giftDesignationChooseCheckbox.addEventListener("change", () => {
         if (giftDesignationChooseCheckbox.checked) {
           giftDesignationField.value = appealCode;
-          hiddenAppealCodeField.value = appealCode;
         }
       });
-      giftDesignationNeededMostCheckbox.addEventListener("change", () => {
-        if (giftDesignationNeededMostCheckbox.checked) {
-          setTimeout(() => {
-            // set this to the default "Select a Program" appeal code.
-            // after the "field dependency" runs and sets the select field to that value.
-            hiddenAppealCodeField.value = giftDesignationField.value;
-          }, 500);
-        }
-      }); //giftDesignationCheckbox.disabled = true; // disable switching to "use my gift where it's needed most"
     }
   }
   /*
