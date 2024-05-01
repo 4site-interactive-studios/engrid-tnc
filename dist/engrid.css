@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 30, 2024 @ 14:38:03 ET
+ *  Date: Wednesday, May 1, 2024 @ 12:13:46 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -9338,6 +9338,29 @@ body[data-engrid-debug]:before{
   border:1px solid #cdcdcd;
   margin-top:10px;
   padding:36px;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc] .engrid--ihmo-wrapper{
+    padding:20px;
+  }
+}
+[data-engrid-theme=tnc] .en__field--trbopts .en__field__item:first-child{
+  padding-right:0 !important;
+}
+[data-engrid-theme=tnc] .en__field--trbopts .en__field__item:last-child{
+  padding-left:0 !important;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc] .select-notification-option.radio-to-buttons.radio-to-buttons_count_3{
+    --radio-to-buttons__button_count:1;
+  }
+  [data-engrid-theme=tnc] .select-notification-option.radio-to-buttons.radio-to-buttons_count_3 .en__field__element--radio{
+    margin:0;
+  }
+  [data-engrid-theme=tnc] .select-notification-option.radio-to-buttons.radio-to-buttons_count_3 .en__field__element--radio .en__field__item{
+    padding-left:0;
+    padding-right:0;
+  }
 }
 [data-engrid-theme=tnc] .form-heading.ihmo-content{
   margin-top:8px !important;

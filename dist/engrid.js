@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 30, 2024 @ 14:38:03 ET
+ *  Date: Wednesday, May 1, 2024 @ 12:13:46 ET
  *  By: michael
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -41409,7 +41409,7 @@ class IHMO {
     this.setFormLayout();
     this.setFormHeadings();
     this.setFieldLabels();
-    this.displayEcard(this.giftNotification === "ECARD");
+    this.displayEcard(this.giftNotification === "ECARD" && this.ihmoCheckbox?.checked);
   }
 
   setFormLayout() {

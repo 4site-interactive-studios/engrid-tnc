@@ -226,7 +226,9 @@ export class IHMO {
     this.setFormLayout();
     this.setFormHeadings();
     this.setFieldLabels();
-    this.displayEcard(this.giftNotification === "ECARD");
+    this.displayEcard(
+      this.giftNotification === "ECARD" && this.ihmoCheckbox?.checked
+    );
   }
 
   private setFormLayout() {

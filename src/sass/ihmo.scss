@@ -2,6 +2,39 @@
   border: 1px solid #cdcdcd;
   padding: 36px;
   margin-top: 10px;
+
+  @media screen and (max-width: 992px) {
+    padding: 20px;
+  }
+}
+
+.en__field--trbopts .en__field__item {
+  &:first-child {
+    padding-right: 0!important;
+  }
+
+  &:last-child {
+    padding-left: 0!important;
+  }
+}
+
+.select-notification-option.radio-to-buttons.radio-to-buttons_count_3 {
+  @media screen and (max-width: 992px) {
+    --radio-to-buttons__button_count: 1;
+  }
+
+  .en__field__element--radio {
+    @media screen and (max-width: 992px) {
+      margin: 0;
+    }
+  }
+
+  .en__field__element--radio .en__field__item {
+    @media screen and (max-width: 992px) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
 }
 
 .form-heading.ihmo-content {
