@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 25, 2024 @ 06:25:30 ET
- *  By: michael
+ *  Date: Wednesday, May 15, 2024 @ 17:26:59 ET
+ *  By: fernando
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
  *
@@ -7653,7 +7653,7 @@ body[data-engrid-debug]:before{
   display:none;
 }
 [data-engrid-theme=tnc]#en__pagebuilder .floating-button-label p{
-  -webkit-appearance:none;
+  appearance:none;
   background-color:var(--submit__button_background-color);
   border:var(--button_border-width) solid var(--button_border-color);
   border-color:var(--submit__button_border-color);
@@ -9204,6 +9204,89 @@ body[data-engrid-debug]:before{
   margin:3.5rem 0 1.25rem;
   padding-bottom:1rem;
   text-transform:uppercase;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub]#en__pagebuilder .body-header,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub]#en__pagebuilder .page-backgroundImage{
+  display:block !important;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--memCardUpdate>.en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--membership>.en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--membershipHistory>.en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--membershipRenew>.en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--pledge .en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--pledgeRoi .en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--supporterdetails .en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--supportersubscriptions .en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--txngiving>.en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay__impact>.en__hubOverlay__popup{
+  max-width:37.5rem;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubPledge__icon{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay__impact .en__hubOverlay__content>div{
+  background:none;
+  padding:0;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubUpdateCC__toggle{
+  aspect-ratio:1/1;
+  margin-bottom:0;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__captcha,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__field{
+  margin:0 auto !important;
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__component--hublogin{
+  margin-bottom:2rem;
+  padding:10vh 0;
+  position:relative;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__component--hublogin label{
+  font-size:26px;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__component--hublogin .en__submit{
+  padding-bottom:0;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .body-main{
+  background-color:initial;
+  border:none;
+  gap:1rem;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__supporterHubLogin__header{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__component--hubgadget>img{
+  height:56px;
+  width:auto;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__component--hubgadget img{
+  display:block;
+  margin:auto;
+  outline:0;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__component--hubgadget{
+  border:var(--button_border-width) solid var(--button_border-color);
+  box-shadow:none;
+  color:var(--button_color);
+  cursor:pointer;
+  grid-column:span 3 / span 3;
+  margin-left:0;
+  margin-right:0;
+  padding:1.5rem 1rem;
+  transition:all .3s;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__component--hubgadget:active,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__component--hubgadget:hover{
+  border-bottom-width:calc(.5rem + 1px);
+  border-color:var(--button_background-color_hover);
+  padding:1.5rem 1rem 1rem;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .body-main{
+  padding-bottom:2rem;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__pagination{
+  display:flex;
+  justify-content:center;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__pagination button{
+  border:none;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubTxnGiving__transactions__total{
+  text-align:left;
+}
+@media screen and (min-width:599px){
+  [data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__registrants__registrantDetails .en__field--registrant[class*="--firstName"],[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__registrants__registrantDetails .en__field--registrant[class*="--lastName"]{
+    flex:1 0 50%;
+  }
 }
 body{
   opacity:1;
