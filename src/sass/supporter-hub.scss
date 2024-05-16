@@ -1,10 +1,12 @@
-&[data-engrid-page-type="supporterhub"] {
-  &#en__pagebuilder {
+&#en__pagebuilder {
+  &:has(.en__component--hublogin) {
     .body-header,
     .page-backgroundImage {
       display: block !important;
     }
   }
+}
+&[data-engrid-page-type="supporterhub"] {
   .en__hubOverlay--supporterdetails .en__hubOverlay__popup,
   .en__hubOverlay--supportersubscriptions .en__hubOverlay__popup,
   .en__hubOverlay--pledge .en__hubOverlay__popup,

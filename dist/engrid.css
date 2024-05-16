@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, May 15, 2024 @ 17:26:59 ET
+ *  Date: Wednesday, May 15, 2024 @ 20:55:11 ET
  *  By: fernando
  *  ENGrid styles: v0.17.13
  *  ENGrid scripts: v0.17.14
@@ -9205,7 +9205,7 @@ body[data-engrid-debug]:before{
   padding-bottom:1rem;
   text-transform:uppercase;
 }
-[data-engrid-theme=tnc][data-engrid-page-type=supporterhub]#en__pagebuilder .body-header,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub]#en__pagebuilder .page-backgroundImage{
+[data-engrid-theme=tnc]#en__pagebuilder:has(.en__component--hublogin) .body-header,[data-engrid-theme=tnc]#en__pagebuilder:has(.en__component--hublogin) .page-backgroundImage{
   display:block !important;
 }
 [data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--memCardUpdate>.en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--membership>.en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--membershipHistory>.en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--membershipRenew>.en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--pledge .en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--pledgeRoi .en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--supporterdetails .en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--supportersubscriptions .en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay--txngiving>.en__hubOverlay__popup,[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__hubOverlay__impact>.en__hubOverlay__popup{
