@@ -1,0 +1,121 @@
+&#en__pagebuilder {
+  &:has(.en__component--hublogin) {
+    .body-header,
+    .page-backgroundImage {
+      display: block !important;
+    }
+  }
+}
+&[data-engrid-page-type="supporterhub"] {
+  .en__hubOverlay--supporterdetails .en__hubOverlay__popup,
+  .en__hubOverlay--supportersubscriptions .en__hubOverlay__popup,
+  .en__hubOverlay--pledge .en__hubOverlay__popup,
+  .en__hubOverlay--pledgeRoi .en__hubOverlay__popup,
+  .en__hubOverlay--membership > .en__hubOverlay__popup,
+  .en__hubOverlay--membershipHistory > .en__hubOverlay__popup,
+  .en__hubOverlay--memCardUpdate > .en__hubOverlay__popup,
+  .en__hubOverlay--membershipRenew > .en__hubOverlay__popup,
+  .en__hubOverlay--txngiving > .en__hubOverlay__popup,
+  .en__hubOverlay__impact > .en__hubOverlay__popup {
+    max-width: 37.5rem;
+  }
+
+  // Remove Pledge Icon from Supporter Hub widget
+  .en__hubPledge__icon {
+    display: none;
+  }
+
+  // Remove Impact Icon from Supporter Hub widget
+  .en__hubOverlay__impact .en__hubOverlay__content > div {
+    padding: 0;
+    background: none;
+  }
+
+  .en__hubUpdateCC__toggle {
+    aspect-ratio: 1 / 1;
+    margin-bottom: 0;
+  }
+
+  .en__captcha,
+  .en__field {
+    margin: 0 auto !important;
+    width: 100%;
+  }
+
+  .en__component--hublogin {
+    position: relative;
+    padding: 10vh 0;
+    margin-bottom: 2rem;
+    label {
+      font-size: 26px;
+    }
+    .en__submit {
+      padding-bottom: 0;
+    }
+  }
+
+  .body-main {
+    background-color: transparent;
+    border: none;
+    gap: 1rem;
+  }
+
+  .en__supporterHubLogin__header {
+    display: none;
+  }
+
+  .en__component--hubgadget > img {
+    height: 56px;
+    width: auto;
+  }
+
+  .en__component--hubgadget img {
+    display: block;
+    margin: auto;
+    outline: 0;
+  }
+
+  .en__component--hubgadget {
+    transition: all 0.3s;
+    cursor: pointer;
+    box-shadow: none;
+    padding: 1.5rem 1rem;
+    border: var(--button_border-width) solid var(--button_border-color);
+    color: var(--button_color);
+    margin-left: 0;
+    margin-right: 0;
+    grid-column: span 3 / span 3;
+    &:hover,
+    &:active {
+      padding: 1.5rem 1rem 1rem;
+      border-bottom-width: calc(0.5rem + 1px);
+      border-color: var(--button_background-color_hover);
+    }
+  }
+
+  .body-main {
+    padding-bottom: 2rem;
+  }
+
+  .en__pagination {
+    display: flex;
+    justify-content: center;
+  }
+
+  .en__pagination button {
+    border: none;
+  }
+
+  .en__hubTxnGiving__transactions__total {
+    text-align: left;
+  }
+
+  @media screen and (min-width: 599px) {
+    .en__registrants__registrantDetails {
+      .en__field--registrant[class*="--firstName"],
+      .en__field--registrant[class*="--lastName"] {
+        flex: 1 0 50%;
+      }
+    }
+  }
+}
