@@ -99,7 +99,7 @@ export class IHMO {
 
   private createPageLayout() {
     const ihmoWrapper = document.createElement("div");
-    ihmoWrapper.classList.add("engrid--ihmo-wrapper", "hide");
+    ihmoWrapper.classList.add("engrid--ihmo-wrapper", "ihmo-closed");
 
     const ihmoContent = document.querySelectorAll(".ihmo-content");
     ihmoContent.forEach((content) => {
@@ -136,10 +136,12 @@ export class IHMO {
       if (checkbox.checked) {
         document
           .querySelector(".engrid--ihmo-wrapper")
-          ?.classList.remove("hide");
+          ?.classList.remove("ihmo-closed");
         this.configureForm(this.giftType, this.giftNotification);
       } else {
-        document.querySelector(".engrid--ihmo-wrapper")?.classList.add("hide");
+        document
+          .querySelector(".engrid--ihmo-wrapper")
+          ?.classList.add("ihmo-closed");
         this.displayEcard(false);
         this.hideAllFields();
       }
@@ -277,33 +279,31 @@ export class IHMO {
   }
 
   private setFormHeadings() {
-    const firstHeading = document.querySelector(
-      ".form-heading.ihmo-content h3"
-    );
-    const thirdHeading = document.querySelectorAll(
-      ".form-heading.ihmo-content h3"
-    )[2];
+    const headings = document.querySelectorAll(".form-heading.ihmo-content h3");
+    if (headings.length === 0) return;
+    const firstHeading = headings[0];
+    const lastHeading = headings[headings.length - 1];
 
-    if (!firstHeading || !thirdHeading) return;
+    if (!firstHeading || !lastHeading) return;
 
     if (this.giftType === "HONORARY") {
       firstHeading.textContent = "PERSON TO BE HONORED";
-      thirdHeading.textContent = "HONOREE'S PERSONAL INFORMATION";
+      lastHeading.textContent = "HONOREE'S PERSONAL INFORMATION";
       if (
         this.giftNotification === "ECARD" ||
         this.giftNotification === "NONE"
       ) {
-        thirdHeading.closest(".form-heading")?.classList.add("hide");
+        lastHeading.closest(".form-heading")?.classList.add("hide");
       } else {
-        thirdHeading.closest(".form-heading")?.classList.remove("hide");
+        lastHeading.closest(".form-heading")?.classList.remove("hide");
       }
     } else {
       firstHeading.textContent = "PERSON TO BE REMEMBERED";
-      thirdHeading.textContent = "PERSON TO BE NOTIFIED";
+      lastHeading.textContent = "PERSON TO BE NOTIFIED";
       if (this.giftNotification === "NONE") {
-        thirdHeading.closest(".form-heading")?.classList.add("hide");
+        lastHeading.closest(".form-heading")?.classList.add("hide");
       } else {
-        thirdHeading.closest(".form-heading")?.classList.remove("hide");
+        lastHeading.closest(".form-heading")?.classList.remove("hide");
       }
     }
   }

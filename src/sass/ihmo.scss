@@ -8,6 +8,10 @@
   }
 }
 
+.engrid--ihmo-wrapper.ihmo-closed {
+  display: none;
+}
+
 .en__field--trbopts .en__field__item {
   &:first-child {
     padding-right: 0!important;
