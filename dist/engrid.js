@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 28, 2024 @ 06:16:28 ET
+ *  Date: Tuesday, May 28, 2024 @ 08:17:10 ET
  *  By: michael
  *  ENGrid styles: v0.18.8
  *  ENGrid scripts: v0.18.11
@@ -21227,6 +21227,21 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
           giftDesignationField.value = appealCode;
         }
       });
+    } // if the gift designation field is a select field,
+    // and it doesnt have the url param value in its options, make that option and select it
+
+
+    if (giftDesignationField.tagName === "SELECT") {
+      const option = giftDesignationField.querySelector(`option[value="${appealCode}"]`);
+
+      if (!option) {
+        const newOption = document.createElement("option");
+        newOption.value = appealCode;
+        newOption.text = appealCode;
+        giftDesignationField.appendChild(newOption);
+        giftDesignationField.value = appealCode;
+        giftDesignationChooseCheckbox.checked = true;
+      }
     }
   }
   /*

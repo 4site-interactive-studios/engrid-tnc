@@ -420,6 +420,21 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
         }
       });
     }
+    // if the gift designation field is a select field,
+    // and it doesnt have the url param value in its options, make that option and select it
+    if (giftDesignationField.tagName === "SELECT") {
+      const option = giftDesignationField.querySelector(
+        `option[value="${appealCode}"]`
+      );
+      if (!option) {
+        const newOption = document.createElement("option");
+        newOption.value = appealCode;
+        newOption.text = appealCode;
+        giftDesignationField.appendChild(newOption);
+        giftDesignationField.value = appealCode;
+        giftDesignationChooseCheckbox.checked = true;
+      }
+    }
   }
 
   /*
