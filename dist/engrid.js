@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 21, 2024 @ 11:03:45 ET
+ *  Date: Thursday, June 6, 2024 @ 06:10:41 ET
  *  By: michael
  *  ENGrid styles: v0.18.8
  *  ENGrid scripts: v0.18.11
@@ -21347,8 +21347,13 @@ function trackFormSubmit(App, DonationAmount) {
     if (feeCoverCheckbox && feeCoverCheckbox.checked) {
       donationData.extraAmount = (DonationAmount.getInstance().amount * 0.03).toFixed(2);
       donationData.originalDonationAmount = donationData.originalDonationAmount - donationData.extraAmount;
-    } //TODO: add ecard data to donationData when we do ecard implementation
+    }
 
+    const sendEcardCheckbox = document.getElementById("en__field_embedded-ecard");
+
+    if (sendEcardCheckbox && sendEcardCheckbox.checked) {
+      donationData.ecardSelected = "true";
+    }
 
     sessionStorage.setItem("donationData", JSON.stringify(donationData));
   } //Mobile phone data

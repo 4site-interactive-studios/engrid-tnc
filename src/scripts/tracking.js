@@ -67,7 +67,12 @@ export function trackFormSubmit(App, DonationAmount) {
         donationData.originalDonationAmount - donationData.extraAmount;
     }
 
-    //TODO: add ecard data to donationData when we do ecard implementation
+    const sendEcardCheckbox = document.getElementById(
+      "en__field_embedded-ecard"
+    );
+    if (sendEcardCheckbox && sendEcardCheckbox.checked) {
+      donationData.ecardSelected = "true";
+    }
 
     sessionStorage.setItem("donationData", JSON.stringify(donationData));
   }
