@@ -423,16 +423,23 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     // if the gift designation field is a select field,
     // and it doesnt have the url param value in its options, make that option and select it
     if (giftDesignationField.tagName === "SELECT") {
-      const option = giftDesignationField.querySelector(
+      let option = giftDesignationField.querySelector(
         `option[value="${appealCode}"]`
       );
       if (!option) {
-        const newOption = document.createElement("option");
-        newOption.value = appealCode;
-        newOption.text = appealCode;
-        giftDesignationField.appendChild(newOption);
+        option = document.createElement("option");
+        option.value = appealCode;
+        option.text = appealCode;
+        giftDesignationField.appendChild(option);
         giftDesignationField.value = appealCode;
         giftDesignationChooseCheckbox.checked = true;
+      }
+      giftDesignationField.closest(".en__field")?.classList.add("hide");
+      const label = document.querySelector(
+        "[for='en__field_supporter_questions_8785941']"
+      );
+      if (label) {
+        label.innerHTML = `I would like to designate my gift to ${option.innerText}`;
       }
     }
   }

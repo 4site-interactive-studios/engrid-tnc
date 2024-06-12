@@ -59,3 +59,33 @@
 .engrid--embedded-ecard.ihmo-content > .en__field--embedded-ecard {
   display: none;
 }
+
+.en__field--recurrfreq {
+  --ihmo-recurring-warning: "Monthly gifts are not applicable for honorary or memorial gifts. To make a gift in honor or memory of someone, please keep this box unchecked.";
+}
+
+&[data-engrid-transaction-recurring="y"][data-engrid-ihmo="true"] .en__field--recurrfreq {
+  .en__field__element--radio {
+    align-items: flex-start;
+
+    .en__field__item:last-child {
+      position: relative;
+
+      &:after {
+        position: absolute;
+        left: calc(100% + 10px);
+        top: 0;
+        width: 300px;
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.5;
+        font-style: italic;
+        content: var(--ihmo-recurring-warning);
+
+        @media screen and (max-width: 992px) {
+          position: static;
+        }
+      }
+    }
+  }
+}

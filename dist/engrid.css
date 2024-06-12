@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, June 6, 2024 @ 06:16:21 ET
+ *  Date: Wednesday, June 12, 2024 @ 12:37:17 ET
  *  By: michael
- *  ENGrid styles: v0.18.8
- *  ENGrid scripts: v0.18.11
+ *  ENGrid styles: v0.18.14
+ *  ENGrid scripts: v0.18.14
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -5637,7 +5637,7 @@ body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardre
   width:100%;
 }
 
-body:not([data-engrid-embedded-ecard-sent=true]) .showif-embedded-ecard-sent,body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardrecipients__email .en__ecarditems__addrecipient,body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardrecipients__list,body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardrecipients__name .en__ecarditems__addrecipient{
+body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-embedded-ecard-sent=true]) .showif-embedded-ecard-sent,body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardrecipients__email .en__ecarditems__addrecipient,body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardrecipients__list,body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardrecipients__name .en__ecarditems__addrecipient{
   display:none;
 }
 [data-engrid-theme]{
@@ -9378,6 +9378,31 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc] .engrid--embedded-ecard.ihmo-content>.en__field--embedded-ecard,[data-engrid-theme=tnc] .engrid--embedded-ecard.ihmo-content>h3{
   display:none;
+}
+[data-engrid-theme=tnc] .en__field--recurrfreq{
+  --ihmo-recurring-warning:"Monthly gifts are not applicable for honorary or memorial gifts. To make a gift in honor or memory of someone, please keep this box unchecked.";
+}
+[data-engrid-theme=tnc][data-engrid-transaction-recurring=y][data-engrid-ihmo=true] .en__field--recurrfreq .en__field__element--radio{
+  align-items:flex-start;
+}
+[data-engrid-theme=tnc][data-engrid-transaction-recurring=y][data-engrid-ihmo=true] .en__field--recurrfreq .en__field__element--radio .en__field__item:last-child{
+  position:relative;
+}
+[data-engrid-theme=tnc][data-engrid-transaction-recurring=y][data-engrid-ihmo=true] .en__field--recurrfreq .en__field__element--radio .en__field__item:last-child:after{
+  content:var(--ihmo-recurring-warning);
+  font-size:14px;
+  font-style:italic;
+  left:calc(100% + 10px);
+  line-height:1.5;
+  margin:0;
+  position:absolute;
+  top:0;
+  width:300px;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-transaction-recurring=y][data-engrid-ihmo=true] .en__field--recurrfreq .en__field__element--radio .en__field__item:last-child:after{
+    position:static;
+  }
 }
 [data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__futureDelivery{
   width:calc(50% - 1rem);

@@ -1,3 +1,5 @@
+import { DonationFrequency, ENGrid } from "@4site/engrid-common";
+
 type GiftType = "HONORARY" | "MEMORIAL";
 type GiftNotification = "ECARD" | "MAIL" | "NONE";
 type FormLayouts = {
@@ -84,6 +86,7 @@ export class IHMO {
     document.querySelector(".ihmo-top-form");
   private bottomForm: HTMLElement | null =
     document.querySelector(".ihmo-bottom-form");
+  private _donationFrequency = DonationFrequency.getInstance();
 
   constructor() {
     if (!this.shouldRun()) return;
@@ -127,6 +130,8 @@ export class IHMO {
         );
       }
     }
+
+    ENGrid.setBodyData("ihmo", "true");
   }
 
   private addEventListeners() {
@@ -215,6 +220,36 @@ export class IHMO {
           location.origin
         );
       });
+    });
+
+    //Hiding the IHMO section when monthly donation is selected
+    // Listen for changes to the donation frequency and amount
+    this._donationFrequency.onFrequencyChange.subscribe((frequency) => {
+      if (frequency !== "onetime") {
+        // Hide the IHMO section, hide the fields to prevent validation errors
+        // Disable ecard to prevent it being sent
+        document.querySelectorAll(".ihmo-element").forEach((el) => {
+          el.classList.add("hide");
+        });
+        document
+          .querySelector(".engrid--ihmo-wrapper")
+          ?.classList.add("ihmo-closed");
+        this.displayEcard(false);
+        this.hideAllFields();
+        this.hideField(".en__field--inmem");
+      } else {
+        // Make everything visible and call configureForm to show the correct fields
+        document.querySelectorAll(".ihmo-element").forEach((el) => {
+          el.classList.remove("hide");
+        });
+        this.showField(".en__field--inmem");
+        this.configureForm(this.giftType, this.giftNotification);
+        if (this.ihmoCheckbox?.checked) {
+          document
+            .querySelector(".engrid--ihmo-wrapper")
+            ?.classList.remove("ihmo-closed");
+        }
+      }
     });
   }
 
