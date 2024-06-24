@@ -439,7 +439,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
         "[for='en__field_supporter_questions_8785941']"
       );
       if (label) {
-        label.innerHTML = `I would like to designate my gift to ${option.innerText}`;
+        label.innerHTML = `I would like to designate my gift to ${option.innerText}.`;
       }
     }
   }

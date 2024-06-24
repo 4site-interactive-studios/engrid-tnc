@@ -89,15 +89,29 @@ export class IHMO {
   private _donationFrequency = DonationFrequency.getInstance();
 
   constructor() {
+    if (this.onThankYouPage()) {
+      this.setGiftDetailsAsDataAttributes();
+      return;
+    }
     if (!this.shouldRun()) return;
     this.createPageLayout();
     this.configureForm(this.giftType, this.giftNotification);
     this.addEventListeners();
     this.hideAllFields();
+    if (this.ihmoCheckbox?.checked) {
+      this.saveGiftDetails();
+    }
   }
 
   private shouldRun(): boolean {
     return !!this.ihmoCheckbox;
+  }
+
+  private onThankYouPage(): boolean {
+    return (
+      sessionStorage.getItem("engrid_ihmo-gift-details") !== null &&
+      ENGrid.getPageNumber() === 2
+    );
   }
 
   private createPageLayout() {
@@ -143,12 +157,14 @@ export class IHMO {
           .querySelector(".engrid--ihmo-wrapper")
           ?.classList.remove("ihmo-closed");
         this.configureForm(this.giftType, this.giftNotification);
+        this.saveGiftDetails();
       } else {
         document
           .querySelector(".engrid--ihmo-wrapper")
           ?.classList.add("ihmo-closed");
         this.displayEcard(false);
         this.hideAllFields();
+        this.clearGiftDetails();
       }
     });
 
@@ -159,6 +175,7 @@ export class IHMO {
         const giftType: GiftType =
           radio.value === "In Honor" ? "HONORARY" : "MEMORIAL";
         this.configureForm(giftType, this.giftNotification);
+        this.saveGiftDetails();
       });
     });
 
@@ -175,6 +192,7 @@ export class IHMO {
           giftNotification = "NONE";
         }
         this.configureForm(this.giftType, giftNotification);
+        this.saveGiftDetails();
       });
     });
 
@@ -266,6 +284,35 @@ export class IHMO {
     this.displayEcard(
       this.giftNotification === "ECARD" && this.ihmoCheckbox?.checked
     );
+  }
+
+  private saveGiftDetails() {
+    const giftDetails = {
+      giftType: this.giftType,
+      giftNotification: this.giftNotification,
+    };
+    sessionStorage.setItem(
+      "engrid_ihmo-gift-details",
+      JSON.stringify(giftDetails)
+    );
+    this.setGiftDetailsAsDataAttributes();
+  }
+
+  private clearGiftDetails() {
+    sessionStorage.removeItem("engrid_ihmo-gift-details");
+    this.setGiftDetailsAsDataAttributes();
+  }
+
+  private setGiftDetailsAsDataAttributes() {
+    const giftDetails = sessionStorage.getItem("engrid_ihmo-gift-details");
+    if (!giftDetails) {
+      ENGrid.setBodyData("ihmo-gift-type", false);
+      ENGrid.setBodyData("ihmo-gift-notification", false);
+      return;
+    }
+    const { giftType, giftNotification } = JSON.parse(giftDetails);
+    ENGrid.setBodyData("ihmo-gift-type", giftType);
+    ENGrid.setBodyData("ihmo-gift-notification", giftNotification);
   }
 
   private setFormLayout() {

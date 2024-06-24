@@ -95,6 +95,10 @@
   --engrid__page_background-color: #f1f1f1;
   // --engrid__body-banner_background-color: #f1f1f1;
   // --engrid__page-backgroundImage-color: #f1f1f1;
+
+  --color-green: #007931;
+  --radio_color: var(--color-green);
+  --radio_box-shadow_selected: inset 0 0 0 6px var(--color-green);
 }
 
 /* Add your custom theme styles here */
