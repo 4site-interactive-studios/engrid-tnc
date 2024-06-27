@@ -87,6 +87,9 @@ export class IHMO {
   private bottomForm: HTMLElement | null =
     document.querySelector(".ihmo-bottom-form");
   private _donationFrequency = DonationFrequency.getInstance();
+  private sourceCodeField = document.getElementById(
+    "en__field_supporter_appealCode"
+  ) as HTMLSelectElement;
 
   constructor() {
     if (this.onThankYouPage()) {
@@ -100,6 +103,7 @@ export class IHMO {
     this.hideAllFields();
     if (this.ihmoCheckbox?.checked) {
       this.saveGiftDetails();
+      this.setSourceCode(this.giftType);
     }
   }
 
@@ -158,6 +162,7 @@ export class IHMO {
           ?.classList.remove("ihmo-closed");
         this.configureForm(this.giftType, this.giftNotification);
         this.saveGiftDetails();
+        this.setSourceCode(this.giftType);
       } else {
         document
           .querySelector(".engrid--ihmo-wrapper")
@@ -165,6 +170,7 @@ export class IHMO {
         this.displayEcard(false);
         this.hideAllFields();
         this.clearGiftDetails();
+        this.setSourceCode(false);
       }
     });
 
@@ -176,6 +182,7 @@ export class IHMO {
           radio.value === "In Honor" ? "HONORARY" : "MEMORIAL";
         this.configureForm(giftType, this.giftNotification);
         this.saveGiftDetails();
+        this.setSourceCode(giftType);
       });
     });
 
@@ -269,6 +276,12 @@ export class IHMO {
         }
       }
     });
+
+    // When gift designation changes, update the source code
+    this.sourceCodeField?.addEventListener("change", () => {
+      const sourceCodeType = this.ihmoCheckbox?.checked ? this.giftType : false;
+      this.setSourceCode(sourceCodeType);
+    });
   }
 
   private configureForm(
@@ -313,6 +326,34 @@ export class IHMO {
     const { giftType, giftNotification } = JSON.parse(giftDetails);
     ENGrid.setBodyData("ihmo-gift-type", giftType);
     ENGrid.setBodyData("ihmo-gift-notification", giftNotification);
+  }
+
+  private setSourceCode(giftType: GiftType | boolean) {
+    if (!this.sourceCodeField) return;
+
+    const selectedOption =
+      this.sourceCodeField.options[this.sourceCodeField.selectedIndex];
+    if (selectedOption.value === "AHOMAONLN21W0XXX01") {
+      // if "use my gift where it's needed most" option is selected, do not change the source code"
+      return;
+    }
+
+    const sourceCode = this.sourceCodeField.value;
+    const sourceEnd = sourceCode.substring(
+      sourceCode.length - 6,
+      sourceCode.length - 2
+    );
+
+    if (giftType === "HONORARY") {
+      selectedOption.value = sourceCode.replace(sourceEnd, "TRIH");
+      ENGrid.setBodyData("source-code", this.sourceCodeField.value);
+    } else if (giftType === "MEMORIAL") {
+      selectedOption.value = sourceCode.replace(sourceEnd, "TRIM");
+      ENGrid.setBodyData("source-code", this.sourceCodeField.value);
+    } else {
+      selectedOption.value = sourceCode.replace(sourceEnd, "0XXX");
+      ENGrid.setBodyData("source-code", this.sourceCodeField.value);
+    }
   }
 
   private setFormLayout() {

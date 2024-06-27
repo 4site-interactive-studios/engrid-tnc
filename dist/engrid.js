@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, June 24, 2024 @ 12:00:56 ET
+ *  Date: Thursday, June 27, 2024 @ 09:46:48 ET
  *  By: michael
  *  ENGrid styles: v0.18.14
  *  ENGrid scripts: v0.18.14
@@ -21903,6 +21903,8 @@ class IHMO {
 
     _defineProperty(this, "_donationFrequency", DonationFrequency.getInstance());
 
+    _defineProperty(this, "sourceCodeField", document.getElementById("en__field_supporter_appealCode"));
+
     if (this.onThankYouPage()) {
       this.setGiftDetailsAsDataAttributes();
       return;
@@ -21916,6 +21918,7 @@ class IHMO {
 
     if (this.ihmoCheckbox?.checked) {
       this.saveGiftDetails();
+      this.setSourceCode(this.giftType);
     }
   }
 
@@ -21964,11 +21967,13 @@ class IHMO {
         document.querySelector(".engrid--ihmo-wrapper")?.classList.remove("ihmo-closed");
         this.configureForm(this.giftType, this.giftNotification);
         this.saveGiftDetails();
+        this.setSourceCode(this.giftType);
       } else {
         document.querySelector(".engrid--ihmo-wrapper")?.classList.add("ihmo-closed");
         this.displayEcard(false);
         this.hideAllFields();
         this.clearGiftDetails();
+        this.setSourceCode(false);
       }
     }); // When the "Gift Type" radio button is changed
 
@@ -21978,6 +21983,7 @@ class IHMO {
         const giftType = radio.value === "In Honor" ? "HONORARY" : "MEMORIAL";
         this.configureForm(giftType, this.giftNotification);
         this.saveGiftDetails();
+        this.setSourceCode(giftType);
       });
     }); // When the "Select Notification option" radio button is changed
 
@@ -22040,6 +22046,12 @@ class IHMO {
           document.querySelector(".engrid--ihmo-wrapper")?.classList.remove("ihmo-closed");
         }
       }
+    }); // When gift designation changes, update the source code
+
+
+    this.sourceCodeField?.addEventListener("change", () => {
+      const sourceCodeType = this.ihmoCheckbox?.checked ? this.giftType : false;
+      this.setSourceCode(sourceCodeType);
     });
   }
 
@@ -22081,6 +22093,30 @@ class IHMO {
     } = JSON.parse(giftDetails);
     engrid_ENGrid.setBodyData("ihmo-gift-type", giftType);
     engrid_ENGrid.setBodyData("ihmo-gift-notification", giftNotification);
+  }
+
+  setSourceCode(giftType) {
+    if (!this.sourceCodeField) return;
+    const selectedOption = this.sourceCodeField.options[this.sourceCodeField.selectedIndex];
+
+    if (selectedOption.value === "AHOMAONLN21W0XXX01") {
+      // if "use my gift where it's needed most" option is selected, do not change the source code"
+      return;
+    }
+
+    const sourceCode = this.sourceCodeField.value;
+    const sourceEnd = sourceCode.substring(sourceCode.length - 6, sourceCode.length - 2);
+
+    if (giftType === "HONORARY") {
+      selectedOption.value = sourceCode.replace(sourceEnd, "TRIH");
+      engrid_ENGrid.setBodyData("source-code", this.sourceCodeField.value);
+    } else if (giftType === "MEMORIAL") {
+      selectedOption.value = sourceCode.replace(sourceEnd, "TRIM");
+      engrid_ENGrid.setBodyData("source-code", this.sourceCodeField.value);
+    } else {
+      selectedOption.value = sourceCode.replace(sourceEnd, "0XXX");
+      engrid_ENGrid.setBodyData("source-code", this.sourceCodeField.value);
+    }
   }
 
   setFormLayout() {
