@@ -92,15 +92,18 @@ export class IHMO {
   ) as HTMLSelectElement;
 
   constructor() {
+    // If we're on the thank you page, add the gift details as data attributes and return
     if (this.onThankYouPage()) {
       this.setGiftDetailsAsDataAttributes();
       return;
     }
+    // Stop here if we're not on an IHMO page
     if (!this.shouldRun()) return;
     this.createPageLayout();
     this.configureForm(this.giftType, this.giftNotification);
     this.addEventListeners();
     this.hideAllFields();
+    // If IHMO is checked, save the gift details and set the source code
     if (this.ihmoCheckbox?.checked) {
       this.saveGiftDetails();
       this.setSourceCode(this.giftType);
@@ -122,15 +125,18 @@ export class IHMO {
     const ihmoWrapper = document.createElement("div");
     ihmoWrapper.classList.add("engrid--ihmo-wrapper", "ihmo-closed");
 
+    // Add all elements with the class "ihmo-content" to the IHMO content wrapper
     const ihmoContent = document.querySelectorAll(".ihmo-content");
     ihmoContent.forEach((content) => {
       ihmoWrapper.appendChild(content);
     });
 
+    // Insert the IHMO content wrapper after the IHMO checkbox
     this.ihmoCheckbox
       ?.closest(".en__component--formblock")
       ?.insertAdjacentElement("afterend", ihmoWrapper);
 
+    // If the page includes the embedded ecard component, move it to the IHMO content wrapper
     const embeddedEcard = document.querySelector(".engrid--embedded-ecard");
     if (embeddedEcard) {
       embeddedEcard.classList.add("ihmo-content");
@@ -142,6 +148,7 @@ export class IHMO {
       }
       const ecardIframe = embeddedEcard.querySelector("iframe");
       if (ecardIframe) {
+        // Extra URL param on eCard does additional functionality for IHMO page.
         ecardIframe.setAttribute(
           "src",
           ecardIframe.src + "&data-engrid-embedded-ihmo=true"
@@ -263,13 +270,14 @@ export class IHMO {
         this.hideAllFields();
         this.hideField(".en__field--inmem");
       } else {
-        // Make everything visible and call configureForm to show the correct fields
+        // Make IHMO elements visible
         document.querySelectorAll(".ihmo-element").forEach((el) => {
           el.classList.remove("hide");
         });
         this.showField(".en__field--inmem");
-        this.configureForm(this.giftType, this.giftNotification);
         if (this.ihmoCheckbox?.checked) {
+          // Don't call "configureForm" unless the IHMO checkbox is checked, otherwise we might get validation errors
+          this.configureForm(this.giftType, this.giftNotification);
           document
             .querySelector(".engrid--ihmo-wrapper")
             ?.classList.remove("ihmo-closed");
