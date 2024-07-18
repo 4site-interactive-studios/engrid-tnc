@@ -87,9 +87,8 @@ export class IHMO {
   private bottomForm: HTMLElement | null =
     document.querySelector(".ihmo-bottom-form");
   private _donationFrequency = DonationFrequency.getInstance();
-  private sourceCodeField = document.getElementById(
-    "en__field_supporter_appealCode"
-  ) as HTMLSelectElement;
+  private sourceCodeField: HTMLSelectElement | HTMLInputElement | null =
+    document.querySelector('[name="supporter.appealCode"]');
 
   constructor() {
     // If we're on the thank you page, add the gift details as data attributes and return
@@ -286,10 +285,14 @@ export class IHMO {
     });
 
     // When gift designation changes, update the source code
-    this.sourceCodeField?.addEventListener("change", () => {
-      const sourceCodeType = this.ihmoCheckbox?.checked ? this.giftType : false;
-      this.setSourceCode(sourceCodeType);
-    });
+    if (this.sourceCodeField?.tagName === "SELECT") {
+      this.sourceCodeField?.addEventListener("change", () => {
+        const sourceCodeType = this.ihmoCheckbox?.checked
+          ? this.giftType
+          : false;
+        this.setSourceCode(sourceCodeType);
+      });
+    }
   }
 
   private configureForm(
@@ -339,29 +342,42 @@ export class IHMO {
   private setSourceCode(giftType: GiftType | boolean) {
     if (!this.sourceCodeField) return;
 
-    const selectedOption =
-      this.sourceCodeField.options[this.sourceCodeField.selectedIndex];
-    if (selectedOption.value === "AHOMAONLN21W0XXX01") {
+    const sourceCodeContainer =
+      this.sourceCodeField instanceof HTMLSelectElement
+        ? this.sourceCodeField.options[this.sourceCodeField.selectedIndex]
+        : this.sourceCodeField;
+
+    if (
+      sourceCodeContainer.value === "AHOMAONLN21W0XXX01" &&
+      this.sourceCodeField instanceof HTMLSelectElement
+    ) {
       // if "use my gift where it's needed most" option is selected, do not change the source code"
       return;
     }
 
-    const sourceCode = this.sourceCodeField.value;
-    const sourceEnd = sourceCode.substring(
-      sourceCode.length - 6,
-      sourceCode.length - 2
+    const sourceEnd = sourceCodeContainer.value.substring(
+      sourceCodeContainer.value.length - 6,
+      sourceCodeContainer.value.length - 2
     );
 
     if (giftType === "HONORARY") {
-      selectedOption.value = sourceCode.replace(sourceEnd, "TRIH");
-      ENGrid.setBodyData("source-code", this.sourceCodeField.value);
+      sourceCodeContainer.value = sourceCodeContainer.value.replace(
+        sourceEnd,
+        "TRIH"
+      );
     } else if (giftType === "MEMORIAL") {
-      selectedOption.value = sourceCode.replace(sourceEnd, "TRIM");
-      ENGrid.setBodyData("source-code", this.sourceCodeField.value);
+      sourceCodeContainer.value = sourceCodeContainer.value.replace(
+        sourceEnd,
+        "TRIM"
+      );
     } else {
-      selectedOption.value = sourceCode.replace(sourceEnd, "0XXX");
-      ENGrid.setBodyData("source-code", this.sourceCodeField.value);
+      sourceCodeContainer.value = sourceCodeContainer.value.replace(
+        sourceEnd,
+        "0XXX"
+      );
     }
+
+    ENGrid.setBodyData("source-code", this.sourceCodeField.value);
   }
 
   private setFormLayout() {
