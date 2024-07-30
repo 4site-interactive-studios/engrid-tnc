@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, July 18, 2024 @ 08:41:14 ET
+ *  Date: Tuesday, July 30, 2024 @ 04:58:18 ET
  *  By: michael
  *  ENGrid styles: v0.18.14
  *  ENGrid scripts: v0.18.14
@@ -21457,11 +21457,18 @@ function trackFormSubmit(App, DonationAmount) {
     donationData.productId = utag_data.page_name.slice(0, -2);
     donationData.campaignId = pageJson.campaignId;
     donationData.campaignPageId = App.getPageID();
-    donationData.state = App.getFieldValue("supporter.postcode");
+    donationData.state = App.getFieldValue("supporter.region");
     donationData.zipCode = App.getFieldValue("supporter.postcode");
     donationData.emailAddress = App.getFieldValue("supporter.emailAddress");
     donationData.originalDonationAmount = DonationAmount.getInstance().amount;
-    donationData.extraAmount = 0;
+    donationData.extraAmount = 0; // New donationData fields for Google Ads Enhanced Conversions
+
+    donationData.firstName = App.getFieldValue("supporter.firstName");
+    donationData.lastName = App.getFieldValue("supporter.lastName");
+    donationData.address1 = App.getFieldValue("supporter.address1");
+    donationData.city = App.getFieldValue("supporter.city");
+    donationData.country = App.getFieldValue("supporter.country");
+    donationData.phoneNumber = App.getFieldValue("supporter.phoneNumber2");
     /** @type {HTMLInputElement} */
     //If fee cover is checked, set extra amount to 3% of donation amount and subtract from original donation amount
 
@@ -21520,7 +21527,16 @@ function trackFormSubmit(App, DonationAmount) {
     utagData.action_id = utag_data.form_name;
     utagData.action_type = pageJson.pageType;
     utagData.zip_code = App.getFieldValue("supporter.postcode");
-    utagData.email_signup_location = pageJson.pageType;
+    utagData.email_signup_location = pageJson.pageType; // New utag variables fields for Google Ads Enhanced Conversions for ETT & PET
+
+    utagData.const_first = App.getFieldValue("supporter.firstName");
+    utagData.const_last = App.getFieldValue("supporter.lastName");
+    utagData.const_address = App.getFieldValue("supporter.address1");
+    utagData.const_city = App.getFieldValue("supporter.city");
+    utagData.customer_state = App.getFieldValue("supporter.region");
+    utagData.customer_postal_code = App.getFieldValue("supporter.postcode");
+    utagData.customer_country = App.getFieldValue("supporter.country");
+    utagData.const_phone = App.getFieldValue("supporter.phoneNumber2");
     trackEvent(eventName, utagData);
   }
 }
