@@ -95,6 +95,10 @@
   --engrid__page_background-color: #f1f1f1;
   // --engrid__body-banner_background-color: #f1f1f1;
   // --engrid__page-backgroundImage-color: #f1f1f1;
+
+  --color-green: #007931;
+  --radio_color: var(--color-green);
+  --radio_box-shadow_selected: inset 0 0 0 6px var(--color-green);
 }
 
 /* Add your custom theme styles here */
@@ -908,6 +912,11 @@
             margin-bottom: 0;
           }
         }
+      }
+
+      a {
+        color: #ffffff;
+        text-decoration-color: initial;
       }
     }
 
@@ -2294,6 +2303,37 @@
     }
   }
 
+  select[disabled],
+  input[type="radio"][disabled],
+  input[type="radio"][disabled] + label {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  input[type="radio"][disabled]:hover,
+  input[type="radio"][disabled]:hover + label:before,
+  input[type="radio"][disabled] + label:hover {
+    background-color: var(--radio_background-color);
+    border-color: var(--radio_border-color);
+    color: var(--radio_color);
+    box-shadow: none;
+  }
+
+  @for $i from 12 through 15 {
+    .i#{$i}-50 .en__field:nth-of-type(#{$i}) {
+      flex-basis: 50%;
+    }
+  }
+
+  @media screen and (max-width: 992px) {
+    @for $i from 12 through 15 {
+      .i#{$i}-m100 .en__field:nth-of-type(#{$i}) {
+        flex-basis: 100%;
+      }
+    }
+  }
+
+  @import "ihmo.scss";
   @import "ecard.scss";
   @import "./supporter-hub.scss";
 }

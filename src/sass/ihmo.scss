@@ -1,0 +1,112 @@
+.engrid--ihmo-wrapper  {
+  border: 1px solid #cdcdcd;
+  padding: 36px;
+  margin-top: 10px;
+
+  @media screen and (max-width: 992px) {
+    padding: 20px;
+  }
+}
+
+.engrid--ihmo-wrapper.ihmo-closed {
+  display: none;
+}
+
+.en__field--trbopts .en__field__item {
+  &:first-child {
+    padding-right: 0!important;
+  }
+
+  &:last-child {
+    padding-left: 0!important;
+  }
+}
+
+.select-notification-option.radio-to-buttons.radio-to-buttons_count_3 {
+  @media screen and (max-width: 992px) {
+    --radio-to-buttons__button_count: 1;
+  }
+
+  .en__field__element--radio {
+    @media screen and (max-width: 992px) {
+      margin: 0;
+    }
+  }
+
+  .en__field__element--radio .en__field__item {
+    @media screen and (max-width: 992px) {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}
+
+.form-heading.ihmo-content {
+  margin-top: 8px!important;
+}
+
+.en__field--select-notification-option .en__field__element {
+  display: flex!important;
+  width: 100%!important;
+  max-width: none!important;
+}
+
+.en__field--select-notification-option .en__field__element label {
+  text-transform: uppercase!important;
+}
+
+.engrid--embedded-ecard.ihmo-content > h3,
+.engrid--embedded-ecard.ihmo-content > .en__field--embedded-ecard {
+  display: none;
+}
+
+.en__field--recurrfreq {
+  --ihmo-recurring-warning: "Monthly gifts are not applicable for honorary or memorial gifts. To make a gift in honor or memory of someone, please select a one-time gift.";
+}
+
+&[data-engrid-transaction-recurring="y"][data-engrid-ihmo="true"] .en__field--recurrfreq {
+  .en__field__element--radio {
+    align-items: flex-start;
+
+    .en__field__item:last-child {
+      position: relative;
+
+      &:after {
+        position: absolute;
+        left: calc(100% + 10px);
+        top: 0;
+        width: 300px;
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.5;
+        font-style: italic;
+        content: var(--ihmo-recurring-warning);
+
+        @media screen and (max-width: 992px) {
+          position: static;
+        }
+      }
+    }
+  }
+}
+
+&:not([data-engrid-debug]):not(#en__pagebuilder) {
+  &:not([data-engrid-ihmo-gift-type="HONORARY"]):not([data-engrid-ihmo-gift-type="MEMORIAL"]) .showif-ihmo,
+  &:not([data-engrid-ihmo-gift-type="HONORARY"]) .showif-ihmo-honorary,
+  &:not([data-engrid-ihmo-gift-type="MEMORIAL"]) .showif-ihmo-memorial,
+  &:not([data-engrid-ihmo-gift-notification="ECARD"]) .showif-ihmo-ecard,
+  &:not([data-engrid-ihmo-gift-notification="MAIL"]) .showif-ihmo-mail,
+  &:not([data-engrid-ihmo-gift-notification="NONE"]) .showif-ihmo-do-not-notify {
+    display: none;
+  }
+
+  &[data-engrid-ihmo-gift-type="HONORARY"] .hideif-ihmo,
+  &[data-engrid-ihmo-gift-type="MEMORIAL"] .hideif-ihmo,
+  &[data-engrid-ihmo-gift-type="HONORARY"] .hideif-ihmo-honorary,
+  &[data-engrid-ihmo-gift-type="MEMORIAL"] .hideif-ihmo-memorial,
+  &[data-engrid-ihmo-gift-notification="ECARD"] .hideif-ihmo-ecard,
+  &[data-engrid-ihmo-gift-notification="MAIL"] .hideif-ihmo-mail,
+  &[data-engrid-ihmo-gift-notification="NONE"] .hideif-ihmo-do-not-notify {
+    display: none;
+  }
+}

@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, July 11, 2024 @ 11:45:03 ET
+ *  Date: Tuesday, July 30, 2024 @ 04:58:18 ET
  *  By: michael
- *  ENGrid styles: v0.18.8
- *  ENGrid scripts: v0.18.11
+ *  ENGrid styles: v0.18.14
+ *  ENGrid scripts: v0.18.14
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -5637,7 +5637,7 @@ body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardre
   width:100%;
 }
 
-body:not([data-engrid-embedded-ecard-sent=true]) .showif-embedded-ecard-sent,body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardrecipients__email .en__ecarditems__addrecipient,body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardrecipients__list,body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardrecipients__name .en__ecarditems__addrecipient{
+body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-embedded-ecard-sent=true]) .showif-embedded-ecard-sent,body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardrecipients__email .en__ecarditems__addrecipient,body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardrecipients__list,body[data-engrid-page-type=e-card][data-engrid-embedded-ecard=true] .en__ecardrecipients__name .en__ecarditems__addrecipient{
   display:none;
 }
 [data-engrid-theme]{
@@ -7682,6 +7682,9 @@ body[data-engrid-debug]:before{
   --engrid__body_padding:0 115px;
   --click-to-expand__copy-area_height:200px;
   --engrid__page_background-color:#f1f1f1;
+  --color-green:#007931;
+  --radio_color:var(--color-green);
+  --radio_box-shadow_selected:inset 0 0 0 6px var(--color-green);
 }
 [data-engrid-theme=tnc] .body-footer,[data-engrid-theme=tnc] .body-footerOutside,[data-engrid-theme=tnc] .body-headerOutside,[data-engrid-theme=tnc] .page-alert,[data-engrid-theme=tnc] .page-backgroundImageOverlay,[data-engrid-theme=tnc]#en__pagebuilder .content-footerSpacer,[data-engrid-theme=tnc]:not([data-engrid-theme=tnc]#en__pagebuilder):not([data-engrid-debug]) [class*=js-zcc--],[data-engrid-theme=tnc]:not([data-engrid-theme=tnc]#en__pagebuilder):not([data-engrid-debug]) img[class*=js-zcc--]~a.photo-info{
   display:none !important;
@@ -8295,6 +8298,10 @@ body[data-engrid-debug]:before{
   [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .body-top .en__component--copyblock>:last-child{
     margin-bottom:0;
   }
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .body-top a{
+  color:#fff;
+  text-decoration-color:initial;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col] .body-banner{
   grid-column:rbc-start /  pc-end;
@@ -9312,6 +9319,97 @@ body[data-engrid-debug]:before{
   background-color:#0000ff1a !important;
   display:block !important;
 }
+[data-engrid-theme=tnc] input[type=radio][disabled],[data-engrid-theme=tnc] input[type=radio][disabled]+label,[data-engrid-theme=tnc] select[disabled]{
+  cursor:not-allowed;
+  opacity:.7;
+}
+[data-engrid-theme=tnc] input[type=radio][disabled]+label:hover,[data-engrid-theme=tnc] input[type=radio][disabled]:hover,[data-engrid-theme=tnc] input[type=radio][disabled]:hover+label:before{
+  background-color:var(--radio_background-color);
+  border-color:var(--radio_border-color);
+  box-shadow:none;
+  color:var(--radio_color);
+}
+[data-engrid-theme=tnc] .i12-50 .en__field:nth-of-type(12),[data-engrid-theme=tnc] .i13-50 .en__field:nth-of-type(13),[data-engrid-theme=tnc] .i14-50 .en__field:nth-of-type(14),[data-engrid-theme=tnc] .i15-50 .en__field:nth-of-type(15){
+  flex-basis:50%;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc] .i12-m100 .en__field:nth-of-type(12),[data-engrid-theme=tnc] .i13-m100 .en__field:nth-of-type(13),[data-engrid-theme=tnc] .i14-m100 .en__field:nth-of-type(14),[data-engrid-theme=tnc] .i15-m100 .en__field:nth-of-type(15){
+    flex-basis:100%;
+  }
+}
+[data-engrid-theme=tnc] .engrid--ihmo-wrapper{
+  border:1px solid #cdcdcd;
+  margin-top:10px;
+  padding:36px;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc] .engrid--ihmo-wrapper{
+    padding:20px;
+  }
+}
+[data-engrid-theme=tnc] .engrid--ihmo-wrapper.ihmo-closed{
+  display:none;
+}
+[data-engrid-theme=tnc] .en__field--trbopts .en__field__item:first-child{
+  padding-right:0 !important;
+}
+[data-engrid-theme=tnc] .en__field--trbopts .en__field__item:last-child{
+  padding-left:0 !important;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc] .select-notification-option.radio-to-buttons.radio-to-buttons_count_3{
+    --radio-to-buttons__button_count:1;
+  }
+  [data-engrid-theme=tnc] .select-notification-option.radio-to-buttons.radio-to-buttons_count_3 .en__field__element--radio{
+    margin:0;
+  }
+  [data-engrid-theme=tnc] .select-notification-option.radio-to-buttons.radio-to-buttons_count_3 .en__field__element--radio .en__field__item{
+    padding-left:0;
+    padding-right:0;
+  }
+}
+[data-engrid-theme=tnc] .form-heading.ihmo-content{
+  margin-top:8px !important;
+}
+[data-engrid-theme=tnc] .en__field--select-notification-option .en__field__element{
+  display:flex !important;
+  max-width:none !important;
+  width:100% !important;
+}
+[data-engrid-theme=tnc] .en__field--select-notification-option .en__field__element label{
+  text-transform:uppercase !important;
+}
+[data-engrid-theme=tnc] .engrid--embedded-ecard.ihmo-content>.en__field--embedded-ecard,[data-engrid-theme=tnc] .engrid--embedded-ecard.ihmo-content>h3{
+  display:none;
+}
+[data-engrid-theme=tnc] .en__field--recurrfreq{
+  --ihmo-recurring-warning:"Monthly gifts are not applicable for honorary or memorial gifts. To make a gift in honor or memory of someone, please select a one-time gift.";
+}
+[data-engrid-theme=tnc][data-engrid-transaction-recurring=y][data-engrid-ihmo=true] .en__field--recurrfreq .en__field__element--radio{
+  align-items:flex-start;
+}
+[data-engrid-theme=tnc][data-engrid-transaction-recurring=y][data-engrid-ihmo=true] .en__field--recurrfreq .en__field__element--radio .en__field__item:last-child{
+  position:relative;
+}
+[data-engrid-theme=tnc][data-engrid-transaction-recurring=y][data-engrid-ihmo=true] .en__field--recurrfreq .en__field__element--radio .en__field__item:last-child:after{
+  content:var(--ihmo-recurring-warning);
+  font-size:14px;
+  font-style:italic;
+  left:calc(100% + 10px);
+  line-height:1.5;
+  margin:0;
+  position:absolute;
+  top:0;
+  width:300px;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-transaction-recurring=y][data-engrid-ihmo=true] .en__field--recurrfreq .en__field__element--radio .en__field__item:last-child:after{
+    position:static;
+  }
+}
+[data-engrid-theme=tnc]:not([data-engrid-debug]):not(#en__pagebuilder):not([data-engrid-ihmo-gift-notification=ECARD]) .showif-ihmo-ecard,[data-engrid-theme=tnc]:not([data-engrid-debug]):not(#en__pagebuilder):not([data-engrid-ihmo-gift-notification=MAIL]) .showif-ihmo-mail,[data-engrid-theme=tnc]:not([data-engrid-debug]):not(#en__pagebuilder):not([data-engrid-ihmo-gift-notification=NONE]) .showif-ihmo-do-not-notify,[data-engrid-theme=tnc]:not([data-engrid-debug]):not(#en__pagebuilder):not([data-engrid-ihmo-gift-type=HONORARY]) .showif-ihmo-honorary,[data-engrid-theme=tnc]:not([data-engrid-debug]):not(#en__pagebuilder):not([data-engrid-ihmo-gift-type=HONORARY]):not([data-engrid-ihmo-gift-type=MEMORIAL]) .showif-ihmo,[data-engrid-theme=tnc]:not([data-engrid-debug]):not(#en__pagebuilder):not([data-engrid-ihmo-gift-type=MEMORIAL]) .showif-ihmo-memorial,[data-engrid-theme=tnc]:not([data-engrid-debug]):not(#en__pagebuilder)[data-engrid-ihmo-gift-notification=ECARD] .hideif-ihmo-ecard,[data-engrid-theme=tnc]:not([data-engrid-debug]):not(#en__pagebuilder)[data-engrid-ihmo-gift-notification=MAIL] .hideif-ihmo-mail,[data-engrid-theme=tnc]:not([data-engrid-debug]):not(#en__pagebuilder)[data-engrid-ihmo-gift-notification=NONE] .hideif-ihmo-do-not-notify,[data-engrid-theme=tnc]:not([data-engrid-debug]):not(#en__pagebuilder)[data-engrid-ihmo-gift-type=HONORARY] .hideif-ihmo,[data-engrid-theme=tnc]:not([data-engrid-debug]):not(#en__pagebuilder)[data-engrid-ihmo-gift-type=HONORARY] .hideif-ihmo-honorary,[data-engrid-theme=tnc]:not([data-engrid-debug]):not(#en__pagebuilder)[data-engrid-ihmo-gift-type=MEMORIAL] .hideif-ihmo,[data-engrid-theme=tnc]:not([data-engrid-debug]):not(#en__pagebuilder)[data-engrid-ihmo-gift-type=MEMORIAL] .hideif-ihmo-memorial{
+  display:none;
+}
 [data-engrid-theme=tnc][data-engrid-page-type=e-card] .en__ecardrecipients__futureDelivery{
   width:calc(50% - 1rem);
 }
@@ -9410,8 +9508,23 @@ body[data-engrid-debug]:before{
     width:100% !important;
   }
 }
-[data-engrid-theme=tnc][data-engrid-page-type=e-card][data-engrid-embedded] #onetrust-consent-sdk{
+[data-engrid-theme=tnc][data-engrid-page-type=e-card][data-engrid-embedded-ihmo=true] .en__ecardrecipients,[data-engrid-theme=tnc][data-engrid-page-type=e-card][data-engrid-embedded] #onetrust-consent-sdk{
   display:none;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card][data-engrid-embedded-ihmo=true] .en__component--ecardblock h2{
+  font-family:var(--default_font-family);
+  font-size:1rem;
+  font-weight:500;
+  line-height:1.375;
+  margin:0 0 10px;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card][data-engrid-embedded-ihmo=true] .en__ecardrecipients__futureDelivery{
+  margin:20px 0;
+}
+[data-engrid-theme=tnc][data-engrid-page-type=e-card][data-engrid-embedded-ihmo=true] .en__ecardmessage__default{
+  height:7rem;
+  margin-bottom:0;
+  min-height:7rem;
 }
 [data-engrid-theme=tnc] .engrid--embedded-ecard-heading{
   border-bottom:1px solid #cdcdcd;

@@ -137,6 +137,31 @@
       display: none;
     }
   }
+
+  // When embedded on IHMO page
+  &[data-engrid-embedded-ihmo="true"] {
+    .en__ecardrecipients {
+      display: none;
+    }
+
+    .en__component--ecardblock h2 {
+      font-size: 1rem;
+      font-family: var(--default_font-family);
+      font-weight: 500;
+      line-height: 1.375;
+      margin: 0 0 10px;
+    }
+
+    .en__ecardrecipients__futureDelivery {
+      margin: 20px 0;
+    }
+
+    .en__ecardmessage__default {
+      min-height: 7rem;
+      height: 7rem;
+      margin-bottom: 0;
+    }
+  }
 }
 
 .engrid--embedded-ecard-heading {

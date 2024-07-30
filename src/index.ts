@@ -22,6 +22,7 @@ import {
 } from "./scripts/tracking";
 import { BequestLightbox } from "./scripts/bequest-lightbox";
 import { Tooltip } from "./scripts/tooltip";
+import { IHMO } from "./scripts/ihmo";
 
 declare global {
   interface Window {
@@ -44,17 +45,15 @@ const minimumAmount = window?.donationSettings?.minimumDonationAmount ?? 5;
 
 //Allow banner image with attribution using image block
 //This code is run before the ENgrid script is loaded so that media-attribution.ts will run on this element
-const bannerImageWithAttribution = document.querySelector(
+const bannerImagesWithAttribution = document.querySelectorAll(
   ".body-banner .en__component--imageblock img[alt]"
-) as HTMLElement;
-if (
-  bannerImageWithAttribution &&
-  bannerImageWithAttribution.getAttribute("alt")
-) {
-  bannerImageWithAttribution.dataset.attributionSource = "i";
-  bannerImageWithAttribution.dataset.attributionSourceTooltip =
-    bannerImageWithAttribution.getAttribute("alt") ?? "";
-}
+) as NodeListOf<HTMLImageElement>;
+bannerImagesWithAttribution.forEach((img) => {
+  if (!img.getAttribute("alt")) return;
+  img.dataset.attributionSource = "i";
+  img.dataset.attributionSourceTooltip =
+    img.getAttribute("alt")?.replace("&copy;", "©") ?? "";
+});
 
 const options: Options = {
   applePay: false,
@@ -105,6 +104,7 @@ const options: Options = {
     customScript(App, DonationFrequency, DonationAmount);
     new BequestLightbox();
     new Tooltip();
+    new IHMO();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();

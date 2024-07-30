@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, July 11, 2024 @ 11:45:03 ET
+ *  Date: Tuesday, July 30, 2024 @ 04:58:18 ET
  *  By: michael
- *  ENGrid styles: v0.18.8
- *  ENGrid scripts: v0.18.11
+ *  ENGrid styles: v0.18.14
+ *  ENGrid scripts: v0.18.14
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11298,14 +11298,20 @@ class engrid_ENGrid {
     static setPaymentType(paymentType) {
         const enFieldPaymentType = engrid_ENGrid.getField("transaction.paymenttype");
         if (enFieldPaymentType) {
-            const paymentTypeOption = Array.from(enFieldPaymentType.options).find((option) => option.value.toLowerCase() === paymentType.toLowerCase());
+            const paymentTypeOption = Array.from(enFieldPaymentType.options).find((option) => paymentType.toLowerCase() === "card"
+                ? ["card", "visa", "vi"].includes(option.value.toLowerCase())
+                : paymentType.toLowerCase() === option.value.toLowerCase());
             if (paymentTypeOption) {
                 paymentTypeOption.selected = true;
+                enFieldPaymentType.value = paymentTypeOption.value;
             }
             else {
                 enFieldPaymentType.value = paymentType;
             }
-            const event = new Event("change");
+            const event = new Event("change", {
+                bubbles: true,
+                cancelable: true,
+            });
             enFieldPaymentType.dispatchEvent(event);
         }
     }
@@ -11748,6 +11754,7 @@ class App extends engrid_ENGrid {
             this.logger.success("Validation Passed");
             return true;
         };
+        new DataAttributes();
         // Country Redirect
         new CountryRedirect();
         // iFrame Logic
@@ -11872,7 +11879,6 @@ class App extends engrid_ENGrid {
             new Plaid();
         // Give By Select
         new GiveBySelect();
-        new DataAttributes();
         //Exit Intent Lightbox
         new ExitIntentLightbox();
         new UrlParamsToBodyAttrs();
@@ -12157,7 +12163,7 @@ class ApplePay {
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/a11y.js
 // a11y means accessibility
-// This Component is supposed to be used as a helper for Arria Attributes & Other Accessibility Features
+// This Component is supposed to be used as a helper for Aria Attributes & Other Accessibility Features
 class A11y {
     constructor() {
         this.addRequired();
@@ -12204,6 +12210,8 @@ class A11y {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/capitalize-fields.js
+// CapitalizeFields is a class that capitalizes the first letter of the fields passed to it.
+// It subscribes to the onSubmit event of the EnForm class and capitalizes the fields on submit.
 
 
 class CapitalizeFields {
@@ -12366,7 +12374,8 @@ class Ecard {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/click-to-expand.js
-// Depends on engrid-click-to-expand.scss to work
+// This class is used to expand content when a user clicks on a div with the class "click-to-expand".
+// The content is shortened by default and will expand when clicked.
 
 // Works when the user has adds ".click-to-expand" as a class to any field
 class ClickToExpand {
@@ -15870,7 +15879,27 @@ class Ticker {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/data-layer.js
-// This class automatically select other radio input when an amount is entered into it.
+// The DataLayer class is a singleton class that is responsible for managing the data layer events.
+// It listens to the EnForm onSubmit event and the RememberMe onLoad event.
+// It also listens to the blur, change, and submit events of the form fields.
+// It adds the following events to the data layer:
+// - EN_PAGE_VIEW
+// - EN_SUCCESSFUL_DONATION
+// - EN_PAGEJSON_{property}
+// - EN_SUBMISSION_SUCCESS_{pageType}
+// - EN_URLPARAM_{key}-{value}
+// - EN_RECURRING_FREQUENCIES
+// - EN_FASTFORMFILL_PERSONALINFO_SUCCESS
+// - EN_FASTFORMFILL_PERSONALINFO_PARTIALSUCCESS
+// - EN_FASTFORMFILL_PERSONALINFO_FAILURE
+// - EN_FASTFORMFILL_ADDRESS_SUCCESS
+// - EN_FASTFORMFILL_ADDRESS_PARTIALSUCCESS
+// - EN_FASTFORMFILL_ADDRESS_FAILURE
+// - EN_FASTFORMFILL_ALL_SUCCESS
+// - EN_FASTFORMFILL_ALL_FAILURE
+// - EN_SUBMISSION_WITH_EMAIL_OPTIN
+// - EN_SUBMISSION_WITHOUT_EMAIL_OPTIN
+// - EN_FORM_VALUE_UPDATED
 
 class DataLayer {
     constructor() {
@@ -16164,6 +16193,13 @@ class DataLayer {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/data-replace.js
+// This script is used to replace merge tags in the EN Blocks of the page.
+// It searches for HTML elements containing the data to be replaced and replaces it.
+// The data to be replaced is passed as URL parameters, example: ?engrid_data[key]=value.
+// The merge tag, if found, is replaced with the value from the URL parameter.
+// If no value is found, the default value is used.
+// The default value is the value inside the merge tag, example: {engrid_data~key~default}.
+// If no default value is set, an empty string is used.
 
 class DataReplace {
     constructor() {
@@ -16175,6 +16211,9 @@ class DataReplace {
         this.logger.log("Elements Found:", this.enElements);
         this.replaceAll();
     }
+    /**
+     * Searches for HTML elements containing the data to be replaced.
+     */
     searchElements() {
         const enElements = document.querySelectorAll(`
       .en__component--copyblock,
@@ -16190,9 +16229,16 @@ class DataReplace {
             });
         }
     }
+    /**
+     * Checks if there are elements to be replaced.
+     * @returns True if there are elements to be replaced, false otherwise.
+     */
     shouldRun() {
         return this.enElements.length > 0;
     }
+    /**
+     * Replaces all occurrences of data in the HTML elements.
+     */
     replaceAll() {
         const regEx = /{engrid_data~\[([\w-]+)\]~?\[?(.+?)?\]?}/g;
         this.enElements.forEach((item) => {
@@ -16203,6 +16249,13 @@ class DataReplace {
         });
         engrid_ENGrid.setBodyData("merge-tags-processed", "");
     }
+    /**
+     * Replaces a specific data item in the given HTML element.
+     * @param where The HTML element where the replacement should occur.
+     * @param item The matched data item.
+     * @param key The key of the data item.
+     * @param defaultValue The default value to use if the data item is not found.
+     */
     replaceItem(where, [item, key, defaultValue]) {
         var _a;
         let value = (_a = engrid_ENGrid.getUrlParameter(`engrid_data[${key}]`)) !== null && _a !== void 0 ? _a : defaultValue;
@@ -16218,6 +16271,12 @@ class DataReplace {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/data-hide.js
+// Hides elements based on URL arguments.
+//
+// The DataHide class is used to hide elements based on URL arguments.
+// It retrieves the elements to hide from the URL arguments and hides them.
+// If no elements are found, the constructor returns early.
+// Otherwise, it logs the found elements and hides them.
 
 class DataHide {
     constructor() {
@@ -16232,6 +16291,9 @@ class DataHide {
         this.logger.log("Elements Found:", this.enElements);
         this.hideAll();
     }
+    /**
+     * Hides all the elements based on the URL arguments.
+     */
     hideAll() {
         this.enElements.forEach((element) => {
             const item = Object.keys(element)[0];
@@ -16240,6 +16302,11 @@ class DataHide {
         });
         return;
     }
+    /**
+     * Hides a specific element based on the item and type.
+     * @param item - The item to hide (ID or class name).
+     * @param type - The type of the item (either "id" or "class").
+     */
     hideItem(item, type) {
         const regEx = /engrid_hide\[([\w-]+)\]/g;
         const itemData = [...item.matchAll(regEx)].map((match) => match[1])[0];
@@ -18710,8 +18777,6 @@ class PremiumGift {
     constructor() {
         this.logger = new EngridLogger("PremiumGift", "#232323", "#f7b500", "🎁");
         this.enElements = new Array();
-        this._frequency = DonationFrequency.getInstance();
-        this._amount = DonationAmount.getInstance();
         if (!this.shoudRun())
             return;
         this.searchElements();
@@ -18765,20 +18830,6 @@ class PremiumGift {
             });
             observer.observe(premiumGiftsBlock, { attributes: true });
         }
-        // When frequency or amount changes, restore the selected premium gift
-        this._frequency.onFrequencyChange.subscribe(this.restorePremiumGift.bind(this));
-        this._amount.onAmountChange.subscribe(this.restorePremiumGift.bind(this));
-    }
-    restorePremiumGift() {
-        const premiumGiftId = engrid_ENGrid.getBodyData("premium-gift-id");
-        setTimeout(() => {
-            const newPremiumGift = document.querySelector('[name="en__pg"][value="' + premiumGiftId + '"]');
-            if (newPremiumGift) {
-                newPremiumGift.checked = true;
-                newPremiumGift.dispatchEvent(new Event("change"));
-                this.logger.log("resetting premium gift after donation frequency/amount change", premiumGiftId);
-            }
-        }, 200);
     }
     checkPremiumGift() {
         const premiumGift = document.querySelector('[name="en__pg"]:checked');
@@ -18790,13 +18841,11 @@ class PremiumGift {
                 const premiumGiftName = premiumGiftContainer.querySelector(".en__pg__name");
                 engrid_ENGrid.setBodyData("premium-gift-maximize", "false");
                 engrid_ENGrid.setBodyData("premium-gift-name", engrid_ENGrid.slugify(premiumGiftName.innerText));
-                engrid_ENGrid.setBodyData("premium-gift-id", premiumGiftValue);
                 this.setPremiumTitle(premiumGiftName.innerText);
             }
             else {
                 engrid_ENGrid.setBodyData("premium-gift-maximize", "true");
                 engrid_ENGrid.setBodyData("premium-gift-name", false);
-                engrid_ENGrid.setBodyData("premium-gift-id", false);
                 this.setPremiumTitle("");
             }
             if (!premiumGiftContainer.classList.contains("en__pg--selected")) {
@@ -18882,6 +18931,11 @@ class DigitalWallets {
             if (stripeContainer) {
                 this.checkForWalletsBeingAdded(stripeContainer, "stripe");
             }
+            // If the default payment type is Stripe Digital Wallet and the page doesnt support it, set the payment type to Card
+            const paymentType = engrid_ENGrid.getPaymentType();
+            if (paymentType.toLowerCase() === "stripedigitalwallet") {
+                engrid_ENGrid.setPaymentType("card");
+            }
         }
         /**
          * Check for presence of elements that indicated Paypal digital wallets
@@ -18937,6 +18991,17 @@ class DigitalWallets {
             walletOption.value = value;
             walletOption.innerText = label;
             paymentTypeField.appendChild(walletOption);
+        }
+        // If this payment type is set as the default on GiveBySelect, set the payment type to this value
+        // We need to do this here because the digital wallets are sometimes slow to load
+        const giveBySelect = document.querySelector('input[name="transaction.giveBySelect"][value="' + value + '"]');
+        if (giveBySelect && giveBySelect.dataset.default === "true") {
+            giveBySelect.checked = true;
+            const event = new Event("change", {
+                bubbles: true,
+                cancelable: true,
+            });
+            giveBySelect.dispatchEvent(event);
         }
     }
     checkForWalletsBeingAdded(node, walletType) {
@@ -19303,12 +19368,7 @@ class GiveBySelect {
         this.transactionGiveBySelect.forEach((giveBySelect) => {
             giveBySelect.addEventListener("change", () => {
                 this.logger.log("Changed to " + giveBySelect.value);
-                if (giveBySelect.value.toLowerCase() === "card") {
-                    this.setCardPaymentType();
-                }
-                else {
-                    engrid_ENGrid.setPaymentType(giveBySelect.value);
-                }
+                engrid_ENGrid.setPaymentType(giveBySelect.value);
             });
         });
         // Set the initial value of giveBySelect to the transaction.paymenttype field
@@ -19338,26 +19398,6 @@ class GiveBySelect {
                     giveBySelect.checked = true;
                 }
             });
-        }
-    }
-    setCardPaymentType() {
-        if (!this.paymentTypeField)
-            return;
-        this.logger.log("Change Payment Type to Card or Visa");
-        // Loop through the payment type field options and set the visa card as the default
-        for (let i = 0; i < this.paymentTypeField.options.length; i++) {
-            if (this.paymentTypeField.options[i].value.toLowerCase() === "card" ||
-                this.paymentTypeField.options[i].value.toLowerCase() === "visa" ||
-                this.paymentTypeField.options[i].value.toLowerCase() === "vi") {
-                this.paymentTypeField.selectedIndex = i;
-                // Trigger the change event
-                const event = new Event("change", {
-                    bubbles: true,
-                    cancelable: true,
-                });
-                this.paymentTypeField.dispatchEvent(event);
-                break;
-            }
         }
     }
 }
@@ -20164,17 +20204,9 @@ class VGS {
         this.logger.log("Options", this.options);
     }
     setPaymentType() {
-        // Because the VGS iFrame Communication doesn't change the value of the payment type field, we have to set it to Visa by default
-        if (this.paymentTypeField) {
-            // Loop through the payment type field options and set the visa card as the default
-            for (let i = 0; i < this.paymentTypeField.options.length; i++) {
-                if (this.paymentTypeField.options[i].value.toLowerCase() === "card" ||
-                    this.paymentTypeField.options[i].value.toLowerCase() === "visa" ||
-                    this.paymentTypeField.options[i].value.toLowerCase() === "vi") {
-                    this.paymentTypeField.selectedIndex = i;
-                    break;
-                }
-            }
+        // If there's no default payment type, set the default to card
+        if (engrid_ENGrid.getPaymentType() === "") {
+            engrid_ENGrid.setPaymentType("card");
         }
     }
     dumpGlobalVar() {
@@ -20544,6 +20576,13 @@ class EmbeddedEcard {
         this._form = EnForm.getInstance();
         // For the page hosting the embedded ecard
         if (this.onHostPage()) {
+            // Clean up session variables if the page is reloaded, and it isn't a submission failure
+            const submissionFailed = !!(engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "checkSubmissionFailed") &&
+                window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed());
+            if (!submissionFailed) {
+                sessionStorage.removeItem("engrid-embedded-ecard");
+                sessionStorage.removeItem("engrid-send-embedded-ecard");
+            }
             this.options = Object.assign(Object.assign({}, EmbeddedEcardOptionsDefaults), window.EngridEmbeddedEcard);
             const pageUrl = new URL(this.options.pageUrl);
             pageUrl.searchParams.append("data-engrid-embedded-ecard", "true");
@@ -20574,6 +20613,7 @@ class EmbeddedEcard {
     }
     onPostActionPage() {
         return (sessionStorage.getItem("engrid-embedded-ecard") !== null &&
+            sessionStorage.getItem("engrid-send-embedded-ecard") !== null &&
             !this.onHostPage() &&
             !this.onEmbeddedEcardPage());
     }
@@ -20613,52 +20653,69 @@ class EmbeddedEcard {
     addEventListeners() {
         const iframe = document.querySelector(".engrid-iframe--embedded-ecard");
         const sendEcardCheckbox = document.getElementById("en__field_embedded-ecard");
+        // Initialize based on checkbox's default state
+        if (sendEcardCheckbox === null || sendEcardCheckbox === void 0 ? void 0 : sendEcardCheckbox.checked) {
+            iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: block");
+            sessionStorage.setItem("engrid-send-embedded-ecard", "true");
+        }
+        else {
+            iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: none");
+            sessionStorage.removeItem("engrid-send-embedded-ecard");
+        }
         sendEcardCheckbox === null || sendEcardCheckbox === void 0 ? void 0 : sendEcardCheckbox.addEventListener("change", (e) => {
             const checkbox = e.target;
             if (checkbox === null || checkbox === void 0 ? void 0 : checkbox.checked) {
                 iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: block");
+                sessionStorage.setItem("engrid-send-embedded-ecard", "true");
             }
             else {
                 iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: none");
+                sessionStorage.removeItem("engrid-send-embedded-ecard");
             }
-        });
-        this._form.onSubmit.subscribe(() => {
-            if (!this._form.submit ||
-                !sendEcardCheckbox ||
-                !(sendEcardCheckbox === null || sendEcardCheckbox === void 0 ? void 0 : sendEcardCheckbox.checked)) {
-                return;
-            }
-            this.sendPostMessage(iframe, "save_form_data");
         });
     }
     setupEmbeddedPage() {
+        let ecardVariant = document.querySelector("[name='friend.ecard']");
+        let ecardSendDate = document.querySelector("[name='ecard.schedule']");
+        let ecardMessage = document.querySelector("[name='transaction.comments']");
+        let recipientName = document.querySelector(".en__ecardrecipients__name > input");
+        let recipientEmail = document.querySelector(".en__ecardrecipients__email > input");
+        [
+            ecardVariant,
+            ecardSendDate,
+            ecardMessage,
+            recipientName,
+            recipientEmail,
+        ].forEach((el) => {
+            el.addEventListener("input", () => {
+                //add "chain" param to window.location.href if it doesnt have it
+                const pageUrl = new URL(window.location.href);
+                if (!pageUrl.searchParams.has("chain")) {
+                    pageUrl.searchParams.append("chain", "");
+                }
+                sessionStorage.setItem("engrid-embedded-ecard", JSON.stringify({
+                    pageUrl: pageUrl.href,
+                    formData: {
+                        ecardVariant: (ecardVariant === null || ecardVariant === void 0 ? void 0 : ecardVariant.value) || "",
+                        ecardSendDate: (ecardSendDate === null || ecardSendDate === void 0 ? void 0 : ecardSendDate.value) || "",
+                        ecardMessage: (ecardMessage === null || ecardMessage === void 0 ? void 0 : ecardMessage.value) || "",
+                        recipientName: (recipientName === null || recipientName === void 0 ? void 0 : recipientName.value) || "",
+                        recipientEmail: (recipientEmail === null || recipientEmail === void 0 ? void 0 : recipientEmail.value) || "",
+                    },
+                }));
+            });
+        });
+        document.querySelectorAll(".en__ecarditems__thumb").forEach((el) => {
+            // Making sure the session value is changed when this is clicked
+            el.addEventListener("click", () => {
+                ecardVariant.dispatchEvent(new Event("input"));
+            });
+        });
         window.addEventListener("message", (e) => {
             if (e.origin !== location.origin || !e.data.action)
                 return;
             this.logger.log("Received post message", e.data);
-            let ecardVariant = document.querySelector("[name='friend.ecard']");
-            let ecardSendDate = document.querySelector("[name='ecard.schedule']");
-            let ecardMessage = document.querySelector("[name='transaction.comments']");
-            let recipientName = document.querySelector(".en__ecardrecipients__name > input");
-            let recipientEmail = document.querySelector(".en__ecardrecipients__email > input");
             switch (e.data.action) {
-                case "save_form_data":
-                    //add "chain" param to window.location.href if it doesnt have it
-                    const pageUrl = new URL(window.location.href);
-                    if (!pageUrl.searchParams.has("chain")) {
-                        pageUrl.searchParams.append("chain", "");
-                    }
-                    sessionStorage.setItem("engrid-embedded-ecard", JSON.stringify({
-                        pageUrl: pageUrl.href,
-                        formData: {
-                            ecardVariant: (ecardVariant === null || ecardVariant === void 0 ? void 0 : ecardVariant.value) || "",
-                            ecardSendDate: (ecardSendDate === null || ecardSendDate === void 0 ? void 0 : ecardSendDate.value) || "",
-                            ecardMessage: (ecardMessage === null || ecardMessage === void 0 ? void 0 : ecardMessage.value) || "",
-                            recipientName: (recipientName === null || recipientName === void 0 ? void 0 : recipientName.value) || "",
-                            recipientEmail: (recipientEmail === null || recipientEmail === void 0 ? void 0 : recipientEmail.value) || "",
-                        },
-                    }));
-                    break;
                 case "submit_form":
                     let embeddedEcardData = JSON.parse(sessionStorage.getItem("engrid-embedded-ecard") || "{}");
                     if (ecardVariant) {
@@ -20677,10 +20734,13 @@ class EmbeddedEcard {
                     const form = EnForm.getInstance();
                     form.submitForm();
                     sessionStorage.removeItem("engrid-embedded-ecard");
+                    sessionStorage.removeItem("engrid-send-embedded-ecard");
                     break;
                 case "set_recipient":
                     recipientName.value = e.data.name;
                     recipientEmail.value = e.data.email;
+                    recipientName.dispatchEvent(new Event("input"));
+                    recipientEmail.dispatchEvent(new Event("input"));
                     break;
             }
         });
@@ -20793,7 +20853,7 @@ class ThankYouPageConditionalContent {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.18.11";
+const AppVersion = "0.18.14";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
@@ -21173,7 +21233,8 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
    */
 
 
-  new URLSearchParams(window.location.search).forEach((value, param) => {
+  const urlParams = new URLSearchParams(window.location.search);
+  urlParams.forEach((value, param) => {
     value = value.replace(/[^_a-zA-Z0-9-]/g, "_").toLowerCase();
     param = param.replace(/[^_a-zA-Z0-9-]/g, "_").toLowerCase();
     const conditionalElements = document.querySelectorAll(`.js-zcc--${param}--${value}`);
@@ -21183,16 +21244,78 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         el.classList.remove(`js-zcc--${param}--${value}`);
       });
     } else {
+      // If there no elements with the specified value, reveal all default elements for that parameter.
       const defaultElements = document.querySelectorAll(`[class="js-zcc--${param}--default"]`);
       defaultElements.forEach(el => {
         el.classList.remove(`js-zcc--${param}--default`);
       });
     }
+  }); // If there is no URL parameter, reveal all elements with class js-zcc--paramName--default class
+
+  const conditionalElements = document.querySelectorAll(`[class*="js-zcc--"]`);
+  conditionalElements.forEach(el => {
+    const className = [...el.classList].find(className => className.startsWith("js-zcc--") && className.endsWith("--default"));
+    if (!className) return;
+    const paramName = className.split("--")[1];
+
+    if (!urlParams.has(paramName)) {
+      el.classList.remove(className);
+    }
+  }); // If there are any extra banner image elements being controlled by the URL parameters,
+  // we will remove them from the page (extra banner images inside body-banner will prevent the image showing)
+
+  const extraBannerImages = document.querySelectorAll(".body-banner img[class*='js-zcc--']");
+  extraBannerImages.forEach(img => {
+    img?.closest(".en__component--imageblock")?.remove();
   });
+  /*
+   * Lock gift designation field when a specific value is passed in the URL
+   * and we are using the gift designation form block
+   */
+
+  const giftDesignationField = document.querySelector(".engrid-gift-designation #en__field_supporter_appealCode");
+  const appealCode = urlParams.get("supporter.appealCode");
+
+  if (giftDesignationField && appealCode) {
+    giftDesignationField.disabled = true;
+    const giftDesignationNeededMostCheckbox = document.querySelector("#en__field_supporter_questions_8785940");
+    const giftDesignationChooseCheckbox = document.querySelector("#en__field_supporter_questions_8785941");
+
+    if (giftDesignationNeededMostCheckbox && giftDesignationChooseCheckbox) {
+      giftDesignationChooseCheckbox.addEventListener("change", () => {
+        if (giftDesignationChooseCheckbox.checked) {
+          giftDesignationField.value = appealCode;
+        }
+      });
+    } // if the gift designation field is a select field,
+    // and it doesnt have the url param value in its options, make that option and select it
+
+
+    if (giftDesignationField.tagName === "SELECT") {
+      let option = giftDesignationField.querySelector(`option[value="${appealCode}"]`);
+
+      if (!option) {
+        option = document.createElement("option");
+        option.value = appealCode;
+        option.text = appealCode;
+        giftDesignationField.appendChild(option);
+        giftDesignationField.value = appealCode;
+        giftDesignationChooseCheckbox.checked = true;
+      }
+
+      giftDesignationField.closest(".en__field")?.classList.add("hide");
+      const label = document.querySelector("[for='en__field_supporter_questions_8785941']");
+
+      if (label) {
+        label.innerHTML = `I would like to designate my gift to ${option.innerText}.`;
+      }
+    }
+  }
   /*
    * Make image selects on surveys into checkboxes
    * "engrid-checkboxes" needs to be somewhere inside the "reference name" field of the question
    */
+
 
   const imageSelectQuestions = document.querySelectorAll(".en__field--imgselect[class*='engrid-checkboxes']");
   imageSelectQuestions.forEach((question, i) => {
@@ -21748,6 +21871,402 @@ class Tooltip {
   }
 
 }
+;// CONCATENATED MODULE: ./src/scripts/ihmo.ts
+
+
+class IHMO {
+  constructor() {
+    _defineProperty(this, "giftType", "HONORARY");
+
+    _defineProperty(this, "giftNotification", "ECARD");
+
+    _defineProperty(this, "formLayouts", {
+      HONORARY: {
+        ECARD: {
+          topFields: [".en__field--honname", ".en__field--othamt2"],
+          bottomFields: [".en__field--infemail"]
+        },
+        MAIL: {
+          topFields: [".en__field--honname", ".en__field--othamt2"],
+          bottomFields: [".en__field--NOT_TAGGED_38", ".en__field--NOT_TAGGED_33", ".en__field--NOT_TAGGED_34", ".en__field--NOT_TAGGED_36", ".en__field--NOT_TAGGED_35", ".en__field--NOT_TAGGED_37"]
+        },
+        NONE: {
+          topFields: [".en__field--honname", ".en__field--othamt2"],
+          bottomFields: []
+        }
+      },
+      MEMORIAL: {
+        ECARD: {
+          topFields: [".en__field--honname", ".en__field--othamt2", ".en__field--NOT_TAGGED_36", ".en__field--NOT_TAGGED_35"],
+          bottomFields: [".en__field--infname", ".en__field--othamt3", ".en__field--infemail"]
+        },
+        MAIL: {
+          topFields: [".en__field--honname", ".en__field--othamt2", ".en__field--NOT_TAGGED_36", ".en__field--NOT_TAGGED_35"],
+          bottomFields: [".en__field--infname", ".en__field--othamt3", ".en__field--infcountry", ".en__field--infadd1", ".en__field--infadd2", ".en__field--infcity", ".en__field--infreg", ".en__field--infpostcd"]
+        },
+        NONE: {
+          topFields: [".en__field--honname", ".en__field--othamt2", ".en__field--NOT_TAGGED_36", ".en__field--NOT_TAGGED_35"],
+          bottomFields: []
+        }
+      }
+    });
+
+    _defineProperty(this, "ihmoCheckbox", document.querySelector('[name="transaction.inmem"]'));
+
+    _defineProperty(this, "topForm", document.querySelector(".ihmo-top-form"));
+
+    _defineProperty(this, "bottomForm", document.querySelector(".ihmo-bottom-form"));
+
+    _defineProperty(this, "_donationFrequency", DonationFrequency.getInstance());
+
+    _defineProperty(this, "sourceCodeField", document.querySelector('[name="supporter.appealCode"]'));
+
+    // If we're on the thank you page, add the gift details as data attributes and return
+    if (this.onThankYouPage()) {
+      this.setGiftDetailsAsDataAttributes();
+      return;
+    } // Stop here if we're not on an IHMO page
+
+
+    if (!this.shouldRun()) return;
+    this.createPageLayout();
+    this.configureForm(this.giftType, this.giftNotification);
+    this.addEventListeners();
+    this.hideAllFields(); // If IHMO is checked, save the gift details and set the source code
+
+    if (this.ihmoCheckbox?.checked) {
+      this.saveGiftDetails();
+      this.setSourceCode(this.giftType);
+    }
+  }
+
+  shouldRun() {
+    return !!this.ihmoCheckbox;
+  }
+
+  onThankYouPage() {
+    return sessionStorage.getItem("engrid_ihmo-gift-details") !== null && engrid_ENGrid.getPageNumber() === 2;
+  }
+
+  createPageLayout() {
+    const ihmoWrapper = document.createElement("div");
+    ihmoWrapper.classList.add("engrid--ihmo-wrapper", "ihmo-closed"); // Add all elements with the class "ihmo-content" to the IHMO content wrapper
+
+    const ihmoContent = document.querySelectorAll(".ihmo-content");
+    ihmoContent.forEach(content => {
+      ihmoWrapper.appendChild(content);
+    }); // Insert the IHMO content wrapper after the IHMO checkbox
+
+    this.ihmoCheckbox?.closest(".en__component--formblock")?.insertAdjacentElement("afterend", ihmoWrapper); // If the page includes the embedded ecard component, move it to the IHMO content wrapper
+
+    const embeddedEcard = document.querySelector(".engrid--embedded-ecard");
+
+    if (embeddedEcard) {
+      embeddedEcard.classList.add("ihmo-content");
+      const ecardAnchor = document.querySelector(".en__field--select-notification-option")?.closest(".en__component--formblock");
+
+      if (ecardAnchor) {
+        ecardAnchor.insertAdjacentElement("afterend", embeddedEcard);
+      }
+
+      const ecardIframe = embeddedEcard.querySelector("iframe");
+
+      if (ecardIframe) {
+        // Extra URL param on eCard does additional functionality for IHMO page.
+        ecardIframe.setAttribute("src", ecardIframe.src + "&data-engrid-embedded-ihmo=true");
+      }
+    }
+
+    engrid_ENGrid.setBodyData("ihmo", "true");
+  }
+
+  addEventListeners() {
+    // When "This gift is in honor or memory of someone" checkbox is changed
+    this.ihmoCheckbox?.addEventListener("change", e => {
+      const checkbox = e.target;
+
+      if (checkbox.checked) {
+        document.querySelector(".engrid--ihmo-wrapper")?.classList.remove("ihmo-closed");
+        this.configureForm(this.giftType, this.giftNotification);
+        this.saveGiftDetails();
+        this.setSourceCode(this.giftType);
+      } else {
+        document.querySelector(".engrid--ihmo-wrapper")?.classList.add("ihmo-closed");
+        this.displayEcard(false);
+        this.hideAllFields();
+        this.clearGiftDetails();
+        this.setSourceCode(false);
+      }
+    }); // When the "Gift Type" radio button is changed
+
+    document.getElementsByName("transaction.trbopts").forEach(el => {
+      el.addEventListener("change", e => {
+        const radio = e.target;
+        const giftType = radio.value === "In Honor" ? "HONORARY" : "MEMORIAL";
+        this.configureForm(giftType, this.giftNotification);
+        this.saveGiftDetails();
+        this.setSourceCode(giftType);
+      });
+    }); // When the "Select Notification option" radio button is changed
+
+    document.getElementsByName("supporter.questions.1381061").forEach(el => {
+      el.addEventListener("change", e => {
+        const radio = e.target;
+        let giftNotification;
+
+        if (radio.value === "Send an ecard") {
+          giftNotification = "ECARD";
+        } else if (radio.value === "Notify by mail") {
+          giftNotification = "MAIL";
+        } else {
+          giftNotification = "NONE";
+        }
+
+        this.configureForm(this.giftType, giftNotification);
+        this.saveGiftDetails();
+      });
+    });
+    const firstNameField = document.getElementById("en__field_transaction_infname");
+    const lastNameField = document.getElementById("en__field_transaction_othamt3");
+    const emailField = document.getElementById("en__field_transaction_infemail");
+    const honorFirstNameField = document.getElementById("en__field_transaction_honname");
+    const honorLastNameField = document.getElementById("en__field_transaction_othamt2");
+    const ecardIframe = document.querySelector(".engrid-iframe--embedded-ecard"); // Setting the recipient name and email in the ecard iframe
+
+    [firstNameField, lastNameField, emailField, honorFirstNameField, honorLastNameField].forEach(field => {
+      field.addEventListener("input", () => {
+        const fullName = this.giftType === "HONORARY" ? `${honorFirstNameField.value} ${honorLastNameField.value}` : `${firstNameField.value} ${lastNameField.value}`;
+        ecardIframe.contentWindow?.postMessage({
+          action: "set_recipient",
+          name: fullName,
+          email: emailField.value
+        }, location.origin);
+      });
+    }); //Hiding the IHMO section when monthly donation is selected
+    // Listen for changes to the donation frequency and amount
+
+    this._donationFrequency.onFrequencyChange.subscribe(frequency => {
+      if (frequency !== "onetime") {
+        // Hide the IHMO section, hide the fields to prevent validation errors
+        // Disable ecard to prevent it being sent
+        document.querySelectorAll(".ihmo-element").forEach(el => {
+          el.classList.add("hide");
+        });
+        document.querySelector(".engrid--ihmo-wrapper")?.classList.add("ihmo-closed");
+        this.displayEcard(false);
+        this.hideAllFields();
+        this.hideField(".en__field--inmem");
+      } else {
+        // Make IHMO elements visible
+        document.querySelectorAll(".ihmo-element").forEach(el => {
+          el.classList.remove("hide");
+        });
+        this.showField(".en__field--inmem");
+
+        if (this.ihmoCheckbox?.checked) {
+          // Don't call "configureForm" unless the IHMO checkbox is checked, otherwise we might get validation errors
+          this.configureForm(this.giftType, this.giftNotification);
+          document.querySelector(".engrid--ihmo-wrapper")?.classList.remove("ihmo-closed");
+        }
+      }
+    }); // When gift designation changes, update the source code
+
+
+    if (this.sourceCodeField?.tagName === "SELECT") {
+      this.sourceCodeField?.addEventListener("change", () => {
+        const sourceCodeType = this.ihmoCheckbox?.checked ? this.giftType : false;
+        this.setSourceCode(sourceCodeType);
+      });
+    }
+  }
+
+  configureForm(giftType, notificationType) {
+    this.giftType = giftType;
+    this.giftNotification = notificationType;
+    this.setFormLayout();
+    this.setFormHeadings();
+    this.setFieldLabels();
+    this.displayEcard(this.giftNotification === "ECARD" && this.ihmoCheckbox?.checked);
+  }
+
+  saveGiftDetails() {
+    const giftDetails = {
+      giftType: this.giftType,
+      giftNotification: this.giftNotification
+    };
+    sessionStorage.setItem("engrid_ihmo-gift-details", JSON.stringify(giftDetails));
+    this.setGiftDetailsAsDataAttributes();
+  }
+
+  clearGiftDetails() {
+    sessionStorage.removeItem("engrid_ihmo-gift-details");
+    this.setGiftDetailsAsDataAttributes();
+  }
+
+  setGiftDetailsAsDataAttributes() {
+    const giftDetails = sessionStorage.getItem("engrid_ihmo-gift-details");
+
+    if (!giftDetails) {
+      engrid_ENGrid.setBodyData("ihmo-gift-type", false);
+      engrid_ENGrid.setBodyData("ihmo-gift-notification", false);
+      return;
+    }
+
+    const {
+      giftType,
+      giftNotification
+    } = JSON.parse(giftDetails);
+    engrid_ENGrid.setBodyData("ihmo-gift-type", giftType);
+    engrid_ENGrid.setBodyData("ihmo-gift-notification", giftNotification);
+  }
+
+  setSourceCode(giftType) {
+    if (!this.sourceCodeField) return;
+    const sourceCodeContainer = this.sourceCodeField instanceof HTMLSelectElement ? this.sourceCodeField.options[this.sourceCodeField.selectedIndex] : this.sourceCodeField;
+
+    if (sourceCodeContainer.value === "AHOMAONLN21W0XXX01" && this.sourceCodeField instanceof HTMLSelectElement) {
+      // if "use my gift where it's needed most" option is selected, do not change the source code"
+      return;
+    }
+
+    const sourceEnd = sourceCodeContainer.value.substring(sourceCodeContainer.value.length - 6, sourceCodeContainer.value.length - 2);
+
+    if (giftType === "HONORARY") {
+      sourceCodeContainer.value = sourceCodeContainer.value.replace(sourceEnd, "TRIH");
+    } else if (giftType === "MEMORIAL") {
+      sourceCodeContainer.value = sourceCodeContainer.value.replace(sourceEnd, "TRIM");
+    } else {
+      sourceCodeContainer.value = sourceCodeContainer.value.replace(sourceEnd, "0XXX");
+    }
+
+    engrid_ENGrid.setBodyData("source-code", this.sourceCodeField.value);
+  }
+
+  setFormLayout() {
+    const formLayout = this.formLayouts[this.giftType][this.giftNotification]; // Add fields to the top form section
+
+    formLayout.topFields.forEach(field => {
+      const el = document.querySelector(field);
+
+      if (el) {
+        this.topForm?.appendChild(el);
+        this.showField(el);
+      }
+    }); // Add fields to the bottom form section
+
+    formLayout.bottomFields.forEach(field => {
+      const el = document.querySelector(field);
+
+      if (el) {
+        this.bottomForm?.appendChild(el);
+        this.showField(el);
+      }
+    }); // Hide unused fields in the top form section
+
+    const topFormFields = this.topForm?.children || [];
+    [...topFormFields].forEach(el => {
+      const classList = Array.from(el.classList);
+      const isActiveField = formLayout.topFields.some(field => classList.includes(field.slice(1)));
+
+      if (!isActiveField) {
+        this.hideField(el);
+      }
+    }); // Hide unused fields in the bottom form section
+
+    const bottomFormFields = this.bottomForm?.children || [];
+    [...bottomFormFields].forEach(el => {
+      const classList = Array.from(el.classList);
+      const isActiveField = formLayout.bottomFields.some(field => classList.includes(field.slice(1)));
+
+      if (!isActiveField) {
+        this.hideField(el);
+      }
+    });
+  }
+
+  setFormHeadings() {
+    const headings = document.querySelectorAll(".form-heading.ihmo-content h3");
+    if (headings.length === 0) return;
+    const firstHeading = headings[0];
+    const lastHeading = headings[headings.length - 1];
+    if (!firstHeading || !lastHeading) return;
+
+    if (this.giftType === "HONORARY") {
+      firstHeading.textContent = "PERSON TO BE HONORED";
+      lastHeading.textContent = "HONOREE'S PERSONAL INFORMATION";
+
+      if (this.giftNotification === "ECARD" || this.giftNotification === "NONE") {
+        lastHeading.closest(".form-heading")?.classList.add("hide");
+      } else {
+        lastHeading.closest(".form-heading")?.classList.remove("hide");
+      }
+    } else {
+      firstHeading.textContent = "PERSON TO BE REMEMBERED";
+      lastHeading.textContent = "PERSON TO BE NOTIFIED";
+
+      if (this.giftNotification === "NONE") {
+        lastHeading.closest(".form-heading")?.classList.add("hide");
+      } else {
+        lastHeading.closest(".form-heading")?.classList.remove("hide");
+      }
+    }
+  }
+
+  setFieldLabels() {
+    const firstNameFieldLabel = document.querySelector(".en__field--honname > label");
+    const lastNameFieldLabel = document.querySelector(".en__field--othamt2 > label");
+    const cityFieldLabel = document.querySelector(".en__field--NOT_TAGGED_36 > label");
+    const stateFieldLabel = document.querySelector(".en__field--NOT_TAGGED_35 > label");
+
+    if (!firstNameFieldLabel || !lastNameFieldLabel || !cityFieldLabel || !stateFieldLabel) {
+      return;
+    }
+
+    if (this.giftType === "HONORARY") {
+      firstNameFieldLabel.textContent = "Honoree First Name";
+      lastNameFieldLabel.textContent = "Honoree Last Name";
+      cityFieldLabel.textContent = "Honoree City";
+      stateFieldLabel.textContent = "Honoree State";
+    } else {
+      firstNameFieldLabel.textContent = "Deceased Person's First Name";
+      lastNameFieldLabel.textContent = "Deceased Person's Last Name";
+      cityFieldLabel.textContent = "Deceased Person's City";
+      stateFieldLabel.textContent = "Deceased Person's State";
+    }
+  }
+
+  displayEcard() {
+    let show = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+    const eCardCheckbox = document.getElementById("en__field_embedded-ecard");
+    eCardCheckbox.checked = show;
+    eCardCheckbox.dispatchEvent(new Event("change"));
+  }
+
+  hideAllFields() {
+    [".en__field--honname", ".en__field--othamt2", ".en__field--NOT_TAGGED_36", ".en__field--NOT_TAGGED_35", ".en__field--infname", ".en__field--othamt3", ".en__field--infcountry", ".en__field--infadd1", ".en__field--infadd2", ".en__field--infcity", ".en__field--infreg", ".en__field--infpostcd", ".en__field--infemail", ".en__field--NOT_TAGGED_38", ".en__field--NOT_TAGGED_33", ".en__field--NOT_TAGGED_34", ".en__field--NOT_TAGGED_37"].forEach(field => {
+      this.hideField(field);
+    });
+  }
+
+  hideField(field) {
+    const el = field instanceof Element ? field : document.querySelector(field);
+
+    if (el) {
+      el.classList.add("en__hidden");
+      el.querySelector(".en__field__input")?.setAttribute("disabled", "disabled");
+    }
+  }
+
+  showField(field) {
+    const el = field instanceof Element ? field : document.querySelector(field);
+
+    if (el) {
+      el.classList.remove("en__hidden");
+      el.querySelector(".en__field__input")?.removeAttribute("disabled");
+    }
+  }
+
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -21762,16 +22281,16 @@ class Tooltip {
 
 
 
+
 const minimumAmount = window?.donationSettings?.minimumDonationAmount ?? 5; //Allow banner image with attribution using image block
 //This code is run before the ENgrid script is loaded so that media-attribution.ts will run on this element
 
-const bannerImageWithAttribution = document.querySelector(".body-banner .en__component--imageblock img[alt]");
-
-if (bannerImageWithAttribution && bannerImageWithAttribution.getAttribute("alt")) {
-  bannerImageWithAttribution.dataset.attributionSource = "i";
-  bannerImageWithAttribution.dataset.attributionSourceTooltip = bannerImageWithAttribution.getAttribute("alt") ?? "";
-}
-
+const bannerImagesWithAttribution = document.querySelectorAll(".body-banner .en__component--imageblock img[alt]");
+bannerImagesWithAttribution.forEach(img => {
+  if (!img.getAttribute("alt")) return;
+  img.dataset.attributionSource = "i";
+  img.dataset.attributionSourceTooltip = img.getAttribute("alt")?.replace("&copy;", "©") ?? "";
+});
 const options = {
   applePay: false,
   AutoYear: true,
@@ -21821,6 +22340,7 @@ const options = {
     customScript(App, DonationFrequency, DonationAmount);
     new BequestLightbox();
     new Tooltip();
+    new IHMO();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();
