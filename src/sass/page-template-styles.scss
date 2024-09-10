@@ -2292,6 +2292,7 @@
 
   // Specific centercenter2col layout styles
   &[data-engrid-layout="centercenter2col"] {
+    --pagebuilder__background-color: var(--engrid__page_background-color);
     --submit__button_background-color: var(--color-green);
     --submit__button_border-color: var(--color-green);
     --engrid__body-title_background-color: white;
@@ -2306,7 +2307,6 @@
     //hide unused sections in this layout
     .body-header,
     .body-bottom,
-    .content-preFooter,
     .page-backgroundImage,
     .page-backgroundImageOverlay {
       display: none;
