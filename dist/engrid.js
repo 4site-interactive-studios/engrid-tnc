@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, September 11, 2024 @ 09:10:34 ET
+ *  Date: Wednesday, September 11, 2024 @ 13:23:01 ET
  *  By: michael
  *  ENGrid styles: v0.18.14
  *  ENGrid scripts: v0.18.14
@@ -21071,7 +21071,9 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
 
   addTooltip(document.querySelector(".en__field--ccvv > label"), "cvv", text.cvvTooltipLabel, text.cvvTooltip); // Add a tooltip for the bank routing number
 
-  addTooltip(document.querySelector(".en__field--bankRoutingNumber > label"), "bankNumber", text.bankNumberTooltipLabel, text.bankNumberTooltip);
+  addTooltip(document.querySelector(".en__field--bankRoutingNumber > label"), "bankNumber", text.bankNumberTooltipLabel, text.bankNumberTooltip); // Add a tooltip for Title
+
+  addTooltip(document.querySelector(".en__field--title > label"), "title", "Why do you ask for this?", "Many of our online actions link up with public officials’ web mail forms in order to deliver your message on your behalf. Many of these public officials’ forms require the Mr./Mrs./Miss field and, unfortunately, we do not have control over which of these titles are presented as options. We must adhere to what the officials are using in order for your message to be delivered.");
   /**
    * Set the visibility of the premium field based on the donation frequency and amount
    * Visibility is set by adding/removing the "engrid-premium-donation" data attr on the body

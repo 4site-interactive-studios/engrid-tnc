@@ -353,6 +353,21 @@
     .i#{$i}-50 .en__field:nth-of-type(#{$i}) {
       flex-basis: 50%;
     }
+
+
+    &:not(#en__pagebuilder):not([data-engrid-debug]) {
+      .i#{$i}-hide .en__field:not(.en__field--validationFailed):nth-of-type(#{$i}) {
+        display: none;
+      }
+    }
+
+    &#en__pagebuilder,
+    &[data-engrid-debug] {
+      .i#{$i}-hide .en__field:nth-of-type(#{$i}),
+      .i#{$i}-hide-label .en__field:nth-of-type(#{$i}) > label {
+        background-color: #ff00001a !important;
+      }
+    }
   }
   @media screen and (max-width: 992px) {
     @for $i from 12 through 15 {
@@ -952,7 +967,7 @@
       align-items: center;
       font-size: 1.25rem;
       color: rgba(0, 0, 0, 0.55);
-      font-family: var(--h1_font-family);
+      font-family: var(--serif-fonts);
       a {
         border-left: 1px solid #cdcdcd;
         margin-left: 1.875rem;
@@ -1033,7 +1048,7 @@
     }
 
     .pre-footer-item-header {
-      font-family: var(--h1_font-family);
+      font-family: var(--serif-fonts);
       font-size: 60px;
       img {
         display: inline;
@@ -1419,7 +1434,7 @@
       }
 
       p {
-        font-family: var(--h1_font-family);
+        font-family: var(--serif-fonts);
         font-size: 20px;
         line-height: 34px;
         margin-top: 0;
@@ -2410,6 +2425,7 @@
     --engrid__body-main_padding: 55px 110px;
     --h1_font-family: var(--sans-serif-fonts);
     --engrid__content-footer_padding: 40px 20px 20px;
+    --fields_spacing-block: 0.7rem;
 
     //hide unused sections in this layout
     .body-header,
