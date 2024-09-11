@@ -237,13 +237,20 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     });
   }
 
-  // Make body-banner attribution clickable
-  const bbTippy = document.querySelector(".body-banner figattribution")?._tippy;
+  // Make body-banner and images with attribution attribution clickable
+  const bbTippy = document.querySelectorAll(
+    ".body-banner figattribution, img.img-with-attribution[alt] + figattribution"
+  );
 
   if (bbTippy) {
-    bbTippy.setProps({
-      arrow: false,
-      trigger: "click",
+    bbTippy.forEach((el) => {
+      const tippyInstance = el?._tippy;
+      if (tippyInstance) {
+        tippyInstance.setProps({
+          arrow: false,
+          trigger: "click",
+        });
+      }
     });
   }
 

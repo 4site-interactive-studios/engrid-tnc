@@ -44,9 +44,10 @@ declare global {
 const minimumAmount = window?.donationSettings?.minimumDonationAmount ?? 5;
 
 //Allow banner image with attribution using image block
+//Also applies to all images with class "img-with-attribution"
 //This code is run before the ENgrid script is loaded so that media-attribution.ts will run on this element
 const bannerImagesWithAttribution = document.querySelectorAll(
-  ".body-banner .en__component--imageblock img[alt]"
+  ".body-banner .en__component--imageblock img[alt], img.img-with-attribution[alt]"
 ) as NodeListOf<HTMLImageElement>;
 bannerImagesWithAttribution.forEach((img) => {
   if (!img.getAttribute("alt")) return;
