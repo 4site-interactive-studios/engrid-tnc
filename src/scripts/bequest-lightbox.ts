@@ -1,4 +1,4 @@
-import { EngridLogger, ENGrid } from "@4site/engrid-common";
+import { EngridLogger, ENGrid } from "@4site/engrid-scripts";
 import { trackEvent } from "./tracking";
 
 export class BequestLightbox {
