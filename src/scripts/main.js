@@ -170,6 +170,14 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     text.bankNumberTooltip
   );
 
+  // Add a tooltip for Title
+  addTooltip(
+    document.querySelector(".en__field--title > label"),
+    "title",
+    "Why do you ask for this?",
+    "Many of our online actions link up with public officials’ web mail forms in order to deliver your message on your behalf. Many of these public officials’ forms require the Mr./Mrs./Miss field and, unfortunately, we do not have control over which of these titles are presented as options. We must adhere to what the officials are using in order for your message to be delivered."
+  );
+
   /**
    * Set the visibility of the premium field based on the donation frequency and amount
    * Visibility is set by adding/removing the "engrid-premium-donation" data attr on the body
@@ -237,13 +245,20 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     });
   }
 
-  // Make body-banner attribution clickable
-  const bbTippy = document.querySelector(".body-banner figattribution")?._tippy;
+  // Make body-banner and images with attribution attribution clickable
+  const bbTippy = document.querySelectorAll(
+    ".body-banner figattribution, img.img-with-attribution[alt] + figattribution"
+  );
 
   if (bbTippy) {
-    bbTippy.setProps({
-      arrow: false,
-      trigger: "click",
+    bbTippy.forEach((el) => {
+      const tippyInstance = el?._tippy;
+      if (tippyInstance) {
+        tippyInstance.setProps({
+          arrow: false,
+          trigger: "click",
+        });
+      }
     });
   }
 

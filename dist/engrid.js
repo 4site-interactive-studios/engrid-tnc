@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, July 30, 2024 @ 04:58:18 ET
+ *  Date: Wednesday, September 11, 2024 @ 13:23:01 ET
  *  By: michael
  *  ENGrid styles: v0.18.14
  *  ENGrid scripts: v0.18.14
@@ -21071,7 +21071,9 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
 
   addTooltip(document.querySelector(".en__field--ccvv > label"), "cvv", text.cvvTooltipLabel, text.cvvTooltip); // Add a tooltip for the bank routing number
 
-  addTooltip(document.querySelector(".en__field--bankRoutingNumber > label"), "bankNumber", text.bankNumberTooltipLabel, text.bankNumberTooltip);
+  addTooltip(document.querySelector(".en__field--bankRoutingNumber > label"), "bankNumber", text.bankNumberTooltipLabel, text.bankNumberTooltip); // Add a tooltip for Title
+
+  addTooltip(document.querySelector(".en__field--title > label"), "title", "Why do you ask for this?", "Many of our online actions link up with public officials’ web mail forms in order to deliver your message on your behalf. Many of these public officials’ forms require the Mr./Mrs./Miss field and, unfortunately, we do not have control over which of these titles are presented as options. We must adhere to what the officials are using in order for your message to be delivered.");
   /**
    * Set the visibility of the premium field based on the donation frequency and amount
    * Visibility is set by adding/removing the "engrid-premium-donation" data attr on the body
@@ -21129,15 +21131,21 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     premiumDonationEls.forEach(el => {
       premiumDonationContainer.appendChild(el);
     });
-  } // Make body-banner attribution clickable
+  } // Make body-banner and images with attribution attribution clickable
 
 
-  const bbTippy = document.querySelector(".body-banner figattribution")?._tippy;
+  const bbTippy = document.querySelectorAll(".body-banner figattribution, img.img-with-attribution[alt] + figattribution");
 
   if (bbTippy) {
-    bbTippy.setProps({
-      arrow: false,
-      trigger: "click"
+    bbTippy.forEach(el => {
+      const tippyInstance = el?._tippy;
+
+      if (tippyInstance) {
+        tippyInstance.setProps({
+          arrow: false,
+          trigger: "click"
+        });
+      }
     });
   } // Add data-thank-you attribute to body of final page
 
@@ -22283,9 +22291,10 @@ class IHMO {
 
 
 const minimumAmount = window?.donationSettings?.minimumDonationAmount ?? 5; //Allow banner image with attribution using image block
+//Also applies to all images with class "img-with-attribution"
 //This code is run before the ENgrid script is loaded so that media-attribution.ts will run on this element
 
-const bannerImagesWithAttribution = document.querySelectorAll(".body-banner .en__component--imageblock img[alt]");
+const bannerImagesWithAttribution = document.querySelectorAll(".body-banner .en__component--imageblock img[alt], img.img-with-attribution[alt]");
 bannerImagesWithAttribution.forEach(img => {
   if (!img.getAttribute("alt")) return;
   img.dataset.attributionSource = "i";
