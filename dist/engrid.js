@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, September 11, 2024 @ 13:23:01 ET
+ *  Date: Monday, September 23, 2024 @ 06:33:02 ET
  *  By: michael
  *  ENGrid styles: v0.18.14
  *  ENGrid scripts: v0.18.14
@@ -21494,7 +21494,7 @@ function trackFormSubmit(App, DonationAmount) {
     }
 
     sessionStorage.setItem("donationData", JSON.stringify(donationData));
-  } //Mobile phone data
+  } //Mobile phone data (for "F32 - Real Time SMS Push" script - opts user into SMS via API)
 
   /** @type {HTMLInputElement} */
 
@@ -21506,7 +21506,7 @@ function trackFormSubmit(App, DonationAmount) {
     mobilePhoneData.phoneNumber = mobilePhoneNumber.value;
     /** @type {HTMLInputElement} */
 
-    const mobilePhoneOptIn = App.getField("supporter.questions.848527");
+    const mobilePhoneOptIn = App.getField("supporter.questions.848527") || App.getField("supporter.questions.1952175");
 
     if (mobilePhoneOptIn && mobilePhoneOptIn.checked) {
       mobilePhoneData.optIn = "Y";
