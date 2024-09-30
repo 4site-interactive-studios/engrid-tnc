@@ -477,6 +477,10 @@
       border-color: var(--color-green);
       color: #ffffff;
     }
+
+    a.button:hover {
+      background-color: #000000;
+    }
   }
 
   .see-why-others-have-signed {
