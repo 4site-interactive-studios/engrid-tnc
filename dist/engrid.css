@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, September 30, 2024 @ 07:10:50 ET
+ *  Date: Tuesday, October 8, 2024 @ 12:54:14 ET
  *  By: michael
  *  ENGrid styles: v0.18.14
  *  ENGrid scripts: v0.18.14
@@ -9937,6 +9937,22 @@ body[data-engrid-debug]:before{
   [data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__registrants__registrantDetails .en__field--registrant[class*="--firstName"],[data-engrid-theme=tnc][data-engrid-page-type=supporterhub] .en__registrants__registrantDetails .en__field--registrant[class*="--lastName"]{
     flex:1 0 50%;
   }
+}
+[data-engrid-theme=tnc][data-engrid-gdcp=true] .en__field--emailAddress .en__field__notice,[data-engrid-theme=tnc][data-engrid-gdcp=true] .en__field--phoneNumber2 .en__field__notice{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-gdcp=true] .en__field [class*="en__field--engrid.gdcp"]{
+  display:flex !important;
+  flex-basis:100% !important;
+  margin-bottom:0;
+}
+[data-engrid-theme=tnc][data-engrid-gdcp=true] .en__field [class*="en__field--engrid.gdcp"] .en__field__item{
+  padding-bottom:0;
+}
+[data-engrid-theme=tnc][data-engrid-gdcp=true] .en__field [class*="en__field--engrid.gdcp"] label a{
+  font-weight:700;
+  -webkit-text-decoration:none;
+  text-decoration:none;
 }
 body{
   opacity:1;
