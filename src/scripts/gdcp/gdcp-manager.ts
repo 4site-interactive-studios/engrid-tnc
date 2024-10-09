@@ -1,6 +1,9 @@
 import { OptInRule } from "./interfaces/opt-in-rule.interface";
 import { GdcpField } from "./interfaces/gdcp-field.interface";
+import { GeographicalRule } from "./interfaces/geographical-rule.interface";
 import { geographicalOptInRules } from "./config/geographical-opt-in-rules";
+import { defaultOptInRules } from "./config/default-opt-in-rules";
+import { strictOptInRules } from "./config/strict-opt-in-rules";
 import { gdcpFields } from "./config/gdcp-fields";
 import { ENGrid, EngridLogger } from "@4site/engrid-common";
 import {
@@ -11,6 +14,12 @@ import {
   preselectedCheckedRule,
 } from "./consent-rules";
 
+declare global {
+  interface Window {
+    GlobalDigitalComplianceStrictMode?: boolean;
+  }
+}
+
 export class GdcpManager {
   private logger: EngridLogger = new EngridLogger(
     "GDCP",
@@ -18,14 +27,22 @@ export class GdcpManager {
     "#000000",
     "🤝"
   );
-  private readonly geographicalRules: Record<string, OptInRule[]> =
+  private readonly geographicalRules: GeographicalRule[] =
     geographicalOptInRules;
+  private readonly defaultRules: OptInRule[] = defaultOptInRules;
+  private readonly strictRules: OptInRule[] = strictOptInRules;
+  private readonly strictMode: boolean = false;
   private gdcpFields: GdcpField[] = gdcpFields;
   private userLocation: string = "";
 
   constructor() {
     if (!this.shouldRun()) return;
-    this.logger.log("GDCP is running");
+    this.strictMode = window.GlobalDigitalComplianceStrictMode || false;
+    this.logger.log(
+      `GDCP is running. Strict mode is ${
+        this.strictMode ? "enabled" : "disabled"
+      }.`
+    );
     ENGrid.setBodyData("gdcp", "true");
     this.setupGdcpFields();
     this.getInitialLocation().then((location) => {
@@ -47,8 +64,9 @@ export class GdcpManager {
    * If the country field is present, use that (and the region field if present).
    * This field is set from Cloudflare by the auto-country-select.ts module of ENgrid.
    * If the country field is present, the user's country is the US, and the region field is not present, add a region field to the page.
-   * If the country field is not present, fetch the user's location from Cloudflare trace endpoint
+   * If the country field is not present, fetch the user's location from Cloudflare trace endpoint. If the user's country is the US, and the region field is not present, add a region field to the page.
    */
+  //TODO: separate the initial location logic from createUSStatesField logic..
   private async getInitialLocation(): Promise<string> {
     const countryField = ENGrid.getField("supporter.country");
     const regionField = ENGrid.getField("supporter.region");
@@ -56,10 +74,10 @@ export class GdcpManager {
     if (countryField) {
       const country = ENGrid.getFieldValue("supporter.country");
       if (!regionField && country === "US") {
-        // TODO: add region field to page
         this.logger.log(
           "Country field value is US and state field is missing, adding state field to page"
         );
+        this.createUSStatesField();
       }
       return `${country}-${ENGrid.getFieldValue("supporter.region")}`;
     }
@@ -79,13 +97,12 @@ export class GdcpManager {
           "No country field and error fetching location data. Falling back to US.",
           err
         );
-        country = "default";
+        country = "unknown";
       });
 
-    if (country === "US") {
-      // TODO: add region field to page
+    if (country === "US" && !regionField) {
       this.logger.log(
-        "Country value from CF is US and state field is missing, adding state field to page"
+        "Country value from CF is US and state field is missing, adding state field to page."
       );
       this.createUSStatesField();
     }
@@ -95,15 +112,71 @@ export class GdcpManager {
 
   /**
    * Create US states field and add it to the page
+   * When positioning on the page, we always use flexbox ordering
+   * to prevent issues with the i-hide i-50 etc helper classes
    */
   private createUSStatesField() {
-    const usStatesFieldHtml = `<div class="en__field en__field--select en__field--1984602 en__field--region en__mandatory">
+    if (ENGrid.getField("supporter.region")) {
+      //If the state field is already on the page, no need to add it again
+      return;
+    }
+
+    const usStatesFieldHtml = `<div class="en__field en__field--select en__field--1984602 en__field--region">
                                 <label for="en__field_supporter_region" class="en__field__label" style="">State or Province</label>
                                 <div class="en__field__element en__field__element--select">
                                 <select id="en__field_supporter_region" class="en__field__input en__field__input--select" name="supporter.region" autocomplete="address-level1" aria-required="true"><option value="">SELECT STATE/PROVINCE</option><option value="AK">Alaska</option><option value="AL">Alabama</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="DC">District of Columbia</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="AA">Armed Forces Americas</option><option value="AE">Armed Forces Europe/Canada/Middle East/Africa</option><option value="AP">Armed Forces Pacific</option><option value="AS">American Samoa</option><option value="CZ">Canal Zone</option><option value="GU">Guam</option><option value="UM">Minor Outlying Islands</option><option value="MP">Northern Mariana Islands</option><option value="PR">Puerto Rico</option><option value="VI">Virgin Islands</option><option value="None">None</option></select>
                                 </div>
                               </div>`;
-    //TODO: FINISH!
+
+    //If the page has a country field we will position the state field after it
+    const countryField = document.querySelector(
+      ".en__field--country"
+    ) as HTMLElement;
+    if (countryField) {
+      countryField.parentElement?.insertAdjacentHTML(
+        "beforeend",
+        usStatesFieldHtml
+      );
+
+      //Doing the ordering here to prevent issues with the i-hide i-50 etc helper classes
+      const children = countryField.parentElement?.children;
+      let countryOrder;
+      if (children) {
+        for (let i = 0; i < children.length; i++) {
+          const child = children[i] as HTMLElement;
+          child.style.order = i.toString();
+          if (child.classList.contains("en__field--country")) {
+            countryOrder = i;
+          }
+        }
+      }
+      document
+        .querySelector(".en__field--region")
+        ?.setAttribute("style", `order: ${countryOrder}`);
+
+      return;
+    }
+
+    //Else, if the page has an email field we will position it at the top of the form block
+    const emailField = document.querySelector(
+      ".en__field--email"
+    ) as HTMLElement;
+    if (emailField) {
+      emailField.parentElement?.insertAdjacentHTML(
+        "beforeend",
+        usStatesFieldHtml
+      );
+
+      const regionField = document.querySelector(
+        ".en__field--region"
+      ) as HTMLElement;
+      if (regionField) {
+        //Position the region field as the first field inside the form block with the email field
+        //Use flex ordering to do this to not interfere with the form's default order (and any iX- helper classes)
+        regionField.style.order = "-1";
+      }
+      return;
+    }
   }
 
   /**
@@ -115,11 +188,17 @@ export class GdcpManager {
 
     if (countryField) {
       countryField.addEventListener("change", () => {
-        //TODO: if country is changed to US and there isn't a state field on the page, add it.
-        //TODO: make sure it has event listeners and they are re-added if it is re-selected??
-        this.userLocation = `${ENGrid.getFieldValue(
-          "supporter.country"
-        )}-${ENGrid.getFieldValue("supporter.region")}`;
+        const country = ENGrid.getFieldValue("supporter.country");
+        if (country === "US" && !regionField) {
+          this.logger.log(
+            "Country field value changed to US and state field is missing, adding state field to page"
+          );
+          this.createUSStatesField();
+        }
+
+        this.userLocation = `${country}-${ENGrid.getFieldValue(
+          "supporter.region"
+        )}`;
 
         this.applyOptInRules(this.userLocation);
       });
@@ -127,9 +206,13 @@ export class GdcpManager {
 
     if (regionField) {
       regionField.addEventListener("change", () => {
-        this.userLocation = `${ENGrid.getFieldValue(
-          "supporter.country"
-        )}-${ENGrid.getFieldValue("supporter.region")}`;
+        //Must always have country value - fall back to our initial value if country field if not on page
+        const country =
+          ENGrid.getFieldValue("supporter.country") ||
+          this.userLocation.split("-")[0];
+        this.userLocation = `${country}-${ENGrid.getFieldValue(
+          "supporter.region"
+        )}`;
 
         this.applyOptInRules(this.userLocation);
       });
@@ -142,21 +225,40 @@ export class GdcpManager {
    * If no rules are found for the country, fall back to "Other"
    */
   private getRulesForLocation(location: string): OptInRule[] {
-    if (this.geographicalRules[location]) {
-      this.logger.log(`Found rules for location "${location}"`);
-      return this.geographicalRules[location];
+    //If we're in strict mode, always use that.
+    if (this.strictMode) {
+      this.logger.log(`Using strict mode rules`, this.strictRules);
+      return this.strictRules;
     }
 
-    const country = location.split("-")[0];
-    if (this.geographicalRules[country]) {
-      this.logger.log(`Found rules for location "${country}"`);
-      return this.geographicalRules[country];
-    }
-
-    this.logger.log(
-      `No rules found for "${location}" - falling back to default`
+    //Find an exact match for the location country+region "{country}-{region}"
+    let rule = this.geographicalRules.find((rule) =>
+      rule.locations.includes(location)
     );
-    return this.geographicalRules["default"];
+    if (rule) {
+      this.logger.log(`Found rules for location "${location}"`, rule.rules);
+      return rule.rules;
+    }
+
+    //Find a match for the location country "{country}"
+    const country = location.split("-")[0];
+    rule = this.geographicalRules.find((rule) =>
+      rule.locations.includes(country)
+    );
+    if (rule) {
+      this.logger.log(
+        `No exact rules for "${location}". Found rules for country "${country}"`,
+        rule.rules
+      );
+      return rule.rules;
+    }
+
+    //Fall back to the default rules
+    this.logger.log(
+      `No rules found for "${location}" - falling back to default`,
+      this.defaultRules
+    );
+    return this.defaultRules;
   }
 
   /**
@@ -165,10 +267,7 @@ export class GdcpManager {
   private applyOptInRules(location: string) {
     const locationRules = this.getRulesForLocation(location);
 
-    this.logger.log(
-      `User location: "${location}". Applying rules:`,
-      locationRules
-    );
+    //TODO: don't reapply rules if the same rules are already active?
 
     locationRules.forEach((rule) => {
       const gdcpField = this.gdcpFields.find(
@@ -245,9 +344,9 @@ export class GdcpManager {
             gdcpField.channel
           }" - "${
             gdcpField.dataFieldName
-          }" and any of "${gdcpField.optInFieldNames.join(
+          }" and any of opt in field(s) "${gdcpField.optInFieldNames.join(
             ", "
-          )}. Skipping adding GDCP field for this channel to page."`
+          )}". Skipping adding GDCP field for this channel to page.`
         );
       }
     });
@@ -284,7 +383,9 @@ export class GdcpManager {
                   </label>
               </div>
               <div class="en__field__item">
-                <div class="${gdcpField.channel}-description hide">${gdcpField.gdcpFieldHtmlLabel}</div>
+                <div class="gdcp-field-text-description ${gdcpField.channel}-description hide">
+                  ${gdcpField.gdcpFieldHtmlLabel}
+                </div>
               </div>
           </div>
       </div>`;

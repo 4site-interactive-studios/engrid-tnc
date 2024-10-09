@@ -21,6 +21,7 @@ export const gdcpFields: GdcpField[] = [
       "supporter.questions.1107654", // Permission to Contact Me
       "supporter.questions.848527", // Mobile Text Opt In
       "supporter.questions.848528", // Mobile Call Opt In
+      "supporter.questions.1952175", // Interested in Mobile Text
     ],
     gdcpFieldName: "engrid.gdcp-mobile_phone",
     gdcpFieldHtmlLabel: `<span>I’d like to receive phone and text updates from The Nature Conservancy and understand I can unsubscribe at any time. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="#" target="_blank">Mobile Terms & Conditions</a> | <a href="#" target="_blank">Privacy Statement</a>.</span>`,

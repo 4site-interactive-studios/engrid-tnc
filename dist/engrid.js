@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, October 8, 2024 @ 12:54:14 ET
+ *  Date: Wednesday, October 9, 2024 @ 13:51:41 ET
  *  By: michael
  *  ENGrid styles: v0.18.14
  *  ENGrid scripts: v0.18.14
@@ -22276,8 +22276,9 @@ class IHMO {
 
 }
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/config/geographical-opt-in-rules.ts
-const geographicalOptInRules = {
-  US: [{
+const geographicalOptInRules = [{
+  locations: ["US", "MX", "AU"],
+  rules: [{
     channel: "email",
     rule: "preselected_checkbox",
     optionalRule: "hidden"
@@ -22292,9 +22293,30 @@ const geographicalOptInRules = {
   }, {
     channel: "postal_mail",
     rule: "hidden_no_qcb",
+    optionalRule: "hidden_no_qcb"
+  }]
+}, {
+  locations: ["US-CO", "US-OR"],
+  rules: [{
+    channel: "email",
+    rule: "checkbox",
     optionalRule: "hidden"
-  }],
-  CA: [{
+  }, {
+    channel: "mobile_phone",
+    rule: "checkbox",
+    optionalRule: "hidden"
+  }, {
+    channel: "home_phone",
+    rule: "checkbox",
+    optionalRule: "hidden"
+  }, {
+    channel: "postal_mail",
+    rule: "checkbox",
+    optionalRule: "hidden"
+  }]
+}, {
+  locations: ["CA"],
+  rules: [{
     channel: "email",
     rule: "double_opt_in",
     optionalRule: "hidden"
@@ -22309,45 +22331,49 @@ const geographicalOptInRules = {
   }, {
     channel: "postal_mail",
     rule: "hidden_no_qcb",
-    optionalRule: "hidden"
-  }],
-  // Default rules for all other countries "ROW (Rest of the World)"
-  default: [{
-    channel: "email",
-    rule: "checkbox",
-    optionalRule: "hidden"
-  }, {
-    channel: "mobile_phone",
-    rule: "checkbox",
-    optionalRule: "hidden"
-  }, {
-    channel: "home_phone",
-    rule: "checkbox",
-    optionalRule: "hidden"
-  }, {
-    channel: "postal_mail",
-    rule: "hidden_no_qcb",
-    optionalRule: "hidden"
-  }],
-  // Strict mode rules - use for all locations when strict mode is enabled via code block
-  strict: [{
-    channel: "email",
-    rule: "checkbox",
-    optionalRule: "checkbox"
-  }, {
-    channel: "mobile_phone",
-    rule: "checkbox",
-    optionalRule: "checkbox"
-  }, {
-    channel: "home_phone",
-    rule: "checkbox",
-    optionalRule: "checkbox"
-  }, {
-    channel: "postal_mail",
-    rule: "hidden_no_qcb",
-    optionalRule: "checkbox"
+    optionalRule: "hidden_no_qcb"
   }]
-};
+}];
+;// CONCATENATED MODULE: ./src/scripts/gdcp/config/default-opt-in-rules.ts
+//Default opt-in rules for the GDCP
+//These rules are used when the user's location does not have specific rules
+const defaultOptInRules = [{
+  channel: "email",
+  rule: "checkbox",
+  optionalRule: "hidden"
+}, {
+  channel: "mobile_phone",
+  rule: "checkbox",
+  optionalRule: "hidden"
+}, {
+  channel: "home_phone",
+  rule: "checkbox",
+  optionalRule: "hidden"
+}, {
+  channel: "postal_mail",
+  rule: "checkbox",
+  optionalRule: "checkbox"
+}];
+;// CONCATENATED MODULE: ./src/scripts/gdcp/config/strict-opt-in-rules.ts
+//Strict Opt-In Rules
+//These rules are used FOR ALL LOCATIONS when the page is manually set to strict opt-in mode
+const strictOptInRules = [{
+  channel: "email",
+  rule: "checkbox",
+  optionalRule: "checkbox"
+}, {
+  channel: "mobile_phone",
+  rule: "checkbox",
+  optionalRule: "checkbox"
+}, {
+  channel: "home_phone",
+  rule: "checkbox",
+  optionalRule: "checkbox"
+}, {
+  channel: "postal_mail",
+  rule: "checkbox",
+  optionalRule: "checkbox"
+}];
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/config/gdcp-fields.ts
 const gdcpFields = [{
   channel: "email",
@@ -22365,7 +22391,8 @@ const gdcpFields = [{
   dataFieldName: "supporter.phoneNumber2",
   optInFieldNames: ["supporter.questions.1107654", // Permission to Contact Me
   "supporter.questions.848527", // Mobile Text Opt In
-  "supporter.questions.848528" // Mobile Call Opt In
+  "supporter.questions.848528", // Mobile Call Opt In
+  "supporter.questions.1952175" // Interested in Mobile Text
   ],
   gdcpFieldName: "engrid.gdcp-mobile_phone",
   gdcpFieldHtmlLabel: `<span>I’d like to receive phone and text updates from The Nature Conservancy and understand I can unsubscribe at any time. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="#" target="_blank">Mobile Terms & Conditions</a> | <a href="#" target="_blank">Privacy Statement</a>.</span>`
@@ -22486,18 +22513,27 @@ function hiddenNoQcbRule(gdcpField) {
 
 
 
+
+
 class GdcpManager {
   constructor() {
     _defineProperty(this, "logger", new EngridLogger("GDCP", "#00ff00", "#000000", "🤝"));
 
     _defineProperty(this, "geographicalRules", geographicalOptInRules);
 
+    _defineProperty(this, "defaultRules", defaultOptInRules);
+
+    _defineProperty(this, "strictRules", strictOptInRules);
+
+    _defineProperty(this, "strictMode", false);
+
     _defineProperty(this, "gdcpFields", gdcpFields);
 
     _defineProperty(this, "userLocation", "");
 
     if (!this.shouldRun()) return;
-    this.logger.log("GDCP is running");
+    this.strictMode = window.GlobalDigitalComplianceStrictMode || false;
+    this.logger.log(`GDCP is running. Strict mode is ${this.strictMode ? "enabled" : "disabled"}.`);
     engrid_ENGrid.setBodyData("gdcp", "true");
     this.setupGdcpFields();
     this.getInitialLocation().then(location => {
@@ -22519,8 +22555,9 @@ class GdcpManager {
    * If the country field is present, use that (and the region field if present).
    * This field is set from Cloudflare by the auto-country-select.ts module of ENgrid.
    * If the country field is present, the user's country is the US, and the region field is not present, add a region field to the page.
-   * If the country field is not present, fetch the user's location from Cloudflare trace endpoint
+   * If the country field is not present, fetch the user's location from Cloudflare trace endpoint. If the user's country is the US, and the region field is not present, add a region field to the page.
    */
+  //TODO: separate the initial location logic from createUSStatesField logic..
 
 
   async getInitialLocation() {
@@ -22531,8 +22568,8 @@ class GdcpManager {
       const country = engrid_ENGrid.getFieldValue("supporter.country");
 
       if (!regionField && country === "US") {
-        // TODO: add region field to page
         this.logger.log("Country field value is US and state field is missing, adding state field to page");
+        this.createUSStatesField();
       }
 
       return `${country}-${engrid_ENGrid.getFieldValue("supporter.region")}`;
@@ -22546,12 +22583,11 @@ class GdcpManager {
       country = jsondata.loc;
     }).catch(err => {
       this.logger.log("No country field and error fetching location data. Falling back to US.", err);
-      country = "default";
+      country = "unknown";
     });
 
-    if (country === "US") {
-      // TODO: add region field to page
-      this.logger.log("Country value from CF is US and state field is missing, adding state field to page");
+    if (country === "US" && !regionField) {
+      this.logger.log("Country value from CF is US and state field is missing, adding state field to page.");
       this.createUSStatesField();
     }
 
@@ -22559,16 +22595,62 @@ class GdcpManager {
   }
   /**
    * Create US states field and add it to the page
+   * When positioning on the page, we always use flexbox ordering
+   * to prevent issues with the i-hide i-50 etc helper classes
    */
 
 
   createUSStatesField() {
-    const usStatesFieldHtml = `<div class="en__field en__field--select en__field--1984602 en__field--region en__mandatory">
+    if (engrid_ENGrid.getField("supporter.region")) {
+      //If the state field is already on the page, no need to add it again
+      return;
+    }
+
+    const usStatesFieldHtml = `<div class="en__field en__field--select en__field--1984602 en__field--region">
                                 <label for="en__field_supporter_region" class="en__field__label" style="">State or Province</label>
                                 <div class="en__field__element en__field__element--select">
                                 <select id="en__field_supporter_region" class="en__field__input en__field__input--select" name="supporter.region" autocomplete="address-level1" aria-required="true"><option value="">SELECT STATE/PROVINCE</option><option value="AK">Alaska</option><option value="AL">Alabama</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="DC">District of Columbia</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="AA">Armed Forces Americas</option><option value="AE">Armed Forces Europe/Canada/Middle East/Africa</option><option value="AP">Armed Forces Pacific</option><option value="AS">American Samoa</option><option value="CZ">Canal Zone</option><option value="GU">Guam</option><option value="UM">Minor Outlying Islands</option><option value="MP">Northern Mariana Islands</option><option value="PR">Puerto Rico</option><option value="VI">Virgin Islands</option><option value="None">None</option></select>
                                 </div>
-                              </div>`; //TODO: FINISH!
+                              </div>`; //If the page has a country field we will position the state field after it
+
+    const countryField = document.querySelector(".en__field--country");
+
+    if (countryField) {
+      countryField.parentElement?.insertAdjacentHTML("beforeend", usStatesFieldHtml); //Doing the ordering here to prevent issues with the i-hide i-50 etc helper classes
+
+      const children = countryField.parentElement?.children;
+      let countryOrder;
+
+      if (children) {
+        for (let i = 0; i < children.length; i++) {
+          const child = children[i];
+          child.style.order = i.toString();
+
+          if (child.classList.contains("en__field--country")) {
+            countryOrder = i;
+          }
+        }
+      }
+
+      document.querySelector(".en__field--region")?.setAttribute("style", `order: ${countryOrder}`);
+      return;
+    } //Else, if the page has an email field we will position it at the top of the form block
+
+
+    const emailField = document.querySelector(".en__field--email");
+
+    if (emailField) {
+      emailField.parentElement?.insertAdjacentHTML("beforeend", usStatesFieldHtml);
+      const regionField = document.querySelector(".en__field--region");
+
+      if (regionField) {
+        //Position the region field as the first field inside the form block with the email field
+        //Use flex ordering to do this to not interfere with the form's default order (and any iX- helper classes)
+        regionField.style.order = "-1";
+      }
+
+      return;
+    }
   }
   /**
    * Watch for changes in the user's location (country and region fields) and apply the opt in rules
@@ -22581,16 +22663,23 @@ class GdcpManager {
 
     if (countryField) {
       countryField.addEventListener("change", () => {
-        //TODO: if country is changed to US and there isn't a state field on the page, add it.
-        //TODO: make sure it has event listeners and they are re-added if it is re-selected??
-        this.userLocation = `${engrid_ENGrid.getFieldValue("supporter.country")}-${engrid_ENGrid.getFieldValue("supporter.region")}`;
+        const country = engrid_ENGrid.getFieldValue("supporter.country");
+
+        if (country === "US" && !regionField) {
+          this.logger.log("Country field value changed to US and state field is missing, adding state field to page");
+          this.createUSStatesField();
+        }
+
+        this.userLocation = `${country}-${engrid_ENGrid.getFieldValue("supporter.region")}`;
         this.applyOptInRules(this.userLocation);
       });
     }
 
     if (regionField) {
       regionField.addEventListener("change", () => {
-        this.userLocation = `${engrid_ENGrid.getFieldValue("supporter.country")}-${engrid_ENGrid.getFieldValue("supporter.region")}`;
+        //Must always have country value - fall back to our initial value if country field if not on page
+        const country = engrid_ENGrid.getFieldValue("supporter.country") || this.userLocation.split("-")[0];
+        this.userLocation = `${country}-${engrid_ENGrid.getFieldValue("supporter.region")}`;
         this.applyOptInRules(this.userLocation);
       });
     }
@@ -22603,20 +22692,32 @@ class GdcpManager {
 
 
   getRulesForLocation(location) {
-    if (this.geographicalRules[location]) {
-      this.logger.log(`Found rules for location "${location}"`);
-      return this.geographicalRules[location];
-    }
+    //If we're in strict mode, always use that.
+    if (this.strictMode) {
+      this.logger.log(`Using strict mode rules`, this.strictRules);
+      return this.strictRules;
+    } //Find an exact match for the location country+region "{country}-{region}"
+
+
+    let rule = this.geographicalRules.find(rule => rule.locations.includes(location));
+
+    if (rule) {
+      this.logger.log(`Found rules for location "${location}"`, rule.rules);
+      return rule.rules;
+    } //Find a match for the location country "{country}"
+
 
     const country = location.split("-")[0];
+    rule = this.geographicalRules.find(rule => rule.locations.includes(country));
 
-    if (this.geographicalRules[country]) {
-      this.logger.log(`Found rules for location "${country}"`);
-      return this.geographicalRules[country];
-    }
+    if (rule) {
+      this.logger.log(`No exact rules for "${location}". Found rules for country "${country}"`, rule.rules);
+      return rule.rules;
+    } //Fall back to the default rules
 
-    this.logger.log(`No rules found for "${location}" - falling back to default`);
-    return this.geographicalRules["default"];
+
+    this.logger.log(`No rules found for "${location}" - falling back to default`, this.defaultRules);
+    return this.defaultRules;
   }
   /**
    * Apply the opt in rules for a given location to each GDCP Field
@@ -22624,8 +22725,8 @@ class GdcpManager {
 
 
   applyOptInRules(location) {
-    const locationRules = this.getRulesForLocation(location);
-    this.logger.log(`User location: "${location}". Applying rules:`, locationRules);
+    const locationRules = this.getRulesForLocation(location); //TODO: don't reapply rules if the same rules are already active?
+
     locationRules.forEach(rule => {
       const gdcpField = this.gdcpFields.find(field => field.channel === rule.channel);
 
@@ -22692,7 +22793,7 @@ class GdcpManager {
         this.createGdcpField(gdcpField);
         this.hideEnOptInFields(gdcpField);
       } else {
-        this.logger.log(`Did not find the required fields for channel "${gdcpField.channel}" - "${gdcpField.dataFieldName}" and any of "${gdcpField.optInFieldNames.join(", ")}. Skipping adding GDCP field for this channel to page."`);
+        this.logger.log(`Did not find the required fields for channel "${gdcpField.channel}" - "${gdcpField.dataFieldName}" and any of opt in field(s) "${gdcpField.optInFieldNames.join(", ")}". Skipping adding GDCP field for this channel to page.`);
       }
     });
   }
@@ -22726,7 +22827,9 @@ class GdcpManager {
                   </label>
               </div>
               <div class="en__field__item">
-                <div class="${gdcpField.channel}-description hide">${gdcpField.gdcpFieldHtmlLabel}</div>
+                <div class="gdcp-field-text-description ${gdcpField.channel}-description hide">
+                  ${gdcpField.gdcpFieldHtmlLabel}
+                </div>
               </div>
           </div>
       </div>`;
