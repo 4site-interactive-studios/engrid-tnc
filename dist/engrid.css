@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, October 9, 2024 @ 13:51:41 ET
+ *  Date: Thursday, October 10, 2024 @ 11:47:13 ET
  *  By: michael
  *  ENGrid styles: v0.18.14
  *  ENGrid scripts: v0.18.14
@@ -9958,6 +9958,15 @@ body[data-engrid-debug]:before{
   font-weight:500;
 }
 [data-engrid-theme=tnc][data-engrid-gdcp=true] .en__field [class*="en__field--engrid.gdcp"] .gdcp-field-text-description span a{
+  font-weight:700;
+  -webkit-text-decoration:none;
+  text-decoration:none;
+}
+[data-engrid-theme=tnc][data-engrid-gdcp=true] .gdcp-consent-statement p{
+  font-size:14px;
+  line-height:1.3;
+}
+[data-engrid-theme=tnc][data-engrid-gdcp=true] .gdcp-consent-statement a{
   font-weight:700;
   -webkit-text-decoration:none;
   text-decoration:none;

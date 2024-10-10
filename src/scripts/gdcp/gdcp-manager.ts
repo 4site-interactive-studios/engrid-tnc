@@ -1,3 +1,4 @@
+import { ENGrid, EngridLogger } from "@4site/engrid-common";
 import { OptInRule } from "./interfaces/opt-in-rule.interface";
 import { GdcpField } from "./interfaces/gdcp-field.interface";
 import { GeographicalRule } from "./interfaces/geographical-rule.interface";
@@ -5,7 +6,6 @@ import { geographicalOptInRules } from "./config/geographical-opt-in-rules";
 import { defaultOptInRules } from "./config/default-opt-in-rules";
 import { strictOptInRules } from "./config/strict-opt-in-rules";
 import { gdcpFields } from "./config/gdcp-fields";
-import { ENGrid, EngridLogger } from "@4site/engrid-common";
 import {
   checkboxRule,
   doubleOptInRule,
@@ -17,6 +17,7 @@ import {
 declare global {
   interface Window {
     GlobalDigitalComplianceStrictMode?: boolean;
+    EngagingNetworks: any;
   }
 }
 
@@ -31,25 +32,40 @@ export class GdcpManager {
     geographicalOptInRules;
   private readonly defaultRules: OptInRule[] = defaultOptInRules;
   private readonly strictRules: OptInRule[] = strictOptInRules;
+  private activeRules: OptInRule[] = [];
+  private countryListenerAdded: boolean = false;
+  private regionListenerAdded: boolean = false;
   private readonly strictMode: boolean = false;
   private gdcpFields: GdcpField[] = gdcpFields;
   private userLocation: string = "";
+  private submissionFailed: boolean = !!(
+    ENGrid.checkNested(
+      window.EngagingNetworks,
+      "require",
+      "_defined",
+      "enjs",
+      "checkSubmissionFailed"
+    ) && window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed()
+  );
 
   constructor() {
     if (!this.shouldRun()) return;
     this.strictMode = window.GlobalDigitalComplianceStrictMode || false;
     this.logger.log(
       `GDCP is running. Strict mode is ${
-        this.strictMode ? "enabled" : "disabled"
+        this.strictMode ? "active" : "not active"
       }.`
     );
     ENGrid.setBodyData("gdcp", "true");
     this.setupGdcpFields();
     this.getInitialLocation().then((location) => {
       this.userLocation = location;
+      this.logger.log(`Initial User location is ${this.userLocation}`);
+      this.addStateFieldIfNeeded(this.userLocation);
       this.applyOptInRules(this.userLocation);
       this.watchForLocationChange();
     });
+    this.addConsentStatementForExistingSupporters();
   }
 
   /**
@@ -60,54 +76,68 @@ export class GdcpManager {
   }
 
   /**
-   * Handles getting the user's initial location based on the fields available on the page
-   * If the country field is present, use that (and the region field if present).
-   * This field is set from Cloudflare by the auto-country-select.ts module of ENgrid.
-   * If the country field is present, the user's country is the US, and the region field is not present, add a region field to the page.
-   * If the country field is not present, fetch the user's location from Cloudflare trace endpoint. If the user's country is the US, and the region field is not present, add a region field to the page.
+   * Handles getting the user's initial location
+   * In most cases this comes from CloudFlare
+   * but in cases where data is prefilled or the submission has failed we get it from the country and region fields
+   * fallback to "unknown" if no location data is found
    */
-  //TODO: separate the initial location logic from createUSStatesField logic..
   private async getInitialLocation(): Promise<string> {
+    let location = "unknown";
+
     const countryField = ENGrid.getField("supporter.country");
     const regionField = ENGrid.getField("supporter.region");
+    const engridAutofill = this.getCookie("engrid-autofill");
+    const locationDataInUrl =
+      ENGrid.getUrlParameter("supporter.country") ||
+      ENGrid.getUrlParameter("supporter.region") ||
+      (ENGrid.getUrlParameter("ea.url.id") &&
+        !ENGrid.getUrlParameter("forwarded"));
 
-    if (countryField) {
-      const country = ENGrid.getFieldValue("supporter.country");
-      if (!regionField && country === "US") {
-        this.logger.log(
-          "Country field value is US and state field is missing, adding state field to page"
-        );
-        this.createUSStatesField();
-      }
-      return `${country}-${ENGrid.getFieldValue("supporter.region")}`;
+    // Get location from Cloudflare
+    // Only run if there's no engrid-autofill cookie, the submission hasn't failed, and there's no location data in the URL
+    if (!engridAutofill && !this.submissionFailed && !locationDataInUrl) {
+      await fetch(`https://${window.location.hostname}/cdn-cgi/trace`)
+        .then((res) => res.text())
+        .then((t) => {
+          let data = t.replace(/[\r\n]+/g, '","').replace(/\=+/g, '":"');
+          data = '{"' + data.slice(0, data.lastIndexOf('","')) + '"}';
+          const jsonData = JSON.parse(data);
+          location = jsonData.loc;
+        })
+        .catch((err) => {
+          this.logger.log(
+            "No country field and error fetching location data. Falling back to US.",
+            err
+          );
+          location = "unknown";
+        });
+      return location;
     }
 
-    let country = "";
+    // Get location from the country and region fields
+    if (countryField) {
+      location = ENGrid.getFieldValue("supporter.country");
+      if (regionField && ENGrid.getFieldValue("supporter.region") !== "") {
+        location += `-${ENGrid.getFieldValue("supporter.region")}`;
+      }
+      return location;
+    }
 
-    await fetch(`https://${window.location.hostname}/cdn-cgi/trace`)
-      .then((res) => res.text())
-      .then((t) => {
-        let data = t.replace(/[\r\n]+/g, '","').replace(/\=+/g, '":"');
-        data = '{"' + data.slice(0, data.lastIndexOf('","')) + '"}';
-        const jsondata = JSON.parse(data);
-        country = jsondata.loc;
-      })
-      .catch((err) => {
-        this.logger.log(
-          "No country field and error fetching location data. Falling back to US.",
-          err
-        );
-        country = "unknown";
-      });
+    // No location data from Cloudflare + no location fields on page
+    // Return default "Unknown" location
+    return location;
+  }
 
-    if (country === "US" && !regionField) {
+  /**
+   * Handle adding the state field to the page if the user's location is the US and the state field is missing
+   */
+  private addStateFieldIfNeeded(location: string) {
+    if (location.startsWith("US") && !ENGrid.getField("supporter.region")) {
       this.logger.log(
-        "Country value from CF is US and state field is missing, adding state field to page."
+        "Location is US and state field is missing, adding state field to page"
       );
       this.createUSStatesField();
     }
-
-    return country;
   }
 
   /**
@@ -116,8 +146,8 @@ export class GdcpManager {
    * to prevent issues with the i-hide i-50 etc helper classes
    */
   private createUSStatesField() {
-    if (ENGrid.getField("supporter.region")) {
-      //If the state field is already on the page, no need to add it again
+    //If the state field is already on the page or we're in strict mode, no need to add it
+    if (ENGrid.getField("supporter.region") || this.strictMode) {
       return;
     }
 
@@ -154,6 +184,8 @@ export class GdcpManager {
         .querySelector(".en__field--region")
         ?.setAttribute("style", `order: ${countryOrder}`);
 
+      this.watchForLocationChange();
+
       return;
     }
 
@@ -186,25 +218,20 @@ export class GdcpManager {
     const countryField = ENGrid.getField("supporter.country");
     const regionField = ENGrid.getField("supporter.region");
 
-    if (countryField) {
+    if (countryField && !this.countryListenerAdded) {
       countryField.addEventListener("change", () => {
-        const country = ENGrid.getFieldValue("supporter.country");
-        if (country === "US" && !regionField) {
-          this.logger.log(
-            "Country field value changed to US and state field is missing, adding state field to page"
-          );
-          this.createUSStatesField();
+        let location = ENGrid.getFieldValue("supporter.country");
+        if (ENGrid.getFieldValue("supporter.region")) {
+          location += `-${ENGrid.getFieldValue("supporter.region")}`;
         }
-
-        this.userLocation = `${country}-${ENGrid.getFieldValue(
-          "supporter.region"
-        )}`;
-
+        this.userLocation = location;
+        this.addStateFieldIfNeeded(this.userLocation);
         this.applyOptInRules(this.userLocation);
       });
+      this.countryListenerAdded = true;
     }
 
-    if (regionField) {
+    if (regionField && !this.regionListenerAdded) {
       regionField.addEventListener("change", () => {
         //Must always have country value - fall back to our initial value if country field if not on page
         const country =
@@ -216,6 +243,7 @@ export class GdcpManager {
 
         this.applyOptInRules(this.userLocation);
       });
+      this.regionListenerAdded = true;
     }
   }
 
@@ -264,10 +292,18 @@ export class GdcpManager {
   /**
    * Apply the opt in rules for a given location to each GDCP Field
    */
-  private applyOptInRules(location: string) {
+  private applyOptInRules(location: string): OptInRule[] {
     const locationRules = this.getRulesForLocation(location);
 
-    //TODO: don't reapply rules if the same rules are already active?
+    //If the rules for the new location match rules for the current location, do nothing
+    if (locationRules === this.activeRules) {
+      this.logger.log(
+        `Rules that match the rules for "${location}" are already active. Not applying new rules.`
+      );
+      return this.activeRules;
+    }
+
+    this.activeRules = locationRules;
 
     locationRules.forEach((rule) => {
       const gdcpField = this.gdcpFields.find(
@@ -278,13 +314,16 @@ export class GdcpManager {
         this.applyRule(rule, gdcpField);
       }
     });
+
+    return this.activeRules;
   }
 
   /**
    * Apply a given opt in rule to a given GDCP Field
    * Determines if the rule is for a mandatory or optional field and applies the correct rule
+   * @return {boolean} - true if the rule was applied, false if the data field was not found
    */
-  private applyRule(rule: OptInRule, gdcpField: GdcpField): void {
+  private applyRule(rule: OptInRule, gdcpField: GdcpField): boolean {
     const dataInputEl = document.querySelector(
       `input[name="${gdcpField.dataFieldName}"]`
     );
@@ -292,7 +331,7 @@ export class GdcpManager {
       this.logger.log(
         `Could not find data field for "${gdcpField.channel}" - skipping rule`
       );
-      return;
+      return false;
     }
 
     // Select the correct rule based on if the field is mandatory or optional
@@ -325,6 +364,8 @@ export class GdcpManager {
         checkboxRule(gdcpField);
         break;
     }
+
+    return true;
   }
 
   /**
@@ -444,5 +485,48 @@ export class GdcpManager {
       .join(", ");
     const optInFieldsPresent = document.querySelector(optInFieldsNames);
     return !!dataFieldPresent && !!optInFieldsPresent;
+  }
+
+  /**
+   * Add a consent statement below the submit button for existing supporters
+   */
+  private addConsentStatementForExistingSupporters() {
+    if (
+      ENGrid.getFieldValue("supporter.emailAddress") &&
+      !this.submissionFailed
+    ) {
+      const submitButtonBlock =
+        document.querySelector(".en__submit")?.parentElement;
+      const consentStatement = `
+        <div class="gdcp-consent-statement">
+          <p>
+            You previously provided your communication preferences. If you wish to change those preferences, please 
+            <a href="https://preserve.nature.org/page/87755/subscriptions/1?chain" target="_blank">click here</a>.
+          </p>
+        </div>
+      `;
+      submitButtonBlock?.insertAdjacentHTML("afterend", consentStatement);
+    }
+  }
+
+  /**
+   * Get the value of a cookie by name
+   */
+  private getCookie(cookieName: string): string | null {
+    const name = `${cookieName}=`;
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookieArray = decodedCookie.split(";");
+
+    for (let i = 0; i < cookieArray.length; i++) {
+      let cookie = cookieArray[i];
+      while (cookie.charAt(0) === " ") {
+        cookie = cookie.substring(1);
+      }
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+
+    return null;
   }
 }
