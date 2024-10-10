@@ -1,18 +1,8 @@
 import { ENGrid, EngridLogger } from "@4site/engrid-common";
-import { OptInRule } from "./interfaces/opt-in-rule.interface";
 import { GdcpField } from "./interfaces/gdcp-field.interface";
-import { GeographicalRule } from "./interfaces/geographical-rule.interface";
-import { geographicalOptInRules } from "./config/geographical-opt-in-rules";
-import { defaultOptInRules } from "./config/default-opt-in-rules";
-import { strictOptInRules } from "./config/strict-opt-in-rules";
 import { gdcpFields } from "./config/gdcp-fields";
-import {
-  checkboxRule,
-  doubleOptInRule,
-  hiddenCheckboxRule,
-  hiddenNoQcbRule,
-  preselectedCheckedRule,
-} from "./consent-rules";
+import { GdcpFieldManager } from "./gdcp-field-manager";
+import { RuleHandler } from "./rule-handler";
 
 declare global {
   interface Window {
@@ -28,11 +18,8 @@ export class GdcpManager {
     "#000000",
     "🤝"
   );
-  private readonly geographicalRules: GeographicalRule[] =
-    geographicalOptInRules;
-  private readonly defaultRules: OptInRule[] = defaultOptInRules;
-  private readonly strictRules: OptInRule[] = strictOptInRules;
-  private activeRules: OptInRule[] = [];
+  private gdcpFieldManager: GdcpFieldManager = new GdcpFieldManager();
+  private ruleHandler: RuleHandler = new RuleHandler(this.gdcpFieldManager);
   private countryListenerAdded: boolean = false;
   private regionListenerAdded: boolean = false;
   private readonly strictMode: boolean = false;
@@ -51,21 +38,22 @@ export class GdcpManager {
   constructor() {
     if (!this.shouldRun()) return;
     this.strictMode = window.GlobalDigitalComplianceStrictMode || false;
+    this.ruleHandler.setStrictMode(this.strictMode);
     this.logger.log(
       `GDCP is running. Strict mode is ${
         this.strictMode ? "active" : "not active"
       }.`
     );
     ENGrid.setBodyData("gdcp", "true");
+    this.addConsentStatementForExistingSupporters();
     this.setupGdcpFields();
     this.getInitialLocation().then((location) => {
       this.userLocation = location;
       this.logger.log(`Initial User location is ${this.userLocation}`);
       this.addStateFieldIfNeeded(this.userLocation);
-      this.applyOptInRules(this.userLocation);
+      this.ruleHandler.applyOptInRules(this.userLocation);
       this.watchForLocationChange();
     });
-    this.addConsentStatementForExistingSupporters();
   }
 
   /**
@@ -99,7 +87,7 @@ export class GdcpManager {
       await fetch(`https://${window.location.hostname}/cdn-cgi/trace`)
         .then((res) => res.text())
         .then((t) => {
-          let data = t.replace(/[\r\n]+/g, '","').replace(/\=+/g, '":"');
+          let data = t.replace(/[\r\n]+/g, '","').replace(/=+/g, '":"');
           data = '{"' + data.slice(0, data.lastIndexOf('","')) + '"}';
           const jsonData = JSON.parse(data);
           location = jsonData.loc;
@@ -226,7 +214,7 @@ export class GdcpManager {
         }
         this.userLocation = location;
         this.addStateFieldIfNeeded(this.userLocation);
-        this.applyOptInRules(this.userLocation);
+        this.ruleHandler.applyOptInRules(this.userLocation);
       });
       this.countryListenerAdded = true;
     }
@@ -241,131 +229,10 @@ export class GdcpManager {
           "supporter.region"
         )}`;
 
-        this.applyOptInRules(this.userLocation);
+        this.ruleHandler.applyOptInRules(this.userLocation);
       });
       this.regionListenerAdded = true;
     }
-  }
-
-  /**
-   * Get the opt in rules for a given location ("{country}-{region}")
-   * If no rules are found for the region, fall back to the country
-   * If no rules are found for the country, fall back to "Other"
-   */
-  private getRulesForLocation(location: string): OptInRule[] {
-    //If we're in strict mode, always use that.
-    if (this.strictMode) {
-      this.logger.log(`Using strict mode rules`, this.strictRules);
-      return this.strictRules;
-    }
-
-    //Find an exact match for the location country+region "{country}-{region}"
-    let rule = this.geographicalRules.find((rule) =>
-      rule.locations.includes(location)
-    );
-    if (rule) {
-      this.logger.log(`Found rules for location "${location}"`, rule.rules);
-      return rule.rules;
-    }
-
-    //Find a match for the location country "{country}"
-    const country = location.split("-")[0];
-    rule = this.geographicalRules.find((rule) =>
-      rule.locations.includes(country)
-    );
-    if (rule) {
-      this.logger.log(
-        `No exact rules for "${location}". Found rules for country "${country}"`,
-        rule.rules
-      );
-      return rule.rules;
-    }
-
-    //Fall back to the default rules
-    this.logger.log(
-      `No rules found for "${location}" - falling back to default`,
-      this.defaultRules
-    );
-    return this.defaultRules;
-  }
-
-  /**
-   * Apply the opt in rules for a given location to each GDCP Field
-   */
-  private applyOptInRules(location: string): OptInRule[] {
-    const locationRules = this.getRulesForLocation(location);
-
-    //If the rules for the new location match rules for the current location, do nothing
-    if (locationRules === this.activeRules) {
-      this.logger.log(
-        `Rules that match the rules for "${location}" are already active. Not applying new rules.`
-      );
-      return this.activeRules;
-    }
-
-    this.activeRules = locationRules;
-
-    locationRules.forEach((rule) => {
-      const gdcpField = this.gdcpFields.find(
-        (field) => field.channel === rule.channel
-      );
-
-      if (gdcpField) {
-        this.applyRule(rule, gdcpField);
-      }
-    });
-
-    return this.activeRules;
-  }
-
-  /**
-   * Apply a given opt in rule to a given GDCP Field
-   * Determines if the rule is for a mandatory or optional field and applies the correct rule
-   * @return {boolean} - true if the rule was applied, false if the data field was not found
-   */
-  private applyRule(rule: OptInRule, gdcpField: GdcpField): boolean {
-    const dataInputEl = document.querySelector(
-      `input[name="${gdcpField.dataFieldName}"]`
-    );
-    if (!dataInputEl) {
-      this.logger.log(
-        `Could not find data field for "${gdcpField.channel}" - skipping rule`
-      );
-      return false;
-    }
-
-    // Select the correct rule based on if the field is mandatory or optional
-    const activeRule = dataInputEl
-      .closest(".en__field")
-      ?.classList.contains("en__mandatory")
-      ? rule.rule
-      : rule.optionalRule;
-
-    switch (activeRule) {
-      case "preselected_checkbox":
-        preselectedCheckedRule(gdcpField);
-        break;
-      case "checkbox":
-        checkboxRule(gdcpField);
-        break;
-      case "double_opt_in":
-        doubleOptInRule(gdcpField);
-        break;
-      case "hidden":
-        hiddenCheckboxRule(gdcpField);
-        break;
-      case "hidden_no_qcb":
-        hiddenNoQcbRule(gdcpField);
-        break;
-      default:
-        this.logger.log(
-          `Unknown rule "${rule.rule} - falling back to an unselected checkbox"`
-        );
-        checkboxRule(gdcpField);
-        break;
-    }
-
-    return true;
   }
 
   /**
@@ -377,6 +244,7 @@ export class GdcpManager {
     this.gdcpFields.forEach((gdcpField) => {
       if (this.enFieldsForGdcpFieldOnPage(gdcpField)) {
         this.logger.log(`Creating GDCP field for "${gdcpField.channel}"`);
+        this.gdcpFieldManager.addField(gdcpField);
         this.createGdcpField(gdcpField);
         this.hideEnOptInFields(gdcpField);
       } else {
@@ -442,33 +310,16 @@ export class GdcpManager {
       `[name="${gdcpField.gdcpFieldName}"]`
     ) as HTMLInputElement;
     if (input) {
-      input.addEventListener("change", (event) => {
-        this.toggleAllOptInFields(
-          gdcpField,
-          (event.target as HTMLInputElement).checked
+      input.addEventListener("change", () => {
+        this.gdcpFieldManager.setChecked(
+          gdcpField.gdcpFieldName,
+          input.checked
         );
+        this.gdcpFieldManager.setTouched(gdcpField.gdcpFieldName);
       });
     }
 
     return input;
-  }
-
-  /**
-   * Toggle all the opt in fields for a given GDCP Field
-   */
-  private toggleAllOptInFields(gdcpField: GdcpField, checked: boolean) {
-    this.logger.log(
-      `Settings opt in fields for "${gdcpField.channel}" to ${checked}`
-    );
-
-    gdcpField.optInFieldNames.forEach((name) => {
-      const input = document.querySelector(
-        `[name="${name}"]`
-      ) as HTMLInputElement;
-      if (input) {
-        input.checked = checked;
-      }
-    });
   }
 
   /**
