@@ -1,4 +1,4 @@
-import { DonationFrequency, ENGrid } from "@4site/engrid-common";
+import { DonationFrequency, ENGrid } from "@4site/engrid-scripts";
 
 type GiftType = "HONORARY" | "MEMORIAL";
 type GiftNotification = "ECARD" | "MAIL" | "NONE";
