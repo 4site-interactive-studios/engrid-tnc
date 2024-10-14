@@ -4,6 +4,7 @@ import { EngridLogger } from "@4site/engrid-common";
 
 export class GdcpFieldManager {
   private fields: Map<string, GdcpFieldState> = new Map();
+  private sessionItemName: string = "engrid_gdcpFieldState";
   private logger: EngridLogger = new EngridLogger(
     "GDCP",
     "#00ff00",
@@ -11,10 +12,9 @@ export class GdcpFieldManager {
     "🤝"
   );
 
-  getField(fieldName: string): GdcpFieldState | undefined {
-    return this.fields.get(fieldName);
-  }
-
+  /**
+   * Add a field to the field manager
+   */
   addField(gdcpField: GdcpField) {
     this.fields.set(gdcpField.gdcpFieldName, {
       field: gdcpField,
@@ -24,9 +24,68 @@ export class GdcpFieldManager {
     });
   }
 
-  setChecked(fieldName: string, checked: boolean) {
+  /**
+   * Get the field state object for a given field name
+   */
+  getField(fieldName: string): GdcpFieldState | undefined {
+    return this.fields.get(fieldName);
+  }
+
+  /**
+   * Save the current state to session storage
+   */
+  saveStateToSession() {
+    const state = [...this.fields.entries()];
+    sessionStorage.setItem(this.sessionItemName, JSON.stringify(state));
+  }
+
+  /**
+   * Apply the state from session storage to the fields
+   */
+  applyStateFromSession() {
+    const state = sessionStorage.getItem(this.sessionItemName);
+    if (state) {
+      const parsedState: [string, GdcpFieldState][] = JSON.parse(state);
+      this.fields = new Map(parsedState);
+      this.fields.forEach((field) => {
+        this.setChecked(field.field.gdcpFieldName, field.checked, true);
+        this.setVisibility(field.field.gdcpFieldName, field.visible);
+        if (field.touched) {
+          this.setTouched(field.field.gdcpFieldName);
+        }
+      });
+    }
+  }
+
+  /**
+   * Clear the state from session storage
+   */
+  clearStateFromSession() {
+    sessionStorage.removeItem(this.sessionItemName);
+  }
+
+  /**
+   * Set the checked state of a field.
+   * If the field has been touched, the checked state will not be changed unless the force flag is set to true.
+   * If the checked state is changed, the checked state of the field and its associated opt-ins will be updated in the DOM.
+   * The force flag is used when handling user-initiated changes to the checked state from the DOM.
+   * @return boolean - true if the checked state was changed, false otherwise
+   */
+  setChecked(
+    fieldName: string,
+    checked: boolean,
+    force: boolean = false
+  ): boolean {
     const field = this.getField(fieldName);
     if (field) {
+      if (field.touched && !force) {
+        this.logger.log(
+          `Field ${fieldName} checked state not changed as it has been touched`,
+          this.fields
+        );
+        return false;
+      }
+      const checkedStateChanged = field.checked !== checked;
       field.checked = checked;
       this.updateFieldChecked(fieldName);
       this.updateFieldOptInsChecked(fieldName);
@@ -34,9 +93,15 @@ export class GdcpFieldManager {
         `Field ${field.field.channel} and opt-ins checked: ${checked}`,
         this.fields
       );
+      return checkedStateChanged;
     }
+    return false;
   }
 
+  /**
+   * Set the visibility of a field
+   * The visibility of the field and its related hidden notice will be updated in the DOM
+   */
   setVisibility(fieldName: string, visible: boolean) {
     const field = this.getField(fieldName);
     if (field) {
@@ -49,9 +114,12 @@ export class GdcpFieldManager {
     }
   }
 
+  /**
+   * Set the touched state of a field
+   */
   setTouched(fieldName: string) {
     const field = this.getField(fieldName);
-    if (field) {
+    if (field && !field.touched) {
       field.touched = true;
       this.logger.log(`Field ${fieldName} touched`, this.fields);
     }

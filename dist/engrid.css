@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 10, 2024 @ 13:31:16 ET
+ *  Date: Monday, October 14, 2024 @ 13:23:48 ET
  *  By: michael
  *  ENGrid styles: v0.18.14
  *  ENGrid scripts: v0.18.14
@@ -8687,7 +8687,7 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .en__submit{
   border-bottom:none;
   margin-bottom:0;
-  padding-bottom:64px;
+  padding-bottom:0;
 }
 [data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .en__submit button{
   padding:1.3rem 2.8rem;
@@ -8824,7 +8824,7 @@ body[data-engrid-debug]:before{
   flex-basis:50%;
 }
 [data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) #en__digitalWallet #en__digitalWallet__paypalTouch__container,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) #en__digitalWallet #en__digitalWallet__stripeButtons__container{
-  padding-bottom:64px;
+  padding-bottom:0;
 }
 [data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .en__upsellModal__content h2,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .en__upsellModal__content h3,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .en__upsellModal__content h4,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .en__upsellModal__content h5,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .en__upsellModal__content h6{
   font-family:var(--default_font-family);
@@ -8861,6 +8861,9 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .en__upsellModal__content #en__upsellModal__no button{
   margin-bottom:0;
+}
+[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .body-main{
+  padding-bottom:64px;
 }
 @media screen and (max-width:992px){
   [data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]){
@@ -9970,6 +9973,9 @@ body[data-engrid-debug]:before{
   font-weight:700;
   -webkit-text-decoration:none;
   text-decoration:none;
+}
+[data-engrid-theme=tnc][data-engrid-gdcp=true] [class*=validationFail] .engrid-gdcp-field label{
+  color:initial;
 }
 body{
   opacity:1;

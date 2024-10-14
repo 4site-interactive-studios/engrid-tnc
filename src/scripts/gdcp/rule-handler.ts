@@ -69,16 +69,25 @@ export class RuleHandler {
 
   /**
    * Apply the opt in rules for a given location to each GDCP Field
+   * @return {checkedStateChangedFields} An array of GDCP Fields whose checked state has changed
+   * @return {activeRules} The rules that were applied
    */
-  applyOptInRules(location: string): OptInRule[] {
+  applyOptInRules(location: string): {
+    activeRules: OptInRule[];
+    checkedStateChangedFields: GdcpField[];
+  } {
     const locationRules = this.getRulesForLocation(location);
+    const checkedStateChangedFields: GdcpField[] = [];
 
     //If the rules for the new location match rules for the current location, do nothing
     if (locationRules === this.activeRules) {
       this.logger.log(
         `Rules that match the rules for "${location}" are already active. Not applying new rules.`
       );
-      return this.activeRules;
+      return {
+        activeRules: this.activeRules,
+        checkedStateChangedFields,
+      };
     }
 
     this.activeRules = locationRules;
@@ -89,13 +98,25 @@ export class RuleHandler {
       );
 
       if (gdcpField) {
-        this.applyRule(rule, gdcpField);
+        const checkedStateChanged = this.applyRule(rule, gdcpField);
+        if (checkedStateChanged) {
+          checkedStateChangedFields.push(gdcpField);
+        }
       }
     });
 
-    return this.activeRules;
+    return {
+      activeRules: this.activeRules,
+      checkedStateChangedFields,
+    };
   }
 
+  /**
+   * Apply a single opt in rule to a GDCP Field.
+   * If the rule is not recognized, fall back to an unselected checkbox.
+   * If the field is optional, use the optional rule.
+   * @return {boolean} Whether the checked state of the GDCP field has changed
+   */
   applyRule(rule: OptInRule, gdcpField: GdcpField): boolean {
     const dataInputEl = document.querySelector(
       `input[name="${gdcpField.dataFieldName}"]`
@@ -107,6 +128,8 @@ export class RuleHandler {
       return false;
     }
 
+    let checkedStateChanged;
+
     const activeRule = dataInputEl
       .closest(".en__field")
       ?.classList.contains("en__mandatory")
@@ -115,29 +138,29 @@ export class RuleHandler {
 
     switch (activeRule) {
       case "preselected_checkbox":
-        this.preselectedCheckedRule(gdcpField);
+        checkedStateChanged = this.preselectedCheckedRule(gdcpField);
         break;
       case "checkbox":
-        this.checkboxRule(gdcpField);
+        checkedStateChanged = this.checkboxRule(gdcpField);
         break;
       case "double_opt_in":
-        this.doubleOptInRule(gdcpField);
+        checkedStateChanged = this.doubleOptInRule(gdcpField);
         break;
       case "hidden":
-        this.hiddenCheckboxRule(gdcpField);
+        checkedStateChanged = this.hiddenCheckboxRule(gdcpField);
         break;
       case "hidden_no_qcb":
-        this.hiddenNoQcbRule(gdcpField);
+        checkedStateChanged = this.hiddenNoQcbRule(gdcpField);
         break;
       default:
         this.logger.log(
           `Unknown rule "${rule.rule} - falling back to an unselected checkbox"`
         );
-        this.checkboxRule(gdcpField);
+        checkedStateChanged = this.checkboxRule(gdcpField);
         break;
     }
 
-    return true;
+    return checkedStateChanged;
   }
 
   setStrictMode(strictMode: boolean) {
@@ -147,19 +170,29 @@ export class RuleHandler {
   /**
    * Rule for preselected checkbox
    * Check the GDCP field and all its associated opt-in fields
+   * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-  preselectedCheckedRule(gdcpField: GdcpField) {
-    this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
+  preselectedCheckedRule(gdcpField: GdcpField): boolean {
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(
+      gdcpField.gdcpFieldName,
+      true
+    );
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
+    return checkedStateChanged;
   }
 
   /**
    * Rule for checkbox
    * Uncheck the GDCP field and all its associated opt-in fields
+   * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-  checkboxRule(gdcpField: GdcpField) {
-    this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false);
+  checkboxRule(gdcpField: GdcpField): boolean {
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(
+      gdcpField.gdcpFieldName,
+      false
+    );
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
+    return checkedStateChanged;
   }
 
   /**
@@ -167,19 +200,32 @@ export class RuleHandler {
    * Visually hide the GDCP field
    * Show the hidden field text
    * Check the GDCP field and all its associated opt-in fields
+   * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-  hiddenCheckboxRule(gdcpField: GdcpField) {
-    this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
+  hiddenCheckboxRule(gdcpField: GdcpField): boolean {
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(
+      gdcpField.gdcpFieldName,
+      true
+    );
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
+    return checkedStateChanged;
   }
 
   //TODO: Implement this rule
-  doubleOptInRule(gdcpField: GdcpField) {
-    return true;
+  /**
+   * Rule for double opt-in
+   * @return {boolean} Whether the checked state of the GDCP field has changed
+   */
+  doubleOptInRule(gdcpField: GdcpField): boolean {
+    return false;
   }
 
   //TODO: Implement this rule
-  hiddenNoQcbRule(gdcpField: GdcpField) {
-    this.hiddenCheckboxRule(gdcpField);
+  /**
+   * Rule for hidden field that does not generate QCB record.
+   * @return {boolean} Whether the checked state of the GDCP field has changed
+   */
+  hiddenNoQcbRule(gdcpField: GdcpField): boolean {
+    return this.hiddenCheckboxRule(gdcpField);
   }
 }

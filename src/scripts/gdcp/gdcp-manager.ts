@@ -3,6 +3,7 @@ import { GdcpField } from "./interfaces/gdcp-field.interface";
 import { gdcpFields } from "./config/gdcp-fields";
 import { GdcpFieldManager } from "./gdcp-field-manager";
 import { RuleHandler } from "./rule-handler";
+import { EnForm } from "@4site/engrid-common";
 
 declare global {
   interface Window {
@@ -34,9 +35,13 @@ export class GdcpManager {
       "checkSubmissionFailed"
     ) && window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed()
   );
+  private _form: EnForm = EnForm.getInstance();
 
   constructor() {
-    if (!this.shouldRun()) return;
+    if (!this.shouldRun()) {
+      this.logger.log("GDCP is not running on this page.");
+      return;
+    }
     this.strictMode = window.GlobalDigitalComplianceStrictMode || false;
     this.ruleHandler.setStrictMode(this.strictMode);
     this.logger.log(
@@ -51,16 +56,21 @@ export class GdcpManager {
       this.userLocation = location;
       this.logger.log(`Initial User location is ${this.userLocation}`);
       this.addStateFieldIfNeeded(this.userLocation);
-      this.ruleHandler.applyOptInRules(this.userLocation);
+      if (this.submissionFailed) {
+        this.restoreFieldsStateFromSession();
+      } else {
+        this.applyRulesForLocation(this.userLocation, false);
+      }
       this.watchForLocationChange();
     });
+    this.onSubmit();
   }
 
   /**
    * List of Page IDs where GDCP should be active
    */
   private shouldRun(): boolean {
-    return [158050].includes(ENGrid.getPageID());
+    return [158050, 158972].includes(ENGrid.getPageID());
   }
 
   /**
@@ -214,7 +224,7 @@ export class GdcpManager {
         }
         this.userLocation = location;
         this.addStateFieldIfNeeded(this.userLocation);
-        this.ruleHandler.applyOptInRules(this.userLocation);
+        this.applyRulesForLocation(this.userLocation);
       });
       this.countryListenerAdded = true;
     }
@@ -228,8 +238,7 @@ export class GdcpManager {
         this.userLocation = `${country}-${ENGrid.getFieldValue(
           "supporter.region"
         )}`;
-
-        this.ruleHandler.applyOptInRules(this.userLocation);
+        this.applyRulesForLocation(this.userLocation);
       });
       this.regionListenerAdded = true;
     }
@@ -277,7 +286,7 @@ export class GdcpManager {
    */
   private createGdcpField(gdcpField: GdcpField): HTMLInputElement {
     const field = `
-      <div class="en__field en__field--checkbox en__field--000000 pseudo-en-field en__field--${gdcpField.gdcpFieldName}">
+      <div class="en__field en__field--checkbox en__field--000000 pseudo-en-field engrid-gdcp-field en__field--${gdcpField.gdcpFieldName}">
           <div class="en__field__element en__field__element--checkbox">
               <div class="en__field__item">
                   <input 
@@ -313,7 +322,8 @@ export class GdcpManager {
       input.addEventListener("change", () => {
         this.gdcpFieldManager.setChecked(
           gdcpField.gdcpFieldName,
-          input.checked
+          input.checked,
+          true
         );
         this.gdcpFieldManager.setTouched(gdcpField.gdcpFieldName);
       });
@@ -336,6 +346,61 @@ export class GdcpManager {
       .join(", ");
     const optInFieldsPresent = document.querySelector(optInFieldsNames);
     return !!dataFieldPresent && !!optInFieldsPresent;
+  }
+
+  /**
+   * Apply the opt in rules for the user's location
+   * @param location The user's location
+   * @param scrollToChangedField Whether to scroll to the field highest up the page that has changed state
+   */
+  private applyRulesForLocation(
+    location: string,
+    scrollToChangedField: boolean = true
+  ) {
+    const { checkedStateChangedFields } =
+      this.ruleHandler.applyOptInRules(location);
+
+    if (scrollToChangedField) {
+      this.scrollUpToHighestChangedField(checkedStateChangedFields);
+    }
+  }
+
+  /**
+   * Scroll to the field highest up the page that has changed state
+   */
+  private scrollUpToHighestChangedField(
+    checkedStateChangedFields: GdcpField[]
+  ) {
+    if (checkedStateChangedFields.length) {
+      // Only rules that have a visible checkbox
+      const visibleFields = checkedStateChangedFields.filter((field) => {
+        const gdcpField = this.gdcpFieldManager.getField(field.gdcpFieldName);
+        return gdcpField?.visible;
+      });
+
+      // Get the DOM element of the data field of the field highest up the page
+      const firstChangedField = visibleFields
+        .map((field) => {
+          return document
+            .querySelector(`[name="${field.dataFieldName}"]`)
+            ?.closest(".en__field") as HTMLElement;
+        })
+        .filter((el) => el)
+        .reduce((a, b) => {
+          return a?.getBoundingClientRect().top < b?.getBoundingClientRect().top
+            ? a
+            : b;
+        });
+
+      if (firstChangedField) {
+        const fieldTop =
+          firstChangedField.getBoundingClientRect().top + window.scrollY;
+        // Only scroll if the field is above the current scroll position
+        if (fieldTop < window.scrollY) {
+          firstChangedField.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    }
   }
 
   /**
@@ -379,5 +444,27 @@ export class GdcpManager {
     }
 
     return null;
+  }
+
+  /**
+   * Actions for when EN form is submitted
+   * @private
+   */
+  private onSubmit() {
+    this._form.onSubmit.subscribe(() => {
+      this.gdcpFieldManager.saveStateToSession();
+    });
+  }
+
+  /**
+   * Restore the state of the GDCP + Opt In fields from session storage
+   * Used when the submission fails, instead of applying location-based rules again.
+   */
+  private restoreFieldsStateFromSession() {
+    this.logger.log(
+      "Detected submission failure. Restoring GDCP + Opt In field states."
+    );
+    this.gdcpFieldManager.applyStateFromSession();
+    this.gdcpFieldManager.clearStateFromSession();
   }
 }

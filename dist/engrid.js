@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 10, 2024 @ 13:31:16 ET
+ *  Date: Monday, October 14, 2024 @ 13:23:48 ET
  *  By: michael
  *  ENGrid styles: v0.18.14
  *  ENGrid scripts: v0.18.14
@@ -22319,13 +22319,14 @@ class GdcpFieldManager {
   constructor() {
     _defineProperty(this, "fields", new Map());
 
+    _defineProperty(this, "sessionItemName", "engrid_gdcpFieldState");
+
     _defineProperty(this, "logger", new EngridLogger("GDCP", "#00ff00", "#000000", "🤝"));
   }
 
-  getField(fieldName) {
-    return this.fields.get(fieldName);
-  }
-
+  /**
+   * Add a field to the field manager
+   */
   addField(gdcpField) {
     this.fields.set(gdcpField.gdcpFieldName, {
       field: gdcpField,
@@ -22334,17 +22335,86 @@ class GdcpFieldManager {
       visible: true
     });
   }
+  /**
+   * Get the field state object for a given field name
+   */
+
+
+  getField(fieldName) {
+    return this.fields.get(fieldName);
+  }
+  /**
+   * Save the current state to session storage
+   */
+
+
+  saveStateToSession() {
+    const state = [...this.fields.entries()];
+    sessionStorage.setItem(this.sessionItemName, JSON.stringify(state));
+  }
+  /**
+   * Apply the state from session storage to the fields
+   */
+
+
+  applyStateFromSession() {
+    const state = sessionStorage.getItem(this.sessionItemName);
+
+    if (state) {
+      const parsedState = JSON.parse(state);
+      this.fields = new Map(parsedState);
+      this.fields.forEach(field => {
+        this.setChecked(field.field.gdcpFieldName, field.checked, true);
+        this.setVisibility(field.field.gdcpFieldName, field.visible);
+
+        if (field.touched) {
+          this.setTouched(field.field.gdcpFieldName);
+        }
+      });
+    }
+  }
+  /**
+   * Clear the state from session storage
+   */
+
+
+  clearStateFromSession() {
+    sessionStorage.removeItem(this.sessionItemName);
+  }
+  /**
+   * Set the checked state of a field.
+   * If the field has been touched, the checked state will not be changed unless the force flag is set to true.
+   * If the checked state is changed, the checked state of the field and its associated opt-ins will be updated in the DOM.
+   * The force flag is used when handling user-initiated changes to the checked state from the DOM.
+   * @return boolean - true if the checked state was changed, false otherwise
+   */
+
 
   setChecked(fieldName, checked) {
+    let force = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     const field = this.getField(fieldName);
 
     if (field) {
+      if (field.touched && !force) {
+        this.logger.log(`Field ${fieldName} checked state not changed as it has been touched`, this.fields);
+        return false;
+      }
+
+      const checkedStateChanged = field.checked !== checked;
       field.checked = checked;
       this.updateFieldChecked(fieldName);
       this.updateFieldOptInsChecked(fieldName);
       this.logger.log(`Field ${field.field.channel} and opt-ins checked: ${checked}`, this.fields);
+      return checkedStateChanged;
     }
+
+    return false;
   }
+  /**
+   * Set the visibility of a field
+   * The visibility of the field and its related hidden notice will be updated in the DOM
+   */
+
 
   setVisibility(fieldName, visible) {
     const field = this.getField(fieldName);
@@ -22355,11 +22425,15 @@ class GdcpFieldManager {
       this.logger.log(`Field ${fieldName} visibility set to: ${visible}`, this.fields);
     }
   }
+  /**
+   * Set the touched state of a field
+   */
+
 
   setTouched(fieldName) {
     const field = this.getField(fieldName);
 
-    if (field) {
+    if (field && !field.touched) {
       field.touched = true;
       this.logger.log(`Field ${fieldName} touched`, this.fields);
     }
@@ -22588,15 +22662,21 @@ class RuleHandler {
   }
   /**
    * Apply the opt in rules for a given location to each GDCP Field
+   * @return {checkedStateChangedFields} An array of GDCP Fields whose checked state has changed
+   * @return {activeRules} The rules that were applied
    */
 
 
   applyOptInRules(location) {
-    const locationRules = this.getRulesForLocation(location); //If the rules for the new location match rules for the current location, do nothing
+    const locationRules = this.getRulesForLocation(location);
+    const checkedStateChangedFields = []; //If the rules for the new location match rules for the current location, do nothing
 
     if (locationRules === this.activeRules) {
       this.logger.log(`Rules that match the rules for "${location}" are already active. Not applying new rules.`);
-      return this.activeRules;
+      return {
+        activeRules: this.activeRules,
+        checkedStateChangedFields
+      };
     }
 
     this.activeRules = locationRules;
@@ -22604,11 +22684,25 @@ class RuleHandler {
       const gdcpField = this.gdcpFields.find(field => field.channel === rule.channel);
 
       if (gdcpField) {
-        this.applyRule(rule, gdcpField);
+        const checkedStateChanged = this.applyRule(rule, gdcpField);
+
+        if (checkedStateChanged) {
+          checkedStateChangedFields.push(gdcpField);
+        }
       }
     });
-    return this.activeRules;
+    return {
+      activeRules: this.activeRules,
+      checkedStateChangedFields
+    };
   }
+  /**
+   * Apply a single opt in rule to a GDCP Field.
+   * If the rule is not recognized, fall back to an unselected checkbox.
+   * If the field is optional, use the optional rule.
+   * @return {boolean} Whether the checked state of the GDCP field has changed
+   */
+
 
   applyRule(rule, gdcpField) {
     const dataInputEl = document.querySelector(`input[name="${gdcpField.dataFieldName}"]`);
@@ -22618,36 +22712,37 @@ class RuleHandler {
       return false;
     }
 
+    let checkedStateChanged;
     const activeRule = dataInputEl.closest(".en__field")?.classList.contains("en__mandatory") ? rule.rule : rule.optionalRule;
 
     switch (activeRule) {
       case "preselected_checkbox":
-        this.preselectedCheckedRule(gdcpField);
+        checkedStateChanged = this.preselectedCheckedRule(gdcpField);
         break;
 
       case "checkbox":
-        this.checkboxRule(gdcpField);
+        checkedStateChanged = this.checkboxRule(gdcpField);
         break;
 
       case "double_opt_in":
-        this.doubleOptInRule(gdcpField);
+        checkedStateChanged = this.doubleOptInRule(gdcpField);
         break;
 
       case "hidden":
-        this.hiddenCheckboxRule(gdcpField);
+        checkedStateChanged = this.hiddenCheckboxRule(gdcpField);
         break;
 
       case "hidden_no_qcb":
-        this.hiddenNoQcbRule(gdcpField);
+        checkedStateChanged = this.hiddenNoQcbRule(gdcpField);
         break;
 
       default:
         this.logger.log(`Unknown rule "${rule.rule} - falling back to an unselected checkbox"`);
-        this.checkboxRule(gdcpField);
+        checkedStateChanged = this.checkboxRule(gdcpField);
         break;
     }
 
-    return true;
+    return checkedStateChanged;
   }
 
   setStrictMode(strictMode) {
@@ -22656,48 +22751,65 @@ class RuleHandler {
   /**
    * Rule for preselected checkbox
    * Check the GDCP field and all its associated opt-in fields
+   * @return {boolean} Whether the checked state of the GDCP field has changed
    */
 
 
   preselectedCheckedRule(gdcpField) {
-    this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
+    return checkedStateChanged;
   }
   /**
    * Rule for checkbox
    * Uncheck the GDCP field and all its associated opt-in fields
+   * @return {boolean} Whether the checked state of the GDCP field has changed
    */
 
 
   checkboxRule(gdcpField) {
-    this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false);
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
+    return checkedStateChanged;
   }
   /**
    * Rule for hidden checkbox
    * Visually hide the GDCP field
    * Show the hidden field text
    * Check the GDCP field and all its associated opt-in fields
+   * @return {boolean} Whether the checked state of the GDCP field has changed
    */
 
 
   hiddenCheckboxRule(gdcpField) {
-    this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
+    return checkedStateChanged;
   } //TODO: Implement this rule
+
+  /**
+   * Rule for double opt-in
+   * @return {boolean} Whether the checked state of the GDCP field has changed
+   */
 
 
   doubleOptInRule(gdcpField) {
-    return true;
+    return false;
   } //TODO: Implement this rule
+
+  /**
+   * Rule for hidden field that does not generate QCB record.
+   * @return {boolean} Whether the checked state of the GDCP field has changed
+   */
 
 
   hiddenNoQcbRule(gdcpField) {
-    this.hiddenCheckboxRule(gdcpField);
+    return this.hiddenCheckboxRule(gdcpField);
   }
 
 }
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/gdcp-manager.ts
+
 
 
 
@@ -22723,7 +22835,13 @@ class GdcpManager {
 
     _defineProperty(this, "submissionFailed", !!(engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "checkSubmissionFailed") && window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed()));
 
-    if (!this.shouldRun()) return;
+    _defineProperty(this, "_form", EnForm.getInstance());
+
+    if (!this.shouldRun()) {
+      this.logger.log("GDCP is not running on this page.");
+      return;
+    }
+
     this.strictMode = window.GlobalDigitalComplianceStrictMode || false;
     this.ruleHandler.setStrictMode(this.strictMode);
     this.logger.log(`GDCP is running. Strict mode is ${this.strictMode ? "active" : "not active"}.`);
@@ -22734,9 +22852,16 @@ class GdcpManager {
       this.userLocation = location;
       this.logger.log(`Initial User location is ${this.userLocation}`);
       this.addStateFieldIfNeeded(this.userLocation);
-      this.ruleHandler.applyOptInRules(this.userLocation);
+
+      if (this.submissionFailed) {
+        this.restoreFieldsStateFromSession();
+      } else {
+        this.applyRulesForLocation(this.userLocation, false);
+      }
+
       this.watchForLocationChange();
     });
+    this.onSubmit();
   }
   /**
    * List of Page IDs where GDCP should be active
@@ -22744,7 +22869,7 @@ class GdcpManager {
 
 
   shouldRun() {
-    return [158050].includes(engrid_ENGrid.getPageID());
+    return [158050, 158972].includes(engrid_ENGrid.getPageID());
   }
   /**
    * Handles getting the user's initial location
@@ -22880,7 +23005,7 @@ class GdcpManager {
 
         this.userLocation = location;
         this.addStateFieldIfNeeded(this.userLocation);
-        this.ruleHandler.applyOptInRules(this.userLocation);
+        this.applyRulesForLocation(this.userLocation);
       });
       this.countryListenerAdded = true;
     }
@@ -22890,7 +23015,7 @@ class GdcpManager {
         //Must always have country value - fall back to our initial value if country field if not on page
         const country = engrid_ENGrid.getFieldValue("supporter.country") || this.userLocation.split("-")[0];
         this.userLocation = `${country}-${engrid_ENGrid.getFieldValue("supporter.region")}`;
-        this.ruleHandler.applyOptInRules(this.userLocation);
+        this.applyRulesForLocation(this.userLocation);
       });
       this.regionListenerAdded = true;
     }
@@ -22929,7 +23054,7 @@ class GdcpManager {
 
   createGdcpField(gdcpField) {
     const field = `
-      <div class="en__field en__field--checkbox en__field--000000 pseudo-en-field en__field--${gdcpField.gdcpFieldName}">
+      <div class="en__field en__field--checkbox en__field--000000 pseudo-en-field engrid-gdcp-field en__field--${gdcpField.gdcpFieldName}">
           <div class="en__field__element en__field__element--checkbox">
               <div class="en__field__item">
                   <input 
@@ -22960,7 +23085,7 @@ class GdcpManager {
 
     if (input) {
       input.addEventListener("change", () => {
-        this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, input.checked);
+        this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, input.checked, true);
         this.gdcpFieldManager.setTouched(gdcpField.gdcpFieldName);
       });
     }
@@ -22979,6 +23104,53 @@ class GdcpManager {
     const optInFieldsNames = gdcpField.optInFieldNames.map(name => `[name="${name}"]`).join(", ");
     const optInFieldsPresent = document.querySelector(optInFieldsNames);
     return !!dataFieldPresent && !!optInFieldsPresent;
+  }
+  /**
+   * Apply the opt in rules for the user's location
+   * @param location The user's location
+   * @param scrollToChangedField Whether to scroll to the field highest up the page that has changed state
+   */
+
+
+  applyRulesForLocation(location) {
+    let scrollToChangedField = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+    const {
+      checkedStateChangedFields
+    } = this.ruleHandler.applyOptInRules(location);
+
+    if (scrollToChangedField) {
+      this.scrollUpToHighestChangedField(checkedStateChangedFields);
+    }
+  }
+  /**
+   * Scroll to the field highest up the page that has changed state
+   */
+
+
+  scrollUpToHighestChangedField(checkedStateChangedFields) {
+    if (checkedStateChangedFields.length) {
+      // Only rules that have a visible checkbox
+      const visibleFields = checkedStateChangedFields.filter(field => {
+        const gdcpField = this.gdcpFieldManager.getField(field.gdcpFieldName);
+        return gdcpField?.visible;
+      }); // Get the DOM element of the data field of the field highest up the page
+
+      const firstChangedField = visibleFields.map(field => {
+        return document.querySelector(`[name="${field.dataFieldName}"]`)?.closest(".en__field");
+      }).filter(el => el).reduce((a, b) => {
+        return a?.getBoundingClientRect().top < b?.getBoundingClientRect().top ? a : b;
+      });
+
+      if (firstChangedField) {
+        const fieldTop = firstChangedField.getBoundingClientRect().top + window.scrollY; // Only scroll if the field is above the current scroll position
+
+        if (fieldTop < window.scrollY) {
+          firstChangedField.scrollIntoView({
+            behavior: "smooth"
+          });
+        }
+      }
+    }
   }
   /**
    * Add a consent statement below the submit button for existing supporters
@@ -23022,6 +23194,28 @@ class GdcpManager {
     }
 
     return null;
+  }
+  /**
+   * Actions for when EN form is submitted
+   * @private
+   */
+
+
+  onSubmit() {
+    this._form.onSubmit.subscribe(() => {
+      this.gdcpFieldManager.saveStateToSession();
+    });
+  }
+  /**
+   * Restore the state of the GDCP + Opt In fields from session storage
+   * Used when the submission fails, instead of applying location-based rules again.
+   */
+
+
+  restoreFieldsStateFromSession() {
+    this.logger.log("Detected submission failure. Restoring GDCP + Opt In field states.");
+    this.gdcpFieldManager.applyStateFromSession();
+    this.gdcpFieldManager.clearStateFromSession();
   }
 
 }

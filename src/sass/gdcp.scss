@@ -39,4 +39,8 @@
       text-decoration: none;
     }
   }
+
+  [class*=validationFail] .engrid-gdcp-field label {
+    color: initial;
+  }
 }
