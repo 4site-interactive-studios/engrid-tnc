@@ -30,7 +30,7 @@ export class RuleHandler {
    * If no rules are found for the region, fall back to the country
    * If no rules are found for the country, fall back to "Other"
    */
-  getRulesForLocation(location: string): OptInRule[] {
+  private getRulesForLocation(location: string): OptInRule[] {
     //If we're in strict mode, always use that.
     if (this.strictMode) {
       this.logger.log(`Using strict mode rules`, this.strictRules);
@@ -117,7 +117,7 @@ export class RuleHandler {
    * If the field is optional, use the optional rule.
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-  applyRule(rule: OptInRule, gdcpField: GdcpField): boolean {
+  private applyRule(rule: OptInRule, gdcpField: GdcpField): boolean {
     const dataInputEl = document.querySelector(
       `input[name="${gdcpField.dataFieldName}"]`
     );
@@ -172,12 +172,14 @@ export class RuleHandler {
    * Check the GDCP field and all its associated opt-in fields
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-  preselectedCheckedRule(gdcpField: GdcpField): boolean {
+  private preselectedCheckedRule(gdcpField: GdcpField): boolean {
     const checkedStateChanged = this.gdcpFieldManager.setChecked(
       gdcpField.gdcpFieldName,
       true
     );
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
 
@@ -186,12 +188,14 @@ export class RuleHandler {
    * Uncheck the GDCP field and all its associated opt-in fields
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-  checkboxRule(gdcpField: GdcpField): boolean {
+  private checkboxRule(gdcpField: GdcpField): boolean {
     const checkedStateChanged = this.gdcpFieldManager.setChecked(
       gdcpField.gdcpFieldName,
       false
     );
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
 
@@ -202,30 +206,43 @@ export class RuleHandler {
    * Check the GDCP field and all its associated opt-in fields
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-  hiddenCheckboxRule(gdcpField: GdcpField): boolean {
+  private hiddenCheckboxRule(gdcpField: GdcpField): boolean {
     const checkedStateChanged = this.gdcpFieldManager.setChecked(
       gdcpField.gdcpFieldName,
       true
     );
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
 
-  //TODO: Implement this rule
   /**
    * Rule for double opt-in
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-  doubleOptInRule(gdcpField: GdcpField): boolean {
-    return false;
+  private doubleOptInRule(gdcpField: GdcpField): boolean {
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(
+      gdcpField.gdcpFieldName,
+      false
+    );
+    this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
+    return checkedStateChanged;
   }
 
-  //TODO: Implement this rule
   /**
    * Rule for hidden field that does not generate QCB record.
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-  hiddenNoQcbRule(gdcpField: GdcpField): boolean {
-    return this.hiddenCheckboxRule(gdcpField);
+  private hiddenNoQcbRule(gdcpField: GdcpField): boolean {
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(
+      gdcpField.gdcpFieldName,
+      true
+    );
+    this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, false);
+    return checkedStateChanged;
   }
 }

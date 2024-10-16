@@ -11,7 +11,7 @@ export const gdcpFields: GdcpField[] = [
       "supporter.questions.848522", // 	Get Involved - Membership
       "supporter.questions.848523", // Get Involved - Volunteer
     ],
-    gdcpFieldName: "engrid.gdcp-email",
+    gdcpFieldName: "engrid.gdcp-email", // Don't edit this field
     gdcpFieldHtmlLabel: `<span>I agree to receive email updates from The Nature Conservancy and understand I can unsubscribe at any time.</span>`,
   },
   {
@@ -23,7 +23,7 @@ export const gdcpFields: GdcpField[] = [
       "supporter.questions.848528", // Mobile Call Opt In
       "supporter.questions.1952175", // Interested in Mobile Text
     ],
-    gdcpFieldName: "engrid.gdcp-mobile_phone",
+    gdcpFieldName: "engrid.gdcp-mobile_phone", // Don't edit this field
     gdcpFieldHtmlLabel: `<span>I’d like to receive phone and text updates from The Nature Conservancy and understand I can unsubscribe at any time. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="#" target="_blank">Mobile Terms & Conditions</a> | <a href="#" target="_blank">Privacy Statement</a>.</span>`,
   },
   {
@@ -32,7 +32,7 @@ export const gdcpFields: GdcpField[] = [
     optInFieldNames: [
       "supporter.questions.894263", // Home Phone Opt In
     ],
-    gdcpFieldName: "engrid.gdcp-home_phone",
+    gdcpFieldName: "engrid.gdcp-home_phone", // Don't edit this field
     gdcpFieldHtmlLabel: `<span>I give The Nature Conservancy permission to contact me by phone.</span>`,
   },
   {
@@ -41,7 +41,7 @@ export const gdcpFields: GdcpField[] = [
     optInFieldNames: [
       "supporter.questions.1984598", // GDCP Dummy Postal Mail Opt-In
     ],
-    gdcpFieldName: "engrid.gdcp-postal_mail",
+    gdcpFieldName: "engrid.gdcp-postal_mail", // Don't edit this field
     gdcpFieldHtmlLabel: `<span>The Nature Conservancy can send me updates about its work and other information by mail.</span>`,
   },
 ];

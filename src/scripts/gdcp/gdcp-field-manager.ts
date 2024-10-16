@@ -21,6 +21,8 @@ export class GdcpFieldManager {
       touched: false,
       checked: false,
       visible: true,
+      doubleOptIn: false,
+      createQcb: true,
     });
   }
 
@@ -29,6 +31,13 @@ export class GdcpFieldManager {
    */
   getField(fieldName: string): GdcpFieldState | undefined {
     return this.fields.get(fieldName);
+  }
+
+  /**
+   * Get all field state objects
+   */
+  getFields(): Map<string, GdcpFieldState> {
+    return this.fields;
   }
 
   /**
@@ -48,11 +57,10 @@ export class GdcpFieldManager {
       const parsedState: [string, GdcpFieldState][] = JSON.parse(state);
       this.fields = new Map(parsedState);
       this.fields.forEach((field) => {
-        this.setChecked(field.field.gdcpFieldName, field.checked, true);
-        this.setVisibility(field.field.gdcpFieldName, field.visible);
-        if (field.touched) {
-          this.setTouched(field.field.gdcpFieldName);
-        }
+        // Run DOM manipulation functions to match DOM to state from session
+        this.updateFieldChecked(field.field.gdcpFieldName);
+        this.updateFieldOptInsChecked(field.field.gdcpFieldName);
+        this.updateFieldDisplay(field.field.gdcpFieldName);
       });
     }
   }
@@ -126,6 +134,36 @@ export class GdcpFieldManager {
   }
 
   /**
+   * Set the double opt-in state of a field
+   */
+  setDoubleOptIn(fieldName: string, doubleOptIn: boolean) {
+    const field = this.getField(fieldName);
+    if (field) {
+      field.doubleOptIn = doubleOptIn;
+      this.logger.log(
+        `Field ${fieldName} double opt-in set to: ${doubleOptIn}`,
+        this.fields
+      );
+      // When setting a field to double opt-in, we re-call the updateFieldOptInsChecked function to ensure the opt-ins are unchecked.
+      this.updateFieldOptInsChecked(fieldName);
+    }
+  }
+
+  /**
+   * Set the create QCB state of a field
+   */
+  setCreateQcb(fieldName: string, createQcb: boolean) {
+    const field = this.getField(fieldName);
+    if (field) {
+      field.createQcb = createQcb;
+      this.logger.log(
+        `Field ${fieldName} create QCB set to: ${createQcb}`,
+        this.fields
+      );
+    }
+  }
+
+  /**
    * Update the checked state of the field in the DOM
    */
   private updateFieldChecked(fieldName: string) {
@@ -151,7 +189,8 @@ export class GdcpFieldManager {
           `[name="${name}"]`
         ) as HTMLInputElement;
         if (input) {
-          input.checked = field.checked;
+          // If the field is double opt-in, always keep the opt-in unchecked, otherwise match field state.
+          input.checked = field.doubleOptIn ? false : field.checked;
         }
       });
     }

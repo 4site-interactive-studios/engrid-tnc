@@ -5,4 +5,6 @@ export interface GdcpFieldState {
   touched: boolean;
   checked: boolean;
   visible: boolean;
+  doubleOptIn: boolean;
+  createQcb: boolean;
 }

@@ -4,6 +4,7 @@ import { gdcpFields } from "./config/gdcp-fields";
 import { GdcpFieldManager } from "./gdcp-field-manager";
 import { RuleHandler } from "./rule-handler";
 import { EnForm } from "@4site/engrid-common";
+import { pages } from "./config/pages";
 
 declare global {
   interface Window {
@@ -36,8 +37,10 @@ export class GdcpManager {
     ) && window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed()
   );
   private _form: EnForm = EnForm.getInstance();
+  private pages: Record<string, string> = pages;
 
   constructor() {
+    this.handleDoubleOptInEmail();
     if (!this.shouldRun()) {
       this.logger.log("GDCP is not running on this page.");
       return;
@@ -49,9 +52,16 @@ export class GdcpManager {
         this.strictMode ? "active" : "not active"
       }.`
     );
+    this.setupGdcpFields();
+    if (this.gdcpFieldManager.getFields().size === 0) {
+      // If we didn't create any GDCP fields, then we're on a static page / thank-you page
+      // we don't need to do anything else
+      this.logger.log("No GDCP fields were created. Exiting GDCP script.");
+      this.clearSessionState();
+      return;
+    }
     ENGrid.setBodyData("gdcp", "true");
     this.addConsentStatementForExistingSupporters();
-    this.setupGdcpFields();
     this.getInitialLocation().then((location) => {
       this.userLocation = location;
       this.logger.log(`Initial User location is ${this.userLocation}`);
@@ -62,6 +72,7 @@ export class GdcpManager {
         this.applyRulesForLocation(this.userLocation, false);
       }
       this.watchForLocationChange();
+      this.clearSessionState();
     });
     this.onSubmit();
   }
@@ -452,7 +463,19 @@ export class GdcpManager {
    */
   private onSubmit() {
     this._form.onSubmit.subscribe(() => {
+      // Save the GDCP fields state to session (for restoring in case of submission errors)
       this.gdcpFieldManager.saveStateToSession();
+
+      // Save the double opt in email state to session (for triggering the opt in confirmation email)
+      const emailGdcpFieldName = this.gdcpFields.find(
+        (field) => field.channel === "email"
+      )?.gdcpFieldName;
+      if (emailGdcpFieldName) {
+        const emailField = this.gdcpFieldManager.getField(emailGdcpFieldName);
+        if (emailField && emailField.checked && emailField.doubleOptIn) {
+          sessionStorage.setItem("gdcp-email-double-opt-in", "Y");
+        }
+      }
     });
   }
 
@@ -465,6 +488,36 @@ export class GdcpManager {
       "Detected submission failure. Restoring GDCP + Opt In field states."
     );
     this.gdcpFieldManager.applyStateFromSession();
+  }
+
+  /**
+   * Clear the session storage state
+   * @private
+   */
+  private clearSessionState() {
+    sessionStorage.removeItem("gdcp-email-double-opt-in");
     this.gdcpFieldManager.clearStateFromSession();
+  }
+
+  /**
+   * Send double opt in email if the user has opted in and the page is not the first page
+   */
+  private handleDoubleOptInEmail() {
+    const shouldSendDoubleOptInEmail =
+      sessionStorage.getItem("gdcp-email-double-opt-in") === "Y" &&
+      ENGrid.getPageNumber() !== 1;
+
+    if (shouldSendDoubleOptInEmail) {
+      const url = new URL(this.pages.double_opt_in_email_trigger);
+      url.searchParams.append("chain", "");
+      url.searchParams.append("autosubmit", "Y");
+      const iframe = document.createElement("iframe");
+      iframe.src = url.toString();
+      iframe.style.display = "none";
+      document.body.appendChild(iframe);
+      this.logger.log(
+        `Sending double opt in email using form: ${url.toString()}`
+      );
+    }
   }
 }

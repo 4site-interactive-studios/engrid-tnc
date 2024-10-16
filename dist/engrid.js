@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, October 14, 2024 @ 13:23:48 ET
+ *  Date: Wednesday, October 16, 2024 @ 11:39:11 ET
  *  By: michael
  *  ENGrid styles: v0.18.14
  *  ENGrid scripts: v0.18.14
@@ -22286,6 +22286,7 @@ const gdcpFields = [{
   "supporter.questions.848523" // Get Involved - Volunteer
   ],
   gdcpFieldName: "engrid.gdcp-email",
+  // Don't edit this field
   gdcpFieldHtmlLabel: `<span>I agree to receive email updates from The Nature Conservancy and understand I can unsubscribe at any time.</span>`
 }, {
   channel: "mobile_phone",
@@ -22296,6 +22297,7 @@ const gdcpFields = [{
   "supporter.questions.1952175" // Interested in Mobile Text
   ],
   gdcpFieldName: "engrid.gdcp-mobile_phone",
+  // Don't edit this field
   gdcpFieldHtmlLabel: `<span>I’d like to receive phone and text updates from The Nature Conservancy and understand I can unsubscribe at any time. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="#" target="_blank">Mobile Terms & Conditions</a> | <a href="#" target="_blank">Privacy Statement</a>.</span>`
 }, {
   channel: "home_phone",
@@ -22303,6 +22305,7 @@ const gdcpFields = [{
   optInFieldNames: ["supporter.questions.894263" // Home Phone Opt In
   ],
   gdcpFieldName: "engrid.gdcp-home_phone",
+  // Don't edit this field
   gdcpFieldHtmlLabel: `<span>I give The Nature Conservancy permission to contact me by phone.</span>`
 }, {
   channel: "postal_mail",
@@ -22310,6 +22313,7 @@ const gdcpFields = [{
   optInFieldNames: ["supporter.questions.1984598" // GDCP Dummy Postal Mail Opt-In
   ],
   gdcpFieldName: "engrid.gdcp-postal_mail",
+  // Don't edit this field
   gdcpFieldHtmlLabel: `<span>The Nature Conservancy can send me updates about its work and other information by mail.</span>`
 }];
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/gdcp-field-manager.ts
@@ -22332,7 +22336,9 @@ class GdcpFieldManager {
       field: gdcpField,
       touched: false,
       checked: false,
-      visible: true
+      visible: true,
+      doubleOptIn: false,
+      createQcb: true
     });
   }
   /**
@@ -22342,6 +22348,14 @@ class GdcpFieldManager {
 
   getField(fieldName) {
     return this.fields.get(fieldName);
+  }
+  /**
+   * Get all field state objects
+   */
+
+
+  getFields() {
+    return this.fields;
   }
   /**
    * Save the current state to session storage
@@ -22364,12 +22378,10 @@ class GdcpFieldManager {
       const parsedState = JSON.parse(state);
       this.fields = new Map(parsedState);
       this.fields.forEach(field => {
-        this.setChecked(field.field.gdcpFieldName, field.checked, true);
-        this.setVisibility(field.field.gdcpFieldName, field.visible);
-
-        if (field.touched) {
-          this.setTouched(field.field.gdcpFieldName);
-        }
+        // Run DOM manipulation functions to match DOM to state from session
+        this.updateFieldChecked(field.field.gdcpFieldName);
+        this.updateFieldOptInsChecked(field.field.gdcpFieldName);
+        this.updateFieldDisplay(field.field.gdcpFieldName);
       });
     }
   }
@@ -22439,6 +22451,34 @@ class GdcpFieldManager {
     }
   }
   /**
+   * Set the double opt-in state of a field
+   */
+
+
+  setDoubleOptIn(fieldName, doubleOptIn) {
+    const field = this.getField(fieldName);
+
+    if (field) {
+      field.doubleOptIn = doubleOptIn;
+      this.logger.log(`Field ${fieldName} double opt-in set to: ${doubleOptIn}`, this.fields); // When setting a field to double opt-in, we re-call the updateFieldOptInsChecked function to ensure the opt-ins are unchecked.
+
+      this.updateFieldOptInsChecked(fieldName);
+    }
+  }
+  /**
+   * Set the create QCB state of a field
+   */
+
+
+  setCreateQcb(fieldName, createQcb) {
+    const field = this.getField(fieldName);
+
+    if (field) {
+      field.createQcb = createQcb;
+      this.logger.log(`Field ${fieldName} create QCB set to: ${createQcb}`, this.fields);
+    }
+  }
+  /**
    * Update the checked state of the field in the DOM
    */
 
@@ -22467,7 +22507,8 @@ class GdcpFieldManager {
         const input = document.querySelector(`[name="${name}"]`);
 
         if (input) {
-          input.checked = field.checked;
+          // If the field is double opt-in, always keep the opt-in unchecked, otherwise match field state.
+          input.checked = field.doubleOptIn ? false : field.checked;
         }
       });
     }
@@ -22758,6 +22799,8 @@ class RuleHandler {
   preselectedCheckedRule(gdcpField) {
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
   /**
@@ -22770,6 +22813,8 @@ class RuleHandler {
   checkboxRule(gdcpField) {
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
   /**
@@ -22784,9 +22829,10 @@ class RuleHandler {
   hiddenCheckboxRule(gdcpField) {
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
-  } //TODO: Implement this rule
-
+  }
   /**
    * Rule for double opt-in
    * @return {boolean} Whether the checked state of the GDCP field has changed
@@ -22794,9 +22840,12 @@ class RuleHandler {
 
 
   doubleOptInRule(gdcpField) {
-    return false;
-  } //TODO: Implement this rule
-
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
+    return checkedStateChanged;
+  }
   /**
    * Rule for hidden field that does not generate QCB record.
    * @return {boolean} Whether the checked state of the GDCP field has changed
@@ -22804,11 +22853,20 @@ class RuleHandler {
 
 
   hiddenNoQcbRule(gdcpField) {
-    return this.hiddenCheckboxRule(gdcpField);
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, false);
+    return checkedStateChanged;
   }
 
 }
+;// CONCATENATED MODULE: ./src/scripts/gdcp/config/pages.ts
+const pages = {
+  double_opt_in_email_trigger: "https://preserve.nature.org/page/159087/petition/1",
+  postal_mail_opt_in: "https://"
+};
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/gdcp-manager.ts
+
 
 
 
@@ -22837,6 +22895,10 @@ class GdcpManager {
 
     _defineProperty(this, "_form", EnForm.getInstance());
 
+    _defineProperty(this, "pages", pages);
+
+    this.handleDoubleOptInEmail();
+
     if (!this.shouldRun()) {
       this.logger.log("GDCP is not running on this page.");
       return;
@@ -22845,9 +22907,18 @@ class GdcpManager {
     this.strictMode = window.GlobalDigitalComplianceStrictMode || false;
     this.ruleHandler.setStrictMode(this.strictMode);
     this.logger.log(`GDCP is running. Strict mode is ${this.strictMode ? "active" : "not active"}.`);
+    this.setupGdcpFields();
+
+    if (this.gdcpFieldManager.getFields().size === 0) {
+      // If we didn't create any GDCP fields, then we're on a static page / thank-you page
+      // we don't need to do anything else
+      this.logger.log("No GDCP fields were created. Exiting GDCP script.");
+      this.clearSessionState();
+      return;
+    }
+
     engrid_ENGrid.setBodyData("gdcp", "true");
     this.addConsentStatementForExistingSupporters();
-    this.setupGdcpFields();
     this.getInitialLocation().then(location => {
       this.userLocation = location;
       this.logger.log(`Initial User location is ${this.userLocation}`);
@@ -22860,6 +22931,7 @@ class GdcpManager {
       }
 
       this.watchForLocationChange();
+      this.clearSessionState();
     });
     this.onSubmit();
   }
@@ -23203,7 +23275,18 @@ class GdcpManager {
 
   onSubmit() {
     this._form.onSubmit.subscribe(() => {
-      this.gdcpFieldManager.saveStateToSession();
+      // Save the GDCP fields state to session (for restoring in case of submission errors)
+      this.gdcpFieldManager.saveStateToSession(); // Save the double opt in email state to session (for triggering the opt in confirmation email)
+
+      const emailGdcpFieldName = this.gdcpFields.find(field => field.channel === "email")?.gdcpFieldName;
+
+      if (emailGdcpFieldName) {
+        const emailField = this.gdcpFieldManager.getField(emailGdcpFieldName);
+
+        if (emailField && emailField.checked && emailField.doubleOptIn) {
+          sessionStorage.setItem("gdcp-email-double-opt-in", "Y");
+        }
+      }
     });
   }
   /**
@@ -23215,7 +23298,35 @@ class GdcpManager {
   restoreFieldsStateFromSession() {
     this.logger.log("Detected submission failure. Restoring GDCP + Opt In field states.");
     this.gdcpFieldManager.applyStateFromSession();
+  }
+  /**
+   * Clear the session storage state
+   * @private
+   */
+
+
+  clearSessionState() {
+    sessionStorage.removeItem("gdcp-email-double-opt-in");
     this.gdcpFieldManager.clearStateFromSession();
+  }
+  /**
+   * Send double opt in email if the user has opted in and the page is not the first page
+   */
+
+
+  handleDoubleOptInEmail() {
+    const shouldSendDoubleOptInEmail = sessionStorage.getItem("gdcp-email-double-opt-in") === "Y" && engrid_ENGrid.getPageNumber() !== 1;
+
+    if (shouldSendDoubleOptInEmail) {
+      const url = new URL(this.pages.double_opt_in_email_trigger);
+      url.searchParams.append("chain", "");
+      url.searchParams.append("autosubmit", "Y");
+      const iframe = document.createElement("iframe");
+      iframe.src = url.toString();
+      iframe.style.display = "none";
+      document.body.appendChild(iframe);
+      this.logger.log(`Sending double opt in email using form: ${url.toString()}`);
+    }
   }
 
 }
