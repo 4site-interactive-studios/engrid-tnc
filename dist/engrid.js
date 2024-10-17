@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, October 16, 2024 @ 11:39:11 ET
+ *  Date: Thursday, October 17, 2024 @ 09:10:27 ET
  *  By: michael
  *  ENGrid styles: v0.18.14
  *  ENGrid scripts: v0.18.14
@@ -22338,7 +22338,8 @@ class GdcpFieldManager {
       checked: false,
       visible: true,
       doubleOptIn: false,
-      createQcb: true
+      createQcb: true,
+      rule: null
     });
   }
   /**
@@ -22476,6 +22477,19 @@ class GdcpFieldManager {
     if (field) {
       field.createQcb = createQcb;
       this.logger.log(`Field ${fieldName} create QCB set to: ${createQcb}`, this.fields);
+    }
+  }
+  /**
+   * Set the rule for a field
+   */
+
+
+  setRule(fieldName, rule) {
+    const field = this.getField(fieldName);
+
+    if (field) {
+      field.rule = rule;
+      this.logger.log(`Field ${fieldName} rule set to: ${rule}`, this.fields);
     }
   }
   /**
@@ -22797,6 +22811,7 @@ class RuleHandler {
 
 
   preselectedCheckedRule(gdcpField) {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "preselected_checkbox");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
@@ -22811,6 +22826,7 @@ class RuleHandler {
 
 
   checkboxRule(gdcpField) {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "checkbox");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
@@ -22827,6 +22843,7 @@ class RuleHandler {
 
 
   hiddenCheckboxRule(gdcpField) {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "hidden");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
@@ -22840,6 +22857,7 @@ class RuleHandler {
 
 
   doubleOptInRule(gdcpField) {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "double_opt_in");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, true);
@@ -22853,6 +22871,7 @@ class RuleHandler {
 
 
   hiddenNoQcbRule(gdcpField) {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "hidden_no_qcb");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
     this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, false);

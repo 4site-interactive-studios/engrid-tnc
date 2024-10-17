@@ -7,6 +7,7 @@ import { geographicalOptInRules } from "./config/geographical-opt-in-rules";
 import { defaultOptInRules } from "./config/default-opt-in-rules";
 import { strictOptInRules } from "./config/strict-opt-in-rules";
 import { GdcpFieldManager } from "./gdcp-field-manager";
+import { Channel } from "./interfaces/channel.type";
 
 export class RuleHandler {
   private logger: EngridLogger = new EngridLogger(
@@ -18,9 +19,9 @@ export class RuleHandler {
   private gdcpFields: GdcpField[] = gdcpFields;
   private readonly geographicalRules: GeographicalRule[] =
     geographicalOptInRules;
-  private readonly defaultRules: OptInRule[] = defaultOptInRules;
-  private readonly strictRules: OptInRule[] = strictOptInRules;
-  private activeRules: OptInRule[] = [];
+  private readonly defaultRules: OptInRule<Channel>[] = defaultOptInRules;
+  private readonly strictRules: OptInRule<Channel>[] = strictOptInRules;
+  private activeRules: OptInRule<Channel>[] = [];
   private strictMode: boolean = false;
 
   constructor(private gdcpFieldManager: GdcpFieldManager) {}
@@ -30,7 +31,7 @@ export class RuleHandler {
    * If no rules are found for the region, fall back to the country
    * If no rules are found for the country, fall back to "Other"
    */
-  private getRulesForLocation(location: string): OptInRule[] {
+  private getRulesForLocation(location: string): OptInRule<Channel>[] {
     //If we're in strict mode, always use that.
     if (this.strictMode) {
       this.logger.log(`Using strict mode rules`, this.strictRules);
@@ -73,7 +74,7 @@ export class RuleHandler {
    * @return {activeRules} The rules that were applied
    */
   applyOptInRules(location: string): {
-    activeRules: OptInRule[];
+    activeRules: OptInRule<Channel>[];
     checkedStateChangedFields: GdcpField[];
   } {
     const locationRules = this.getRulesForLocation(location);
@@ -117,7 +118,7 @@ export class RuleHandler {
    * If the field is optional, use the optional rule.
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-  private applyRule(rule: OptInRule, gdcpField: GdcpField): boolean {
+  private applyRule(rule: OptInRule<Channel>, gdcpField: GdcpField): boolean {
     const dataInputEl = document.querySelector(
       `input[name="${gdcpField.dataFieldName}"]`
     );
@@ -173,6 +174,10 @@ export class RuleHandler {
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
   private preselectedCheckedRule(gdcpField: GdcpField): boolean {
+    this.gdcpFieldManager.setRule(
+      gdcpField.gdcpFieldName,
+      "preselected_checkbox"
+    );
     const checkedStateChanged = this.gdcpFieldManager.setChecked(
       gdcpField.gdcpFieldName,
       true
@@ -189,6 +194,7 @@ export class RuleHandler {
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
   private checkboxRule(gdcpField: GdcpField): boolean {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "checkbox");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(
       gdcpField.gdcpFieldName,
       false
@@ -207,6 +213,7 @@ export class RuleHandler {
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
   private hiddenCheckboxRule(gdcpField: GdcpField): boolean {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "hidden");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(
       gdcpField.gdcpFieldName,
       true
@@ -222,6 +229,7 @@ export class RuleHandler {
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
   private doubleOptInRule(gdcpField: GdcpField): boolean {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "double_opt_in");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(
       gdcpField.gdcpFieldName,
       false
@@ -237,6 +245,7 @@ export class RuleHandler {
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
   private hiddenNoQcbRule(gdcpField: GdcpField): boolean {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "hidden_no_qcb");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(
       gdcpField.gdcpFieldName,
       true

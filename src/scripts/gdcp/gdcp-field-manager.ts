@@ -1,6 +1,7 @@
 import { GdcpField } from "./interfaces/gdcp-field.interface";
 import { GdcpFieldState } from "./interfaces/gdcp-field-state.interface";
 import { EngridLogger } from "@4site/engrid-common";
+import { Rule } from "./interfaces/rule.type";
 
 export class GdcpFieldManager {
   private fields: Map<string, GdcpFieldState> = new Map();
@@ -23,6 +24,7 @@ export class GdcpFieldManager {
       visible: true,
       doubleOptIn: false,
       createQcb: true,
+      rule: null,
     });
   }
 
@@ -160,6 +162,17 @@ export class GdcpFieldManager {
         `Field ${fieldName} create QCB set to: ${createQcb}`,
         this.fields
       );
+    }
+  }
+
+  /**
+   * Set the rule for a field
+   */
+  setRule(fieldName: string, rule: Rule) {
+    const field = this.getField(fieldName);
+    if (field) {
+      field.rule = rule;
+      this.logger.log(`Field ${fieldName} rule set to: ${rule}`, this.fields);
     }
   }
 

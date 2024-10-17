@@ -1,1 +1,1 @@
-export type channel = "email" | "mobile_phone" | "home_phone" | "postal_mail";
+export type Channel = "email" | "mobile_phone" | "home_phone" | "postal_mail";

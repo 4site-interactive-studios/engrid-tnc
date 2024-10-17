@@ -1,7 +1,7 @@
-import { channel } from "./channel.type";
+import { Channel } from "./channel.type";
 
 export interface GdcpField {
-  channel: channel;
+  channel: Channel;
   dataFieldName: string;
   optInFieldNames: string[];
   gdcpFieldName: string;
