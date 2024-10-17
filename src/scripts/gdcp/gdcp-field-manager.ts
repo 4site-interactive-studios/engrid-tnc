@@ -23,7 +23,6 @@ export class GdcpFieldManager {
       checked: false,
       visible: true,
       doubleOptIn: false,
-      createQcb: true,
       rule: null,
     });
   }
@@ -148,20 +147,6 @@ export class GdcpFieldManager {
       );
       // When setting a field to double opt-in, we re-call the updateFieldOptInsChecked function to ensure the opt-ins are unchecked.
       this.updateFieldOptInsChecked(fieldName);
-    }
-  }
-
-  /**
-   * Set the create QCB state of a field
-   */
-  setCreateQcb(fieldName: string, createQcb: boolean) {
-    const field = this.getField(fieldName);
-    if (field) {
-      field.createQcb = createQcb;
-      this.logger.log(
-        `Field ${fieldName} create QCB set to: ${createQcb}`,
-        this.fields
-      );
     }
   }
 

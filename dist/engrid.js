@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 17, 2024 @ 09:10:27 ET
+ *  Date: Thursday, October 17, 2024 @ 12:15:37 ET
  *  By: michael
  *  ENGrid styles: v0.18.14
  *  ENGrid scripts: v0.18.14
@@ -22338,7 +22338,6 @@ class GdcpFieldManager {
       checked: false,
       visible: true,
       doubleOptIn: false,
-      createQcb: true,
       rule: null
     });
   }
@@ -22464,19 +22463,6 @@ class GdcpFieldManager {
       this.logger.log(`Field ${fieldName} double opt-in set to: ${doubleOptIn}`, this.fields); // When setting a field to double opt-in, we re-call the updateFieldOptInsChecked function to ensure the opt-ins are unchecked.
 
       this.updateFieldOptInsChecked(fieldName);
-    }
-  }
-  /**
-   * Set the create QCB state of a field
-   */
-
-
-  setCreateQcb(fieldName, createQcb) {
-    const field = this.getField(fieldName);
-
-    if (field) {
-      field.createQcb = createQcb;
-      this.logger.log(`Field ${fieldName} create QCB set to: ${createQcb}`, this.fields);
     }
   }
   /**
@@ -22815,7 +22801,6 @@ class RuleHandler {
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
-    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
   /**
@@ -22830,7 +22815,6 @@ class RuleHandler {
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
-    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
   /**
@@ -22847,7 +22831,6 @@ class RuleHandler {
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
-    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
   /**
@@ -22861,7 +22844,6 @@ class RuleHandler {
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, true);
-    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
   /**
@@ -22874,7 +22856,6 @@ class RuleHandler {
     this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "hidden_no_qcb");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
-    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, false);
     return checkedStateChanged;
   }
 
@@ -22882,7 +22863,7 @@ class RuleHandler {
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/config/pages.ts
 const pages = {
   double_opt_in_email_trigger: "https://preserve.nature.org/page/159087/petition/1",
-  postal_mail_opt_in: "https://"
+  postal_mail_qcb: "https://preserve.nature.org/page/159247/petition/1"
 };
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/gdcp-manager.ts
 
@@ -22917,6 +22898,7 @@ class GdcpManager {
     _defineProperty(this, "pages", pages);
 
     this.handleDoubleOptInEmail();
+    this.handlePostalMailQcb();
 
     if (!this.shouldRun()) {
       this.logger.log("GDCP is not running on this page.");
@@ -23305,6 +23287,18 @@ class GdcpManager {
         if (emailField && emailField.checked && emailField.doubleOptIn) {
           sessionStorage.setItem("gdcp-email-double-opt-in", "Y");
         }
+      } // If postal mail channel rule is NOT "hidden_no_qcb", save value to session
+      // to trigger the QCB for postal mail on thank you page load
+
+
+      const postalMailGdcpFieldName = this.gdcpFields.find(field => field.channel === "postal_mail")?.gdcpFieldName;
+
+      if (postalMailGdcpFieldName) {
+        const postalMailField = this.gdcpFieldManager.getField(postalMailGdcpFieldName);
+
+        if (postalMailField && postalMailField.checked && postalMailField.rule !== "hidden_no_qcb") {
+          sessionStorage.setItem("gdcp-postal-mail-create-qcb", "Y");
+        }
       }
     });
   }
@@ -23325,6 +23319,7 @@ class GdcpManager {
 
 
   clearSessionState() {
+    sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
     sessionStorage.removeItem("gdcp-email-double-opt-in");
     this.gdcpFieldManager.clearStateFromSession();
   }
@@ -23334,18 +23329,40 @@ class GdcpManager {
 
 
   handleDoubleOptInEmail() {
-    const shouldSendDoubleOptInEmail = sessionStorage.getItem("gdcp-email-double-opt-in") === "Y" && engrid_ENGrid.getPageNumber() !== 1;
+    const shouldSendDoubleOptInEmail = sessionStorage.getItem("gdcp-email-double-opt-in") === "Y" && !this.submissionFailed;
 
     if (shouldSendDoubleOptInEmail) {
-      const url = new URL(this.pages.double_opt_in_email_trigger);
-      url.searchParams.append("chain", "");
-      url.searchParams.append("autosubmit", "Y");
-      const iframe = document.createElement("iframe");
-      iframe.src = url.toString();
-      iframe.style.display = "none";
-      document.body.appendChild(iframe);
+      const url = this.createAutoSubmitIframeForm(this.pages.double_opt_in_email_trigger);
       this.logger.log(`Sending double opt in email using form: ${url.toString()}`);
     }
+  }
+  /**
+   * Send QCB for postal mail if we have the session data to do that
+   */
+
+
+  handlePostalMailQcb() {
+    const shouldCreateQcb = sessionStorage.getItem("gdcp-postal-mail-create-qcb") === "Y" && !this.submissionFailed;
+
+    if (shouldCreateQcb) {
+      const url = this.createAutoSubmitIframeForm(this.pages.postal_mail_qcb);
+      this.logger.log(`Creating QCB for postal mail using form: ${url.toString()}`);
+    }
+  }
+  /**
+   * Create an iframe form with autosubmit form
+   */
+
+
+  createAutoSubmitIframeForm(urlString) {
+    const url = new URL(urlString);
+    url.searchParams.append("chain", "");
+    url.searchParams.append("autosubmit", "Y");
+    const iframe = document.createElement("iframe");
+    iframe.src = url.toString();
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+    return url;
   }
 
 }

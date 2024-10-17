@@ -184,7 +184,6 @@ export class RuleHandler {
     );
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
-    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
 
@@ -201,7 +200,6 @@ export class RuleHandler {
     );
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
-    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
 
@@ -220,7 +218,6 @@ export class RuleHandler {
     );
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
-    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
 
@@ -236,7 +233,6 @@ export class RuleHandler {
     );
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, true);
-    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
 
@@ -251,7 +247,6 @@ export class RuleHandler {
       true
     );
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
-    this.gdcpFieldManager.setCreateQcb(gdcpField.gdcpFieldName, false);
     return checkedStateChanged;
   }
 }

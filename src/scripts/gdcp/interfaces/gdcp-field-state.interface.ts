@@ -7,6 +7,5 @@ export interface GdcpFieldState {
   checked: boolean;
   visible: boolean;
   doubleOptIn: boolean;
-  createQcb: boolean;
   rule: Rule | null;
 }

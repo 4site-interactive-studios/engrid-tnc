@@ -41,6 +41,7 @@ export class GdcpManager {
 
   constructor() {
     this.handleDoubleOptInEmail();
+    this.handlePostalMailQcb();
     if (!this.shouldRun()) {
       this.logger.log("GDCP is not running on this page.");
       return;
@@ -476,6 +477,24 @@ export class GdcpManager {
           sessionStorage.setItem("gdcp-email-double-opt-in", "Y");
         }
       }
+
+      // If postal mail channel rule is NOT "hidden_no_qcb", save value to session
+      // to trigger the QCB for postal mail on thank you page load
+      const postalMailGdcpFieldName = this.gdcpFields.find(
+        (field) => field.channel === "postal_mail"
+      )?.gdcpFieldName;
+      if (postalMailGdcpFieldName) {
+        const postalMailField = this.gdcpFieldManager.getField(
+          postalMailGdcpFieldName
+        );
+        if (
+          postalMailField &&
+          postalMailField.checked &&
+          postalMailField.rule !== "hidden_no_qcb"
+        ) {
+          sessionStorage.setItem("gdcp-postal-mail-create-qcb", "Y");
+        }
+      }
     });
   }
 
@@ -495,6 +514,7 @@ export class GdcpManager {
    * @private
    */
   private clearSessionState() {
+    sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
     sessionStorage.removeItem("gdcp-email-double-opt-in");
     this.gdcpFieldManager.clearStateFromSession();
   }
@@ -505,19 +525,45 @@ export class GdcpManager {
   private handleDoubleOptInEmail() {
     const shouldSendDoubleOptInEmail =
       sessionStorage.getItem("gdcp-email-double-opt-in") === "Y" &&
-      ENGrid.getPageNumber() !== 1;
+      !this.submissionFailed;
 
     if (shouldSendDoubleOptInEmail) {
-      const url = new URL(this.pages.double_opt_in_email_trigger);
-      url.searchParams.append("chain", "");
-      url.searchParams.append("autosubmit", "Y");
-      const iframe = document.createElement("iframe");
-      iframe.src = url.toString();
-      iframe.style.display = "none";
-      document.body.appendChild(iframe);
+      const url = this.createAutoSubmitIframeForm(
+        this.pages.double_opt_in_email_trigger
+      );
       this.logger.log(
         `Sending double opt in email using form: ${url.toString()}`
       );
     }
+  }
+
+  /**
+   * Send QCB for postal mail if we have the session data to do that
+   */
+  private handlePostalMailQcb() {
+    const shouldCreateQcb =
+      sessionStorage.getItem("gdcp-postal-mail-create-qcb") === "Y" &&
+      !this.submissionFailed;
+
+    if (shouldCreateQcb) {
+      const url = this.createAutoSubmitIframeForm(this.pages.postal_mail_qcb);
+      this.logger.log(
+        `Creating QCB for postal mail using form: ${url.toString()}`
+      );
+    }
+  }
+
+  /**
+   * Create an iframe form with autosubmit form
+   */
+  private createAutoSubmitIframeForm(urlString: string): URL {
+    const url = new URL(urlString);
+    url.searchParams.append("chain", "");
+    url.searchParams.append("autosubmit", "Y");
+    const iframe = document.createElement("iframe");
+    iframe.src = url.toString();
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+    return url;
   }
 }
