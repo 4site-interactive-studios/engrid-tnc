@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, September 12, 2024 @ 12:01:06 ET
+ *  Date: Monday, October 21, 2024 @ 06:39:04 ET
  *  By: michael
  *  ENGrid styles: v0.19.4
  *  ENGrid scripts: v0.19.5
@@ -8005,6 +8005,9 @@ body[data-engrid-debug]:before{
   color:#fff;
   margin:70px auto 0;
   max-width:190px;
+}
+[data-engrid-theme=tnc] .view-all-button a.button:hover{
+  background-color:#000;
 }
 [data-engrid-theme=tnc] .see-why-others-have-signed{
   --h3_font-family:var(--serif-fonts);

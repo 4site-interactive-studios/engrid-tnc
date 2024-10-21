@@ -84,14 +84,16 @@ export function trackFormSubmit(App, DonationAmount) {
     sessionStorage.setItem("donationData", JSON.stringify(donationData));
   }
 
-  //Mobile phone data
+  //Mobile phone data (for "F32 - Real Time SMS Push" script - opts user into SMS via API)
   /** @type {HTMLInputElement} */
   const mobilePhoneNumber = App.getField("supporter.phoneNumber2");
   if (mobilePhoneNumber) {
     const mobilePhoneData = {};
     mobilePhoneData.phoneNumber = mobilePhoneNumber.value;
     /** @type {HTMLInputElement} */
-    const mobilePhoneOptIn = App.getField("supporter.questions.848527");
+    const mobilePhoneOptIn =
+      App.getField("supporter.questions.848527") ||
+      App.getField("supporter.questions.1952175");
     if (mobilePhoneOptIn && mobilePhoneOptIn.checked) {
       mobilePhoneData.optIn = "Y";
     }
