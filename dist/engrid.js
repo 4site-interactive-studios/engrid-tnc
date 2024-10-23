@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 17, 2024 @ 12:15:37 ET
+ *  Date: Wednesday, October 23, 2024 @ 07:07:41 ET
  *  By: michael
- *  ENGrid styles: v0.18.14
- *  ENGrid scripts: v0.18.14
+ *  ENGrid styles: v0.19.4
+ *  ENGrid scripts: v0.19.5
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -30,7 +30,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 2705:
+/***/ 3309:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -60,14 +60,14 @@ exports.DispatchError = DispatchError;
 
 /***/ }),
 
-/***/ 9885:
+/***/ 8441:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DispatcherBase = void 0;
-const __1 = __webpack_require__(4844);
+const __1 = __webpack_require__(4604);
 /**
  * Base class for implementation of the dispatcher. It facilitates the subscribe
  * and unsubscribe methods based on generic handlers. The TEventType specifies
@@ -310,7 +310,7 @@ exports.DispatcherBase = DispatcherBase;
 
 /***/ }),
 
-/***/ 1637:
+/***/ 8901:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -438,7 +438,7 @@ exports.DispatcherWrapper = DispatcherWrapper;
 
 /***/ }),
 
-/***/ 4155:
+/***/ 4004:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -490,14 +490,14 @@ exports.EventListBase = EventListBase;
 
 /***/ }),
 
-/***/ 2849:
+/***/ 6580:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseDispatcherBase = void 0;
-const __1 = __webpack_require__(4844);
+const __1 = __webpack_require__(4604);
 /**
  * Dispatcher base for dispatchers that use promises. Each promise
  * is awaited before the next is dispatched, unless the event is
@@ -573,14 +573,14 @@ exports.PromiseDispatcherBase = PromiseDispatcherBase;
 
 /***/ }),
 
-/***/ 4220:
+/***/ 956:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SubscriptionChangeEventDispatcher = void 0;
-const __1 = __webpack_require__(4844);
+const __1 = __webpack_require__(4604);
 /**
  * Dispatcher for subscription changes.
  *
@@ -605,7 +605,7 @@ exports.SubscriptionChangeEventDispatcher = SubscriptionChangeEventDispatcher;
 
 /***/ }),
 
-/***/ 7278:
+/***/ 6436:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -668,7 +668,7 @@ exports.PromiseSubscription = PromiseSubscription;
 
 /***/ }),
 
-/***/ 8326:
+/***/ 3707:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -722,7 +722,7 @@ exports.Subscription = Subscription;
 
 /***/ }),
 
-/***/ 516:
+/***/ 6442:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -817,7 +817,7 @@ exports.HandlingBase = HandlingBase;
 
 /***/ }),
 
-/***/ 4844:
+/***/ 4604:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -832,31 +832,31 @@ exports.HandlingBase = HandlingBase;
  */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SubscriptionChangeEventDispatcher = exports.HandlingBase = exports.PromiseDispatcherBase = exports.PromiseSubscription = exports.DispatchError = exports.EventManagement = exports.EventListBase = exports.DispatcherWrapper = exports.DispatcherBase = exports.Subscription = void 0;
-const DispatcherBase_1 = __webpack_require__(9885);
+const DispatcherBase_1 = __webpack_require__(8441);
 Object.defineProperty(exports, "DispatcherBase", ({ enumerable: true, get: function () { return DispatcherBase_1.DispatcherBase; } }));
-const DispatchError_1 = __webpack_require__(2705);
+const DispatchError_1 = __webpack_require__(3309);
 Object.defineProperty(exports, "DispatchError", ({ enumerable: true, get: function () { return DispatchError_1.DispatchError; } }));
-const DispatcherWrapper_1 = __webpack_require__(1637);
+const DispatcherWrapper_1 = __webpack_require__(8901);
 Object.defineProperty(exports, "DispatcherWrapper", ({ enumerable: true, get: function () { return DispatcherWrapper_1.DispatcherWrapper; } }));
-const EventListBase_1 = __webpack_require__(4155);
+const EventListBase_1 = __webpack_require__(4004);
 Object.defineProperty(exports, "EventListBase", ({ enumerable: true, get: function () { return EventListBase_1.EventListBase; } }));
-const EventManagement_1 = __webpack_require__(5638);
+const EventManagement_1 = __webpack_require__(1289);
 Object.defineProperty(exports, "EventManagement", ({ enumerable: true, get: function () { return EventManagement_1.EventManagement; } }));
-const HandlingBase_1 = __webpack_require__(516);
+const HandlingBase_1 = __webpack_require__(6442);
 Object.defineProperty(exports, "HandlingBase", ({ enumerable: true, get: function () { return HandlingBase_1.HandlingBase; } }));
-const PromiseDispatcherBase_1 = __webpack_require__(2849);
+const PromiseDispatcherBase_1 = __webpack_require__(6580);
 Object.defineProperty(exports, "PromiseDispatcherBase", ({ enumerable: true, get: function () { return PromiseDispatcherBase_1.PromiseDispatcherBase; } }));
-const PromiseSubscription_1 = __webpack_require__(7278);
+const PromiseSubscription_1 = __webpack_require__(6436);
 Object.defineProperty(exports, "PromiseSubscription", ({ enumerable: true, get: function () { return PromiseSubscription_1.PromiseSubscription; } }));
-const Subscription_1 = __webpack_require__(8326);
+const Subscription_1 = __webpack_require__(3707);
 Object.defineProperty(exports, "Subscription", ({ enumerable: true, get: function () { return Subscription_1.Subscription; } }));
-const SubscriptionChangeEventHandler_1 = __webpack_require__(4220);
+const SubscriptionChangeEventHandler_1 = __webpack_require__(956);
 Object.defineProperty(exports, "SubscriptionChangeEventDispatcher", ({ enumerable: true, get: function () { return SubscriptionChangeEventHandler_1.SubscriptionChangeEventDispatcher; } }));
 
 
 /***/ }),
 
-/***/ 5638:
+/***/ 1289:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -896,14 +896,14 @@ exports.EventManagement = EventManagement;
 
 /***/ }),
 
-/***/ 4402:
+/***/ 71:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EventDispatcher = void 0;
-const ste_core_1 = __webpack_require__(4844);
+const ste_core_1 = __webpack_require__(4604);
 /**
  * Dispatcher implementation for events. Can be used to subscribe, unsubscribe
  * or dispatch events. Use the ToEvent() method to expose the event.
@@ -968,15 +968,15 @@ exports.EventDispatcher = EventDispatcher;
 
 /***/ }),
 
-/***/ 9411:
+/***/ 2162:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EventHandlingBase = void 0;
-const ste_core_1 = __webpack_require__(4844);
-const EventList_1 = __webpack_require__(2453);
+const ste_core_1 = __webpack_require__(4604);
+const EventList_1 = __webpack_require__(338);
 /**
  * Extends objects with signal event handling capabilities.
  */
@@ -990,15 +990,15 @@ exports.EventHandlingBase = EventHandlingBase;
 
 /***/ }),
 
-/***/ 2453:
+/***/ 338:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.EventList = void 0;
-const ste_core_1 = __webpack_require__(4844);
-const EventDispatcher_1 = __webpack_require__(4402);
+const ste_core_1 = __webpack_require__(4604);
+const EventDispatcher_1 = __webpack_require__(71);
 /**
  * Storage class for multiple events that are accessible by name.
  * Events dispatchers are automatically created.
@@ -1022,14 +1022,14 @@ exports.EventList = EventList;
 
 /***/ }),
 
-/***/ 7891:
+/***/ 2293:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NonUniformEventList = void 0;
-const EventDispatcher_1 = __webpack_require__(4402);
+const EventDispatcher_1 = __webpack_require__(71);
 /**
  * Similar to EventList, but instead of TArgs, a map of event names ang argument types is provided with TArgsMap.
  */
@@ -1069,7 +1069,7 @@ exports.NonUniformEventList = NonUniformEventList;
 
 /***/ }),
 
-/***/ 3111:
+/***/ 4214:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -1084,26 +1084,26 @@ exports.NonUniformEventList = NonUniformEventList;
  */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NonUniformEventList = exports.EventList = exports.EventHandlingBase = exports.EventDispatcher = void 0;
-const EventDispatcher_1 = __webpack_require__(4402);
+const EventDispatcher_1 = __webpack_require__(71);
 Object.defineProperty(exports, "EventDispatcher", ({ enumerable: true, get: function () { return EventDispatcher_1.EventDispatcher; } }));
-const EventHandlingBase_1 = __webpack_require__(9411);
+const EventHandlingBase_1 = __webpack_require__(2162);
 Object.defineProperty(exports, "EventHandlingBase", ({ enumerable: true, get: function () { return EventHandlingBase_1.EventHandlingBase; } }));
-const EventList_1 = __webpack_require__(2453);
+const EventList_1 = __webpack_require__(338);
 Object.defineProperty(exports, "EventList", ({ enumerable: true, get: function () { return EventList_1.EventList; } }));
-const NonUniformEventList_1 = __webpack_require__(7891);
+const NonUniformEventList_1 = __webpack_require__(2293);
 Object.defineProperty(exports, "NonUniformEventList", ({ enumerable: true, get: function () { return NonUniformEventList_1.NonUniformEventList; } }));
 
 
 /***/ }),
 
-/***/ 4729:
+/***/ 2725:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SignalDispatcher = void 0;
-const ste_core_1 = __webpack_require__(4844);
+const ste_core_1 = __webpack_require__(4604);
 /**
  * The dispatcher handles the storage of subsciptions and facilitates
  * subscription, unsubscription and dispatching of a signal event.
@@ -1153,15 +1153,15 @@ exports.SignalDispatcher = SignalDispatcher;
 
 /***/ }),
 
-/***/ 4243:
+/***/ 7936:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SignalHandlingBase = void 0;
-const ste_core_1 = __webpack_require__(4844);
-const _1 = __webpack_require__(1254);
+const ste_core_1 = __webpack_require__(4604);
+const _1 = __webpack_require__(5010);
 /**
  * Extends objects with signal event handling capabilities.
  *
@@ -1186,15 +1186,15 @@ exports.SignalHandlingBase = SignalHandlingBase;
 
 /***/ }),
 
-/***/ 7991:
+/***/ 1064:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SignalList = void 0;
-const ste_core_1 = __webpack_require__(4844);
-const _1 = __webpack_require__(1254);
+const ste_core_1 = __webpack_require__(4604);
+const _1 = __webpack_require__(5010);
 /**
  * Storage class for multiple signal events that are accessible by name.
  * Events dispatchers are automatically created.
@@ -1229,7 +1229,7 @@ exports.SignalList = SignalList;
 
 /***/ }),
 
-/***/ 1254:
+/***/ 5010:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -1244,24 +1244,24 @@ exports.SignalList = SignalList;
  */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SignalList = exports.SignalHandlingBase = exports.SignalDispatcher = void 0;
-const SignalDispatcher_1 = __webpack_require__(4729);
+const SignalDispatcher_1 = __webpack_require__(2725);
 Object.defineProperty(exports, "SignalDispatcher", ({ enumerable: true, get: function () { return SignalDispatcher_1.SignalDispatcher; } }));
-const SignalHandlingBase_1 = __webpack_require__(4243);
+const SignalHandlingBase_1 = __webpack_require__(7936);
 Object.defineProperty(exports, "SignalHandlingBase", ({ enumerable: true, get: function () { return SignalHandlingBase_1.SignalHandlingBase; } }));
-const SignalList_1 = __webpack_require__(7991);
+const SignalList_1 = __webpack_require__(1064);
 Object.defineProperty(exports, "SignalList", ({ enumerable: true, get: function () { return SignalList_1.SignalList; } }));
 
 
 /***/ }),
 
-/***/ 9360:
+/***/ 7376:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NonUniformSimpleEventList = void 0;
-const SimpleEventDispatcher_1 = __webpack_require__(4624);
+const SimpleEventDispatcher_1 = __webpack_require__(9606);
 /**
  * Similar to EventList, but instead of TArgs, a map of event names ang argument types is provided with TArgsMap.
  */
@@ -1301,14 +1301,14 @@ exports.NonUniformSimpleEventList = NonUniformSimpleEventList;
 
 /***/ }),
 
-/***/ 4624:
+/***/ 9606:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SimpleEventDispatcher = void 0;
-const ste_core_1 = __webpack_require__(4844);
+const ste_core_1 = __webpack_require__(4604);
 /**
  * The dispatcher handles the storage of subsciptions and facilitates
  * subscription, unsubscription and dispatching of a simple event
@@ -1370,15 +1370,15 @@ exports.SimpleEventDispatcher = SimpleEventDispatcher;
 
 /***/ }),
 
-/***/ 1269:
+/***/ 4763:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SimpleEventHandlingBase = void 0;
-const ste_core_1 = __webpack_require__(4844);
-const SimpleEventList_1 = __webpack_require__(5570);
+const ste_core_1 = __webpack_require__(4604);
+const SimpleEventList_1 = __webpack_require__(2175);
 /**
  * Extends objects with signal event handling capabilities.
  */
@@ -1392,15 +1392,15 @@ exports.SimpleEventHandlingBase = SimpleEventHandlingBase;
 
 /***/ }),
 
-/***/ 5570:
+/***/ 2175:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SimpleEventList = void 0;
-const ste_core_1 = __webpack_require__(4844);
-const SimpleEventDispatcher_1 = __webpack_require__(4624);
+const ste_core_1 = __webpack_require__(4604);
+const SimpleEventDispatcher_1 = __webpack_require__(9606);
 /**
  * Storage class for multiple simple events that are accessible by name.
  * Events dispatchers are automatically created.
@@ -1424,26 +1424,26 @@ exports.SimpleEventList = SimpleEventList;
 
 /***/ }),
 
-/***/ 5931:
+/***/ 6569:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NonUniformSimpleEventList = exports.SimpleEventList = exports.SimpleEventHandlingBase = exports.SimpleEventDispatcher = void 0;
-const SimpleEventDispatcher_1 = __webpack_require__(4624);
+const SimpleEventDispatcher_1 = __webpack_require__(9606);
 Object.defineProperty(exports, "SimpleEventDispatcher", ({ enumerable: true, get: function () { return SimpleEventDispatcher_1.SimpleEventDispatcher; } }));
-const SimpleEventHandlingBase_1 = __webpack_require__(1269);
+const SimpleEventHandlingBase_1 = __webpack_require__(4763);
 Object.defineProperty(exports, "SimpleEventHandlingBase", ({ enumerable: true, get: function () { return SimpleEventHandlingBase_1.SimpleEventHandlingBase; } }));
-const NonUniformSimpleEventList_1 = __webpack_require__(9360);
+const NonUniformSimpleEventList_1 = __webpack_require__(7376);
 Object.defineProperty(exports, "NonUniformSimpleEventList", ({ enumerable: true, get: function () { return NonUniformSimpleEventList_1.NonUniformSimpleEventList; } }));
-const SimpleEventList_1 = __webpack_require__(5570);
+const SimpleEventList_1 = __webpack_require__(2175);
 Object.defineProperty(exports, "SimpleEventList", ({ enumerable: true, get: function () { return SimpleEventList_1.SimpleEventList; } }));
 
 
 /***/ }),
 
-/***/ 5363:
+/***/ 3199:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -1458,8 +1458,8 @@ var __webpack_unused_export__;
  * Released under the MIT license
  */
 __webpack_unused_export__ = ({ value: true });
-__webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = exports.nz = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = exports.FK = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = void 0;
-var ste_core_1 = __webpack_require__(4844);
+__webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = exports.UD = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = exports.IL = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = __webpack_unused_export__ = void 0;
+var ste_core_1 = __webpack_require__(4604);
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_core_1.Subscription; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_core_1.DispatcherBase; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_core_1.DispatcherWrapper; } });
@@ -1469,30 +1469,30 @@ __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_c
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_core_1.PromiseSubscription; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_core_1.PromiseDispatcherBase; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_core_1.HandlingBase; } });
-var ste_events_1 = __webpack_require__(3111);
+var ste_events_1 = __webpack_require__(4214);
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_events_1.EventDispatcher; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_events_1.EventHandlingBase; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_events_1.EventList; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_events_1.NonUniformEventList; } });
-var ste_simple_events_1 = __webpack_require__(5931);
-Object.defineProperty(exports, "FK", ({ enumerable: true, get: function () { return ste_simple_events_1.SimpleEventDispatcher; } }));
+var ste_simple_events_1 = __webpack_require__(6569);
+Object.defineProperty(exports, "IL", ({ enumerable: true, get: function () { return ste_simple_events_1.SimpleEventDispatcher; } }));
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_simple_events_1.SimpleEventHandlingBase; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_simple_events_1.SimpleEventList; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_simple_events_1.NonUniformSimpleEventList; } });
-var ste_signals_1 = __webpack_require__(1254);
-Object.defineProperty(exports, "nz", ({ enumerable: true, get: function () { return ste_signals_1.SignalDispatcher; } }));
+var ste_signals_1 = __webpack_require__(5010);
+Object.defineProperty(exports, "UD", ({ enumerable: true, get: function () { return ste_signals_1.SignalDispatcher; } }));
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_signals_1.SignalHandlingBase; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_signals_1.SignalList; } });
-var ste_promise_events_1 = __webpack_require__(6586);
+var ste_promise_events_1 = __webpack_require__(606);
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_promise_events_1.PromiseEventDispatcher; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_promise_events_1.PromiseEventHandlingBase; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_promise_events_1.PromiseEventList; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_promise_events_1.NonUniformPromiseEventList; } });
-var ste_promise_signals_1 = __webpack_require__(6838);
+var ste_promise_signals_1 = __webpack_require__(6042);
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_promise_signals_1.PromiseSignalDispatcher; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_promise_signals_1.PromiseSignalHandlingBase; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_promise_signals_1.PromiseSignalList; } });
-var ste_promise_simple_events_1 = __webpack_require__(9176);
+var ste_promise_simple_events_1 = __webpack_require__(4225);
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_promise_simple_events_1.PromiseSimpleEventDispatcher; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_promise_simple_events_1.PromiseSimpleEventHandlingBase; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_promise_simple_events_1.PromiseSimpleEventList; } });
@@ -1501,7 +1501,7 @@ __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_p
 
 /***/ }),
 
-/***/ 6377:
+/***/ 7391:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 // A library of seedable RNGs implemented in Javascript.
@@ -1516,17 +1516,17 @@ __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_p
 // alea, a 53-bit multiply-with-carry generator by Johannes Baagøe.
 // Period: ~2^116
 // Reported to pass all BigCrush tests.
-var alea = __webpack_require__(4832);
+var alea = __webpack_require__(7180);
 
 // xor128, a pure xor-shift generator by George Marsaglia.
 // Period: 2^128-1.
 // Reported to fail: MatrixRank and LinearComp.
-var xor128 = __webpack_require__(8652);
+var xor128 = __webpack_require__(3181);
 
 // xorwow, George Marsaglia's 160-bit xor-shift combined plus weyl.
 // Period: 2^192-2^32
 // Reported to fail: CollisionOver, SimpPoker, and LinearComp.
-var xorwow = __webpack_require__(801);
+var xorwow = __webpack_require__(3031);
 
 // xorshift7, by François Panneton and Pierre L'ecuyer, takes
 // a different approach: it adds robustness by allowing more shifts
@@ -1534,7 +1534,7 @@ var xorwow = __webpack_require__(801);
 // with 256 bits, that passes BigCrush with no systmatic failures.
 // Period 2^256-1.
 // No systematic BigCrush failures reported.
-var xorshift7 = __webpack_require__(2030);
+var xorshift7 = __webpack_require__(9067);
 
 // xor4096, by Richard Brent, is a 4096-bit xor-shift with a
 // very long period that also adds a Weyl generator. It also passes
@@ -1543,18 +1543,18 @@ var xorshift7 = __webpack_require__(2030);
 // collisions.
 // Period: 2^4128-2^32.
 // No systematic BigCrush failures reported.
-var xor4096 = __webpack_require__(3618);
+var xor4096 = __webpack_require__(6833);
 
 // Tyche-i, by Samuel Neves and Filipe Araujo, is a bit-shifting random
 // number generator derived from ChaCha, a modern stream cipher.
 // https://eden.dei.uc.pt/~sneves/pubs/2011-snfa2.pdf
 // Period: ~2^127
 // No systematic BigCrush failures reported.
-var tychei = __webpack_require__(9049);
+var tychei = __webpack_require__(3717);
 
 // The original ARC4-based prng included in this library.
 // Period: ~2^1600
-var sr = __webpack_require__(1971);
+var sr = __webpack_require__(4801);
 
 sr.alea = alea;
 sr.xor128 = xor128;
@@ -1568,7 +1568,7 @@ module.exports = sr;
 
 /***/ }),
 
-/***/ 4832:
+/***/ 7180:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* module decorator */ module = __webpack_require__.nmd(module);
@@ -1691,7 +1691,7 @@ if (module && module.exports) {
 
 /***/ }),
 
-/***/ 9049:
+/***/ 3717:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* module decorator */ module = __webpack_require__.nmd(module);
@@ -1803,7 +1803,7 @@ if (module && module.exports) {
 
 /***/ }),
 
-/***/ 8652:
+/***/ 3181:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* module decorator */ module = __webpack_require__.nmd(module);
@@ -1893,7 +1893,7 @@ if (module && module.exports) {
 
 /***/ }),
 
-/***/ 3618:
+/***/ 6833:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* module decorator */ module = __webpack_require__.nmd(module);
@@ -2048,7 +2048,7 @@ if (module && module.exports) {
 
 /***/ }),
 
-/***/ 2030:
+/***/ 9067:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* module decorator */ module = __webpack_require__.nmd(module);
@@ -2154,7 +2154,7 @@ if (module && module.exports) {
 
 /***/ }),
 
-/***/ 801:
+/***/ 3031:
 /***/ (function(module, exports, __webpack_require__) {
 
 /* module decorator */ module = __webpack_require__.nmd(module);
@@ -2249,7 +2249,7 @@ if (module && module.exports) {
 
 /***/ }),
 
-/***/ 1971:
+/***/ 4801:
 /***/ ((module, exports, __webpack_require__) => {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -2491,7 +2491,7 @@ if ( true && module.exports) {
   module.exports = seedrandom;
   // When in node.js, try using crypto package for autoseeding.
   try {
-    nodecrypto = __webpack_require__(5042);
+    nodecrypto = __webpack_require__(1234);
   } catch (ex) {}
 } else if (true) {
   !(__WEBPACK_AMD_DEFINE_RESULT__ = (function() { return seedrandom; }).call(exports, __webpack_require__, exports, module),
@@ -2507,11 +2507,11 @@ if ( true && module.exports) {
 
 /***/ }),
 
-/***/ 7650:
+/***/ 3184:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-var seedrandom = __webpack_require__(6377);
-var self = __webpack_require__(1987);
+var seedrandom = __webpack_require__(7391);
+var self = __webpack_require__(2287);
 
 module.exports = self;
 
@@ -2519,7 +2519,7 @@ module.exports = self;
 
 /***/ }),
 
-/***/ 1987:
+/***/ 2287:
 /***/ (function(module) {
 
 ;(function() {
@@ -2598,14 +2598,14 @@ module.exports = self;
 
 /***/ }),
 
-/***/ 6357:
+/***/ 1246:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NonUniformPromiseEventList = void 0;
-const PromiseEventDispatcher_1 = __webpack_require__(5072);
+const PromiseEventDispatcher_1 = __webpack_require__(2330);
 /**
  * Similar to EventList, but instead of TArgs, a map of event names ang argument types is provided with TArgsMap.
  */
@@ -2645,14 +2645,14 @@ exports.NonUniformPromiseEventList = NonUniformPromiseEventList;
 
 /***/ }),
 
-/***/ 5072:
+/***/ 2330:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseEventDispatcher = void 0;
-const ste_core_1 = __webpack_require__(2874);
+const ste_core_1 = __webpack_require__(9184);
 /**
  * Dispatcher implementation for events. Can be used to subscribe, unsubscribe
  * or dispatch events. Use the ToEvent() method to expose the event.
@@ -2711,15 +2711,15 @@ exports.PromiseEventDispatcher = PromiseEventDispatcher;
 
 /***/ }),
 
-/***/ 7873:
+/***/ 3351:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseEventHandlingBase = void 0;
-const ste_core_1 = __webpack_require__(2874);
-const PromiseEventList_1 = __webpack_require__(4414);
+const ste_core_1 = __webpack_require__(9184);
+const PromiseEventList_1 = __webpack_require__(4283);
 /**
  * Extends objects with signal event handling capabilities.
  */
@@ -2733,15 +2733,15 @@ exports.PromiseEventHandlingBase = PromiseEventHandlingBase;
 
 /***/ }),
 
-/***/ 4414:
+/***/ 4283:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseEventList = void 0;
-const ste_core_1 = __webpack_require__(2874);
-const PromiseEventDispatcher_1 = __webpack_require__(5072);
+const ste_core_1 = __webpack_require__(9184);
+const PromiseEventDispatcher_1 = __webpack_require__(2330);
 /**
  * Storage class for multiple events that are accessible by name.
  * Events dispatchers are automatically created.
@@ -2765,7 +2765,7 @@ exports.PromiseEventList = PromiseEventList;
 
 /***/ }),
 
-/***/ 6586:
+/***/ 606:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -2780,19 +2780,19 @@ exports.PromiseEventList = PromiseEventList;
  */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NonUniformPromiseEventList = exports.PromiseEventList = exports.PromiseEventHandlingBase = exports.PromiseEventDispatcher = void 0;
-const PromiseEventDispatcher_1 = __webpack_require__(5072);
+const PromiseEventDispatcher_1 = __webpack_require__(2330);
 Object.defineProperty(exports, "PromiseEventDispatcher", ({ enumerable: true, get: function () { return PromiseEventDispatcher_1.PromiseEventDispatcher; } }));
-const PromiseEventHandlingBase_1 = __webpack_require__(7873);
+const PromiseEventHandlingBase_1 = __webpack_require__(3351);
 Object.defineProperty(exports, "PromiseEventHandlingBase", ({ enumerable: true, get: function () { return PromiseEventHandlingBase_1.PromiseEventHandlingBase; } }));
-const PromiseEventList_1 = __webpack_require__(4414);
+const PromiseEventList_1 = __webpack_require__(4283);
 Object.defineProperty(exports, "PromiseEventList", ({ enumerable: true, get: function () { return PromiseEventList_1.PromiseEventList; } }));
-const NonUniformPromiseEventList_1 = __webpack_require__(6357);
+const NonUniformPromiseEventList_1 = __webpack_require__(1246);
 Object.defineProperty(exports, "NonUniformPromiseEventList", ({ enumerable: true, get: function () { return NonUniformPromiseEventList_1.NonUniformPromiseEventList; } }));
 
 
 /***/ }),
 
-/***/ 4383:
+/***/ 3729:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -2822,14 +2822,14 @@ exports.DispatchError = DispatchError;
 
 /***/ }),
 
-/***/ 894:
+/***/ 4645:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DispatcherBase = void 0;
-const __1 = __webpack_require__(2874);
+const __1 = __webpack_require__(9184);
 /**
  * Base class for implementation of the dispatcher. It facilitates the subscribe
  * and unsubscribe methods based on generic handlers. The TEventType specifies
@@ -3072,7 +3072,7 @@ exports.DispatcherBase = DispatcherBase;
 
 /***/ }),
 
-/***/ 9757:
+/***/ 7569:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3200,7 +3200,7 @@ exports.DispatcherWrapper = DispatcherWrapper;
 
 /***/ }),
 
-/***/ 5930:
+/***/ 7672:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3252,14 +3252,14 @@ exports.EventListBase = EventListBase;
 
 /***/ }),
 
-/***/ 7541:
+/***/ 4995:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseDispatcherBase = void 0;
-const __1 = __webpack_require__(2874);
+const __1 = __webpack_require__(9184);
 /**
  * Dispatcher base for dispatchers that use promises. Each promise
  * is awaited before the next is dispatched, unless the event is
@@ -3335,14 +3335,14 @@ exports.PromiseDispatcherBase = PromiseDispatcherBase;
 
 /***/ }),
 
-/***/ 2545:
+/***/ 3512:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SubscriptionChangeEventDispatcher = void 0;
-const __1 = __webpack_require__(2874);
+const __1 = __webpack_require__(9184);
 /**
  * Dispatcher for subscription changes.
  *
@@ -3367,7 +3367,7 @@ exports.SubscriptionChangeEventDispatcher = SubscriptionChangeEventDispatcher;
 
 /***/ }),
 
-/***/ 8452:
+/***/ 7744:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3430,7 +3430,7 @@ exports.PromiseSubscription = PromiseSubscription;
 
 /***/ }),
 
-/***/ 365:
+/***/ 455:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3484,7 +3484,7 @@ exports.Subscription = Subscription;
 
 /***/ }),
 
-/***/ 954:
+/***/ 278:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3579,7 +3579,7 @@ exports.HandlingBase = HandlingBase;
 
 /***/ }),
 
-/***/ 2874:
+/***/ 9184:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -3594,31 +3594,31 @@ exports.HandlingBase = HandlingBase;
  */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SubscriptionChangeEventDispatcher = exports.HandlingBase = exports.PromiseDispatcherBase = exports.PromiseSubscription = exports.DispatchError = exports.EventManagement = exports.EventListBase = exports.DispatcherWrapper = exports.DispatcherBase = exports.Subscription = void 0;
-const DispatcherBase_1 = __webpack_require__(894);
+const DispatcherBase_1 = __webpack_require__(4645);
 Object.defineProperty(exports, "DispatcherBase", ({ enumerable: true, get: function () { return DispatcherBase_1.DispatcherBase; } }));
-const DispatchError_1 = __webpack_require__(4383);
+const DispatchError_1 = __webpack_require__(3729);
 Object.defineProperty(exports, "DispatchError", ({ enumerable: true, get: function () { return DispatchError_1.DispatchError; } }));
-const DispatcherWrapper_1 = __webpack_require__(9757);
+const DispatcherWrapper_1 = __webpack_require__(7569);
 Object.defineProperty(exports, "DispatcherWrapper", ({ enumerable: true, get: function () { return DispatcherWrapper_1.DispatcherWrapper; } }));
-const EventListBase_1 = __webpack_require__(5930);
+const EventListBase_1 = __webpack_require__(7672);
 Object.defineProperty(exports, "EventListBase", ({ enumerable: true, get: function () { return EventListBase_1.EventListBase; } }));
-const EventManagement_1 = __webpack_require__(4796);
+const EventManagement_1 = __webpack_require__(6413);
 Object.defineProperty(exports, "EventManagement", ({ enumerable: true, get: function () { return EventManagement_1.EventManagement; } }));
-const HandlingBase_1 = __webpack_require__(954);
+const HandlingBase_1 = __webpack_require__(278);
 Object.defineProperty(exports, "HandlingBase", ({ enumerable: true, get: function () { return HandlingBase_1.HandlingBase; } }));
-const PromiseDispatcherBase_1 = __webpack_require__(7541);
+const PromiseDispatcherBase_1 = __webpack_require__(4995);
 Object.defineProperty(exports, "PromiseDispatcherBase", ({ enumerable: true, get: function () { return PromiseDispatcherBase_1.PromiseDispatcherBase; } }));
-const PromiseSubscription_1 = __webpack_require__(8452);
+const PromiseSubscription_1 = __webpack_require__(7744);
 Object.defineProperty(exports, "PromiseSubscription", ({ enumerable: true, get: function () { return PromiseSubscription_1.PromiseSubscription; } }));
-const Subscription_1 = __webpack_require__(365);
+const Subscription_1 = __webpack_require__(455);
 Object.defineProperty(exports, "Subscription", ({ enumerable: true, get: function () { return Subscription_1.Subscription; } }));
-const SubscriptionChangeEventHandler_1 = __webpack_require__(2545);
+const SubscriptionChangeEventHandler_1 = __webpack_require__(3512);
 Object.defineProperty(exports, "SubscriptionChangeEventDispatcher", ({ enumerable: true, get: function () { return SubscriptionChangeEventHandler_1.SubscriptionChangeEventDispatcher; } }));
 
 
 /***/ }),
 
-/***/ 4796:
+/***/ 6413:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3658,14 +3658,14 @@ exports.EventManagement = EventManagement;
 
 /***/ }),
 
-/***/ 5890:
+/***/ 4450:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseSignalDispatcher = void 0;
-const ste_core_1 = __webpack_require__(8486);
+const ste_core_1 = __webpack_require__(7852);
 /**
  * The dispatcher handles the storage of subsciptions and facilitates
  * subscription, unsubscription and dispatching of a signal event.
@@ -3710,15 +3710,15 @@ exports.PromiseSignalDispatcher = PromiseSignalDispatcher;
 
 /***/ }),
 
-/***/ 205:
+/***/ 5871:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseSignalHandlingBase = void 0;
-const ste_core_1 = __webpack_require__(8486);
-const PromiseSignalList_1 = __webpack_require__(3146);
+const ste_core_1 = __webpack_require__(7852);
+const PromiseSignalList_1 = __webpack_require__(131);
 /**
  * Extends objects with signal event handling capabilities.
  */
@@ -3732,15 +3732,15 @@ exports.PromiseSignalHandlingBase = PromiseSignalHandlingBase;
 
 /***/ }),
 
-/***/ 3146:
+/***/ 131:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseSignalList = void 0;
-const ste_core_1 = __webpack_require__(8486);
-const _1 = __webpack_require__(6838);
+const ste_core_1 = __webpack_require__(7852);
+const _1 = __webpack_require__(6042);
 /**
  * Storage class for multiple signal events that are accessible by name.
  * Events dispatchers are automatically created.
@@ -3764,7 +3764,7 @@ exports.PromiseSignalList = PromiseSignalList;
 
 /***/ }),
 
-/***/ 6838:
+/***/ 6042:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -3779,17 +3779,17 @@ exports.PromiseSignalList = PromiseSignalList;
  */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseSignalList = exports.PromiseSignalHandlingBase = exports.PromiseSignalDispatcher = void 0;
-const PromiseSignalDispatcher_1 = __webpack_require__(5890);
+const PromiseSignalDispatcher_1 = __webpack_require__(4450);
 Object.defineProperty(exports, "PromiseSignalDispatcher", ({ enumerable: true, get: function () { return PromiseSignalDispatcher_1.PromiseSignalDispatcher; } }));
-const PromiseSignalHandlingBase_1 = __webpack_require__(205);
+const PromiseSignalHandlingBase_1 = __webpack_require__(5871);
 Object.defineProperty(exports, "PromiseSignalHandlingBase", ({ enumerable: true, get: function () { return PromiseSignalHandlingBase_1.PromiseSignalHandlingBase; } }));
-const PromiseSignalList_1 = __webpack_require__(3146);
+const PromiseSignalList_1 = __webpack_require__(131);
 Object.defineProperty(exports, "PromiseSignalList", ({ enumerable: true, get: function () { return PromiseSignalList_1.PromiseSignalList; } }));
 
 
 /***/ }),
 
-/***/ 6463:
+/***/ 8589:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -3819,14 +3819,14 @@ exports.DispatchError = DispatchError;
 
 /***/ }),
 
-/***/ 1368:
+/***/ 9737:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DispatcherBase = void 0;
-const __1 = __webpack_require__(8486);
+const __1 = __webpack_require__(7852);
 /**
  * Base class for implementation of the dispatcher. It facilitates the subscribe
  * and unsubscribe methods based on generic handlers. The TEventType specifies
@@ -4069,7 +4069,7 @@ exports.DispatcherBase = DispatcherBase;
 
 /***/ }),
 
-/***/ 6982:
+/***/ 8661:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -4197,7 +4197,7 @@ exports.DispatcherWrapper = DispatcherWrapper;
 
 /***/ }),
 
-/***/ 2177:
+/***/ 5636:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -4249,14 +4249,14 @@ exports.EventListBase = EventListBase;
 
 /***/ }),
 
-/***/ 2300:
+/***/ 6372:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseDispatcherBase = void 0;
-const __1 = __webpack_require__(8486);
+const __1 = __webpack_require__(7852);
 /**
  * Dispatcher base for dispatchers that use promises. Each promise
  * is awaited before the next is dispatched, unless the event is
@@ -4332,14 +4332,14 @@ exports.PromiseDispatcherBase = PromiseDispatcherBase;
 
 /***/ }),
 
-/***/ 4303:
+/***/ 3324:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SubscriptionChangeEventDispatcher = void 0;
-const __1 = __webpack_require__(8486);
+const __1 = __webpack_require__(7852);
 /**
  * Dispatcher for subscription changes.
  *
@@ -4364,7 +4364,7 @@ exports.SubscriptionChangeEventDispatcher = SubscriptionChangeEventDispatcher;
 
 /***/ }),
 
-/***/ 9703:
+/***/ 6484:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -4427,7 +4427,7 @@ exports.PromiseSubscription = PromiseSubscription;
 
 /***/ }),
 
-/***/ 4683:
+/***/ 8859:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -4481,7 +4481,7 @@ exports.Subscription = Subscription;
 
 /***/ }),
 
-/***/ 5673:
+/***/ 5722:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -4576,7 +4576,7 @@ exports.HandlingBase = HandlingBase;
 
 /***/ }),
 
-/***/ 8486:
+/***/ 7852:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -4591,31 +4591,31 @@ exports.HandlingBase = HandlingBase;
  */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SubscriptionChangeEventDispatcher = exports.HandlingBase = exports.PromiseDispatcherBase = exports.PromiseSubscription = exports.DispatchError = exports.EventManagement = exports.EventListBase = exports.DispatcherWrapper = exports.DispatcherBase = exports.Subscription = void 0;
-const DispatcherBase_1 = __webpack_require__(1368);
+const DispatcherBase_1 = __webpack_require__(9737);
 Object.defineProperty(exports, "DispatcherBase", ({ enumerable: true, get: function () { return DispatcherBase_1.DispatcherBase; } }));
-const DispatchError_1 = __webpack_require__(6463);
+const DispatchError_1 = __webpack_require__(8589);
 Object.defineProperty(exports, "DispatchError", ({ enumerable: true, get: function () { return DispatchError_1.DispatchError; } }));
-const DispatcherWrapper_1 = __webpack_require__(6982);
+const DispatcherWrapper_1 = __webpack_require__(8661);
 Object.defineProperty(exports, "DispatcherWrapper", ({ enumerable: true, get: function () { return DispatcherWrapper_1.DispatcherWrapper; } }));
-const EventListBase_1 = __webpack_require__(2177);
+const EventListBase_1 = __webpack_require__(5636);
 Object.defineProperty(exports, "EventListBase", ({ enumerable: true, get: function () { return EventListBase_1.EventListBase; } }));
-const EventManagement_1 = __webpack_require__(8209);
+const EventManagement_1 = __webpack_require__(1385);
 Object.defineProperty(exports, "EventManagement", ({ enumerable: true, get: function () { return EventManagement_1.EventManagement; } }));
-const HandlingBase_1 = __webpack_require__(5673);
+const HandlingBase_1 = __webpack_require__(5722);
 Object.defineProperty(exports, "HandlingBase", ({ enumerable: true, get: function () { return HandlingBase_1.HandlingBase; } }));
-const PromiseDispatcherBase_1 = __webpack_require__(2300);
+const PromiseDispatcherBase_1 = __webpack_require__(6372);
 Object.defineProperty(exports, "PromiseDispatcherBase", ({ enumerable: true, get: function () { return PromiseDispatcherBase_1.PromiseDispatcherBase; } }));
-const PromiseSubscription_1 = __webpack_require__(9703);
+const PromiseSubscription_1 = __webpack_require__(6484);
 Object.defineProperty(exports, "PromiseSubscription", ({ enumerable: true, get: function () { return PromiseSubscription_1.PromiseSubscription; } }));
-const Subscription_1 = __webpack_require__(4683);
+const Subscription_1 = __webpack_require__(8859);
 Object.defineProperty(exports, "Subscription", ({ enumerable: true, get: function () { return Subscription_1.Subscription; } }));
-const SubscriptionChangeEventHandler_1 = __webpack_require__(4303);
+const SubscriptionChangeEventHandler_1 = __webpack_require__(3324);
 Object.defineProperty(exports, "SubscriptionChangeEventDispatcher", ({ enumerable: true, get: function () { return SubscriptionChangeEventHandler_1.SubscriptionChangeEventDispatcher; } }));
 
 
 /***/ }),
 
-/***/ 8209:
+/***/ 1385:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -4655,14 +4655,14 @@ exports.EventManagement = EventManagement;
 
 /***/ }),
 
-/***/ 4537:
+/***/ 5829:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NonUniformPromiseSimpleEventList = void 0;
-const PromiseSimpleEventDispatcher_1 = __webpack_require__(8921);
+const PromiseSimpleEventDispatcher_1 = __webpack_require__(3677);
 /**
  * Similar to EventList, but instead of TArgs, a map of event names ang argument types is provided with TArgsMap.
  */
@@ -4702,14 +4702,14 @@ exports.NonUniformPromiseSimpleEventList = NonUniformPromiseSimpleEventList;
 
 /***/ }),
 
-/***/ 8921:
+/***/ 3677:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseSimpleEventDispatcher = void 0;
-const ste_core_1 = __webpack_require__(3310);
+const ste_core_1 = __webpack_require__(5575);
 /**
  * The dispatcher handles the storage of subsciptions and facilitates
  * subscription, unsubscription and dispatching of a simple event
@@ -4761,15 +4761,15 @@ exports.PromiseSimpleEventDispatcher = PromiseSimpleEventDispatcher;
 
 /***/ }),
 
-/***/ 532:
+/***/ 8648:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseSimpleEventHandlingBase = void 0;
-const ste_core_1 = __webpack_require__(3310);
-const PromiseSimpleEventList_1 = __webpack_require__(7929);
+const ste_core_1 = __webpack_require__(5575);
+const PromiseSimpleEventList_1 = __webpack_require__(5536);
 /**
  * Extends objects with signal event handling capabilities.
  */
@@ -4783,15 +4783,15 @@ exports.PromiseSimpleEventHandlingBase = PromiseSimpleEventHandlingBase;
 
 /***/ }),
 
-/***/ 7929:
+/***/ 5536:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseSimpleEventList = void 0;
-const ste_core_1 = __webpack_require__(3310);
-const PromiseSimpleEventDispatcher_1 = __webpack_require__(8921);
+const ste_core_1 = __webpack_require__(5575);
+const PromiseSimpleEventDispatcher_1 = __webpack_require__(3677);
 /**
  * Storage class for multiple simple events that are accessible by name.
  * Events dispatchers are automatically created.
@@ -4815,7 +4815,7 @@ exports.PromiseSimpleEventList = PromiseSimpleEventList;
 
 /***/ }),
 
-/***/ 9176:
+/***/ 4225:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -4830,19 +4830,19 @@ exports.PromiseSimpleEventList = PromiseSimpleEventList;
  */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.NonUniformPromiseSimpleEventList = exports.PromiseSimpleEventList = exports.PromiseSimpleEventHandlingBase = exports.PromiseSimpleEventDispatcher = void 0;
-const NonUniformPromiseSimpleEventList_1 = __webpack_require__(4537);
+const NonUniformPromiseSimpleEventList_1 = __webpack_require__(5829);
 Object.defineProperty(exports, "NonUniformPromiseSimpleEventList", ({ enumerable: true, get: function () { return NonUniformPromiseSimpleEventList_1.NonUniformPromiseSimpleEventList; } }));
-const PromiseSimpleEventDispatcher_1 = __webpack_require__(8921);
+const PromiseSimpleEventDispatcher_1 = __webpack_require__(3677);
 Object.defineProperty(exports, "PromiseSimpleEventDispatcher", ({ enumerable: true, get: function () { return PromiseSimpleEventDispatcher_1.PromiseSimpleEventDispatcher; } }));
-const PromiseSimpleEventHandlingBase_1 = __webpack_require__(532);
+const PromiseSimpleEventHandlingBase_1 = __webpack_require__(8648);
 Object.defineProperty(exports, "PromiseSimpleEventHandlingBase", ({ enumerable: true, get: function () { return PromiseSimpleEventHandlingBase_1.PromiseSimpleEventHandlingBase; } }));
-const PromiseSimpleEventList_1 = __webpack_require__(7929);
+const PromiseSimpleEventList_1 = __webpack_require__(5536);
 Object.defineProperty(exports, "PromiseSimpleEventList", ({ enumerable: true, get: function () { return PromiseSimpleEventList_1.PromiseSimpleEventList; } }));
 
 
 /***/ }),
 
-/***/ 8181:
+/***/ 2210:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -4872,14 +4872,14 @@ exports.DispatchError = DispatchError;
 
 /***/ }),
 
-/***/ 3040:
+/***/ 5072:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.DispatcherBase = void 0;
-const __1 = __webpack_require__(3310);
+const __1 = __webpack_require__(5575);
 /**
  * Base class for implementation of the dispatcher. It facilitates the subscribe
  * and unsubscribe methods based on generic handlers. The TEventType specifies
@@ -5122,7 +5122,7 @@ exports.DispatcherBase = DispatcherBase;
 
 /***/ }),
 
-/***/ 3122:
+/***/ 1050:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -5250,7 +5250,7 @@ exports.DispatcherWrapper = DispatcherWrapper;
 
 /***/ }),
 
-/***/ 7955:
+/***/ 4211:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -5302,14 +5302,14 @@ exports.EventListBase = EventListBase;
 
 /***/ }),
 
-/***/ 2490:
+/***/ 3787:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PromiseDispatcherBase = void 0;
-const __1 = __webpack_require__(3310);
+const __1 = __webpack_require__(5575);
 /**
  * Dispatcher base for dispatchers that use promises. Each promise
  * is awaited before the next is dispatched, unless the event is
@@ -5385,14 +5385,14 @@ exports.PromiseDispatcherBase = PromiseDispatcherBase;
 
 /***/ }),
 
-/***/ 1002:
+/***/ 1789:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SubscriptionChangeEventDispatcher = void 0;
-const __1 = __webpack_require__(3310);
+const __1 = __webpack_require__(5575);
 /**
  * Dispatcher for subscription changes.
  *
@@ -5417,7 +5417,7 @@ exports.SubscriptionChangeEventDispatcher = SubscriptionChangeEventDispatcher;
 
 /***/ }),
 
-/***/ 9347:
+/***/ 5485:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -5480,7 +5480,7 @@ exports.PromiseSubscription = PromiseSubscription;
 
 /***/ }),
 
-/***/ 2229:
+/***/ 8080:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -5534,7 +5534,7 @@ exports.Subscription = Subscription;
 
 /***/ }),
 
-/***/ 1605:
+/***/ 5537:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -5629,7 +5629,7 @@ exports.HandlingBase = HandlingBase;
 
 /***/ }),
 
-/***/ 3310:
+/***/ 5575:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -5644,31 +5644,31 @@ exports.HandlingBase = HandlingBase;
  */
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SubscriptionChangeEventDispatcher = exports.HandlingBase = exports.PromiseDispatcherBase = exports.PromiseSubscription = exports.DispatchError = exports.EventManagement = exports.EventListBase = exports.DispatcherWrapper = exports.DispatcherBase = exports.Subscription = void 0;
-const DispatcherBase_1 = __webpack_require__(3040);
+const DispatcherBase_1 = __webpack_require__(5072);
 Object.defineProperty(exports, "DispatcherBase", ({ enumerable: true, get: function () { return DispatcherBase_1.DispatcherBase; } }));
-const DispatchError_1 = __webpack_require__(8181);
+const DispatchError_1 = __webpack_require__(2210);
 Object.defineProperty(exports, "DispatchError", ({ enumerable: true, get: function () { return DispatchError_1.DispatchError; } }));
-const DispatcherWrapper_1 = __webpack_require__(3122);
+const DispatcherWrapper_1 = __webpack_require__(1050);
 Object.defineProperty(exports, "DispatcherWrapper", ({ enumerable: true, get: function () { return DispatcherWrapper_1.DispatcherWrapper; } }));
-const EventListBase_1 = __webpack_require__(7955);
+const EventListBase_1 = __webpack_require__(4211);
 Object.defineProperty(exports, "EventListBase", ({ enumerable: true, get: function () { return EventListBase_1.EventListBase; } }));
-const EventManagement_1 = __webpack_require__(2234);
+const EventManagement_1 = __webpack_require__(3504);
 Object.defineProperty(exports, "EventManagement", ({ enumerable: true, get: function () { return EventManagement_1.EventManagement; } }));
-const HandlingBase_1 = __webpack_require__(1605);
+const HandlingBase_1 = __webpack_require__(5537);
 Object.defineProperty(exports, "HandlingBase", ({ enumerable: true, get: function () { return HandlingBase_1.HandlingBase; } }));
-const PromiseDispatcherBase_1 = __webpack_require__(2490);
+const PromiseDispatcherBase_1 = __webpack_require__(3787);
 Object.defineProperty(exports, "PromiseDispatcherBase", ({ enumerable: true, get: function () { return PromiseDispatcherBase_1.PromiseDispatcherBase; } }));
-const PromiseSubscription_1 = __webpack_require__(9347);
+const PromiseSubscription_1 = __webpack_require__(5485);
 Object.defineProperty(exports, "PromiseSubscription", ({ enumerable: true, get: function () { return PromiseSubscription_1.PromiseSubscription; } }));
-const Subscription_1 = __webpack_require__(2229);
+const Subscription_1 = __webpack_require__(8080);
 Object.defineProperty(exports, "Subscription", ({ enumerable: true, get: function () { return Subscription_1.Subscription; } }));
-const SubscriptionChangeEventHandler_1 = __webpack_require__(1002);
+const SubscriptionChangeEventHandler_1 = __webpack_require__(1789);
 Object.defineProperty(exports, "SubscriptionChangeEventDispatcher", ({ enumerable: true, get: function () { return SubscriptionChangeEventHandler_1.SubscriptionChangeEventDispatcher; } }));
 
 
 /***/ }),
 
-/***/ 2234:
+/***/ 3504:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -5708,14 +5708,14 @@ exports.EventManagement = EventManagement;
 
 /***/ }),
 
-/***/ 3861:
+/***/ 9244:
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "ZP": () => (/* binding */ tippy_esm)
+  Ay: () => (/* binding */ tippy_esm)
 });
 
 // UNUSED EXPORTS: animateFill, createSingleton, delegate, followCursor, hideAll, inlinePositioning, roundArrow, sticky
@@ -5761,41 +5761,63 @@ function isShadowRoot(node) {
 var math_max = Math.max;
 var math_min = Math.min;
 var round = Math.round;
+;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/utils/userAgent.js
+function getUAString() {
+  var uaData = navigator.userAgentData;
+
+  if (uaData != null && uaData.brands && Array.isArray(uaData.brands)) {
+    return uaData.brands.map(function (item) {
+      return item.brand + "/" + item.version;
+    }).join(' ');
+  }
+
+  return navigator.userAgent;
+}
+;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/dom-utils/isLayoutViewport.js
+
+function isLayoutViewport() {
+  return !/^((?!chrome|android).)*safari/i.test(getUAString());
+}
 ;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js
 
 
-function getBoundingClientRect(element, includeScale) {
+
+
+function getBoundingClientRect(element, includeScale, isFixedStrategy) {
   if (includeScale === void 0) {
     includeScale = false;
   }
 
-  var rect = element.getBoundingClientRect();
+  if (isFixedStrategy === void 0) {
+    isFixedStrategy = false;
+  }
+
+  var clientRect = element.getBoundingClientRect();
   var scaleX = 1;
   var scaleY = 1;
 
-  if (isHTMLElement(element) && includeScale) {
-    var offsetHeight = element.offsetHeight;
-    var offsetWidth = element.offsetWidth; // Do not attempt to divide by 0, otherwise we get `Infinity` as scale
-    // Fallback to 1 in case both values are `0`
-
-    if (offsetWidth > 0) {
-      scaleX = round(rect.width) / offsetWidth || 1;
-    }
-
-    if (offsetHeight > 0) {
-      scaleY = round(rect.height) / offsetHeight || 1;
-    }
+  if (includeScale && isHTMLElement(element)) {
+    scaleX = element.offsetWidth > 0 ? round(clientRect.width) / element.offsetWidth || 1 : 1;
+    scaleY = element.offsetHeight > 0 ? round(clientRect.height) / element.offsetHeight || 1 : 1;
   }
 
+  var _ref = isElement(element) ? getWindow(element) : window,
+      visualViewport = _ref.visualViewport;
+
+  var addVisualOffsets = !isLayoutViewport() && isFixedStrategy;
+  var x = (clientRect.left + (addVisualOffsets && visualViewport ? visualViewport.offsetLeft : 0)) / scaleX;
+  var y = (clientRect.top + (addVisualOffsets && visualViewport ? visualViewport.offsetTop : 0)) / scaleY;
+  var width = clientRect.width / scaleX;
+  var height = clientRect.height / scaleY;
   return {
-    width: rect.width / scaleX,
-    height: rect.height / scaleY,
-    top: rect.top / scaleY,
-    right: rect.right / scaleX,
-    bottom: rect.bottom / scaleY,
-    left: rect.left / scaleX,
-    x: rect.left / scaleX,
-    y: rect.top / scaleY
+    width: width,
+    height: height,
+    top: y,
+    right: x + width,
+    bottom: y + height,
+    left: x,
+    x: x,
+    y: y
   };
 }
 ;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js
@@ -5896,7 +5918,7 @@ function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
   var isOffsetParentAnElement = isHTMLElement(offsetParent);
   var offsetParentIsScaled = isHTMLElement(offsetParent) && isElementScaled(offsetParent);
   var documentElement = getDocumentElement(offsetParent);
-  var rect = getBoundingClientRect(elementOrVirtualElement, offsetParentIsScaled);
+  var rect = getBoundingClientRect(elementOrVirtualElement, offsetParentIsScaled, isFixed);
   var scroll = {
     scrollLeft: 0,
     scrollTop: 0
@@ -6031,6 +6053,7 @@ function isTableElement(element) {
 
 
 
+
 function getTrueOffsetParent(element) {
   if (!isHTMLElement(element) || // https://github.com/popperjs/popper-core/issues/837
   getComputedStyle(element).position === 'fixed') {
@@ -6043,8 +6066,8 @@ function getTrueOffsetParent(element) {
 
 
 function getContainingBlock(element) {
-  var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') !== -1;
-  var isIE = navigator.userAgent.indexOf('Trident') !== -1;
+  var isFirefox = /firefox/i.test(getUAString());
+  var isIE = /Trident/i.test(getUAString());
 
   if (isIE && isHTMLElement(element)) {
     // In IE 9, 10 and 11 fixed elements containing block is always established by the viewport
@@ -6056,6 +6079,10 @@ function getContainingBlock(element) {
   }
 
   var currentNode = getParentNode(element);
+
+  if (isShadowRoot(currentNode)) {
+    currentNode = currentNode.host;
+  }
 
   while (isHTMLElement(currentNode) && ['html', 'body'].indexOf(getNodeName(currentNode)) < 0) {
     var css = getComputedStyle(currentNode); // This is non-exhaustive but covers the most common CSS properties that
@@ -6206,13 +6233,6 @@ function mergeByName(modifiers) {
 
 
 
-
-
-
-
-
-var INVALID_ELEMENT_ERROR = 'Popper: Invalid reference or popper argument provided. They must be either a DOM element or virtual element.';
-var INFINITE_LOOP_ERROR = 'Popper: An infinite loop in the modifiers cycle has been detected! The cycle has been interrupted to prevent a browser crash.';
 var DEFAULT_OPTIONS = {
   placement: 'bottom',
   modifiers: [],
@@ -6274,11 +6294,7 @@ function popperGenerator(generatorOptions) {
 
         state.orderedModifiers = orderedModifiers.filter(function (m) {
           return m.enabled;
-        }); // Validate the provided modifiers so that the consumer will get warned
-        // if one of the modifiers is invalid for any reason
-
-        if (false) { var _getComputedStyle, marginTop, marginRight, marginBottom, marginLeft, flipModifier, modifiers; }
-
+        });
         runModifierEffects();
         return instance.update();
       },
@@ -6298,8 +6314,6 @@ function popperGenerator(generatorOptions) {
         // anymore
 
         if (!areValidElements(reference, popper)) {
-          if (false) {}
-
           return;
         } // Store the reference and popper rects to be read by modifiers
 
@@ -6322,11 +6336,8 @@ function popperGenerator(generatorOptions) {
         state.orderedModifiers.forEach(function (modifier) {
           return state.modifiersData[modifier.name] = Object.assign({}, modifier.data);
         });
-        var __debug_loops__ = 0;
 
         for (var index = 0; index < state.orderedModifiers.length; index++) {
-          if (false) {}
-
           if (state.reset === true) {
             state.reset = false;
             index = -1;
@@ -6364,8 +6375,6 @@ function popperGenerator(generatorOptions) {
     };
 
     if (!areValidElements(reference, popper)) {
-      if (false) {}
-
       return instance;
     }
 
@@ -6380,11 +6389,11 @@ function popperGenerator(generatorOptions) {
     // one.
 
     function runModifierEffects() {
-      state.orderedModifiers.forEach(function (_ref3) {
-        var name = _ref3.name,
-            _ref3$options = _ref3.options,
-            options = _ref3$options === void 0 ? {} : _ref3$options,
-            effect = _ref3.effect;
+      state.orderedModifiers.forEach(function (_ref) {
+        var name = _ref.name,
+            _ref$options = _ref.options,
+            options = _ref$options === void 0 ? {} : _ref$options,
+            effect = _ref.effect;
 
         if (typeof effect === 'function') {
           var cleanupFn = effect({
@@ -6593,10 +6602,9 @@ var unsetSides = {
 // Zooming can change the DPR, but it seems to report a value that will
 // cleanly divide the values into the appropriate subpixels.
 
-function roundOffsetsByDPR(_ref) {
+function roundOffsetsByDPR(_ref, win) {
   var x = _ref.x,
       y = _ref.y;
-  var win = window;
   var dpr = win.devicePixelRatio || 1;
   return {
     x: round(x * dpr) / dpr || 0,
@@ -6657,7 +6665,7 @@ function mapToStyles(_ref2) {
 
     if (placement === enums_top || (placement === left || placement === right) && variation === end) {
       sideY = bottom;
-      var offsetY = isFixed && win.visualViewport ? win.visualViewport.height : // $FlowFixMe[prop-missing]
+      var offsetY = isFixed && offsetParent === win && win.visualViewport ? win.visualViewport.height : // $FlowFixMe[prop-missing]
       offsetParent[heightProp];
       y -= offsetY - popperRect.height;
       y *= gpuAcceleration ? 1 : -1;
@@ -6665,7 +6673,7 @@ function mapToStyles(_ref2) {
 
     if (placement === left || (placement === enums_top || placement === bottom) && variation === end) {
       sideX = right;
-      var offsetX = isFixed && win.visualViewport ? win.visualViewport.width : // $FlowFixMe[prop-missing]
+      var offsetX = isFixed && offsetParent === win && win.visualViewport ? win.visualViewport.width : // $FlowFixMe[prop-missing]
       offsetParent[widthProp];
       x -= offsetX - popperRect.width;
       x *= gpuAcceleration ? 1 : -1;
@@ -6679,7 +6687,7 @@ function mapToStyles(_ref2) {
   var _ref4 = roundOffsets === true ? roundOffsetsByDPR({
     x: x,
     y: y
-  }) : {
+  }, getWindow(popper)) : {
     x: x,
     y: y
   };
@@ -6705,9 +6713,6 @@ function computeStyles(_ref5) {
       adaptive = _options$adaptive === void 0 ? true : _options$adaptive,
       _options$roundOffsets = options.roundOffsets,
       roundOffsets = _options$roundOffsets === void 0 ? true : _options$roundOffsets;
-
-  if (false) { var transitionProperty; }
-
   var commonStyles = {
     placement: getBasePlacement(state.placement),
     variation: getVariation(state.placement),
@@ -6914,31 +6919,22 @@ function getOppositeVariationPlacement(placement) {
 
 
 
-function getViewportRect(element) {
+
+function getViewportRect(element, strategy) {
   var win = getWindow(element);
   var html = getDocumentElement(element);
   var visualViewport = win.visualViewport;
   var width = html.clientWidth;
   var height = html.clientHeight;
   var x = 0;
-  var y = 0; // NB: This isn't supported on iOS <= 12. If the keyboard is open, the popper
-  // can be obscured underneath it.
-  // Also, `html.clientHeight` adds the bottom bar height in Safari iOS, even
-  // if it isn't open, so if this isn't available, the popper will be detected
-  // to overflow the bottom of the screen too early.
+  var y = 0;
 
   if (visualViewport) {
     width = visualViewport.width;
-    height = visualViewport.height; // Uses Layout Viewport (like Chrome; Safari does not currently)
-    // In Chrome, it returns a value very close to 0 (+/-) but contains rounding
-    // errors due to floating point numbers, so we need to check precision.
-    // Safari returns a number <= 0, usually < -1 when pinch-zoomed
-    // Feature detection fails in mobile emulation mode in Chrome.
-    // Math.abs(win.innerWidth / visualViewport.scale - visualViewport.width) <
-    // 0.001
-    // Fallback here: "Not Safari" userAgent
+    height = visualViewport.height;
+    var layoutViewport = isLayoutViewport();
 
-    if (!/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+    if (layoutViewport || !layoutViewport && strategy === 'fixed') {
       x = visualViewport.offsetLeft;
       y = visualViewport.offsetTop;
     }
@@ -7030,8 +7026,8 @@ function rectToClientRect(rect) {
 
 
 
-function getInnerBoundingClientRect(element) {
-  var rect = getBoundingClientRect(element);
+function getInnerBoundingClientRect(element, strategy) {
+  var rect = getBoundingClientRect(element, false, strategy === 'fixed');
   rect.top = rect.top + element.clientTop;
   rect.left = rect.left + element.clientLeft;
   rect.bottom = rect.top + element.clientHeight;
@@ -7043,8 +7039,8 @@ function getInnerBoundingClientRect(element) {
   return rect;
 }
 
-function getClientRectFromMixedType(element, clippingParent) {
-  return clippingParent === viewport ? rectToClientRect(getViewportRect(element)) : isElement(clippingParent) ? getInnerBoundingClientRect(clippingParent) : rectToClientRect(getDocumentRect(getDocumentElement(element)));
+function getClientRectFromMixedType(element, clippingParent, strategy) {
+  return clippingParent === viewport ? rectToClientRect(getViewportRect(element, strategy)) : isElement(clippingParent) ? getInnerBoundingClientRect(clippingParent, strategy) : rectToClientRect(getDocumentRect(getDocumentElement(element)));
 } // A "clipping parent" is an overflowable container with the characteristic of
 // clipping (or hiding) overflowing elements with a position different from
 // `initial`
@@ -7067,18 +7063,18 @@ function getClippingParents(element) {
 // clipping parents
 
 
-function getClippingRect(element, boundary, rootBoundary) {
+function getClippingRect(element, boundary, rootBoundary, strategy) {
   var mainClippingParents = boundary === 'clippingParents' ? getClippingParents(element) : [].concat(boundary);
   var clippingParents = [].concat(mainClippingParents, [rootBoundary]);
   var firstClippingParent = clippingParents[0];
   var clippingRect = clippingParents.reduce(function (accRect, clippingParent) {
-    var rect = getClientRectFromMixedType(element, clippingParent);
+    var rect = getClientRectFromMixedType(element, clippingParent, strategy);
     accRect.top = math_max(rect.top, accRect.top);
     accRect.right = math_min(rect.right, accRect.right);
     accRect.bottom = math_min(rect.bottom, accRect.bottom);
     accRect.left = math_max(rect.left, accRect.left);
     return accRect;
-  }, getClientRectFromMixedType(element, firstClippingParent));
+  }, getClientRectFromMixedType(element, firstClippingParent, strategy));
   clippingRect.width = clippingRect.right - clippingRect.left;
   clippingRect.height = clippingRect.bottom - clippingRect.top;
   clippingRect.x = clippingRect.left;
@@ -7125,6 +7121,8 @@ function detectOverflow(state, options) {
   var _options = options,
       _options$placement = _options.placement,
       placement = _options$placement === void 0 ? state.placement : _options$placement,
+      _options$strategy = _options.strategy,
+      strategy = _options$strategy === void 0 ? state.strategy : _options$strategy,
       _options$boundary = _options.boundary,
       boundary = _options$boundary === void 0 ? clippingParents : _options$boundary,
       _options$rootBoundary = _options.rootBoundary,
@@ -7139,7 +7137,7 @@ function detectOverflow(state, options) {
   var altContext = elementContext === popper ? reference : popper;
   var popperRect = state.rects.popper;
   var element = state.elements[altBoundary ? altContext : elementContext];
-  var clippingClientRect = getClippingRect(isElement(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary);
+  var clippingClientRect = getClippingRect(isElement(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary, strategy);
   var referenceClientRect = getBoundingClientRect(state.elements.reference);
   var popperOffsets = computeOffsets({
     reference: referenceClientRect,
@@ -7198,8 +7196,6 @@ function computeAutoPlacement(state, options) {
 
   if (allowedPlacements.length === 0) {
     allowedPlacements = placements;
-
-    if (false) {}
   } // $FlowFixMe[incompatible-type]: Flow seems to have problems with two array unions...
 
 
@@ -7529,7 +7525,6 @@ function preventOverflow(_ref) {
 
 
 
-
  // eslint-disable-next-line import/no-unused-modules
 
 var toPaddingObject = function toPaddingObject(padding, state) {
@@ -7595,11 +7590,7 @@ function arrow_effect(_ref2) {
     }
   }
 
-  if (false) {}
-
   if (!contains(state.elements.popper, arrowElement)) {
-    if (false) {}
-
     return;
   }
 
@@ -10156,7 +10147,7 @@ tippy.setDefaultProps({
 
 /***/ }),
 
-/***/ 5042:
+/***/ 1234:
 /***/ (() => {
 
 /* (ignored) */
@@ -10237,7 +10228,7 @@ var __webpack_exports__ = {};
 (() => {
 "use strict";
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/deprecated.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/deprecated.js
 // A way to gracefully handle deprecation.
 // Find and replace HTML Elements, Classes, and more after the DOM is loaded but before any other Javascript fires.
 
@@ -10279,7 +10270,7 @@ class Deprecated {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/options.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/interfaces/options.js
 const OptionsDefaults = {
     backgroundImage: "",
     MediaAttribution: true,
@@ -10331,7 +10322,7 @@ const OptionsDefaults = {
     ],
 };
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/upsell-options.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/interfaces/upsell-options.js
 const UpsellOptionsDefaults = {
     image: "https://picsum.photos/480/650",
     imagePosition: "left",
@@ -10366,7 +10357,7 @@ const UpsellOptionsDefaults = {
     conversionField: "",
 };
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/translate-options.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/interfaces/translate-options.js
 const ptbrTranslation = [
     { field: "supporter.firstName", translation: "Nome" },
     { field: "supporter.lastName", translation: "Sobrenome" },
@@ -10410,7 +10401,7 @@ const TranslateOptionsDefaults = {
     NLD: nlTranslation,
 };
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/exit-intent-options.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/interfaces/exit-intent-options.js
 const ExitIntentOptionsDefaults = {
     enabled: false,
     title: "We are sad that you are leaving",
@@ -10425,7 +10416,7 @@ const ExitIntentOptionsDefaults = {
     },
 };
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/loader.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/loader.js
 // Ref: https://app.getguru.com/card/iMgx968T/ENgrid-Loader
 
 class Loader {
@@ -10602,17 +10593,17 @@ class Loader {
     }
 }
 
-// EXTERNAL MODULE: ./node_modules/@4site/engrid-common/node_modules/strongly-typed-events/dist/index.js
-var dist = __webpack_require__(5363);
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/events/en-form.js
+// EXTERNAL MODULE: ./node_modules/@4site/engrid-scripts/node_modules/strongly-typed-events/dist/index.js
+var dist = __webpack_require__(3199);
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/events/en-form.js
 
 
 class EnForm {
     constructor() {
         this.logger = new EngridLogger("EnForm");
-        this._onSubmit = new dist/* SignalDispatcher */.nz();
-        this._onValidate = new dist/* SignalDispatcher */.nz();
-        this._onError = new dist/* SignalDispatcher */.nz();
+        this._onSubmit = new dist/* SignalDispatcher */.UD();
+        this._onValidate = new dist/* SignalDispatcher */.UD();
+        this._onError = new dist/* SignalDispatcher */.UD();
         this.submit = true;
         this.submitPromise = false;
         this.validate = true;
@@ -10658,12 +10649,12 @@ class EnForm {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/events/donation-amount.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/events/donation-amount.js
 
 
 class DonationAmount {
     constructor(radios = "transaction.donationAmt", other = "transaction.donationAmt.other") {
-        this._onAmountChange = new dist/* SimpleEventDispatcher */.FK();
+        this._onAmountChange = new dist/* SimpleEventDispatcher */.IL();
         this._amount = 0;
         this._radios = "";
         this._other = "";
@@ -10779,7 +10770,7 @@ class DonationAmount {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/engrid.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/engrid.js
 class engrid_ENGrid {
     constructor() {
         if (!engrid_ENGrid.enForm) {
@@ -11328,12 +11319,12 @@ class engrid_ENGrid {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/events/donation-frequency.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/events/donation-frequency.js
 
 
 class DonationFrequency {
     constructor() {
-        this._onFrequencyChange = new dist/* SimpleEventDispatcher */.FK();
+        this._onFrequencyChange = new dist/* SimpleEventDispatcher */.IL();
         this._frequency = "onetime";
         this._recurring = "n";
         this._dispatch = true;
@@ -11445,13 +11436,13 @@ class DonationFrequency {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/events/processing-fees.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/events/processing-fees.js
 
 
 
 class ProcessingFees {
     constructor() {
-        this._onFeeChange = new dist/* SimpleEventDispatcher */.FK();
+        this._onFeeChange = new dist/* SimpleEventDispatcher */.IL();
         this._amount = DonationAmount.getInstance();
         this._form = EnForm.getInstance();
         this._fee = 0;
@@ -11539,7 +11530,7 @@ class ProcessingFees {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/events/remember-me-events.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/events/remember-me-events.js
 /**
  * This class is responsible for managing events related to the "Remember Me" functionality.
  * It uses the Singleton design pattern to ensure only one instance of this class exists.
@@ -11550,8 +11541,8 @@ class ProcessingFees {
 class RememberMeEvents {
     constructor() {
         this.logger = new EngridLogger("RememberMeEvents");
-        this._onLoad = new dist/* SimpleEventDispatcher */.FK();
-        this._onClear = new dist/* SignalDispatcher */.nz();
+        this._onLoad = new dist/* SimpleEventDispatcher */.IL();
+        this._onClear = new dist/* SignalDispatcher */.UD();
         this.hasData = false;
     }
     static getInstance() {
@@ -11577,12 +11568,12 @@ class RememberMeEvents {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/events/country.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/events/country.js
 
 
 class Country {
     constructor() {
-        this._onCountryChange = new dist/* SimpleEventDispatcher */.FK();
+        this._onCountryChange = new dist/* SimpleEventDispatcher */.IL();
         this._country = "";
         this._field = null;
         // Run only if it is a Page with a Country field
@@ -11621,7 +11612,7 @@ class Country {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/events/index.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/events/index.js
 
 
 
@@ -11629,7 +11620,7 @@ class Country {
 
 
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/app.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/app.js
 
 
 class App extends engrid_ENGrid {
@@ -11647,6 +11638,12 @@ class App extends engrid_ENGrid {
         // Add Options to window
         window.EngridOptions = this.options;
         this._dataLayer = DataLayer.getInstance();
+        // If there's a ?pbedit query string, redirect to the page builder to edit on EN
+        if (engrid_ENGrid.getUrlParameter("pbedit") === true ||
+            engrid_ENGrid.getUrlParameter("pbedit") === "true") {
+            window.location.href = `https://${engrid_ENGrid.getDataCenter()}.engagingnetworks.app/index.html#pages/${engrid_ENGrid.getPageID()}/edit`;
+            return;
+        }
         if (loader.reload())
             return;
         // Turn Debug ON if you use local assets
@@ -11682,6 +11679,12 @@ class App extends engrid_ENGrid {
             this.options = Object.assign(Object.assign({}, this.options), window.EngridPageOptions);
             // Add Options to window
             window.EngridOptions = this.options;
+        }
+        // If there's no pageJson.pageType, add a big red warning to the console
+        if (!engrid_ENGrid.checkNested(window, "pageJson", "pageType")) {
+            window.setTimeout(() => {
+                console.log("%c ⛔️ pageJson.pageType NOT FOUND - Go to the Account Settings and Expose the Transaction Details %s", "background-color: red; color: white; font-size: 22px; font-weight: bold;", "https://knowledge.engagingnetworks.net/datareports/expose-transaction-details-pagejson");
+            }, 2000);
         }
         if (this.options.Debug || App.getUrlParameter("debug") == "true")
             // Enable debug if available is the first thing
@@ -11908,7 +11911,7 @@ class App extends engrid_ENGrid {
         if (engrid_ENGrid.getUrlParameter("development") === "branding") {
             new BrandingHtml().show();
         }
-        engrid_ENGrid.setBodyData("data-engrid-scripts-js-loading", "finished");
+        engrid_ENGrid.setBodyData("js-loading", "finished");
         window.EngridVersion = AppVersion;
         this.logger.success(`VERSION: ${AppVersion}`);
         // Window Load
@@ -11959,7 +11962,7 @@ class App extends engrid_ENGrid {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/amount-label.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/amount-label.js
 // This script checks if the donations amounts are numbers and if they are, appends the correct currency symbol
 
 class AmountLabel {
@@ -11990,7 +11993,7 @@ class AmountLabel {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/apple-pay.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/apple-pay.js
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -12161,7 +12164,7 @@ class ApplePay {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/a11y.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/a11y.js
 // a11y means accessibility
 // This Component is supposed to be used as a helper for Aria Attributes & Other Accessibility Features
 class A11y {
@@ -12209,7 +12212,7 @@ class A11y {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/capitalize-fields.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/capitalize-fields.js
 // CapitalizeFields is a class that capitalizes the first letter of the fields passed to it.
 // It subscribes to the onSubmit event of the EnForm class and capitalizes the fields on submit.
 
@@ -12233,7 +12236,7 @@ class CapitalizeFields {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/auto-year.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/auto-year.js
 // This class changes the Credit Card Expiration Year Field Options to
 // include the current year and the next 19 years.
 class AutoYear {
@@ -12270,7 +12273,7 @@ class AutoYear {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/autocomplete.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/autocomplete.js
 // This class adds the autocomplete attribute to
 // the most common input elements
 
@@ -12310,7 +12313,7 @@ class Autocomplete {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/ecard.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/ecard.js
 
 class Ecard {
     constructor() {
@@ -12373,7 +12376,7 @@ class Ecard {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/click-to-expand.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/click-to-expand.js
 // This class is used to expand content when a user clicks on a div with the class "click-to-expand".
 // The content is shortened by default and will expand when clicked.
 
@@ -12414,7 +12417,7 @@ class ClickToExpand {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/advocacy.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/advocacy.js
 // Component to handle advocacy features
 // 1 - Adds EN Polyfill to support "label" clicking on Advocacy Recipient "labels"
 
@@ -12450,7 +12453,7 @@ class Advocacy {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/data-attributes.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/data-attributes.js
 // Component that adds data attributes to the Body
 
 class DataAttributes {
@@ -12571,10 +12574,17 @@ class DataAttributes {
         // Add demo data attribute
         if (engrid_ENGrid.demo)
             engrid_ENGrid.setBodyData("demo", "");
+        // Add data-first-page and data-last-page
+        if (engrid_ENGrid.getPageNumber() === 1) {
+            engrid_ENGrid.setBodyData("first-page", "");
+        }
+        if (engrid_ENGrid.getPageNumber() === engrid_ENGrid.getPageCount()) {
+            engrid_ENGrid.setBodyData("last-page", "");
+        }
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/iframe.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/iframe.js
 
 
 class iFrame {
@@ -12584,23 +12594,40 @@ class iFrame {
         if (this.inIframe()) {
             // Add the data-engrid-embedded attribute when inside an iFrame if it wasn't already added by a script in the Page Template
             engrid_ENGrid.setBodyData("embedded", "");
+            // Check if the parent page URL matches the criteria for a thank you page donation
+            const getParentUrl = () => {
+                try {
+                    return window.parent.location.href;
+                }
+                catch (e) {
+                    // If we can't access parent location due to same-origin policy, fall back to referrer
+                    return document.referrer;
+                }
+            };
+            const parentUrl = getParentUrl();
+            const thankYouPageRegex = /\/page\/\d+\/[^\/]+\/(\d+)(\?|$)/;
+            const match = parentUrl.match(thankYouPageRegex);
+            if (match) {
+                const pageNumber = parseInt(match[1], 10);
+                if (pageNumber > 1) {
+                    engrid_ENGrid.setBodyData("embedded", "thank-you-page-donation");
+                    this.hideFormComponents();
+                    this.logger.log("iFrame Event - Set embedded attribute to thank-you-page-donation");
+                }
+            }
             // Fire the resize event
             this.logger.log("iFrame Event - Begin Resizing");
-            window.addEventListener("load", (event) => {
-                // Scroll to top of iFrame
-                this.logger.log("iFrame Event - window.onload");
-                this.sendIframeHeight();
-                window.parent.postMessage({
-                    scroll: this.shouldScroll(),
-                }, "*");
-                // On click fire the resize event
-                document.addEventListener("click", (e) => {
-                    this.logger.log("iFrame Event - click");
-                    setTimeout(() => {
-                        this.sendIframeHeight();
-                    }, 100);
+            // Run onLoaded function
+            console.log("document.readyState", document.readyState);
+            // Document Load
+            if (document.readyState !== "loading") {
+                this.onLoaded();
+            }
+            else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    this.onLoaded();
                 });
-            });
+            }
             window.setTimeout(() => {
                 this.sendIframeHeight();
             }, 300);
@@ -12617,8 +12644,7 @@ class iFrame {
             if (this.isChained() && engrid_ENGrid.getPaymentType()) {
                 this.logger.log("iFrame Event - Chained iFrame");
                 this.sendIframeFormStatus("chained");
-                this.hideFormComponents();
-                this.addChainedBanner();
+                // this.addChainedBanner();
             }
             // Remove the skip link markup when inside an iFrame
             const skipLink = document.querySelector(".skip-link");
@@ -12681,6 +12707,23 @@ class iFrame {
             });
         }
     }
+    onLoaded() {
+        // Scroll to top of iFrame
+        this.logger.log("iFrame Event - window.onload");
+        this.sendIframeHeight();
+        window.parent.postMessage({
+            scroll: this.shouldScroll(),
+        }, "*");
+        // On click fire the resize event
+        document.addEventListener("click", (e) => {
+            this.logger.log("iFrame Event - click");
+            setTimeout(() => {
+                this.sendIframeHeight();
+            }, 100);
+        });
+        // Watch for errors and send the height
+        engrid_ENGrid.watchForError(this.sendIframeHeight.bind(this));
+    }
     sendIframeHeight() {
         let height = document.body.offsetHeight;
         this.logger.log("iFrame Event - Sending iFrame height of: " + height + "px"); // check the message is being sent correctly
@@ -12729,20 +12772,31 @@ class iFrame {
             return true;
         }
     }
+    // This method checks if the URL has a parameter named "chain" and returns true if it exists, otherwise false.
     isChained() {
         return !!engrid_ENGrid.getUrlParameter("chain");
     }
     hideFormComponents() {
         this.logger.log("iFrame Event - Hiding Form Components");
-        const en__component = document.querySelectorAll(".body-main > div");
-        en__component.forEach((component, index) => {
-            if (component.classList.contains("hide") === false &&
-                component.classList.contains("hide-iframe") === false &&
-                component.classList.contains("radio-to-buttons_donationAmt") ===
-                    false &&
-                index < en__component.length - 1) {
-                component.classList.add("hide-iframe");
-                component.classList.add("hide-chained");
+        const excludeClasses = [
+            "giveBySelect-Card",
+            "en__field--ccnumber",
+            "give-by-select",
+            "give-by-select-header",
+            "en__submit",
+            "en__captcha",
+            "force-visibility",
+            "hide",
+            "hide-iframe",
+            "radio-to-buttons_donationAmt",
+        ];
+        const excludeIds = ["en__digitalWallet"];
+        const components = Array.from(document.querySelectorAll(".body-main > div:not(:last-child)"));
+        components.forEach((component) => {
+            const shouldExclude = excludeClasses.some((cls) => component.classList.contains(cls) ||
+                component.querySelector(`:scope > .${cls}`)) || excludeIds.some((id) => component.querySelector(`#${id}`));
+            if (!shouldExclude) {
+                component.classList.add("hide-iframe", "hide-chained");
             }
         });
         this.sendIframeHeight();
@@ -12756,26 +12810,30 @@ class iFrame {
         });
         this.sendIframeHeight();
     }
-    addChainedBanner() {
-        var _a, _b;
-        this.logger.log("iFrame Event - Adding Chained Banner");
-        const banner = document.createElement("div");
-        const lastComponent = document.querySelector(".body-main > div:last-of-type");
-        banner.classList.add("en__component");
-        banner.classList.add("en__component--banner");
-        banner.classList.add("en__component--banner--chained");
-        banner.innerHTML = `<div class="en__component__content"><div class="en__component__content__inner"><div class="en__component__content__text"><p>
-      Giving as <strong>${engrid_ENGrid.getFieldValue("supporter.firstName")} ${engrid_ENGrid.getFieldValue("supporter.lastName")}</strong> 
-      with <strong>${engrid_ENGrid.getFieldValue("transaction.paymenttype").toUpperCase()}</strong>
-      (<a href="#" class="en__component__content__link">change</a>)</p></div></div></div>`;
-        (_a = lastComponent === null || lastComponent === void 0 ? void 0 : lastComponent.parentNode) === null || _a === void 0 ? void 0 : _a.insertBefore(banner, lastComponent);
-        (_b = banner
-            .querySelector(".en__component__content__link")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", (e) => {
-            e.preventDefault();
-            this.showFormComponents();
-            banner.remove();
-        });
-    }
+    // private addChainedBanner() {
+    //   this.logger.log("iFrame Event - Adding Chained Banner");
+    //   const banner = document.createElement("div");
+    //   const lastComponent = document.querySelector(
+    //     ".body-main > div:last-of-type"
+    //   ) as HTMLDivElement;
+    //   banner.classList.add("en__component");
+    //   banner.classList.add("en__component--banner");
+    //   banner.classList.add("en__component--banner--chained");
+    //   banner.innerHTML = `<div class="en__component__content"><div class="en__component__content__inner"><div class="en__component__content__text"><p>
+    //     ${ENGrid.getFieldValue("supporter.firstName") ? `Giving as <strong>${ENGrid.getFieldValue("supporter.firstName")} ${ENGrid.getFieldValue("supporter.lastName")}</strong>` : "<strong>Testing as </strong>"}
+    //     with <strong>${ENGrid.getFieldValue(
+    //       "transaction.paymenttype"
+    //     ).toUpperCase()}</strong>
+    //     (<a href="#" class="en__component__content__link">change</a>)</p></div></div></div>`;
+    //   lastComponent?.parentNode?.insertBefore(banner, lastComponent);
+    //   banner
+    //     .querySelector(".en__component__content__link")
+    //     ?.addEventListener("click", (e) => {
+    //       e.preventDefault();
+    //       this.showFormComponents();
+    //       banner.remove();
+    //     });
+    // }
     debounceWithImmediate(func, timeout = 1000) {
         let timer;
         let firstEvent = true;
@@ -12793,7 +12851,7 @@ class iFrame {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/input-has-value-and-focus.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/input-has-value-and-focus.js
 // Component that adds has-value and has-focus classes to form inputs
 
 class InputHasValueAndFocus {
@@ -12845,7 +12903,7 @@ class InputHasValueAndFocus {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/input-placeholders.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/input-placeholders.js
 // Component that adds input placeholders
 // You can override the default placeholders by adding a Placeholders option to the EngridOptions on the client theme.
 // You can also add an EngridPageOptions override to the page, if you want to override the placeholders on a specific page. Example:
@@ -12929,7 +12987,7 @@ class InputPlaceholders {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/media-attribution.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/media-attribution.js
 /*
   Looks for specially crafted <img> links and will transform its markup to display an attribution overlay on top of the image
   Depends on "_engrid-media-attribution.scss" for styling
@@ -12947,7 +13005,7 @@ class InputPlaceholders {
   <figure class="media-with-attribution"><img src="https://via.placeholder.com/300x300" data-src="https://via.placeholder.com/300x300" data-attribution-source="Jane Doe 1"><figattribution class="attribution-bottomright">Jane Doe 1</figattribution></figure>
 */
 
-const tippy = (__webpack_require__(3861)/* ["default"] */ .ZP);
+const tippy = (__webpack_require__(9244)/* ["default"] */ .Ay);
 class MediaAttribution {
     constructor() {
         // Find all images with attribution but not with the "data-attribution-hide-overlay" attribute
@@ -12997,7 +13055,7 @@ class MediaAttribution {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/live-variables.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/live-variables.js
 
 
 class LiveVariables {
@@ -13146,7 +13204,7 @@ class LiveVariables {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/upsell-lightbox.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/upsell-lightbox.js
 
 
 class UpsellLightbox {
@@ -13511,28 +13569,9 @@ class UpsellLightbox {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/show-hide-radio-checkboxes.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/show-hide-radio-checkboxes.js
 
 class ShowHideRadioCheckboxes {
-    constructor(elements, classes) {
-        this.logger = new EngridLogger("ShowHideRadioCheckboxes", "black", "lightblue", "👁");
-        this.elements = document.getElementsByName(elements);
-        this.classes = classes;
-        this.createDataAttributes();
-        this.hideAll();
-        this.storeSessionState();
-        for (let i = 0; i < this.elements.length; i++) {
-            let element = this.elements[i];
-            if (element.checked) {
-                this.show(element);
-            }
-            element.addEventListener("change", (e) => {
-                this.hideAll();
-                this.show(element);
-                this.storeSessionState();
-            });
-        }
-    }
     // Create default data attributes on all fields
     createDataAttributes() {
         this.elements.forEach((item) => {
@@ -13672,9 +13711,28 @@ class ShowHideRadioCheckboxes {
         });
         window.sessionStorage.setItem(`engrid_ShowHideRadioCheckboxesState`, JSON.stringify(state));
     }
+    constructor(elements, classes) {
+        this.logger = new EngridLogger("ShowHideRadioCheckboxes", "black", "lightblue", "👁");
+        this.elements = document.getElementsByName(elements);
+        this.classes = classes;
+        this.createDataAttributes();
+        this.hideAll();
+        this.storeSessionState();
+        for (let i = 0; i < this.elements.length; i++) {
+            let element = this.elements[i];
+            if (element.checked) {
+                this.show(element);
+            }
+            element.addEventListener("change", (e) => {
+                this.hideAll();
+                this.show(element);
+                this.storeSessionState();
+            });
+        }
+    }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/cookie.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/cookie.js
 /**
 Example:
 import * as cookie from "./cookie";
@@ -13752,7 +13810,7 @@ function remove(name, attributes) {
     set(name, "", Object.assign(Object.assign({}, attributes), { expires: -1 }));
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/translate-fields.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/translate-fields.js
 // Component to translate fields based on the country selected
 // It will also adapt the state field to the country selected
 
@@ -14302,7 +14360,7 @@ class TranslateFields {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/auto-country-select.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/auto-country-select.js
 // This class works when the user has added ".simple_country_select" as a class in page builder for the Country select
 
 
@@ -14367,7 +14425,7 @@ class AutoCountrySelect {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/skip-link.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/skip-link.js
 // Javascript that adds an accessible "Skip Link" button after the <body> opening that jumps to
 // the first <title> or <h1> field in a "body-" section, or the first <h1> if none are found
 // in those sections
@@ -14405,7 +14463,7 @@ class SkipToMainContentLink {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/src-defer.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/src-defer.js
 // Build Notes: Add the vanilla Javascript version inline inside the page template right before </body>
 // In the event the vanilla javascript is not inlined we should still process any assets with a data-src still defined on it. Plus we only process background video via this JS file as to not block the page with a large video file downloading.
 // // 4Site's simplified image lazy loader
@@ -14417,7 +14475,7 @@ class SkipToMainContentLink {
 //       srcDefer[i].setAttribute("decoding", "async"); // Gets image processing off the main working thread
 //       srcDefer[i].setAttribute("loading", "lazy"); // Lets the browser determine when the asset should be downloaded
 //       srcDefer[i].setAttribute("src", dataSrc); // Sets the src which will cause the browser to retrieve the asset
-//       srcDefer[i].setAttribute("data-engrid-data-src-processed", "true"); // Sets an attribute to mark that it has been processed by ENGrid
+//       srcDefer[i].setAttribute("data-engrid-data-src-processed", "true"); // Sets an attribute to mark that it has been processed by ENgrid
 //       srcDefer[i].removeAttribute("data-src"); // Removes the data-source
 //     }
 //   }
@@ -14438,7 +14496,7 @@ class SrcDefer {
                 if (imgDataSrc) {
                     img.setAttribute("src", imgDataSrc); // Sets the src which will cause the browser to retrieve the asset
                 }
-                img.setAttribute("data-engrid-data-src-processed", "true"); // Sets an attribute to mark that it has been processed by ENGrid
+                img.setAttribute("data-engrid-data-src-processed", "true"); // Sets an attribute to mark that it has been processed by ENgrid
                 img.removeAttribute("data-src"); // Removes the data-source
             }
         }
@@ -14455,7 +14513,7 @@ class SrcDefer {
                         let videoBackgroundSourcedDataSrc = videoSource.getAttribute("data-src");
                         if (videoBackgroundSourcedDataSrc) {
                             videoSource.setAttribute("src", videoBackgroundSourcedDataSrc);
-                            videoSource.setAttribute("data-engrid-data-src-processed", "true"); // Sets an attribute to mark that it has been processed by ENGrid
+                            videoSource.setAttribute("data-engrid-data-src-processed", "true"); // Sets an attribute to mark that it has been processed by ENgrid
                             videoSource.removeAttribute("data-src"); // Removes the data-source
                         }
                     }
@@ -14477,7 +14535,7 @@ class SrcDefer {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/set-recurr-freq.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/set-recurr-freq.js
 
 
 class setRecurrFreq {
@@ -14549,7 +14607,7 @@ class setRecurrFreq {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/page-background.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/page-background.js
 
 class PageBackground {
     constructor() {
@@ -14606,7 +14664,7 @@ class PageBackground {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/neverbounce.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/neverbounce.js
 
 
 class NeverBounce {
@@ -14852,7 +14910,7 @@ class NeverBounce {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/freshaddress.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/freshaddress.js
 // According to the FreshAddress documentation, you need to add the following code to your page:
 // jQuery library.
 // <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
@@ -15058,7 +15116,7 @@ class FreshAddress {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/progress-bar.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/progress-bar.js
 
 class ProgressBar {
     constructor() {
@@ -15100,10 +15158,10 @@ class ProgressBar {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/remember-me.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/remember-me.js
 
 
-const remember_me_tippy = (__webpack_require__(3861)/* ["default"] */ .ZP);
+const remember_me_tippy = (__webpack_require__(9244)/* ["default"] */ .Ay);
 class RememberMe {
     constructor(options) {
         this._form = EnForm.getInstance();
@@ -15460,7 +15518,7 @@ class RememberMe {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/show-if-amount.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/show-if-amount.js
 
 
 class ShowIfAmount {
@@ -15579,7 +15637,7 @@ class ShowIfAmount {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/other-amount.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/other-amount.js
 // This class automatically select other radio input when an amount is entered into it.
 
 class OtherAmount {
@@ -15651,7 +15709,7 @@ class OtherAmount {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/logger.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/logger.js
 
 /**
  * A better logger. It only works if debug is enabled.
@@ -15737,7 +15795,7 @@ class EngridLogger {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/min-max-amount.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/min-max-amount.js
 // This script adds an erros message to the page if the amount is greater than the max amount or less than the min amount.
 
 class MinMaxAmount {
@@ -15810,11 +15868,11 @@ class MinMaxAmount {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/ticker.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/ticker.js
 
 class Ticker {
     constructor() {
-        this.shuffleSeed = __webpack_require__(7650);
+        this.shuffleSeed = __webpack_require__(3184);
         this.items = [];
         this.tickerElement = document.querySelector(".engrid-ticker");
         this.logger = new EngridLogger("Ticker", "black", "beige", "🔁");
@@ -15878,7 +15936,7 @@ class Ticker {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/data-layer.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/data-layer.js
 // The DataLayer class is a singleton class that is responsible for managing the data layer events.
 // It listens to the EnForm onSubmit event and the RememberMe onLoad event.
 // It also listens to the blur, change, and submit events of the form fields.
@@ -16192,7 +16250,7 @@ class DataLayer {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/data-replace.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/data-replace.js
 // This script is used to replace merge tags in the EN Blocks of the page.
 // It searches for HTML elements containing the data to be replaced and replaces it.
 // The data to be replaced is passed as URL parameters, example: ?engrid_data[key]=value.
@@ -16270,7 +16328,7 @@ class DataReplace {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/data-hide.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/data-hide.js
 // Hides elements based on URL arguments.
 //
 // The DataHide class is used to hide elements based on URL arguments.
@@ -16338,7 +16396,7 @@ class DataHide {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/add-name-to-message.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/add-name-to-message.js
 /*
  Adds first and last name when First Name and Last Name fields lose focus if name shortcodes aren't present
 */
@@ -16389,7 +16447,7 @@ class AddNameToMessage {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/expand-region-name.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/expand-region-name.js
 // Populates hidden supporter field "Region Long Format" with expanded name (e.g FL becomes Florida)
 
 
@@ -16435,7 +16493,7 @@ class ExpandRegionName {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/url-to-form.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/url-to-form.js
 // Component that allows to set a field value from URL parameters
 // Workflow:
 // 1. Loop through all the URL parameters
@@ -16469,7 +16527,7 @@ class UrlToForm {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/required-if-visible.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/required-if-visible.js
 
 class RequiredIfVisible {
     constructor() {
@@ -16531,7 +16589,7 @@ class RequiredIfVisible {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/tidycontact.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/tidycontact.js
 var tidycontact_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -17735,7 +17793,7 @@ class TidyContact {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/live-currency.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/live-currency.js
 // This script enables live currency symbol and code to the page.
 
 class LiveCurrency {
@@ -17877,7 +17935,7 @@ class LiveCurrency {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/custom-currency.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/custom-currency.js
 // This component allows you to customize the currency options in the currency field
 // It is used in the following way:
 //
@@ -17991,7 +18049,7 @@ class CustomCurrency {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/autosubmit.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/autosubmit.js
 // Automatically submits the page if a URL argument is present
 
 class Autosubmit {
@@ -18007,7 +18065,7 @@ class Autosubmit {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/event-tickets.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/event-tickets.js
 class EventTickets {
     constructor() {
         // --------------------------------------------
@@ -18033,7 +18091,7 @@ class EventTickets {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/swap-amounts.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/swap-amounts.js
 // This script allows you to override the default donation amounts in Engaging Networks
 // with a custom list of amounts.
 /**
@@ -18116,7 +18174,7 @@ class SwapAmounts {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/debug-panel.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/debug-panel.js
 
 class DebugPanel {
     constructor(pageLayouts) {
@@ -18626,7 +18684,7 @@ class DebugPanel {
 }
 DebugPanel.debugSessionStorageKey = "engrid_debug_panel";
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/debug-hidden-fields.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/debug-hidden-fields.js
 // Switches hidden fields to be type text when debug mode is enabled.
 
 class DebugHiddenFields {
@@ -18670,7 +18728,7 @@ class DebugHiddenFields {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/branding-html.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/branding-html.js
 var branding_html_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -18681,12 +18739,12 @@ var branding_html_awaiter = (undefined && undefined.__awaiter) || function (this
     });
 };
 /**
- * Inserts all of the branding HTML from https://github.com/4site-interactive-studios/engrid-scripts/tree/main/reference-materials/html/brand-guide-markup
+ * Inserts all of the branding HTML from https://github.com/4site-interactive-studios/engrid/tree/main/reference-materials/html/brand-guide-markup
  * into the body-main section of the page.
  */
 class BrandingHtml {
     constructor() {
-        this.assetBaseUrl = "https://cdn.jsdelivr.net/gh/4site-interactive-studios/engrid-scripts@main/reference-materials/html/brand-guide-markup/";
+        this.assetBaseUrl = "https://cdn.jsdelivr.net/gh/4site-interactive-studios/engrid@main/reference-materials/html/brand-guide-markup/";
         this.brandingHtmlFiles = [
             "html5-tags.html",
             "en-common-fields.html",
@@ -18742,7 +18800,7 @@ class BrandingHtml {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/country-disable.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/country-disable.js
 // This class allows you to disable some countries from the country dropdown list.
 
 class CountryDisable {
@@ -18766,7 +18824,7 @@ class CountryDisable {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/premium-gift.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/premium-gift.js
 // Component to handle premium gift features
 // 1 - Add a class to body to indicate which premium gift is selected (data-engrid-premium-gift-name="item-name-slugged")
 // 2 - Add a class to body to indicate if the "maximize my impact" is selected (data-engrid-premium-gift-maximize="true|false")
@@ -18883,7 +18941,7 @@ class PremiumGift {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/digital-wallets.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/digital-wallets.js
 
 class DigitalWallets {
     constructor() {
@@ -19028,7 +19086,7 @@ class DigitalWallets {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/mobile-cta.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/mobile-cta.js
 // This component adds a floating CTA button to the page, which can be used to scroll to the top of the form
 
 class MobileCTA {
@@ -19101,7 +19159,7 @@ class MobileCTA {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/live-frequency.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/live-frequency.js
 // This script creates merge tags: [[frequency]], [[Frequency]], or [[FREQUENCY]]
 // that gets replaced with the donation frequency
 // and can be used on any Code Block, Text Block, or Form Block
@@ -19212,7 +19270,7 @@ class LiveFrequency {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/universal-opt-in.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/universal-opt-in.js
 /**
  * This class will add event listeners to every yes/no radio button or checkbox
  * inside a universal opt-in element (any form block with the CSS class universal-opt-in). When the user clicks on a radio/checkbox
@@ -19305,7 +19363,7 @@ class UniversalOptIn {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/plaid.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/plaid.js
 // Component with a helper to auto-click on the Plaid link
 // when that payment method is selected
 
@@ -19356,15 +19414,17 @@ class Plaid {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/give-by-select.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/give-by-select.js
 
 class GiveBySelect {
     constructor() {
         this.logger = new EngridLogger("GiveBySelect", "#FFF", "#333", "🐇");
         this.transactionGiveBySelect = document.getElementsByName("transaction.giveBySelect");
         this.paymentTypeField = document.querySelector("select[name='transaction.paymenttype']");
+        this._frequency = DonationFrequency.getInstance();
         if (!this.transactionGiveBySelect)
             return;
+        this._frequency.onFrequencyChange.subscribe(() => this.checkPaymentTypeVisibility());
         this.transactionGiveBySelect.forEach((giveBySelect) => {
             giveBySelect.addEventListener("change", () => {
                 this.logger.log("Changed to " + giveBySelect.value);
@@ -19400,9 +19460,45 @@ class GiveBySelect {
             });
         }
     }
+    // Returns true if the selected payment type is visible
+    // Returns false if the selected payment type is not visible
+    isSelectedPaymentVisible() {
+        let visible = true;
+        this.transactionGiveBySelect.forEach((giveBySelect) => {
+            const container = giveBySelect.parentElement;
+            if (giveBySelect.checked && !engrid_ENGrid.isVisible(container)) {
+                this.logger.log(`Selected Payment Type is not visible: ${giveBySelect.value}`);
+                visible = false;
+            }
+        });
+        return visible;
+    }
+    // Checks if the selected payment type is visible
+    // If the selected payment type is not visible, it sets the payment type to the first visible option
+    checkPaymentTypeVisibility() {
+        window.setTimeout(() => {
+            var _a;
+            if (!this.isSelectedPaymentVisible()) {
+                this.logger.log("Setting payment type to first visible option");
+                const firstVisible = Array.from(this.transactionGiveBySelect).find((giveBySelect) => {
+                    const container = giveBySelect.parentElement;
+                    return engrid_ENGrid.isVisible(container);
+                });
+                if (firstVisible) {
+                    this.logger.log("Setting payment type to ", firstVisible.value);
+                    const container = firstVisible.parentElement;
+                    (_a = container.querySelector("label")) === null || _a === void 0 ? void 0 : _a.click();
+                    engrid_ENGrid.setPaymentType(firstVisible.value);
+                }
+            }
+            else {
+                this.logger.log("Selected Payment Type is visible");
+            }
+        }, 300);
+    }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/url-params-to-body-attrs.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/url-params-to-body-attrs.js
 //This component adds any url parameters that begin with "data-engrid-" to the body as attributes.
 
 class UrlParamsToBodyAttrs {
@@ -19418,7 +19514,7 @@ class UrlParamsToBodyAttrs {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/exit-intent-lightbox.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/exit-intent-lightbox.js
 
 
 class ExitIntentLightbox {
@@ -19565,7 +19661,7 @@ class ExitIntentLightbox {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/supporter-hub.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/supporter-hub.js
 // Component that adds 4Site Special Features to the Supporter Hub Page
 
 class SupporterHub {
@@ -19642,7 +19738,7 @@ class SupporterHub {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/fast-form-fill.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/fast-form-fill.js
 /**
  * This class adds body data attributes if all mandatory inputs, on specific form blocks, are filled.
  * Related styling (to hide elements) can be found in "fast-form-fill.scss".
@@ -19719,7 +19815,7 @@ class FastFormFill {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/set-attr.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/set-attr.js
 /*+
   The class is used to set body attributes via click handlers.
   The format is "setattr--{attribute}--{value}".
@@ -19752,7 +19848,7 @@ class SetAttr {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/show-if-present.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/show-if-present.js
 /**
  * This class contains the logic for special classes that can be used to hide elements if
  * certain supporter questions are present or absent.
@@ -19833,7 +19929,7 @@ class ShowIfPresent {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/en-validators.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/en-validators.js
 // This component uses EN's Custom Validators on the client side to validate form fields.
 // It's currently behind a feature flag, so it's not enabled by default.
 // To enable it, add the following to your options:
@@ -19924,7 +20020,7 @@ class ENValidators {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/postal-code-validator.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/postal-code-validator.js
 
 
 
@@ -20044,7 +20140,7 @@ class PostalCodeValidator {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/vgs.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/vgs.js
 // This component allows you to customize the VGS theme options
 //
 // It is used in the following way:
@@ -20198,6 +20294,13 @@ class VGS {
                 validations: ["required", "validCardSecurityCode"],
                 css: styles,
             },
+            "transaction.ccexpire": {
+                placeholder: "MM/YY",
+                autoComplete: "cc-exp",
+                validations: ["required", "validCardExpirationDate"],
+                css: styles,
+                yearLength: 2,
+            },
         };
         // Deep merge the default options with the options set in the theme
         this.options = engrid_ENGrid.deepMerge(defaultOptions, options);
@@ -20289,7 +20392,7 @@ class VGS {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/country-redirect.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/country-redirect.js
 // This component allows you to redirect the user to a different page based on their country.
 // It works by checking the country field on the page and comparing it to the list of countries in the CountryRedirect option.
 // If the country matches one of the countries in the list, the user is redirected to the specified URL only if the URL is not the same as the current page.
@@ -20352,7 +20455,7 @@ class CountryRedirect {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/welcome-back.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/welcome-back.js
 /**
  * This component adds a welcome back message and a personal details summary to the page.
  * It depends on the "fast-personal-details" functionality from the FastFormFill component.
@@ -20466,7 +20569,7 @@ class WelcomeBack {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/ecard-to-target-options.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/interfaces/ecard-to-target-options.js
 const EcardToTargetOptionsDefaults = {
     targetName: "",
     targetEmail: "",
@@ -20476,7 +20579,7 @@ const EcardToTargetOptionsDefaults = {
     addSupporterNameToMessage: false,
 };
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/ecard-to-target.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/ecard-to-target.js
 /**
  * This component adjusts an ecard form to target a specific recipient,
  * defined in a code block
@@ -20551,7 +20654,7 @@ class EcardToTarget {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/embedded-ecard-options.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/interfaces/embedded-ecard-options.js
 const EmbeddedEcardOptionsDefaults = {
     pageUrl: "",
     headerText: "Send an Ecard notification of your gift",
@@ -20560,7 +20663,7 @@ const EmbeddedEcardOptionsDefaults = {
     placement: "afterend",
 };
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/embedded-ecard.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/embedded-ecard.js
 /**
  * This class handles adding a checkbox to a form that, when checked, will display an embedded ecard form.
  * The embedded ecard form is hosted on a separate page and is displayed in an iframe.
@@ -20574,6 +20677,7 @@ class EmbeddedEcard {
         this.logger = new EngridLogger("Embedded Ecard", "#D95D39", "#0E1428", "📧");
         this.options = EmbeddedEcardOptionsDefaults;
         this._form = EnForm.getInstance();
+        this.isSubmitting = false;
         // For the page hosting the embedded ecard
         if (this.onHostPage()) {
             // Clean up session variables if the page is reloaded, and it isn't a submission failure
@@ -20674,6 +20778,57 @@ class EmbeddedEcard {
             }
         });
     }
+    setEmbeddedEcardSessionData() {
+        let ecardVariant = document.querySelector("[name='friend.ecard']");
+        let ecardSendDate = document.querySelector("[name='ecard.schedule']");
+        let ecardMessage = document.querySelector("[name='transaction.comments']");
+        //add "chain" param to window.location.href if it doesnt have it
+        const pageUrl = new URL(window.location.href);
+        if (!pageUrl.searchParams.has("chain")) {
+            pageUrl.searchParams.append("chain", "");
+        }
+        const embeddedEcardData = {
+            pageUrl: pageUrl.href,
+            formData: {
+                ecardVariant: (ecardVariant === null || ecardVariant === void 0 ? void 0 : ecardVariant.value) || "",
+                ecardSendDate: (ecardSendDate === null || ecardSendDate === void 0 ? void 0 : ecardSendDate.value) || "",
+                ecardMessage: (ecardMessage === null || ecardMessage === void 0 ? void 0 : ecardMessage.value) || "",
+                recipients: this.getEcardRecipients(),
+            },
+        };
+        sessionStorage.setItem("engrid-embedded-ecard", JSON.stringify(embeddedEcardData));
+    }
+    getEcardRecipients() {
+        const recipients = [];
+        const addRecipientButton = document.querySelector(".en__ecarditems__addrecipient");
+        //Single recipient form where the "add recipient" button is hidden, and we use the recipient name and email fields
+        const isSingleRecipientForm = !addRecipientButton || addRecipientButton.offsetHeight === 0;
+        if (isSingleRecipientForm) {
+            // When it is a single recipient form, we only need to get the recipient name and email from the input fields
+            let recipientName = document.querySelector(".en__ecardrecipients__name > input");
+            let recipientEmail = document.querySelector(".en__ecardrecipients__email > input");
+            if (recipientName && recipientEmail) {
+                recipients.push({
+                    name: recipientName.value,
+                    email: recipientEmail.value,
+                });
+            }
+            return recipients;
+        }
+        // For multiple recipient forms, we need to get the recipient name and email from each recipient in the recipient list
+        const recipientList = document.querySelector(".en__ecardrecipients__list");
+        recipientList === null || recipientList === void 0 ? void 0 : recipientList.querySelectorAll(".en__ecardrecipients__recipient").forEach((el) => {
+            const recipientName = el.querySelector(".ecardrecipient__name");
+            const recipientEmail = el.querySelector(".ecardrecipient__email");
+            if (recipientName && recipientEmail) {
+                recipients.push({
+                    name: recipientName.value,
+                    email: recipientEmail.value,
+                });
+            }
+        });
+        return recipients;
+    }
     setupEmbeddedPage() {
         let ecardVariant = document.querySelector("[name='friend.ecard']");
         let ecardSendDate = document.querySelector("[name='ecard.schedule']");
@@ -20688,23 +20843,25 @@ class EmbeddedEcard {
             recipientEmail,
         ].forEach((el) => {
             el.addEventListener("input", () => {
-                //add "chain" param to window.location.href if it doesnt have it
-                const pageUrl = new URL(window.location.href);
-                if (!pageUrl.searchParams.has("chain")) {
-                    pageUrl.searchParams.append("chain", "");
-                }
-                sessionStorage.setItem("engrid-embedded-ecard", JSON.stringify({
-                    pageUrl: pageUrl.href,
-                    formData: {
-                        ecardVariant: (ecardVariant === null || ecardVariant === void 0 ? void 0 : ecardVariant.value) || "",
-                        ecardSendDate: (ecardSendDate === null || ecardSendDate === void 0 ? void 0 : ecardSendDate.value) || "",
-                        ecardMessage: (ecardMessage === null || ecardMessage === void 0 ? void 0 : ecardMessage.value) || "",
-                        recipientName: (recipientName === null || recipientName === void 0 ? void 0 : recipientName.value) || "",
-                        recipientEmail: (recipientEmail === null || recipientEmail === void 0 ? void 0 : recipientEmail.value) || "",
-                    },
-                }));
+                if (this.isSubmitting)
+                    return;
+                this.setEmbeddedEcardSessionData();
             });
         });
+        // MutationObserver to detect changes in the recipient list and update the session data
+        const observer = new MutationObserver((mutationsList) => {
+            for (let mutation of mutationsList) {
+                if (mutation.type === "childList") {
+                    if (this.isSubmitting)
+                        return;
+                    this.setEmbeddedEcardSessionData();
+                }
+            }
+        });
+        const recipientList = document.querySelector(".en__ecardrecipients__list");
+        if (recipientList) {
+            observer.observe(recipientList, { childList: true });
+        }
         document.querySelectorAll(".en__ecarditems__thumb").forEach((el) => {
             // Making sure the session value is changed when this is clicked
             el.addEventListener("click", () => {
@@ -20717,6 +20874,7 @@ class EmbeddedEcard {
             this.logger.log("Received post message", e.data);
             switch (e.data.action) {
                 case "submit_form":
+                    this.isSubmitting = true;
                     let embeddedEcardData = JSON.parse(sessionStorage.getItem("engrid-embedded-ecard") || "{}");
                     if (ecardVariant) {
                         ecardVariant.value = embeddedEcardData.formData["ecardVariant"];
@@ -20727,10 +20885,12 @@ class EmbeddedEcard {
                     if (ecardMessage) {
                         ecardMessage.value = embeddedEcardData.formData["ecardMessage"];
                     }
-                    recipientName.value = embeddedEcardData.formData["recipientName"];
-                    recipientEmail.value = embeddedEcardData.formData["recipientEmail"];
                     const addRecipientButton = document.querySelector(".en__ecarditems__addrecipient");
-                    addRecipientButton === null || addRecipientButton === void 0 ? void 0 : addRecipientButton.click();
+                    embeddedEcardData.formData.recipients.forEach((recipient) => {
+                        recipientName.value = recipient.name;
+                        recipientEmail.value = recipient.email;
+                        addRecipientButton === null || addRecipientButton === void 0 ? void 0 : addRecipientButton.click();
+                    });
                     const form = EnForm.getInstance();
                     form.submitForm();
                     sessionStorage.removeItem("engrid-embedded-ecard");
@@ -20772,7 +20932,7 @@ class EmbeddedEcard {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/us-only-form.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/us-only-form.js
 /*
  * This class disables the country field and fixes the country to "United States"
  */
@@ -20804,7 +20964,7 @@ class UsOnlyForm {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/thank-you-page-conditional-content.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/thank-you-page-conditional-content.js
 
 class ThankYouPageConditionalContent {
     constructor() {
@@ -20852,10 +21012,10 @@ class ThankYouPageConditionalContent {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.18.14";
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
+const AppVersion = "0.19.5";
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
 
 
@@ -20942,24 +21102,21 @@ const AppVersion = "0.18.14";
 
 
 ;// CONCATENATED MODULE: ./src/scripts/main.js
-const main_tippy = (__webpack_require__(3861)/* ["default"] */ .ZP);
-
+const main_tippy = (__webpack_require__(9244)/* ["default"] */ .Ay);
 const customScript = function (App, DonationFrequency, DonationAmount) {
-  console.log("ENGrid client scripts are executing"); // Add your client scripts here
-
+  console.log("ENGrid client scripts are executing");
+  // Add your client scripts here
   var checkForServerError = document.querySelector(".en__errorList *");
-
   if (checkForServerError) {
     console.log("Has server error!");
   } else {
-    console.log("Does not have a server error!"); // Check if the first field is in the viewport
+    console.log("Does not have a server error!");
 
+    // Check if the first field is in the viewport
     let firstElement = document.querySelector(".en__component--formblock");
-
     if (firstElement) {
       firstElement.id = "firstElement";
       let bounding = firstElement.getBoundingClientRect();
-
       if (bounding.top >= 0 && bounding.left >= 0 && bounding.right <= window.innerWidth && bounding.bottom <= window.innerHeight) {
         console.log("First field is in the viewport!");
       } else {
@@ -20981,7 +21138,6 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         });
         document.addEventListener("scroll", function (e) {
           const button = document.querySelector("#floating-button");
-
           if (window.scrollY < 100) {
             button.classList.add("show");
           } else {
@@ -20995,11 +21151,11 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         }, 200);
       }
     }
-  } ////////////////////////////////////////////
+  }
+
+  ////////////////////////////////////////////
   // START ENGRID TRANSITION SCRIPTS
   ////////////////////////////////////////////
-
-
   const texts = {
     en: {
       emailFieldNotice: "You'll receive email updates from The Nature Conservancy. You can unsubscribe at any time.",
@@ -21018,24 +21174,23 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
       bankNumberTooltip: "Su número de ruta es el número de 9 dígitos que aparece en la parte inferior izquierda de su cheque."
     }
   };
-  const text = texts[window.pageJson.locale.slice(0, 2)] ?? texts.en; // Position monthly upsell after the recurring frequency field
+  const text = texts[window.pageJson.locale.slice(0, 2)] ?? texts.en;
 
+  // Position monthly upsell after the recurring frequency field
   let inlineMonthlyUpsell = document.querySelector(".move-after--transaction-recurrfreq");
   let recurrFrequencyField = document.querySelector(".en__field--recurrfreq");
-
   if (inlineMonthlyUpsell && recurrFrequencyField) {
     recurrFrequencyField.insertAdjacentElement("beforeend", inlineMonthlyUpsell);
   }
-
   const emailField = document.querySelector('[name="supporter.emailAddress"]');
-
   if (emailField && emailField.type !== "hidden") {
     // Add a notice to the email field
     App.addHtml(`<div class="en__field__notice">${text.emailFieldNotice}</div>`, '[name="supporter.emailAddress"]', "after");
-  } // Add a notice to the phone number field
+  }
 
-
+  // Add a notice to the phone number field
   App.addHtml(`<div class="en__field__notice">${text.phoneNumberNotice}</div>`, '[name="supporter.phoneNumber2"]', "after");
+
   /**
    * Add a Tippy tooltip to a field
    * @param {HTMLElement} labelElement
@@ -21043,12 +21198,10 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
    * @param {string} labelText
    * @param {string} tooltipText
    */
-
   function addTooltip(labelElement, fieldName, labelText, tooltipText) {
     if (!labelElement) {
       return;
     }
-
     let link = document.createElement("a");
     link.href = "#";
     link.id = fieldName + "-tooltip";
@@ -21066,36 +21219,34 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
       content: tooltipText,
       theme: "light-border"
     });
-  } // Add a tooltip for the CVV number
+  }
 
+  // Add a tooltip for the CVV number
+  addTooltip(document.querySelector(".en__field--ccvv > label"), "cvv", text.cvvTooltipLabel, text.cvvTooltip);
 
-  addTooltip(document.querySelector(".en__field--ccvv > label"), "cvv", text.cvvTooltipLabel, text.cvvTooltip); // Add a tooltip for the bank routing number
+  // Add a tooltip for the bank routing number
+  addTooltip(document.querySelector(".en__field--bankRoutingNumber > label"), "bankNumber", text.bankNumberTooltipLabel, text.bankNumberTooltip);
 
-  addTooltip(document.querySelector(".en__field--bankRoutingNumber > label"), "bankNumber", text.bankNumberTooltipLabel, text.bankNumberTooltip); // Add a tooltip for Title
-
+  // Add a tooltip for Title
   addTooltip(document.querySelector(".en__field--title > label"), "title", "Why do you ask for this?", "Many of our online actions link up with public officials’ web mail forms in order to deliver your message on your behalf. Many of these public officials’ forms require the Mr./Mrs./Miss field and, unfortunately, we do not have control over which of these titles are presented as options. We must adhere to what the officials are using in order for your message to be delivered.");
+
   /**
    * Set the visibility of the premium field based on the donation frequency and amount
    * Visibility is set by adding/removing the "engrid-premium-donation" data attr on the body
    * @param {string} frequency
    * @param {number} amount
    */
-
   function setPremiumVisibility(frequency, amount) {
     const monthlyPremiumMinimum = window?.donationSettings?.monthlyPremiumMinimum;
     const onetimePremiumMinimum = window?.donationSettings?.onetimePremiumMinimum;
-
     if (!monthlyPremiumMinimum || !onetimePremiumMinimum) {
       return;
     }
-
     const monthlyPremiumField = App.getField("supporter.questions.1362488");
     const premiumVisibleField = App.getField("supporter.questions.1366068");
-
     if (!monthlyPremiumField || !premiumVisibleField) {
       return;
     }
-
     if (frequency === "monthly" && amount >= monthlyPremiumMinimum) {
       App.setBodyData("premium-donation", "active");
       monthlyPremiumField.checked = true;
@@ -21112,9 +21263,9 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
       premiumVisibleField.checked = false;
       App.enParseDependencies();
     }
-  } // Listen for changes to the donation frequency and amount
+  }
 
-
+  // Listen for changes to the donation frequency and amount
   const freq = DonationFrequency.getInstance();
   const amt = DonationAmount.getInstance();
   freq.onFrequencyChange.subscribe(frequency => {
@@ -21122,24 +21273,22 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   });
   amt.onAmountChange.subscribe(amount => {
     setPremiumVisibility(freq.frequency, amount);
-  }); // Move Premium donation elements into their container
+  });
 
+  // Move Premium donation elements into their container
   let premiumDonationEls = document.querySelectorAll(".move-into--engrid-premium-container");
   let premiumDonationContainer = document.querySelector(".engrid-premium-container");
-
   if (premiumDonationEls.length > 0 && premiumDonationContainer) {
     premiumDonationEls.forEach(el => {
       premiumDonationContainer.appendChild(el);
     });
-  } // Make body-banner and images with attribution attribution clickable
+  }
 
-
+  // Make body-banner and images with attribution attribution clickable
   const bbTippy = document.querySelectorAll(".body-banner figattribution, img.img-with-attribution[alt] + figattribution");
-
   if (bbTippy) {
     bbTippy.forEach(el => {
       const tippyInstance = el?._tippy;
-
       if (tippyInstance) {
         tippyInstance.setProps({
           arrow: false,
@@ -21147,22 +21296,20 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         });
       }
     });
-  } // Add data-thank-you attribute to body of final page
+  }
 
-
+  // Add data-thank-you attribute to body of final page
   if (pageJson && pageJson.pageNumber === pageJson.pageCount && pageJson.pageCount > 1) {
     App.setBodyData("thank-you", "true");
   } else {
     App.setBodyData("thank-you", "false");
-  } // Auto renew
+  }
 
-
+  // Auto renew
   const autoRenew = document.getElementById("en__field_auto_renew");
-
   if (autoRenew) {
     const annualFrequencyOption = document.querySelector('input[name="transaction.recurrfreq"][value="ANNUAL"]');
     const extRef2Input = document.querySelector('[name="en_txn2"]');
-
     if (!annualFrequencyOption || !extRef2Input) {
       // if recurring frequency option for annual is not found, we remove the auto renew checkbox and stop here
       console.error("ENgrid: Annual frequency option or external reference field not found. Removing Auto Renew checkbox to prevent failed donations.");
@@ -21183,26 +21330,23 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         }
       });
     }
-  } ////////////////////////////////////////////
+  }
+
+  ////////////////////////////////////////////
   // Spanish translation tweaks
+
   // Translate recurring status
-
-
   const recurringStatus = document.querySelector(".js-recurring-status");
-
   if (recurringStatus) {
     if (window.navigator.language === "es-MX" || window.location.href.indexOf("locale=es-MX") > -1 || pageJson.locale === "es-MX") {
       console.log(recurringStatus.textContent);
-
       switch (recurringStatus.textContent) {
         case "MONTHLY":
           recurringStatus.textContent = "Mensual";
           break;
-
         case "ANNUAL":
           recurringStatus.textContent = "Anual";
           break;
-
         default:
           recurringStatus.textContent = "Una vez";
       }
@@ -21211,24 +21355,23 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         case "MONTHLY":
           recurringStatus.textContent = "Monthly";
           break;
-
         case "ANNUAL":
           recurringStatus.textContent = "Annual";
           break;
-
         default:
           recurringStatus.textContent = "One-time";
       }
     }
   }
-
   if (window?.pageJson?.locale === "es-MX") {
     const donationAmountField = document.querySelector(".en__field--donationAmt");
-
     if (donationAmountField) {
       donationAmountField.style.setProperty("--give-monthly-donation-amount-appended-label", '"/MES"');
     }
-  } // END Spanish translation tweaks
+  }
+
+  // END Spanish translation tweaks
+
   ////////////////////////////////////////////
   // END ENGRID TRANSITION SCRIPTS
   ////////////////////////////////////////////
@@ -21239,14 +21382,11 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
    * ?crid=1234
    * Will reveal all elements with class js-zcc--crid--1234
    */
-
-
   const urlParams = new URLSearchParams(window.location.search);
   urlParams.forEach((value, param) => {
     value = value.replace(/[^_a-zA-Z0-9-]/g, "_").toLowerCase();
     param = param.replace(/[^_a-zA-Z0-9-]/g, "_").toLowerCase();
     const conditionalElements = document.querySelectorAll(`.js-zcc--${param}--${value}`);
-
     if (conditionalElements.length > 0) {
       conditionalElements.forEach(el => {
         el.classList.remove(`js-zcc--${param}--${value}`);
@@ -21258,50 +21398,45 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         el.classList.remove(`js-zcc--${param}--default`);
       });
     }
-  }); // If there is no URL parameter, reveal all elements with class js-zcc--paramName--default class
-
+  });
+  // If there is no URL parameter, reveal all elements with class js-zcc--paramName--default class
   const conditionalElements = document.querySelectorAll(`[class*="js-zcc--"]`);
   conditionalElements.forEach(el => {
     const className = [...el.classList].find(className => className.startsWith("js-zcc--") && className.endsWith("--default"));
     if (!className) return;
     const paramName = className.split("--")[1];
-
     if (!urlParams.has(paramName)) {
       el.classList.remove(className);
     }
-  }); // If there are any extra banner image elements being controlled by the URL parameters,
+  });
+  // If there are any extra banner image elements being controlled by the URL parameters,
   // we will remove them from the page (extra banner images inside body-banner will prevent the image showing)
-
   const extraBannerImages = document.querySelectorAll(".body-banner img[class*='js-zcc--']");
   extraBannerImages.forEach(img => {
     img?.closest(".en__component--imageblock")?.remove();
   });
+
   /*
    * Lock gift designation field when a specific value is passed in the URL
    * and we are using the gift designation form block
    */
-
   const giftDesignationField = document.querySelector(".engrid-gift-designation #en__field_supporter_appealCode");
   const appealCode = urlParams.get("supporter.appealCode");
-
   if (giftDesignationField && appealCode) {
     giftDesignationField.disabled = true;
     const giftDesignationNeededMostCheckbox = document.querySelector("#en__field_supporter_questions_8785940");
     const giftDesignationChooseCheckbox = document.querySelector("#en__field_supporter_questions_8785941");
-
     if (giftDesignationNeededMostCheckbox && giftDesignationChooseCheckbox) {
       giftDesignationChooseCheckbox.addEventListener("change", () => {
         if (giftDesignationChooseCheckbox.checked) {
           giftDesignationField.value = appealCode;
         }
       });
-    } // if the gift designation field is a select field,
+    }
+    // if the gift designation field is a select field,
     // and it doesnt have the url param value in its options, make that option and select it
-
-
     if (giftDesignationField.tagName === "SELECT") {
       let option = giftDesignationField.querySelector(`option[value="${appealCode}"]`);
-
       if (!option) {
         option = document.createElement("option");
         option.value = appealCode;
@@ -21310,21 +21445,18 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         giftDesignationField.value = appealCode;
         giftDesignationChooseCheckbox.checked = true;
       }
-
       giftDesignationField.closest(".en__field")?.classList.add("hide");
       const label = document.querySelector("[for='en__field_supporter_questions_8785941']");
-
       if (label) {
         label.innerHTML = `I would like to designate my gift to ${option.innerText}.`;
       }
     }
   }
+
   /*
    * Make image selects on surveys into checkboxes
    * "engrid-checkboxes" needs to be somewhere inside the "reference name" field of the question
    */
-
-
   const imageSelectQuestions = document.querySelectorAll(".en__field--imgselect[class*='engrid-checkboxes']");
   imageSelectQuestions.forEach((question, i) => {
     const inputs = question.querySelectorAll("input[type='radio']");
@@ -21346,28 +21478,25 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
           if (input.checked) {
             checkedValues.push(input.value);
           }
-
           hiddenInput.value = checkedValues.join(",");
         });
       });
     });
-  }); // Select donation amount based on URL parameter
+  });
 
+  // Select donation amount based on URL parameter
   const donationIndex = new URLSearchParams(window.location.search).get("donationIndex");
-
   if (donationIndex) {
     const donationAmounts = document.querySelectorAll('input[name="transaction.donationAmt"]');
-
     if (donationAmounts[donationIndex]) {
       amt.setAmount(donationAmounts[donationIndex].value);
     }
-  } // When doing E-Check payment, make the bank account agreement field visible. Otherwise, it should be hidden
+  }
+
+  // When doing E-Check payment, make the bank account agreement field visible. Otherwise, it should be hidden
   // so that there is not a validation error when the form is submitted.
-
-
   const giveBySelectInputs = document.querySelectorAll("[name='transaction.giveBySelect']");
   const bankAccountAgreementField = document.querySelector(".en__field--879592");
-
   if (bankAccountAgreementField) {
     giveBySelectInputs.forEach(input => {
       input.addEventListener("change", () => {
@@ -21381,10 +21510,10 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
           }
         }
       });
-    }); // Set the initial state of the bank account agreement field
+    });
 
+    // Set the initial state of the bank account agreement field
     const initialGiveBySelect = document.querySelector("[name='transaction.giveBySelect']:checked");
-
     if (initialGiveBySelect && initialGiveBySelect.value === "ACH") {
       if (App.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "showField")) {
         window.EngagingNetworks.require._defined.enjs.showField("879592");
@@ -21396,28 +21525,53 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     }
   }
 };
-;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
+;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/typeof.js
+function _typeof(o) {
+  "@babel/helpers - typeof";
 
-  return obj;
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, _typeof(o);
 }
+
+;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/toPrimitive.js
+
+function toPrimitive(t, r) {
+  if ("object" != _typeof(t) || !t) return t;
+  var e = t[Symbol.toPrimitive];
+  if (void 0 !== e) {
+    var i = e.call(t, r || "default");
+    if ("object" != _typeof(i)) return i;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return ("string" === r ? String : Number)(t);
+}
+
+;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js
+
+
+function toPropertyKey(t) {
+  var i = toPrimitive(t, "string");
+  return "symbol" == _typeof(i) ? i : i + "";
+}
+
+;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
+
+function _defineProperty(e, r, t) {
+  return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[r] = t, e;
+}
+
 ;// CONCATENATED MODULE: ./src/scripts/tracking.js
 
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * @typedef {Object} Window
  * @property {Object} utag
@@ -21426,6 +21580,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
  * @property {Object} pageJson
  * @property {String} pageJson.pageType
  */
+
 function trackEvent(eventName, eventData) {
   if (typeof utag !== "undefined") {
     utag.link(_objectSpread({
@@ -21437,7 +21592,6 @@ function trackEvent(eventName, eventData) {
       event_name: eventName
     }, eventData));
     const tealiumScript = document.querySelector('script[src*="//tags.tiqcdn.com/utag/tnc/global/prod/utag.js"]');
-
     if (tealiumScript) {
       tealiumScript.onload = () => {
         window.utagQueue.forEach(event => {
@@ -21457,9 +21611,9 @@ function trackFormSubmit(App, DonationAmount) {
       form_name: utag_data.page_name.slice(0, -2),
       email_signup_location: "otherdatacapture"
     });
-  } //Donation page submits
+  }
 
-
+  //Donation page submits
   if (App.getPageType() === "DONATION" && App.getPageNumber() === 1) {
     const donationData = {};
     donationData.productId = utag_data.page_name.slice(0, -2);
@@ -21469,74 +21623,63 @@ function trackFormSubmit(App, DonationAmount) {
     donationData.zipCode = App.getFieldValue("supporter.postcode");
     donationData.emailAddress = App.getFieldValue("supporter.emailAddress");
     donationData.originalDonationAmount = DonationAmount.getInstance().amount;
-    donationData.extraAmount = 0; // New donationData fields for Google Ads Enhanced Conversions
-
+    donationData.extraAmount = 0;
+    // New donationData fields for Google Ads Enhanced Conversions
     donationData.firstName = App.getFieldValue("supporter.firstName");
     donationData.lastName = App.getFieldValue("supporter.lastName");
     donationData.address1 = App.getFieldValue("supporter.address1");
     donationData.city = App.getFieldValue("supporter.city");
     donationData.country = App.getFieldValue("supporter.country");
     donationData.phoneNumber = App.getFieldValue("supporter.phoneNumber2");
+
     /** @type {HTMLInputElement} */
     //If fee cover is checked, set extra amount to 3% of donation amount and subtract from original donation amount
-
     const feeCoverCheckbox = App.getField("transaction.feeCover");
-
     if (feeCoverCheckbox && feeCoverCheckbox.checked) {
       donationData.extraAmount = (DonationAmount.getInstance().amount * 0.03).toFixed(2);
       donationData.originalDonationAmount = donationData.originalDonationAmount - donationData.extraAmount;
     }
-
     const sendEcardCheckbox = document.getElementById("en__field_embedded-ecard");
-
     if (sendEcardCheckbox && sendEcardCheckbox.checked) {
       donationData.ecardSelected = "true";
     }
-
     sessionStorage.setItem("donationData", JSON.stringify(donationData));
-  } //Mobile phone data (for "F32 - Real Time SMS Push" script - opts user into SMS via API)
+  }
 
+  //Mobile phone data (for "F32 - Real Time SMS Push" script - opts user into SMS via API)
   /** @type {HTMLInputElement} */
-
-
   const mobilePhoneNumber = App.getField("supporter.phoneNumber2");
-
   if (mobilePhoneNumber) {
     const mobilePhoneData = {};
     mobilePhoneData.phoneNumber = mobilePhoneNumber.value;
     /** @type {HTMLInputElement} */
-
     const mobilePhoneOptIn = App.getField("supporter.questions.848527") || App.getField("supporter.questions.1952175");
-
     if (mobilePhoneOptIn && mobilePhoneOptIn.checked) {
       mobilePhoneData.optIn = "Y";
     }
-
     sessionStorage.setItem("mobilePhoneData", JSON.stringify(mobilePhoneData));
-  } //Track ETT and petition submits
+  }
 
-
+  //Track ETT and petition submits
   if (["ADVOCACY", "EMAILTOTARGET"].includes(App.getPageType())) {
     let utagData = {};
     let eventName = "";
     /** @type {HTMLInputElement} */
-
     const phoneOptIn = App.getField("supporter.questions.1107654");
-
     if (phoneOptIn && phoneOptIn.checked) {
       eventName = "frm_emt_txt_submit";
       utagData.text_signup_location = pageJson.pageType;
     } else {
       eventName = "frm_emt_submit";
     }
-
     utagData.form_type = pageJson.pageType;
     utagData.form_name = utag_data.page_name.slice(0, -2);
     utagData.action_id = utag_data.form_name;
     utagData.action_type = pageJson.pageType;
     utagData.zip_code = App.getFieldValue("supporter.postcode");
-    utagData.email_signup_location = pageJson.pageType; // New utag variables fields for Google Ads Enhanced Conversions for ETT & PET
+    utagData.email_signup_location = pageJson.pageType;
 
+    // New utag variables fields for Google Ads Enhanced Conversions for ETT & PET
     utagData.const_first = App.getFieldValue("supporter.firstName");
     utagData.const_last = App.getFieldValue("supporter.lastName");
     utagData.const_address = App.getFieldValue("supporter.address1");
@@ -21550,15 +21693,17 @@ function trackFormSubmit(App, DonationAmount) {
 }
 function trackFormErrors() {
   let invalidFields = "";
-  let errors = ""; // Gather invalid fields and error messages
+  let errors = "";
 
+  // Gather invalid fields and error messages
   document.querySelectorAll(".en__field--validationFailed").forEach(el => {
     if (el.querySelector(".en__field__error")) {
       invalidFields += `${el.querySelector(".en__field__input").getAttribute("name")}|`;
       errors += `${el.querySelector(".en__field__error").textContent}|`;
     }
-  }); // Fire tracking if errors were found
+  });
 
+  // Fire tracking if errors were found
   if (invalidFields !== "") {
     trackEvent("form_error", {
       form_field_error_field: invalidFields.slice(0, -1),
@@ -21570,7 +21715,6 @@ function trackFormErrors() {
 }
 function trackProcessingErrors(App) {
   const errorList = document.querySelector(".en__errorList");
-
   if (errorList && errorList.textContent.trim() !== "") {
     trackEvent("form_error", {
       form_field_error_field: "payment error",
@@ -21601,16 +21745,18 @@ function trackUserInteractions() {
         social_share_platform: e.target.parentElement.dataset.enshare
       });
     });
-  }); // Track clicks on footer links
+  });
 
+  // Track clicks on footer links
   document.querySelectorAll(".main-page-footer a").forEach(el => {
     el.addEventListener("click", e => {
       trackEvent("footer_nav_click", {
         nav_click_location: `preserve.nature.org.fnav.${e.target.textContent.toLowerCase()}`
       });
     });
-  }); // Track en upsell modal opening
+  });
 
+  // Track en upsell modal opening
   const observer = new MutationObserver((mutationsList, observer) => {
     for (const mutation of mutationsList) {
       if (mutation.addedNodes) {
@@ -21619,8 +21765,8 @@ function trackUserInteractions() {
             //Track lightbox opened
             trackEvent("lightbox_impression", {
               lightbox_name: "sustainer upsell"
-            }); //Track if 'yes' is clicked on lightbox
-
+            });
+            //Track if 'yes' is clicked on lightbox
             document.getElementById("en__upsellModal__yes").addEventListener("click", () => {
               trackEvent("lightbox_click", {
                 lightbox_name: "sustainer upsell"
@@ -21644,59 +21790,44 @@ function trackUserInteractions() {
 class BequestLightbox {
   constructor() {
     _defineProperty(this, "logger", new EngridLogger("BequestLightbox", "yellow", "black"));
-
     _defineProperty(this, "modalContent", null);
-
     _defineProperty(this, "bequestUserProfile", undefined);
-
     _defineProperty(this, "pageJson", void 0);
-
     this.modalContent = document.querySelector(".modal--bequest");
     this.bequestUserProfile = window.bequestUserProfile || undefined;
     this.pageJson = window.pageJson;
-
     if (!this.shouldRun()) {
       this.logger.log("Not running bequest modal.");
       return;
     }
-
     this.addModal();
-
     if (this.shouldOpen()) {
       this.open();
     }
-
     this.logConditions();
   }
-
   shouldRun() {
     if (this.modalContent && !this.bequestUserProfile) {
       this.logger.log("Bequest modal found, but no user profile found. Please add the User Profile Script.");
     }
-
     return !!this.modalContent && !!this.bequestUserProfile;
   }
-
   shouldOpen() {
     if (this.modalContent?.classList.contains("modal--always-open")) {
       this.logger.log("Opening bequest modal. Always open trigger found.");
       return true;
     }
-
     if (this.lessRestrictiveTrigger()) {
       this.logger.log("Opening bequest modal. Less restrictive trigger found.");
       return true;
     }
-
     if (this.strictTrigger()) {
       this.logger.log("Opening bequest modal. Strict trigger found.");
       return true;
     }
-
     this.logger.log("Not opening bequest modal. No conditions met.");
     return false;
   }
-
   logConditions() {
     // prettier-ignore
     this.logger.log(`country: ${this.pageJson?.country}
@@ -21709,8 +21840,9 @@ class BequestLightbox {
       bequest_lb_select: ${this.getCookie("bequest_lb_select")}
       gp_form_submitted: ${this.getCookie("gp_form_submitted")}
       per_gp: ${this.getCookie("per_gp")}
-      gp_email: ${this.getCookie("gp_email")}`); // prettier-ignore
+      gp_email: ${this.getCookie("gp_email")}`);
 
+    // prettier-ignore
     this.logger.log(`country: ${this.pageJson?.country} = ${this.pageJson?.country === "US"}
       doNotSendSolicitations: ${this.bequestUserProfile?.doNotSendSolicitations} === "Y" = ${this.bequestUserProfile?.doNotSendSolicitations === "Y"}
       crmConstituency: ${this.bequestUserProfile?.crmConstituency} includes "Legacy Club" = ${this.bequestUserProfile?.crmConstituency?.includes("Legacy Club")}
@@ -21723,29 +21855,23 @@ class BequestLightbox {
       includeInPlannedGivingSolicitations: ${this.bequestUserProfile?.includeInPlannedGivingSolicitations} === "Y" = ${this.bequestUserProfile?.includeInPlannedGivingSolicitations === "Y"}
       plannedGiftProspect: ${this.bequestUserProfile?.plannedGiftProspect} === "Y" = ${this.bequestUserProfile?.plannedGiftProspect === "Y"}`);
   }
-
   lessRestrictiveTrigger() {
     if (this.modalContent?.classList.contains("modal--bequest-less-restrictive") && this.pageJson?.country === "US" && this.bequestUserProfile?.doNotSendSolicitations !== "Y" && !this.bequestUserProfile?.crmConstituency?.includes("Legacy Club") && !this.getCookie("bequest_lb_select") && !this.getCookie("gp_form_submitted")) {
       this.logger.log("Less restrictive trigger passed condition");
       return true;
     }
-
     return false;
   }
-
   strictTrigger() {
     if (this.pageJson?.country === "US" && this.bequestUserProfile?.doNotSendSolicitations !== "Y" && !this.bequestUserProfile?.crmConstituency?.includes("Legacy Club") && this.pageJson?.amount >= 100 && !this.getCookie("bequest_lb_select") && !this.getCookie("gp_form_submitted")) {
       this.logger.log("Strict trigger passed first condition");
-
       if (this.getCookie("per_gp") === "true" || this.getCookie("gp_email") === "true" || Number(this.bequestUserProfile?.totalNumberOfGifts) >= 3 || this.bequestUserProfile?.includeInPlannedGivingSolicitations === "Y" || this.bequestUserProfile?.plannedGiftProspect === "Y") {
         this.logger.log("Strict trigger passed second condition");
         return true;
       }
     }
-
     return false;
   }
-
   addModal() {
     document.body.insertAdjacentHTML("beforeend", `<div class="engrid-modal">
         <div class="engrid-modal__overlay">
@@ -21758,7 +21884,6 @@ class BequestLightbox {
     document.querySelector(".engrid-modal .engrid-modal__body")?.appendChild(this.modalContent);
     this.addEventListeners();
   }
-
   open() {
     engrid_ENGrid.setBodyData("modal", "open");
     engrid_ENGrid.setBodyData("bequest-lightbox", "open");
@@ -21766,34 +21891,34 @@ class BequestLightbox {
       lightbox_name: "bequest"
     });
   }
-
   addEventListeners() {
     // Close event on top X
     document.querySelector(".engrid-modal__close")?.addEventListener("click", () => {
       this.close();
-    }); // Bounce scale when clicking outside of modal
+    });
 
+    // Bounce scale when clicking outside of modal
     document.querySelector(".engrid-modal__overlay")?.addEventListener("click", event => {
       if (event.target === event.currentTarget) {
         const modal = document.querySelector(".engrid-modal");
-
         if (modal) {
           modal.classList.remove("engrid-modal--scale");
           void modal.clientWidth;
           modal.classList.add("engrid-modal--scale");
         }
       }
-    }); // Close on "modal__close" click
+    });
 
+    // Close on "modal__close" click
     const closeEls = document.querySelectorAll(".modal__close");
     closeEls.forEach(el => {
       el.addEventListener("click", () => {
         this.close();
       });
-    }); // Resize iframe on load
+    });
 
+    // Resize iframe on load
     const iframe = document.querySelector(".engrid-modal__body iframe");
-
     if (iframe) {
       this.resizeIframe(iframe);
       iframe.addEventListener("load", () => {
@@ -21802,9 +21927,9 @@ class BequestLightbox {
       window.addEventListener("resize", () => {
         this.resizeIframe(iframe);
       });
-    } // Listen for iframe submission message from iframe page 2, and close modal.
+    }
 
-
+    // Listen for iframe submission message from iframe page 2, and close modal.
     window.addEventListener("message", event => {
       if (event.data === "iframeSubmitted") {
         this.close();
@@ -21814,61 +21939,50 @@ class BequestLightbox {
       }
     });
   }
-
   close() {
     engrid_ENGrid.setBodyData("modal", "closed");
     engrid_ENGrid.setBodyData("bequest-lightbox", "closed");
   }
-
   resizeIframe(iframe) {
     iframe.style.height = iframe.contentWindow?.document.body.scrollHeight + "px";
   }
-
   getCookie(cookieName) {
     const name = `${cookieName}=`;
     const decodedCookie = decodeURIComponent(document.cookie);
     const cookieArray = decodedCookie.split(";");
-
     for (let i = 0; i < cookieArray.length; i++) {
       let cookie = cookieArray[i];
-
       while (cookie.charAt(0) === " ") {
         cookie = cookie.substring(1);
       }
-
       if (cookie.indexOf(name) === 0) {
         return cookie.substring(name.length, cookie.length);
       }
     }
-
     return null;
   }
-
 }
-// EXTERNAL MODULE: ./node_modules/tippy.js/dist/tippy.esm.js + 52 modules
-var tippy_esm = __webpack_require__(3861);
+// EXTERNAL MODULE: ./node_modules/tippy.js/dist/tippy.esm.js + 54 modules
+var tippy_esm = __webpack_require__(9244);
 ;// CONCATENATED MODULE: ./src/scripts/tooltip.ts
 
 
 class Tooltip {
   constructor() {
     _defineProperty(this, "Els", void 0);
-
     this.Els = document.querySelectorAll("[data-engrid-tooltip]");
     if (!this.shouldRun()) return;
     this.addTooltips();
   }
-
   shouldRun() {
     return this.Els.length > 0;
   }
-
   addTooltips() {
     this.Els.forEach(el => {
       const content = el.getAttribute("data-engrid-tooltip");
       const trigger = el.getAttribute("data-engrid-tooltip-trigger") || "click";
       if (!content) return;
-      (0,tippy_esm/* default */.ZP)(el, {
+      (0,tippy_esm/* default */.Ay)(el, {
         content: content,
         theme: "light-border",
         allowHTML: true,
@@ -21877,7 +21991,6 @@ class Tooltip {
       });
     });
   }
-
 }
 ;// CONCATENATED MODULE: ./src/scripts/ihmo.ts
 
@@ -21885,9 +21998,7 @@ class Tooltip {
 class IHMO {
   constructor() {
     _defineProperty(this, "giftType", "HONORARY");
-
     _defineProperty(this, "giftNotification", "ECARD");
-
     _defineProperty(this, "formLayouts", {
       HONORARY: {
         ECARD: {
@@ -21918,81 +22029,67 @@ class IHMO {
         }
       }
     });
-
     _defineProperty(this, "ihmoCheckbox", document.querySelector('[name="transaction.inmem"]'));
-
     _defineProperty(this, "topForm", document.querySelector(".ihmo-top-form"));
-
     _defineProperty(this, "bottomForm", document.querySelector(".ihmo-bottom-form"));
-
     _defineProperty(this, "_donationFrequency", DonationFrequency.getInstance());
-
     _defineProperty(this, "sourceCodeField", document.querySelector('[name="supporter.appealCode"]'));
-
     // If we're on the thank you page, add the gift details as data attributes and return
     if (this.onThankYouPage()) {
       this.setGiftDetailsAsDataAttributes();
       return;
-    } // Stop here if we're not on an IHMO page
-
-
+    }
+    // Stop here if we're not on an IHMO page
     if (!this.shouldRun()) return;
     this.createPageLayout();
     this.configureForm(this.giftType, this.giftNotification);
     this.addEventListeners();
-    this.hideAllFields(); // If IHMO is checked, save the gift details and set the source code
-
+    this.hideAllFields();
+    // If IHMO is checked, save the gift details and set the source code
     if (this.ihmoCheckbox?.checked) {
       this.saveGiftDetails();
       this.setSourceCode(this.giftType);
     }
   }
-
   shouldRun() {
     return !!this.ihmoCheckbox;
   }
-
   onThankYouPage() {
     return sessionStorage.getItem("engrid_ihmo-gift-details") !== null && engrid_ENGrid.getPageNumber() === 2;
   }
-
   createPageLayout() {
     const ihmoWrapper = document.createElement("div");
-    ihmoWrapper.classList.add("engrid--ihmo-wrapper", "ihmo-closed"); // Add all elements with the class "ihmo-content" to the IHMO content wrapper
+    ihmoWrapper.classList.add("engrid--ihmo-wrapper", "ihmo-closed");
 
+    // Add all elements with the class "ihmo-content" to the IHMO content wrapper
     const ihmoContent = document.querySelectorAll(".ihmo-content");
     ihmoContent.forEach(content => {
       ihmoWrapper.appendChild(content);
-    }); // Insert the IHMO content wrapper after the IHMO checkbox
+    });
 
-    this.ihmoCheckbox?.closest(".en__component--formblock")?.insertAdjacentElement("afterend", ihmoWrapper); // If the page includes the embedded ecard component, move it to the IHMO content wrapper
+    // Insert the IHMO content wrapper after the IHMO checkbox
+    this.ihmoCheckbox?.closest(".en__component--formblock")?.insertAdjacentElement("afterend", ihmoWrapper);
 
+    // If the page includes the embedded ecard component, move it to the IHMO content wrapper
     const embeddedEcard = document.querySelector(".engrid--embedded-ecard");
-
     if (embeddedEcard) {
       embeddedEcard.classList.add("ihmo-content");
       const ecardAnchor = document.querySelector(".en__field--select-notification-option")?.closest(".en__component--formblock");
-
       if (ecardAnchor) {
         ecardAnchor.insertAdjacentElement("afterend", embeddedEcard);
       }
-
       const ecardIframe = embeddedEcard.querySelector("iframe");
-
       if (ecardIframe) {
         // Extra URL param on eCard does additional functionality for IHMO page.
         ecardIframe.setAttribute("src", ecardIframe.src + "&data-engrid-embedded-ihmo=true");
       }
     }
-
     engrid_ENGrid.setBodyData("ihmo", "true");
   }
-
   addEventListeners() {
     // When "This gift is in honor or memory of someone" checkbox is changed
     this.ihmoCheckbox?.addEventListener("change", e => {
       const checkbox = e.target;
-
       if (checkbox.checked) {
         document.querySelector(".engrid--ihmo-wrapper")?.classList.remove("ihmo-closed");
         this.configureForm(this.giftType, this.giftNotification);
@@ -22005,8 +22102,9 @@ class IHMO {
         this.clearGiftDetails();
         this.setSourceCode(false);
       }
-    }); // When the "Gift Type" radio button is changed
+    });
 
+    // When the "Gift Type" radio button is changed
     document.getElementsByName("transaction.trbopts").forEach(el => {
       el.addEventListener("change", e => {
         const radio = e.target;
@@ -22015,13 +22113,13 @@ class IHMO {
         this.saveGiftDetails();
         this.setSourceCode(giftType);
       });
-    }); // When the "Select Notification option" radio button is changed
+    });
 
+    // When the "Select Notification option" radio button is changed
     document.getElementsByName("supporter.questions.1381061").forEach(el => {
       el.addEventListener("change", e => {
         const radio = e.target;
         let giftNotification;
-
         if (radio.value === "Send an ecard") {
           giftNotification = "ECARD";
         } else if (radio.value === "Notify by mail") {
@@ -22029,7 +22127,6 @@ class IHMO {
         } else {
           giftNotification = "NONE";
         }
-
         this.configureForm(this.giftType, giftNotification);
         this.saveGiftDetails();
       });
@@ -22039,8 +22136,9 @@ class IHMO {
     const emailField = document.getElementById("en__field_transaction_infemail");
     const honorFirstNameField = document.getElementById("en__field_transaction_honname");
     const honorLastNameField = document.getElementById("en__field_transaction_othamt2");
-    const ecardIframe = document.querySelector(".engrid-iframe--embedded-ecard"); // Setting the recipient name and email in the ecard iframe
+    const ecardIframe = document.querySelector(".engrid-iframe--embedded-ecard");
 
+    // Setting the recipient name and email in the ecard iframe
     [firstNameField, lastNameField, emailField, honorFirstNameField, honorLastNameField].forEach(field => {
       field.addEventListener("input", () => {
         const fullName = this.giftType === "HONORARY" ? `${honorFirstNameField.value} ${honorLastNameField.value}` : `${firstNameField.value} ${lastNameField.value}`;
@@ -22050,9 +22148,10 @@ class IHMO {
           email: emailField.value
         }, location.origin);
       });
-    }); //Hiding the IHMO section when monthly donation is selected
-    // Listen for changes to the donation frequency and amount
+    });
 
+    //Hiding the IHMO section when monthly donation is selected
+    // Listen for changes to the donation frequency and amount
     this._donationFrequency.onFrequencyChange.subscribe(frequency => {
       if (frequency !== "onetime") {
         // Hide the IHMO section, hide the fields to prevent validation errors
@@ -22070,16 +22169,15 @@ class IHMO {
           el.classList.remove("hide");
         });
         this.showField(".en__field--inmem");
-
         if (this.ihmoCheckbox?.checked) {
           // Don't call "configureForm" unless the IHMO checkbox is checked, otherwise we might get validation errors
           this.configureForm(this.giftType, this.giftNotification);
           document.querySelector(".engrid--ihmo-wrapper")?.classList.remove("ihmo-closed");
         }
       }
-    }); // When gift designation changes, update the source code
+    });
 
-
+    // When gift designation changes, update the source code
     if (this.sourceCodeField?.tagName === "SELECT") {
       this.sourceCodeField?.addEventListener("change", () => {
         const sourceCodeType = this.ihmoCheckbox?.checked ? this.giftType : false;
@@ -22087,7 +22185,6 @@ class IHMO {
       });
     }
   }
-
   configureForm(giftType, notificationType) {
     this.giftType = giftType;
     this.giftNotification = notificationType;
@@ -22096,7 +22193,6 @@ class IHMO {
     this.setFieldLabels();
     this.displayEcard(this.giftNotification === "ECARD" && this.ihmoCheckbox?.checked);
   }
-
   saveGiftDetails() {
     const giftDetails = {
       giftType: this.giftType,
@@ -22105,21 +22201,17 @@ class IHMO {
     sessionStorage.setItem("engrid_ihmo-gift-details", JSON.stringify(giftDetails));
     this.setGiftDetailsAsDataAttributes();
   }
-
   clearGiftDetails() {
     sessionStorage.removeItem("engrid_ihmo-gift-details");
     this.setGiftDetailsAsDataAttributes();
   }
-
   setGiftDetailsAsDataAttributes() {
     const giftDetails = sessionStorage.getItem("engrid_ihmo-gift-details");
-
     if (!giftDetails) {
       engrid_ENGrid.setBodyData("ihmo-gift-type", false);
       engrid_ENGrid.setBodyData("ihmo-gift-notification", false);
       return;
     }
-
     const {
       giftType,
       giftNotification
@@ -22127,18 +22219,14 @@ class IHMO {
     engrid_ENGrid.setBodyData("ihmo-gift-type", giftType);
     engrid_ENGrid.setBodyData("ihmo-gift-notification", giftNotification);
   }
-
   setSourceCode(giftType) {
     if (!this.sourceCodeField) return;
     const sourceCodeContainer = this.sourceCodeField instanceof HTMLSelectElement ? this.sourceCodeField.options[this.sourceCodeField.selectedIndex] : this.sourceCodeField;
-
     if (sourceCodeContainer.value === "AHOMAONLN21W0XXX01" && this.sourceCodeField instanceof HTMLSelectElement) {
       // if "use my gift where it's needed most" option is selected, do not change the source code"
       return;
     }
-
     const sourceEnd = sourceCodeContainer.value.substring(sourceCodeContainer.value.length - 6, sourceCodeContainer.value.length - 2);
-
     if (giftType === "HONORARY") {
       sourceCodeContainer.value = sourceCodeContainer.value.replace(sourceEnd, "TRIH");
     } else if (giftType === "MEMORIAL") {
@@ -22146,63 +22234,57 @@ class IHMO {
     } else {
       sourceCodeContainer.value = sourceCodeContainer.value.replace(sourceEnd, "0XXX");
     }
-
     engrid_ENGrid.setBodyData("source-code", this.sourceCodeField.value);
   }
-
   setFormLayout() {
-    const formLayout = this.formLayouts[this.giftType][this.giftNotification]; // Add fields to the top form section
-
+    const formLayout = this.formLayouts[this.giftType][this.giftNotification];
+    // Add fields to the top form section
     formLayout.topFields.forEach(field => {
       const el = document.querySelector(field);
-
       if (el) {
         this.topForm?.appendChild(el);
         this.showField(el);
       }
-    }); // Add fields to the bottom form section
+    });
 
+    // Add fields to the bottom form section
     formLayout.bottomFields.forEach(field => {
       const el = document.querySelector(field);
-
       if (el) {
         this.bottomForm?.appendChild(el);
         this.showField(el);
       }
-    }); // Hide unused fields in the top form section
+    });
 
+    // Hide unused fields in the top form section
     const topFormFields = this.topForm?.children || [];
     [...topFormFields].forEach(el => {
       const classList = Array.from(el.classList);
       const isActiveField = formLayout.topFields.some(field => classList.includes(field.slice(1)));
-
       if (!isActiveField) {
         this.hideField(el);
       }
-    }); // Hide unused fields in the bottom form section
+    });
 
+    // Hide unused fields in the bottom form section
     const bottomFormFields = this.bottomForm?.children || [];
     [...bottomFormFields].forEach(el => {
       const classList = Array.from(el.classList);
       const isActiveField = formLayout.bottomFields.some(field => classList.includes(field.slice(1)));
-
       if (!isActiveField) {
         this.hideField(el);
       }
     });
   }
-
   setFormHeadings() {
     const headings = document.querySelectorAll(".form-heading.ihmo-content h3");
     if (headings.length === 0) return;
     const firstHeading = headings[0];
     const lastHeading = headings[headings.length - 1];
     if (!firstHeading || !lastHeading) return;
-
     if (this.giftType === "HONORARY") {
       firstHeading.textContent = "PERSON TO BE HONORED";
       lastHeading.textContent = "HONOREE'S PERSONAL INFORMATION";
-
       if (this.giftNotification === "ECARD" || this.giftNotification === "NONE") {
         lastHeading.closest(".form-heading")?.classList.add("hide");
       } else {
@@ -22211,7 +22293,6 @@ class IHMO {
     } else {
       firstHeading.textContent = "PERSON TO BE REMEMBERED";
       lastHeading.textContent = "PERSON TO BE NOTIFIED";
-
       if (this.giftNotification === "NONE") {
         lastHeading.closest(".form-heading")?.classList.add("hide");
       } else {
@@ -22219,17 +22300,14 @@ class IHMO {
       }
     }
   }
-
   setFieldLabels() {
     const firstNameFieldLabel = document.querySelector(".en__field--honname > label");
     const lastNameFieldLabel = document.querySelector(".en__field--othamt2 > label");
     const cityFieldLabel = document.querySelector(".en__field--NOT_TAGGED_36 > label");
     const stateFieldLabel = document.querySelector(".en__field--NOT_TAGGED_35 > label");
-
     if (!firstNameFieldLabel || !lastNameFieldLabel || !cityFieldLabel || !stateFieldLabel) {
       return;
     }
-
     if (this.giftType === "HONORARY") {
       firstNameFieldLabel.textContent = "Honoree First Name";
       lastNameFieldLabel.textContent = "Honoree Last Name";
@@ -22242,47 +22320,43 @@ class IHMO {
       stateFieldLabel.textContent = "Deceased Person's State";
     }
   }
-
-  displayEcard() {
-    let show = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+  displayEcard(show = true) {
     const eCardCheckbox = document.getElementById("en__field_embedded-ecard");
     eCardCheckbox.checked = show;
     eCardCheckbox.dispatchEvent(new Event("change"));
   }
-
   hideAllFields() {
     [".en__field--honname", ".en__field--othamt2", ".en__field--NOT_TAGGED_36", ".en__field--NOT_TAGGED_35", ".en__field--infname", ".en__field--othamt3", ".en__field--infcountry", ".en__field--infadd1", ".en__field--infadd2", ".en__field--infcity", ".en__field--infreg", ".en__field--infpostcd", ".en__field--infemail", ".en__field--NOT_TAGGED_38", ".en__field--NOT_TAGGED_33", ".en__field--NOT_TAGGED_34", ".en__field--NOT_TAGGED_37"].forEach(field => {
       this.hideField(field);
     });
   }
-
   hideField(field) {
     const el = field instanceof Element ? field : document.querySelector(field);
-
     if (el) {
       el.classList.add("en__hidden");
       el.querySelector(".en__field__input")?.setAttribute("disabled", "disabled");
     }
   }
-
   showField(field) {
     const el = field instanceof Element ? field : document.querySelector(field);
-
     if (el) {
       el.classList.remove("en__hidden");
       el.querySelector(".en__field__input")?.removeAttribute("disabled");
     }
   }
-
 }
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/config/gdcp-fields.ts
 const gdcpFields = [{
   channel: "email",
   dataFieldName: "supporter.emailAddress",
-  optInFieldNames: ["supporter.questions.848518", // Stay Informed - Nature News
-  "supporter.questions.848520", // 	Get Involved - Advocacy
-  "supporter.questions.848521", // Get Involved - Events
-  "supporter.questions.848522", // 	Get Involved - Membership
+  optInFieldNames: ["supporter.questions.848518",
+  // Stay Informed - Nature News
+  "supporter.questions.848520",
+  // 	Get Involved - Advocacy
+  "supporter.questions.848521",
+  // Get Involved - Events
+  "supporter.questions.848522",
+  // 	Get Involved - Membership
   "supporter.questions.848523" // Get Involved - Volunteer
   ],
   gdcpFieldName: "engrid.gdcp-email",
@@ -22291,9 +22365,12 @@ const gdcpFields = [{
 }, {
   channel: "mobile_phone",
   dataFieldName: "supporter.phoneNumber2",
-  optInFieldNames: ["supporter.questions.1107654", // Permission to Contact Me
-  "supporter.questions.848527", // Mobile Text Opt In
-  "supporter.questions.848528", // Mobile Call Opt In
+  optInFieldNames: ["supporter.questions.1107654",
+  // Permission to Contact Me
+  "supporter.questions.848527",
+  // Mobile Text Opt In
+  "supporter.questions.848528",
+  // Mobile Call Opt In
   "supporter.questions.1952175" // Interested in Mobile Text
   ],
   gdcpFieldName: "engrid.gdcp-mobile_phone",
@@ -22322,12 +22399,9 @@ const gdcpFields = [{
 class GdcpFieldManager {
   constructor() {
     _defineProperty(this, "fields", new Map());
-
     _defineProperty(this, "sessionItemName", "engrid_gdcpFieldState");
-
     _defineProperty(this, "logger", new EngridLogger("GDCP", "#00ff00", "#000000", "🤝"));
   }
-
   /**
    * Add a field to the field manager
    */
@@ -22341,39 +22415,34 @@ class GdcpFieldManager {
       rule: null
     });
   }
+
   /**
    * Get the field state object for a given field name
    */
-
-
   getField(fieldName) {
     return this.fields.get(fieldName);
   }
+
   /**
    * Get all field state objects
    */
-
-
   getFields() {
     return this.fields;
   }
+
   /**
    * Save the current state to session storage
    */
-
-
   saveStateToSession() {
     const state = [...this.fields.entries()];
     sessionStorage.setItem(this.sessionItemName, JSON.stringify(state));
   }
+
   /**
    * Apply the state from session storage to the fields
    */
-
-
   applyStateFromSession() {
     const state = sessionStorage.getItem(this.sessionItemName);
-
     if (state) {
       const parsedState = JSON.parse(state);
       this.fields = new Map(parsedState);
@@ -22385,14 +22454,14 @@ class GdcpFieldManager {
       });
     }
   }
+
   /**
    * Clear the state from session storage
    */
-
-
   clearStateFromSession() {
     sessionStorage.removeItem(this.sessionItemName);
   }
+
   /**
    * Set the checked state of a field.
    * If the field has been touched, the checked state will not be changed unless the force flag is set to true.
@@ -22400,18 +22469,13 @@ class GdcpFieldManager {
    * The force flag is used when handling user-initiated changes to the checked state from the DOM.
    * @return boolean - true if the checked state was changed, false otherwise
    */
-
-
-  setChecked(fieldName, checked) {
-    let force = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  setChecked(fieldName, checked, force = false) {
     const field = this.getField(fieldName);
-
     if (field) {
       if (field.touched && !force) {
         this.logger.log(`Field ${fieldName} checked state not changed as it has been touched`, this.fields);
         return false;
       }
-
       const checkedStateChanged = field.checked !== checked;
       field.checked = checked;
       this.updateFieldChecked(fieldName);
@@ -22419,93 +22483,78 @@ class GdcpFieldManager {
       this.logger.log(`Field ${field.field.channel} and opt-ins checked: ${checked}`, this.fields);
       return checkedStateChanged;
     }
-
     return false;
   }
+
   /**
    * Set the visibility of a field
    * The visibility of the field and its related hidden notice will be updated in the DOM
    */
-
-
   setVisibility(fieldName, visible) {
     const field = this.getField(fieldName);
-
     if (field) {
       field.visible = visible;
       this.updateFieldDisplay(fieldName);
       this.logger.log(`Field ${fieldName} visibility set to: ${visible}`, this.fields);
     }
   }
+
   /**
    * Set the touched state of a field
    */
-
-
   setTouched(fieldName) {
     const field = this.getField(fieldName);
-
     if (field && !field.touched) {
       field.touched = true;
       this.logger.log(`Field ${fieldName} touched`, this.fields);
     }
   }
+
   /**
    * Set the double opt-in state of a field
    */
-
-
   setDoubleOptIn(fieldName, doubleOptIn) {
     const field = this.getField(fieldName);
-
     if (field) {
       field.doubleOptIn = doubleOptIn;
-      this.logger.log(`Field ${fieldName} double opt-in set to: ${doubleOptIn}`, this.fields); // When setting a field to double opt-in, we re-call the updateFieldOptInsChecked function to ensure the opt-ins are unchecked.
-
+      this.logger.log(`Field ${fieldName} double opt-in set to: ${doubleOptIn}`, this.fields);
+      // When setting a field to double opt-in, we re-call the updateFieldOptInsChecked function to ensure the opt-ins are unchecked.
       this.updateFieldOptInsChecked(fieldName);
     }
   }
+
   /**
    * Set the rule for a field
    */
-
-
   setRule(fieldName, rule) {
     const field = this.getField(fieldName);
-
     if (field) {
       field.rule = rule;
       this.logger.log(`Field ${fieldName} rule set to: ${rule}`, this.fields);
     }
   }
+
   /**
    * Update the checked state of the field in the DOM
    */
-
-
   updateFieldChecked(fieldName) {
     const field = this.getField(fieldName);
-
     if (field) {
       const input = document.querySelector(`input[name="${field.field.gdcpFieldName}"]`);
-
       if (input) {
         input.checked = field.checked;
       }
     }
   }
+
   /**
    * Update the checked state of the opt in fields associated with the field in the DOM
    */
-
-
   updateFieldOptInsChecked(fieldName) {
     const field = this.getField(fieldName);
-
     if (field) {
       field.field.optInFieldNames.forEach(name => {
         const input = document.querySelector(`[name="${name}"]`);
-
         if (input) {
           // If the field is double opt-in, always keep the opt-in unchecked, otherwise match field state.
           input.checked = field.doubleOptIn ? false : field.checked;
@@ -22513,34 +22562,27 @@ class GdcpFieldManager {
       });
     }
   }
+
   /**
    * Update the visibility of the field
    * Show/hide the field and its related hidden notice in the DOM
    */
-
-
   updateFieldDisplay(fieldName) {
     const field = this.getField(fieldName);
-
     if (field) {
       const input = document.querySelector(`input[name="${field.field.gdcpFieldName}"]`);
-
       if (input) {
         const wrapper = input.closest(".en__field__item");
-
         if (wrapper) {
           wrapper.classList.toggle("hide", !field.visible);
         }
-
         const notice = document.querySelector(`.${field.field.channel}-description`);
-
         if (notice) {
           notice.classList.toggle("hide", field.visible);
         }
       }
     }
   }
-
 }
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/config/geographical-opt-in-rules.ts
 const geographicalOptInRules = [{
@@ -22651,67 +22693,57 @@ const strictOptInRules = [{
 class RuleHandler {
   constructor(gdcpFieldManager) {
     this.gdcpFieldManager = gdcpFieldManager;
-
     _defineProperty(this, "logger", new EngridLogger("GDCP", "#00ff00", "#000000", "🤝"));
-
     _defineProperty(this, "gdcpFields", gdcpFields);
-
     _defineProperty(this, "geographicalRules", geographicalOptInRules);
-
     _defineProperty(this, "defaultRules", defaultOptInRules);
-
     _defineProperty(this, "strictRules", strictOptInRules);
-
     _defineProperty(this, "activeRules", []);
-
     _defineProperty(this, "strictMode", false);
   }
+
   /**
    * Get the opt in rules for a given location ("{country}-{region}")
    * If no rules are found for the region, fall back to the country
    * If no rules are found for the country, fall back to "Other"
    */
-
-
   getRulesForLocation(location) {
     //If we're in strict mode, always use that.
     if (this.strictMode) {
       this.logger.log(`Using strict mode rules`, this.strictRules);
       return this.strictRules;
-    } //Find an exact match for the location country+region "{country}-{region}"
+    }
 
-
+    //Find an exact match for the location country+region "{country}-{region}"
     let rule = this.geographicalRules.find(rule => rule.locations.includes(location));
-
     if (rule) {
       this.logger.log(`Found rules for location "${location}"`, rule.rules);
       return rule.rules;
-    } //Find a match for the location country "{country}"
+    }
 
-
+    //Find a match for the location country "{country}"
     const country = location.split("-")[0];
     rule = this.geographicalRules.find(rule => rule.locations.includes(country));
-
     if (rule) {
       this.logger.log(`No exact rules for "${location}". Found rules for country "${country}"`, rule.rules);
       return rule.rules;
-    } //Fall back to the default rules
+    }
 
-
+    //Fall back to the default rules
     this.logger.log(`No rules found for "${location}" - falling back to default`, this.defaultRules);
     return this.defaultRules;
   }
+
   /**
    * Apply the opt in rules for a given location to each GDCP Field
    * @return {checkedStateChangedFields} An array of GDCP Fields whose checked state has changed
    * @return {activeRules} The rules that were applied
    */
-
-
   applyOptInRules(location) {
     const locationRules = this.getRulesForLocation(location);
-    const checkedStateChangedFields = []; //If the rules for the new location match rules for the current location, do nothing
+    const checkedStateChangedFields = [];
 
+    //If the rules for the new location match rules for the current location, do nothing
     if (locationRules === this.activeRules) {
       this.logger.log(`Rules that match the rules for "${location}" are already active. Not applying new rules.`);
       return {
@@ -22719,14 +22751,11 @@ class RuleHandler {
         checkedStateChangedFields
       };
     }
-
     this.activeRules = locationRules;
     locationRules.forEach(rule => {
       const gdcpField = this.gdcpFields.find(field => field.channel === rule.channel);
-
       if (gdcpField) {
         const checkedStateChanged = this.applyRule(rule, gdcpField);
-
         if (checkedStateChanged) {
           checkedStateChangedFields.push(gdcpField);
         }
@@ -22737,65 +22766,53 @@ class RuleHandler {
       checkedStateChangedFields
     };
   }
+
   /**
    * Apply a single opt in rule to a GDCP Field.
    * If the rule is not recognized, fall back to an unselected checkbox.
    * If the field is optional, use the optional rule.
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-
-
   applyRule(rule, gdcpField) {
     const dataInputEl = document.querySelector(`input[name="${gdcpField.dataFieldName}"]`);
-
     if (!dataInputEl) {
       this.logger.log(`Could not find data field for "${gdcpField.channel}" - skipping rule`);
       return false;
     }
-
     let checkedStateChanged;
     const activeRule = dataInputEl.closest(".en__field")?.classList.contains("en__mandatory") ? rule.rule : rule.optionalRule;
-
     switch (activeRule) {
       case "preselected_checkbox":
         checkedStateChanged = this.preselectedCheckedRule(gdcpField);
         break;
-
       case "checkbox":
         checkedStateChanged = this.checkboxRule(gdcpField);
         break;
-
       case "double_opt_in":
         checkedStateChanged = this.doubleOptInRule(gdcpField);
         break;
-
       case "hidden":
         checkedStateChanged = this.hiddenCheckboxRule(gdcpField);
         break;
-
       case "hidden_no_qcb":
         checkedStateChanged = this.hiddenNoQcbRule(gdcpField);
         break;
-
       default:
         this.logger.log(`Unknown rule "${rule.rule} - falling back to an unselected checkbox"`);
         checkedStateChanged = this.checkboxRule(gdcpField);
         break;
     }
-
     return checkedStateChanged;
   }
-
   setStrictMode(strictMode) {
     this.strictMode = strictMode;
   }
+
   /**
    * Rule for preselected checkbox
    * Check the GDCP field and all its associated opt-in fields
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-
-
   preselectedCheckedRule(gdcpField) {
     this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "preselected_checkbox");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
@@ -22803,13 +22820,12 @@ class RuleHandler {
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
     return checkedStateChanged;
   }
+
   /**
    * Rule for checkbox
    * Uncheck the GDCP field and all its associated opt-in fields
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-
-
   checkboxRule(gdcpField) {
     this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "checkbox");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false);
@@ -22817,6 +22833,7 @@ class RuleHandler {
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
     return checkedStateChanged;
   }
+
   /**
    * Rule for hidden checkbox
    * Visually hide the GDCP field
@@ -22824,8 +22841,6 @@ class RuleHandler {
    * Check the GDCP field and all its associated opt-in fields
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-
-
   hiddenCheckboxRule(gdcpField) {
     this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "hidden");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
@@ -22833,12 +22848,11 @@ class RuleHandler {
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
     return checkedStateChanged;
   }
+
   /**
    * Rule for double opt-in
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-
-
   doubleOptInRule(gdcpField) {
     this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "double_opt_in");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false);
@@ -22846,19 +22860,17 @@ class RuleHandler {
     this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, true);
     return checkedStateChanged;
   }
+
   /**
    * Rule for hidden field that does not generate QCB record.
    * @return {boolean} Whether the checked state of the GDCP field has changed
    */
-
-
   hiddenNoQcbRule(gdcpField) {
     this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "hidden_no_qcb");
     const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
     this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
     return checkedStateChanged;
   }
-
 }
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/config/pages.ts
 const pages = {
@@ -22876,40 +22888,26 @@ const pages = {
 class GdcpManager {
   constructor() {
     _defineProperty(this, "logger", new EngridLogger("GDCP", "#00ff00", "#000000", "🤝"));
-
     _defineProperty(this, "gdcpFieldManager", new GdcpFieldManager());
-
     _defineProperty(this, "ruleHandler", new RuleHandler(this.gdcpFieldManager));
-
     _defineProperty(this, "countryListenerAdded", false);
-
     _defineProperty(this, "regionListenerAdded", false);
-
     _defineProperty(this, "strictMode", false);
-
     _defineProperty(this, "gdcpFields", gdcpFields);
-
     _defineProperty(this, "userLocation", "");
-
     _defineProperty(this, "submissionFailed", !!(engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "checkSubmissionFailed") && window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed()));
-
     _defineProperty(this, "_form", EnForm.getInstance());
-
     _defineProperty(this, "pages", pages);
-
     this.handleDoubleOptInEmail();
     this.handlePostalMailQcb();
-
     if (!this.shouldRun()) {
       this.logger.log("GDCP is not running on this page.");
       return;
     }
-
     this.strictMode = window.GlobalDigitalComplianceStrictMode || false;
     this.ruleHandler.setStrictMode(this.strictMode);
     this.logger.log(`GDCP is running. Strict mode is ${this.strictMode ? "active" : "not active"}.`);
     this.setupGdcpFields();
-
     if (this.gdcpFieldManager.getFields().size === 0) {
       // If we didn't create any GDCP fields, then we're on a static page / thank-you page
       // we don't need to do anything else
@@ -22917,49 +22915,45 @@ class GdcpManager {
       this.clearSessionState();
       return;
     }
-
     engrid_ENGrid.setBodyData("gdcp", "true");
     this.addConsentStatementForExistingSupporters();
     this.getInitialLocation().then(location => {
       this.userLocation = location;
       this.logger.log(`Initial User location is ${this.userLocation}`);
       this.addStateFieldIfNeeded(this.userLocation);
-
       if (this.submissionFailed) {
         this.restoreFieldsStateFromSession();
       } else {
         this.applyRulesForLocation(this.userLocation, false);
       }
-
       this.watchForLocationChange();
       this.clearSessionState();
     });
     this.onSubmit();
   }
+
   /**
    * List of Page IDs where GDCP should be active
    */
-
-
   shouldRun() {
     return [158050, 158972].includes(engrid_ENGrid.getPageID());
   }
+
   /**
    * Handles getting the user's initial location
    * In most cases this comes from CloudFlare
    * but in cases where data is prefilled or the submission has failed we get it from the country and region fields
    * fallback to "unknown" if no location data is found
    */
-
-
   async getInitialLocation() {
     let location = "unknown";
     const countryField = engrid_ENGrid.getField("supporter.country");
     const regionField = engrid_ENGrid.getField("supporter.region");
     const engridAutofill = this.getCookie("engrid-autofill");
-    const locationDataInUrl = engrid_ENGrid.getUrlParameter("supporter.country") || engrid_ENGrid.getUrlParameter("supporter.region") || engrid_ENGrid.getUrlParameter("ea.url.id") && !engrid_ENGrid.getUrlParameter("forwarded"); // Get location from Cloudflare
-    // Only run if there's no engrid-autofill cookie, the submission hasn't failed, and there's no location data in the URL
+    const locationDataInUrl = engrid_ENGrid.getUrlParameter("supporter.country") || engrid_ENGrid.getUrlParameter("supporter.region") || engrid_ENGrid.getUrlParameter("ea.url.id") && !engrid_ENGrid.getUrlParameter("forwarded");
 
+    // Get location from Cloudflare
+    // Only run if there's no engrid-autofill cookie, the submission hasn't failed, and there's no location data in the URL
     if (!engridAutofill && !this.submissionFailed && !locationDataInUrl) {
       await fetch(`https://${window.location.hostname}/cdn-cgi/trace`).then(res => res.text()).then(t => {
         let data = t.replace(/[\r\n]+/g, '","').replace(/=+/g, '":"');
@@ -22971,118 +22965,103 @@ class GdcpManager {
         location = "unknown";
       });
       return location;
-    } // Get location from the country and region fields
+    }
 
-
+    // Get location from the country and region fields
     if (countryField) {
       location = engrid_ENGrid.getFieldValue("supporter.country");
-
       if (regionField && engrid_ENGrid.getFieldValue("supporter.region") !== "") {
         location += `-${engrid_ENGrid.getFieldValue("supporter.region")}`;
       }
-
       return location;
-    } // No location data from Cloudflare + no location fields on page
+    }
+
+    // No location data from Cloudflare + no location fields on page
     // Return default "Unknown" location
-
-
     return location;
   }
+
   /**
    * Handle adding the state field to the page if the user's location is the US and the state field is missing
    */
-
-
   addStateFieldIfNeeded(location) {
     if (location.startsWith("US") && !engrid_ENGrid.getField("supporter.region")) {
       this.logger.log("Location is US and state field is missing, adding state field to page");
       this.createUSStatesField();
     }
   }
+
   /**
    * Create US states field and add it to the page
    * When positioning on the page, we always use flexbox ordering
    * to prevent issues with the i-hide i-50 etc helper classes
    */
-
-
   createUSStatesField() {
     //If the state field is already on the page or we're in strict mode, no need to add it
     if (engrid_ENGrid.getField("supporter.region") || this.strictMode) {
       return;
     }
-
     const usStatesFieldHtml = `<div class="en__field en__field--select en__field--1984602 en__field--region">
                                 <label for="en__field_supporter_region" class="en__field__label" style="">State or Province</label>
                                 <div class="en__field__element en__field__element--select">
                                 <select id="en__field_supporter_region" class="en__field__input en__field__input--select" name="supporter.region" autocomplete="address-level1" aria-required="true"><option value="">SELECT STATE/PROVINCE</option><option value="AK">Alaska</option><option value="AL">Alabama</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="DC">District of Columbia</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="AA">Armed Forces Americas</option><option value="AE">Armed Forces Europe/Canada/Middle East/Africa</option><option value="AP">Armed Forces Pacific</option><option value="AS">American Samoa</option><option value="CZ">Canal Zone</option><option value="GU">Guam</option><option value="UM">Minor Outlying Islands</option><option value="MP">Northern Mariana Islands</option><option value="PR">Puerto Rico</option><option value="VI">Virgin Islands</option><option value="None">None</option></select>
                                 </div>
-                              </div>`; //If the page has a country field we will position the state field after it
+                              </div>`;
 
+    //If the page has a country field we will position the state field after it
     const countryField = document.querySelector(".en__field--country");
-
     if (countryField) {
-      countryField.parentElement?.insertAdjacentHTML("beforeend", usStatesFieldHtml); //Doing the ordering here to prevent issues with the i-hide i-50 etc helper classes
+      countryField.parentElement?.insertAdjacentHTML("beforeend", usStatesFieldHtml);
 
+      //Doing the ordering here to prevent issues with the i-hide i-50 etc helper classes
       const children = countryField.parentElement?.children;
       let countryOrder;
-
       if (children) {
         for (let i = 0; i < children.length; i++) {
           const child = children[i];
           child.style.order = i.toString();
-
           if (child.classList.contains("en__field--country")) {
             countryOrder = i;
           }
         }
       }
-
       document.querySelector(".en__field--region")?.setAttribute("style", `order: ${countryOrder}`);
       this.watchForLocationChange();
       return;
-    } //Else, if the page has an email field we will position it at the top of the form block
+    }
 
-
+    //Else, if the page has an email field we will position it at the top of the form block
     const emailField = document.querySelector(".en__field--email");
-
     if (emailField) {
       emailField.parentElement?.insertAdjacentHTML("beforeend", usStatesFieldHtml);
       const regionField = document.querySelector(".en__field--region");
-
       if (regionField) {
         //Position the region field as the first field inside the form block with the email field
         //Use flex ordering to do this to not interfere with the form's default order (and any iX- helper classes)
         regionField.style.order = "-1";
       }
-
       return;
     }
   }
+
   /**
    * Watch for changes in the user's location (country and region fields) and apply the opt in rules
    */
-
-
   watchForLocationChange() {
     const countryField = engrid_ENGrid.getField("supporter.country");
     const regionField = engrid_ENGrid.getField("supporter.region");
-
     if (countryField && !this.countryListenerAdded) {
       countryField.addEventListener("change", () => {
         let location = engrid_ENGrid.getFieldValue("supporter.country");
-
         if (engrid_ENGrid.getFieldValue("supporter.region")) {
           location += `-${engrid_ENGrid.getFieldValue("supporter.region")}`;
         }
-
         this.userLocation = location;
         this.addStateFieldIfNeeded(this.userLocation);
         this.applyRulesForLocation(this.userLocation);
       });
       this.countryListenerAdded = true;
     }
-
     if (regionField && !this.regionListenerAdded) {
       regionField.addEventListener("change", () => {
         //Must always have country value - fall back to our initial value if country field if not on page
@@ -23093,13 +23072,12 @@ class GdcpManager {
       this.regionListenerAdded = true;
     }
   }
+
   /**
    * Setup the GDCP fields on the page
    * Determines if the required fields are present for a channel and creates the GDCP field
    * Hides the EN opt in fields for the GDCP field
    */
-
-
   setupGdcpFields() {
     this.gdcpFields.forEach(gdcpField => {
       if (this.enFieldsForGdcpFieldOnPage(gdcpField)) {
@@ -23112,19 +23090,17 @@ class GdcpManager {
       }
     });
   }
-
   hideEnOptInFields(gdcpField) {
     gdcpField.optInFieldNames.forEach(name => {
       const input = document.querySelector(`[name="${name}"]`);
       input?.closest(".en__field")?.classList.add("hide");
     });
   }
+
   /**
    * Creates the GDCP field element and adds it to the page
    * Also adds an event listener to toggle all the opt in fields when the GDCP field is checked/unchecked
    */
-
-
   createGdcpField(gdcpField) {
     const field = `
       <div class="en__field en__field--checkbox en__field--000000 pseudo-en-field engrid-gdcp-field en__field--${gdcpField.gdcpFieldName}">
@@ -23149,74 +23125,65 @@ class GdcpManager {
           </div>
       </div>`;
     const formElement = document.querySelector(`[name="${gdcpField.dataFieldName}"]`)?.closest(".en__field");
-
     if (formElement) {
       formElement.insertAdjacentHTML("beforeend", field);
     }
-
     const input = document.querySelector(`[name="${gdcpField.gdcpFieldName}"]`);
-
     if (input) {
       input.addEventListener("change", () => {
         this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, input.checked, true);
         this.gdcpFieldManager.setTouched(gdcpField.gdcpFieldName);
       });
     }
-
     return input;
   }
+
   /**
    * Check if the corresponding EN fields are present on the page
    * for a given GDCP Opt In Field
    * i.e. Its data field + any of the opt in fields
    */
-
-
   enFieldsForGdcpFieldOnPage(gdcpField) {
     const dataFieldPresent = document.querySelector(`[name="${gdcpField.dataFieldName}"]`);
     const optInFieldsNames = gdcpField.optInFieldNames.map(name => `[name="${name}"]`).join(", ");
     const optInFieldsPresent = document.querySelector(optInFieldsNames);
     return !!dataFieldPresent && !!optInFieldsPresent;
   }
+
   /**
    * Apply the opt in rules for the user's location
    * @param location The user's location
    * @param scrollToChangedField Whether to scroll to the field highest up the page that has changed state
    */
-
-
-  applyRulesForLocation(location) {
-    let scrollToChangedField = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  applyRulesForLocation(location, scrollToChangedField = true) {
     const {
       checkedStateChangedFields
     } = this.ruleHandler.applyOptInRules(location);
-
     if (scrollToChangedField) {
       this.scrollUpToHighestChangedField(checkedStateChangedFields);
     }
   }
+
   /**
    * Scroll to the field highest up the page that has changed state
    */
-
-
   scrollUpToHighestChangedField(checkedStateChangedFields) {
     if (checkedStateChangedFields.length) {
       // Only rules that have a visible checkbox
       const visibleFields = checkedStateChangedFields.filter(field => {
         const gdcpField = this.gdcpFieldManager.getField(field.gdcpFieldName);
         return gdcpField?.visible;
-      }); // Get the DOM element of the data field of the field highest up the page
+      });
 
+      // Get the DOM element of the data field of the field highest up the page
       const firstChangedField = visibleFields.map(field => {
         return document.querySelector(`[name="${field.dataFieldName}"]`)?.closest(".en__field");
       }).filter(el => el).reduce((a, b) => {
         return a?.getBoundingClientRect().top < b?.getBoundingClientRect().top ? a : b;
       });
-
       if (firstChangedField) {
-        const fieldTop = firstChangedField.getBoundingClientRect().top + window.scrollY; // Only scroll if the field is above the current scroll position
-
+        const fieldTop = firstChangedField.getBoundingClientRect().top + window.scrollY;
+        // Only scroll if the field is above the current scroll position
         if (fieldTop < window.scrollY) {
           firstChangedField.scrollIntoView({
             behavior: "smooth"
@@ -23225,11 +23192,10 @@ class GdcpManager {
       }
     }
   }
+
   /**
    * Add a consent statement below the submit button for existing supporters
    */
-
-
   addConsentStatementForExistingSupporters() {
     if (engrid_ENGrid.getFieldValue("supporter.emailAddress") && !this.submissionFailed) {
       const submitButtonBlock = document.querySelector(".en__submit")?.parentElement;
@@ -23244,116 +23210,100 @@ class GdcpManager {
       submitButtonBlock?.insertAdjacentHTML("afterend", consentStatement);
     }
   }
+
   /**
    * Get the value of a cookie by name
    */
-
-
   getCookie(cookieName) {
     const name = `${cookieName}=`;
     const decodedCookie = decodeURIComponent(document.cookie);
     const cookieArray = decodedCookie.split(";");
-
     for (let i = 0; i < cookieArray.length; i++) {
       let cookie = cookieArray[i];
-
       while (cookie.charAt(0) === " ") {
         cookie = cookie.substring(1);
       }
-
       if (cookie.indexOf(name) === 0) {
         return cookie.substring(name.length, cookie.length);
       }
     }
-
     return null;
   }
+
   /**
    * Actions for when EN form is submitted
    * @private
    */
-
-
   onSubmit() {
     this._form.onSubmit.subscribe(() => {
       // Save the GDCP fields state to session (for restoring in case of submission errors)
-      this.gdcpFieldManager.saveStateToSession(); // Save the double opt in email state to session (for triggering the opt in confirmation email)
+      this.gdcpFieldManager.saveStateToSession();
 
+      // Save the double opt in email state to session (for triggering the opt in confirmation email)
       const emailGdcpFieldName = this.gdcpFields.find(field => field.channel === "email")?.gdcpFieldName;
-
       if (emailGdcpFieldName) {
         const emailField = this.gdcpFieldManager.getField(emailGdcpFieldName);
-
         if (emailField && emailField.checked && emailField.doubleOptIn) {
           sessionStorage.setItem("gdcp-email-double-opt-in", "Y");
         }
-      } // If postal mail channel rule is NOT "hidden_no_qcb", save value to session
+      }
+
+      // If postal mail channel rule is NOT "hidden_no_qcb", save value to session
       // to trigger the QCB for postal mail on thank you page load
-
-
       const postalMailGdcpFieldName = this.gdcpFields.find(field => field.channel === "postal_mail")?.gdcpFieldName;
-
       if (postalMailGdcpFieldName) {
         const postalMailField = this.gdcpFieldManager.getField(postalMailGdcpFieldName);
-
         if (postalMailField && postalMailField.checked && postalMailField.rule !== "hidden_no_qcb") {
           sessionStorage.setItem("gdcp-postal-mail-create-qcb", "Y");
         }
       }
     });
   }
+
   /**
    * Restore the state of the GDCP + Opt In fields from session storage
    * Used when the submission fails, instead of applying location-based rules again.
    */
-
-
   restoreFieldsStateFromSession() {
     this.logger.log("Detected submission failure. Restoring GDCP + Opt In field states.");
     this.gdcpFieldManager.applyStateFromSession();
   }
+
   /**
    * Clear the session storage state
    * @private
    */
-
-
   clearSessionState() {
     sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
     sessionStorage.removeItem("gdcp-email-double-opt-in");
     this.gdcpFieldManager.clearStateFromSession();
   }
+
   /**
    * Send double opt in email if the user has opted in and the page is not the first page
    */
-
-
   handleDoubleOptInEmail() {
     const shouldSendDoubleOptInEmail = sessionStorage.getItem("gdcp-email-double-opt-in") === "Y" && !this.submissionFailed;
-
     if (shouldSendDoubleOptInEmail) {
       const url = this.createAutoSubmitIframeForm(this.pages.double_opt_in_email_trigger);
       this.logger.log(`Sending double opt in email using form: ${url.toString()}`);
     }
   }
+
   /**
    * Send QCB for postal mail if we have the session data to do that
    */
-
-
   handlePostalMailQcb() {
     const shouldCreateQcb = sessionStorage.getItem("gdcp-postal-mail-create-qcb") === "Y" && !this.submissionFailed;
-
     if (shouldCreateQcb) {
       const url = this.createAutoSubmitIframeForm(this.pages.postal_mail_qcb);
       this.logger.log(`Creating QCB for postal mail using form: ${url.toString()}`);
     }
   }
+
   /**
    * Create an iframe form with autosubmit form
    */
-
-
   createAutoSubmitIframeForm(urlString) {
     const url = new URL(urlString);
     url.searchParams.append("chain", "");
@@ -23364,7 +23314,6 @@ class GdcpManager {
     document.body.appendChild(iframe);
     return url;
   }
-
 }
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
@@ -23382,10 +23331,11 @@ class GdcpManager {
 
 
 
-const minimumAmount = window?.donationSettings?.minimumDonationAmount ?? 5; //Allow banner image with attribution using image block
+const minimumAmount = window?.donationSettings?.minimumDonationAmount ?? 5;
+
+//Allow banner image with attribution using image block
 //Also applies to all images with class "img-with-attribution"
 //This code is run before the ENgrid script is loaded so that media-attribution.ts will run on this element
-
 const bannerImagesWithAttribution = document.querySelectorAll(".body-banner .en__component--imageblock img[alt], img.img-with-attribution[alt]");
 bannerImagesWithAttribution.forEach(img => {
   if (!img.getAttribute("alt")) return;

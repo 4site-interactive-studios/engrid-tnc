@@ -1,9 +1,9 @@
-import { ENGrid, EngridLogger } from "@4site/engrid-common";
+import { ENGrid, EngridLogger } from "@4site/engrid-scripts";
 import { GdcpField } from "./interfaces/gdcp-field.interface";
 import { gdcpFields } from "./config/gdcp-fields";
 import { GdcpFieldManager } from "./gdcp-field-manager";
 import { RuleHandler } from "./rule-handler";
-import { EnForm } from "@4site/engrid-common";
+import { EnForm } from "@4site/engrid-scripts";
 import { pages } from "./config/pages";
 
 declare global {

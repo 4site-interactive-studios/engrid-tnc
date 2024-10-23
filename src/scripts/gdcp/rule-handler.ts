@@ -1,5 +1,5 @@
 import { GdcpField } from "./interfaces/gdcp-field.interface";
-import { EngridLogger } from "@4site/engrid-common";
+import { EngridLogger } from "@4site/engrid-scripts";
 import { OptInRule } from "./interfaces/opt-in-rule.interface";
 import { gdcpFields } from "./config/gdcp-fields";
 import { GeographicalRule } from "./interfaces/geographical-rule.interface";

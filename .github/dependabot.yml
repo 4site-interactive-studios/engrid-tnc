@@ -60,7 +60,7 @@ updates:
   - dependency-name: "@babel/core"
     versions:
     - 7.12.17
-  - dependency-name: "@4site/engrid-common"
+  - dependency-name: "@4site/engrid-scripts"
     versions:
     - 0.1.14
     - 0.1.16

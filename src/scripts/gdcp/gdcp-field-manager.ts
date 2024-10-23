@@ -1,6 +1,6 @@
 import { GdcpField } from "./interfaces/gdcp-field.interface";
 import { GdcpFieldState } from "./interfaces/gdcp-field-state.interface";
-import { EngridLogger } from "@4site/engrid-common";
+import { EngridLogger } from "@4site/engrid-scripts";
 import { Rule } from "./interfaces/rule.type";
 
 export class GdcpFieldManager {
