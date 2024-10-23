@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, October 23, 2024 @ 12:34:54 ET
+ *  Date: Wednesday, October 23, 2024 @ 12:39:04 ET
  *  By: michael
  *  ENGrid styles: v0.19.4
  *  ENGrid scripts: v0.19.5
@@ -22986,8 +22986,8 @@ class GdcpManager {
    * Handle adding the state field to the page if the user's location is the US and the state field is missing
    */
   addStateFieldIfNeeded(location) {
-    // If strict mode is active or we're in single opt in mode, we don't need to add the state field
-    if (this.strictMode || this.singleOptInMode) {
+    // If strict mode is active we don't need to add the state field
+    if (this.strictMode) {
       return;
     }
     if (location.startsWith("US") && !engrid_ENGrid.getField("supporter.region")) {

@@ -150,8 +150,8 @@ export class GdcpManager {
    * Handle adding the state field to the page if the user's location is the US and the state field is missing
    */
   private addStateFieldIfNeeded(location: string) {
-    // If strict mode is active or we're in single opt in mode, we don't need to add the state field
-    if (this.strictMode || this.singleOptInMode) {
+    // If strict mode is active we don't need to add the state field
+    if (this.strictMode) {
       return;
     }
 
