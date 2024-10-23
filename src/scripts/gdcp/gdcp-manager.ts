@@ -8,7 +8,9 @@ import { pages } from "./config/pages";
 
 declare global {
   interface Window {
+    GlobalDigitalComplianceActive?: boolean;
     GlobalDigitalComplianceStrictMode?: boolean;
+    GlobalDigitalComplianceSingleOptIn?: boolean;
     EngagingNetworks: any;
   }
 }
@@ -24,7 +26,10 @@ export class GdcpManager {
   private ruleHandler: RuleHandler = new RuleHandler(this.gdcpFieldManager);
   private countryListenerAdded: boolean = false;
   private regionListenerAdded: boolean = false;
-  private readonly strictMode: boolean = false;
+  private readonly strictMode: boolean =
+    window.GlobalDigitalComplianceStrictMode || false;
+  private readonly singleOptInMode: boolean =
+    window.GlobalDigitalComplianceSingleOptIn || false;
   private gdcpFields: GdcpField[] = gdcpFields;
   private userLocation: string = "";
   private submissionFailed: boolean = !!(
@@ -46,7 +51,6 @@ export class GdcpManager {
       this.logger.log("GDCP is not running on this page.");
       return;
     }
-    this.strictMode = window.GlobalDigitalComplianceStrictMode || false;
     this.ruleHandler.setStrictMode(this.strictMode);
     this.logger.log(
       `GDCP is running. Strict mode is ${
@@ -73,6 +77,7 @@ export class GdcpManager {
         this.applyRulesForLocation(this.userLocation, false);
       }
       this.watchForLocationChange();
+      this.setSingleOptInModeInitialState();
       this.clearSessionState();
     });
     this.onSubmit();
@@ -82,7 +87,10 @@ export class GdcpManager {
    * List of Page IDs where GDCP should be active
    */
   private shouldRun(): boolean {
-    return [158050, 158972].includes(ENGrid.getPageID());
+    return (
+      [158050, 158972].includes(ENGrid.getPageID()) ||
+      window.GlobalDigitalComplianceActive === true
+    );
   }
 
   /**
@@ -142,6 +150,11 @@ export class GdcpManager {
    * Handle adding the state field to the page if the user's location is the US and the state field is missing
    */
   private addStateFieldIfNeeded(location: string) {
+    // If strict mode is active or we're in single opt in mode, we don't need to add the state field
+    if (this.strictMode || this.singleOptInMode) {
+      return;
+    }
+
     if (location.startsWith("US") && !ENGrid.getField("supporter.region")) {
       this.logger.log(
         "Location is US and state field is missing, adding state field to page"
@@ -264,10 +277,12 @@ export class GdcpManager {
   private setupGdcpFields() {
     this.gdcpFields.forEach((gdcpField) => {
       if (this.enFieldsForGdcpFieldOnPage(gdcpField)) {
-        this.logger.log(`Creating GDCP field for "${gdcpField.channel}"`);
         this.gdcpFieldManager.addField(gdcpField);
-        this.createGdcpField(gdcpField);
         this.hideEnOptInFields(gdcpField);
+        if (!this.singleOptInMode) {
+          this.logger.log(`Creating GDCP field for "${gdcpField.channel}"`);
+          this.createGdcpField(gdcpField);
+        }
       } else {
         this.logger.log(
           `Did not find the required fields for channel "${
@@ -280,6 +295,11 @@ export class GdcpManager {
         );
       }
     });
+
+    if (this.singleOptInMode && this.gdcpFieldManager.getFields().size > 0) {
+      this.logger.log("Single Opt-In mode is active, creating checkbox");
+      this.createSingleOptInCheckbox();
+    }
   }
 
   private hideEnOptInFields(gdcpField: GdcpField) {
@@ -565,5 +585,72 @@ export class GdcpManager {
     iframe.style.display = "none";
     document.body.appendChild(iframe);
     return url;
+  }
+
+  /**
+   * Create a single opt in checkbox for the page
+   */
+  private createSingleOptInCheckbox(): HTMLInputElement {
+    const field = `
+      <div class="en__component en__component--formblock">
+          <div class="en__field en__field--checkbox en__field--000000 pseudo-en-field engrid-gdcp-field en__field--gdcp-single-opt-in">
+              <div class="en__field__element en__field__element--checkbox">
+                  <div class="en__field__item">
+                      <input
+                        class="en__field__input en__field__input--checkbox"
+                        id="en__field_gdcp-single-opt-in"
+                        name="engrid.gdcp-single-opt-in"
+                        type="checkbox"
+                        value="Y"
+                      >
+                      <label class="en__field__label en__field__label--item" for="en__field_gdcp-single-opt-in">
+                        I agree to receive communications from The Nature Conservancy.
+                      </label>
+                  </div>
+              </div>
+          </div>
+      </div>`;
+
+    const formElement = document.querySelector(".en__submit");
+    if (formElement) {
+      formElement
+        .closest(".en__component--formblock")
+        ?.insertAdjacentHTML("beforebegin", field);
+    }
+
+    const input = document.querySelector(
+      `[name="engrid.gdcp-single-opt-in"]`
+    ) as HTMLInputElement;
+    if (input) {
+      input.addEventListener("change", () => {
+        this.gdcpFields.forEach((gdcpField) => {
+          this.gdcpFieldManager.setChecked(
+            gdcpField.gdcpFieldName,
+            input.checked,
+            true
+          );
+          this.gdcpFieldManager.setTouched(gdcpField.gdcpFieldName);
+        });
+      });
+    }
+
+    return input;
+  }
+
+  /**
+   * Set the initial state of the GDCP fields to unchecked in single opt in mode
+   * Set them to touched so that any location rule change won't modify the checked state
+   * We still want the location based rules to apply so we have the double opt in and no qcb rules
+   */
+  private setSingleOptInModeInitialState() {
+    if (this.singleOptInMode && !this.submissionFailed) {
+      this.logger.log(
+        "Single Opt-In Mode - Setting all opt-ins to unchecked as initial state."
+      );
+      this.gdcpFields.forEach((gdcpField) => {
+        this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false, true);
+        this.gdcpFieldManager.setTouched(gdcpField.gdcpFieldName);
+      });
+    }
   }
 }

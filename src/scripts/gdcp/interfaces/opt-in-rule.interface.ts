@@ -12,5 +12,5 @@ type ConditionalRule<C extends Channel> = C extends "email"
 export interface OptInRule<C extends Channel> {
   channel: C;
   rule: ConditionalRule<C>;
-  optionalRule: Rule;
+  optionalRule: ConditionalRule<C>;
 }
