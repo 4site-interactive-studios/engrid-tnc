@@ -9,7 +9,7 @@ import {
 //   App,
 //   DonationFrequency,
 //   DonationAmount,
-// } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
+// } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
 import { customScript } from "./scripts/main";
@@ -23,6 +23,7 @@ import {
 import { BequestLightbox } from "./scripts/bequest-lightbox";
 import { Tooltip } from "./scripts/tooltip";
 import { IHMO } from "./scripts/ihmo";
+import { WidgetProgressBar } from "./scripts/widget-progress-bar";
 
 declare global {
   interface Window {
@@ -109,6 +110,7 @@ const options: Options = {
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();
+    new WidgetProgressBar();
   },
   onSubmit: () => trackFormSubmit(App, DonationAmount),
   onResize: () => console.log("Starter Theme Window Resized"),
