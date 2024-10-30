@@ -551,6 +551,7 @@ export class GdcpManager {
       const url = this.createAutoSubmitIframeForm(
         this.pages.double_opt_in_email_trigger
       );
+      sessionStorage.removeItem("gdcp-email-double-opt-in");
       this.logger.log(
         `Sending double opt in email using form: ${url.toString()}`
       );
@@ -567,6 +568,7 @@ export class GdcpManager {
 
     if (shouldCreateQcb) {
       const url = this.createAutoSubmitIframeForm(this.pages.postal_mail_qcb);
+      sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
       this.logger.log(
         `Creating QCB for postal mail using form: ${url.toString()}`
       );
