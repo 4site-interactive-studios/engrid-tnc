@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, October 30, 2024 @ 12:28:54 ET
+ *  Date: Monday, November 4, 2024 @ 12:48:26 ET
  *  By: michael
  *  ENGrid styles: v0.19.9
  *  ENGrid scripts: v0.19.11
@@ -22615,6 +22615,70 @@ class IHMO {
     }
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/widget-progress-bar.ts
+
+
+class WidgetProgressBar {
+  constructor() {
+    _defineProperty(this, "logger", new EngridLogger("WidgetProgressBar", "black", "yellow", "🍫"));
+    _defineProperty(this, "widget", document.querySelector(".en__component--widgetblock"));
+    _defineProperty(this, "increase", 1.25);
+    _defineProperty(this, "threshold", 80);
+    if (!this.shouldRun()) {
+      this.logger.log("Not running");
+      return;
+    }
+    const widget = document.querySelector(".enWidget--progressBar");
+    if (widget && widget.querySelector(".raised-remaining")) {
+      this.logger.log("Widget found via querySelector");
+      this.run(widget);
+    } else {
+      this.addMutationObserver();
+    }
+  }
+  addMutationObserver() {
+    // Watch for changes to the widget, until an element with the class "enWidget--progressBar" is found
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.addedNodes.length && mutation.addedNodes[0].querySelector(".remaining")) {
+          observer.disconnect();
+          // There's an additional script that runs after the widget is added to the DOM, so we need to wait a bit before running our code
+          window.setTimeout(() => {
+            this.logger.log("Widget found via MutationObserver");
+            this.widget = document.querySelector(".enWidget--progressBar");
+            this.run(this.widget);
+          }, 150);
+          return;
+        }
+      });
+    });
+    observer.observe(this.widget, {
+      childList: true,
+      subtree: true
+    });
+  }
+  run(widget) {
+    const fill = widget.querySelector(".enWidget__fill");
+    const percentage = fill ? parseInt(fill.style.width, 10) : 0;
+    this.logger.log("Percentage", percentage);
+    if (percentage >= this.threshold) {
+      this.logger.log("Incrementing goal");
+      const supporters = parseInt(widget.querySelector(".raised > div")?.textContent?.replace(/\,/g, "") || "0");
+      // Reset fill width so that animation runs once new width is set
+      fill.style.width = "0";
+      const newGoal = Math.ceil(supporters * this.increase);
+      const remainingElement = widget.querySelector(".remaining > div:first-child span");
+      if (remainingElement) {
+        remainingElement.textContent = (newGoal - supporters).toLocaleString();
+      }
+      this.logger.log("New goal", newGoal);
+      fill.style.width = `${supporters / newGoal * 100}%`;
+    }
+  }
+  shouldRun() {
+    return !!this.widget;
+  }
+}
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/config/gdcp-fields.ts
 const gdcpFields = [{
   channel: "email",
@@ -23659,7 +23723,8 @@ class GdcpManager {
 //   App,
 //   DonationFrequency,
 //   DonationAmount,
-// } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
+// } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -23733,6 +23798,7 @@ const options = {
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();
+    new WidgetProgressBar();
   },
   onSubmit: () => trackFormSubmit(App, DonationAmount),
   onResize: () => console.log("Starter Theme Window Resized"),
