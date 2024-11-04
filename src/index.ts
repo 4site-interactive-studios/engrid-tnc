@@ -24,6 +24,7 @@ import { BequestLightbox } from "./scripts/bequest-lightbox";
 import { Tooltip } from "./scripts/tooltip";
 import { IHMO } from "./scripts/ihmo";
 import { WidgetProgressBar } from "./scripts/widget-progress-bar";
+import { GdcpManager } from "./scripts/gdcp/gdcp-manager";
 
 declare global {
   interface Window {
@@ -107,6 +108,7 @@ const options: Options = {
     new BequestLightbox();
     new Tooltip();
     new IHMO();
+    new GdcpManager();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();
