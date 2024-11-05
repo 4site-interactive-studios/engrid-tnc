@@ -24,7 +24,7 @@ export const gdcpFields: GdcpField[] = [
       "supporter.questions.1952175", // Interested in Mobile Text
     ],
     gdcpFieldName: "engrid.gdcp-mobile_phone", // Don't edit this field
-    gdcpFieldHtmlLabel: `<span>I’d like to receive phone and text updates from The Nature Conservancy and understand I can unsubscribe at any time. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="#" target="_blank">Mobile Terms & Conditions</a> | <a href="#" target="_blank">Privacy Statement</a>.</span>`,
+    gdcpFieldHtmlLabel: `<span>I’d like to receive phone and text updates from The Nature Conservancy and understand I can unsubscribe at any time. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Mobile Terms & Conditions</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Privacy Statement</a>.</span>`,
   },
   {
     channel: "home_phone",
