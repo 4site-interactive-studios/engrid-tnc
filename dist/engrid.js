@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 5, 2024 @ 12:53:22 ET
+ *  Date: Wednesday, November 6, 2024 @ 08:48:17 ET
  *  By: michael
  *  ENGrid styles: v0.19.9
  *  ENGrid scripts: v0.19.11
@@ -22924,7 +22924,7 @@ const geographicalOptInRules = [{
   rules: [{
     channel: "email",
     rule: "preselected_checkbox",
-    optionalRule: "preselected_checkbox"
+    optionalRule: "hidden"
   }, {
     channel: "mobile_phone",
     rule: "preselected_checkbox",
@@ -22943,7 +22943,7 @@ const geographicalOptInRules = [{
   rules: [{
     channel: "email",
     rule: "checkbox",
-    optionalRule: "checkbox"
+    optionalRule: "hidden"
   }, {
     channel: "mobile_phone",
     rule: "checkbox",
@@ -22962,7 +22962,7 @@ const geographicalOptInRules = [{
   rules: [{
     channel: "email",
     rule: "double_opt_in",
-    optionalRule: "double_opt_in"
+    optionalRule: "hidden"
   }, {
     channel: "mobile_phone",
     rule: "checkbox",
@@ -23241,28 +23241,22 @@ class GdcpManager {
     }
     this.ruleHandler.setStrictMode(this.strictMode);
     this.logger.log(`GDCP is running. Strict mode is ${this.strictMode ? "active" : "not active"}.`);
-    this.setupGdcpFields();
-    if (this.gdcpFieldManager.getFields().size === 0) {
-      // If we didn't create any GDCP fields, then we're on a static page / thank-you page
-      // we don't need to do anything else
-      this.logger.log("No GDCP fields were created. Exiting GDCP script.");
-      this.clearSessionState();
-      return;
-    }
-    engrid_ENGrid.setBodyData("gdcp", "true");
-    this.addConsentStatementForExistingSupporters();
-    this.getInitialLocation().then(location => {
-      this.userLocation = location;
-      this.logger.log(`Initial User location is ${this.userLocation}`);
-      this.addStateFieldIfNeeded(this.userLocation);
-      if (this.submissionFailed) {
-        this.restoreFieldsStateFromSession();
-      } else {
-        this.applyRulesForLocation(this.userLocation, false);
-      }
-      this.watchForLocationChange();
-      this.setSingleOptInModeInitialState();
-      this.clearSessionState();
+    this.setupGdcpFields().then(() => {
+      engrid_ENGrid.setBodyData("gdcp", "true");
+      this.addConsentStatementForExistingSupporters();
+      this.getInitialLocation().then(location => {
+        this.userLocation = location;
+        this.logger.log(`Initial User location is ${this.userLocation}`);
+        this.addStateFieldIfNeeded(this.userLocation);
+        if (this.submissionFailed) {
+          this.restoreFieldsStateFromSession();
+        } else {
+          this.applyRulesForLocation(this.userLocation, false);
+        }
+        this.watchForLocationChange();
+        this.setSingleOptInModeInitialState();
+        this.clearSessionState();
+      });
     });
     this.onSubmit();
   }
@@ -23324,7 +23318,7 @@ class GdcpManager {
     if (this.strictMode) {
       return;
     }
-    if (location.startsWith("US") && !engrid_ENGrid.getField("supporter.region")) {
+    if (location.startsWith("US") && !engrid_ENGrid.getField("supporter.region") && this.gdcpFieldManager.getFields().size > 0) {
       this.logger.log("Location is US and state field is missing, adding state field to page");
       this.createUSStatesField();
     }
@@ -23417,9 +23411,10 @@ class GdcpManager {
    * Determines if the required fields are present for a channel and creates the GDCP field
    * Hides the EN opt in fields for the GDCP field
    */
-  setupGdcpFields() {
-    this.gdcpFields.forEach(gdcpField => {
-      if (this.enFieldsForGdcpFieldOnPage(gdcpField)) {
+  async setupGdcpFields() {
+    for (const gdcpField of this.gdcpFields) {
+      const enFieldsAreOnPage = await this.enFieldsForGdcpFieldOnPage(gdcpField);
+      if (enFieldsAreOnPage) {
         this.gdcpFieldManager.addField(gdcpField);
         this.hideEnOptInFields(gdcpField);
         if (!this.singleOptInMode) {
@@ -23429,7 +23424,7 @@ class GdcpManager {
       } else {
         this.logger.log(`Did not find the required fields for channel "${gdcpField.channel}" - "${gdcpField.dataFieldName}" and any of opt in field(s) "${gdcpField.optInFieldNames.join(", ")}". Skipping adding GDCP field for this channel to page.`);
       }
-    });
+    }
     if (this.singleOptInMode && this.gdcpFieldManager.getFields().size > 0) {
       this.logger.log("Single Opt-In mode is active, creating checkbox");
       this.createSingleOptInCheckbox();
@@ -23488,11 +23483,30 @@ class GdcpManager {
    * for a given GDCP Opt In Field
    * i.e. Its data field + any of the opt in fields
    */
-  enFieldsForGdcpFieldOnPage(gdcpField) {
+  async enFieldsForGdcpFieldOnPage(gdcpField) {
     const dataFieldPresent = document.querySelector(`[name="${gdcpField.dataFieldName}"]`);
     const optInFieldsNames = gdcpField.optInFieldNames.map(name => `[name="${name}"]`).join(", ");
     const optInFieldsPresent = document.querySelector(optInFieldsNames);
-    return !!dataFieldPresent && !!optInFieldsPresent;
+    if (gdcpField.channel !== "postal_mail") {
+      return !!dataFieldPresent && !!optInFieldsPresent;
+    }
+    try {
+      const postalMailOptInFieldPresent = await this.postalMailOptInFieldPresent();
+      return !!dataFieldPresent && !!optInFieldsPresent && postalMailOptInFieldPresent;
+    } catch (e) {
+      this.logger.error("Error checking if opted into postal mail", e);
+      return false;
+    }
+  }
+  async postalMailOptInFieldPresent() {
+    const iframe = this.createChainedIframeForm(this.pages.postal_mail_qcb);
+    await new Promise((resolve, reject) => {
+      iframe.addEventListener("load", resolve);
+      iframe.addEventListener("error", reject);
+    });
+    const iframeDocument = iframe.contentDocument || iframe.contentWindow?.document;
+    let elementInIframe = iframeDocument?.querySelector("#en__field_supporter_questions_1942219");
+    return !!elementInIframe;
   }
 
   /**
@@ -23630,9 +23644,9 @@ class GdcpManager {
   handleDoubleOptInEmail() {
     const shouldSendDoubleOptInEmail = sessionStorage.getItem("gdcp-email-double-opt-in") === "Y" && !this.submissionFailed;
     if (shouldSendDoubleOptInEmail) {
-      const url = this.createAutoSubmitIframeForm(this.pages.double_opt_in_email_trigger);
+      const iframe = this.createChainedIframeForm(this.pages.double_opt_in_email_trigger, true);
       sessionStorage.removeItem("gdcp-email-double-opt-in");
-      this.logger.log(`Sending double opt in email using form: ${url.toString()}`);
+      this.logger.log(`Sending double opt in email using form: ${iframe.getAttribute("src")}`);
     }
   }
 
@@ -23642,24 +23656,26 @@ class GdcpManager {
   handlePostalMailQcb() {
     const shouldCreateQcb = sessionStorage.getItem("gdcp-postal-mail-create-qcb") === "Y" && !this.submissionFailed;
     if (shouldCreateQcb) {
-      const url = this.createAutoSubmitIframeForm(this.pages.postal_mail_qcb);
+      const iframe = this.createChainedIframeForm(this.pages.postal_mail_qcb, true);
       sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
-      this.logger.log(`Creating QCB for postal mail using form: ${url.toString()}`);
+      this.logger.log(`Creating QCB for postal mail using form: ${iframe.getAttribute("src")}`);
     }
   }
 
   /**
    * Create an iframe form with autosubmit form
    */
-  createAutoSubmitIframeForm(urlString) {
+  createChainedIframeForm(urlString, autoSubmit = false) {
     const url = new URL(urlString);
     url.searchParams.append("chain", "");
-    url.searchParams.append("autosubmit", "Y");
+    if (autoSubmit) {
+      url.searchParams.append("autosubmit", "Y");
+    }
     const iframe = document.createElement("iframe");
     iframe.src = url.toString();
     iframe.style.display = "none";
     document.body.appendChild(iframe);
-    return url;
+    return iframe;
   }
 
   /**
