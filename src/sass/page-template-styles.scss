@@ -527,8 +527,10 @@
     }
 
     @media screen and (min-width: 1024px) {
-      .body-banner {
-        display: none;
+      &:not(#en__pagebuilder) {
+        .body-banner {
+          display: none;
+        }
       }
     }
 
