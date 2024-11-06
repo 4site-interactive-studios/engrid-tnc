@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, November 1, 2024 @ 17:01:38 ET
+ *  Date: Wednesday, November 6, 2024 @ 17:52:39 ET
  *  By: fernando
  *  ENGrid styles: v0.19.9
  *  ENGrid scripts: v0.19.11
@@ -22679,6 +22679,1059 @@ class WidgetProgressBar {
     return !!this.widget;
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/gdcp/config/gdcp-fields.ts
+const gdcpFields = [{
+  channel: "email",
+  dataFieldName: "supporter.emailAddress",
+  optInFieldNames: ["supporter.questions.848518",
+  // Stay Informed - Nature News
+  "supporter.questions.848520",
+  // 	Get Involved - Advocacy
+  "supporter.questions.848521",
+  // Get Involved - Events
+  "supporter.questions.848522",
+  // 	Get Involved - Membership
+  "supporter.questions.848523" // Get Involved - Volunteer
+  ],
+  gdcpFieldName: "engrid.gdcp-email",
+  // Don't edit this field
+  gdcpFieldHtmlLabel: `<span>I agree to receive email updates from The Nature Conservancy and understand I can unsubscribe at any time.</span>`
+}, {
+  channel: "mobile_phone",
+  dataFieldName: "supporter.phoneNumber2",
+  optInFieldNames: ["supporter.questions.1107654",
+  // Permission to Contact Me
+  "supporter.questions.848527",
+  // Mobile Text Opt In
+  "supporter.questions.848528",
+  // Mobile Call Opt In
+  "supporter.questions.1952175" // Interested in Mobile Text
+  ],
+  gdcpFieldName: "engrid.gdcp-mobile_phone",
+  // Don't edit this field
+  gdcpFieldHtmlLabel: `<span>I’d like to receive phone and text updates from The Nature Conservancy and understand I can unsubscribe at any time. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Mobile Terms & Conditions</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Privacy Statement</a>.</span>`
+}, {
+  channel: "home_phone",
+  dataFieldName: "supporter.phoneNumber",
+  optInFieldNames: ["supporter.questions.894263" // Home Phone Opt In
+  ],
+  gdcpFieldName: "engrid.gdcp-home_phone",
+  // Don't edit this field
+  gdcpFieldHtmlLabel: `<span>I give The Nature Conservancy permission to contact me by phone.</span>`
+}, {
+  channel: "postal_mail",
+  dataFieldName: "supporter.postcode",
+  optInFieldNames: ["supporter.questions.1984598" // GDCP Dummy Postal Mail Opt-In
+  ],
+  gdcpFieldName: "engrid.gdcp-postal_mail",
+  // Don't edit this field
+  gdcpFieldHtmlLabel: `<span>The Nature Conservancy can send me updates about its work and other information by mail.</span>`
+}];
+;// CONCATENATED MODULE: ./src/scripts/gdcp/gdcp-field-manager.ts
+
+
+class GdcpFieldManager {
+  constructor() {
+    _defineProperty(this, "fields", new Map());
+    _defineProperty(this, "sessionItemName", "engrid_gdcpFieldState");
+    _defineProperty(this, "logger", new EngridLogger("GDCP", "#00ff00", "#000000", "🤝"));
+  }
+  /**
+   * Add a field to the field manager
+   */
+  addField(gdcpField) {
+    this.fields.set(gdcpField.gdcpFieldName, {
+      field: gdcpField,
+      touched: false,
+      checked: false,
+      visible: true,
+      doubleOptIn: false,
+      rule: null
+    });
+  }
+
+  /**
+   * Get the field state object for a given field name
+   */
+  getField(fieldName) {
+    return this.fields.get(fieldName);
+  }
+
+  /**
+   * Get all field state objects
+   */
+  getFields() {
+    return this.fields;
+  }
+
+  /**
+   * Save the current state to session storage
+   */
+  saveStateToSession() {
+    const state = [...this.fields.entries()];
+    sessionStorage.setItem(this.sessionItemName, JSON.stringify(state));
+  }
+
+  /**
+   * Apply the state from session storage to the fields
+   */
+  applyStateFromSession() {
+    const state = sessionStorage.getItem(this.sessionItemName);
+    if (state) {
+      const parsedState = JSON.parse(state);
+      this.fields = new Map(parsedState);
+      this.fields.forEach(field => {
+        // Run DOM manipulation functions to match DOM to state from session
+        this.updateFieldChecked(field.field.gdcpFieldName);
+        this.updateFieldOptInsChecked(field.field.gdcpFieldName);
+        this.updateFieldDisplay(field.field.gdcpFieldName);
+      });
+    }
+  }
+
+  /**
+   * Clear the state from session storage
+   */
+  clearStateFromSession() {
+    sessionStorage.removeItem(this.sessionItemName);
+  }
+
+  /**
+   * Set the checked state of a field.
+   * If the field has been touched, the checked state will not be changed unless the force flag is set to true.
+   * If the checked state is changed, the checked state of the field and its associated opt-ins will be updated in the DOM.
+   * The force flag is used when handling user-initiated changes to the checked state from the DOM.
+   * @return boolean - true if the checked state was changed, false otherwise
+   */
+  setChecked(fieldName, checked, force = false) {
+    const field = this.getField(fieldName);
+    if (field) {
+      if (field.touched && !force) {
+        this.logger.log(`Field ${fieldName} checked state not changed as it has been touched`, this.fields);
+        return false;
+      }
+      const checkedStateChanged = field.checked !== checked;
+      field.checked = checked;
+      this.updateFieldChecked(fieldName);
+      this.updateFieldOptInsChecked(fieldName);
+      this.logger.log(`Field ${field.field.channel} and opt-ins checked: ${checked}`, this.fields);
+      return checkedStateChanged;
+    }
+    return false;
+  }
+
+  /**
+   * Set the visibility of a field
+   * The visibility of the field and its related hidden notice will be updated in the DOM
+   */
+  setVisibility(fieldName, visible) {
+    const field = this.getField(fieldName);
+    if (field) {
+      field.visible = visible;
+      this.updateFieldDisplay(fieldName);
+      this.logger.log(`Field ${fieldName} visibility set to: ${visible}`, this.fields);
+    }
+  }
+
+  /**
+   * Set the touched state of a field
+   */
+  setTouched(fieldName) {
+    const field = this.getField(fieldName);
+    if (field && !field.touched) {
+      field.touched = true;
+      this.logger.log(`Field ${fieldName} touched`, this.fields);
+    }
+  }
+
+  /**
+   * Set the double opt-in state of a field
+   */
+  setDoubleOptIn(fieldName, doubleOptIn) {
+    const field = this.getField(fieldName);
+    if (field) {
+      field.doubleOptIn = doubleOptIn;
+      this.logger.log(`Field ${fieldName} double opt-in set to: ${doubleOptIn}`, this.fields);
+      // When setting a field to double opt-in, we re-call the updateFieldOptInsChecked function to ensure the opt-ins are unchecked.
+      this.updateFieldOptInsChecked(fieldName);
+    }
+  }
+
+  /**
+   * Set the rule for a field
+   */
+  setRule(fieldName, rule) {
+    const field = this.getField(fieldName);
+    if (field) {
+      field.rule = rule;
+      this.logger.log(`Field ${fieldName} rule set to: ${rule}`, this.fields);
+    }
+  }
+
+  /**
+   * Update the checked state of the field in the DOM
+   */
+  updateFieldChecked(fieldName) {
+    const field = this.getField(fieldName);
+    if (field) {
+      const input = document.querySelector(`input[name="${field.field.gdcpFieldName}"]`);
+      if (input) {
+        input.checked = field.checked;
+      }
+    }
+  }
+
+  /**
+   * Update the checked state of the opt in fields associated with the field in the DOM
+   */
+  updateFieldOptInsChecked(fieldName) {
+    const field = this.getField(fieldName);
+    if (field) {
+      field.field.optInFieldNames.forEach(name => {
+        const input = document.querySelector(`[name="${name}"]`);
+        if (input) {
+          // If the field is double opt-in, always keep the opt-in unchecked, otherwise match field state.
+          input.checked = field.doubleOptIn ? false : field.checked;
+        }
+      });
+    }
+  }
+
+  /**
+   * Update the visibility of the field
+   * Show/hide the field and its related hidden notice in the DOM
+   */
+  updateFieldDisplay(fieldName) {
+    const field = this.getField(fieldName);
+    if (field) {
+      const input = document.querySelector(`input[name="${field.field.gdcpFieldName}"]`);
+      if (input) {
+        const wrapper = input.closest(".en__field__item");
+        if (wrapper) {
+          wrapper.classList.toggle("hide", !field.visible);
+        }
+        const notice = document.querySelector(`.${field.field.channel}-description`);
+        if (notice) {
+          notice.classList.toggle("hide", field.visible);
+        }
+      }
+    }
+  }
+}
+;// CONCATENATED MODULE: ./src/scripts/gdcp/config/geographical-opt-in-rules.ts
+const geographicalOptInRules = [{
+  locations: ["US", "MX", "AU"],
+  rules: [{
+    channel: "email",
+    rule: "preselected_checkbox",
+    optionalRule: "hidden"
+  }, {
+    channel: "mobile_phone",
+    rule: "preselected_checkbox",
+    optionalRule: "hidden"
+  }, {
+    channel: "home_phone",
+    rule: "preselected_checkbox",
+    optionalRule: "hidden"
+  }, {
+    channel: "postal_mail",
+    rule: "hidden_no_qcb",
+    optionalRule: "hidden_no_qcb"
+  }]
+}, {
+  locations: ["US-CO", "US-OR"],
+  rules: [{
+    channel: "email",
+    rule: "checkbox",
+    optionalRule: "hidden"
+  }, {
+    channel: "mobile_phone",
+    rule: "checkbox",
+    optionalRule: "hidden"
+  }, {
+    channel: "home_phone",
+    rule: "checkbox",
+    optionalRule: "hidden"
+  }, {
+    channel: "postal_mail",
+    rule: "checkbox",
+    optionalRule: "checkbox"
+  }]
+}, {
+  locations: ["CA"],
+  rules: [{
+    channel: "email",
+    rule: "double_opt_in",
+    optionalRule: "hidden"
+  }, {
+    channel: "mobile_phone",
+    rule: "checkbox",
+    optionalRule: "hidden"
+  }, {
+    channel: "home_phone",
+    rule: "checkbox",
+    optionalRule: "hidden"
+  }, {
+    channel: "postal_mail",
+    rule: "checkbox",
+    optionalRule: "checkbox"
+  }]
+}];
+;// CONCATENATED MODULE: ./src/scripts/gdcp/config/default-opt-in-rules.ts
+//Default opt-in rules for the GDCP
+//These rules are used when the user's location does not have specific rules
+const defaultOptInRules = [{
+  channel: "email",
+  rule: "checkbox",
+  optionalRule: "hidden"
+}, {
+  channel: "mobile_phone",
+  rule: "checkbox",
+  optionalRule: "hidden"
+}, {
+  channel: "home_phone",
+  rule: "checkbox",
+  optionalRule: "hidden"
+}, {
+  channel: "postal_mail",
+  rule: "checkbox",
+  optionalRule: "checkbox"
+}];
+;// CONCATENATED MODULE: ./src/scripts/gdcp/config/strict-opt-in-rules.ts
+//Strict Opt-In Rules
+//These rules are used FOR ALL LOCATIONS when the page is manually set to strict opt-in mode
+const strictOptInRules = [{
+  channel: "email",
+  rule: "checkbox",
+  optionalRule: "checkbox"
+}, {
+  channel: "mobile_phone",
+  rule: "checkbox",
+  optionalRule: "checkbox"
+}, {
+  channel: "home_phone",
+  rule: "checkbox",
+  optionalRule: "checkbox"
+}, {
+  channel: "postal_mail",
+  rule: "checkbox",
+  optionalRule: "checkbox"
+}];
+;// CONCATENATED MODULE: ./src/scripts/gdcp/rule-handler.ts
+
+
+
+
+
+
+class RuleHandler {
+  constructor(gdcpFieldManager) {
+    this.gdcpFieldManager = gdcpFieldManager;
+    _defineProperty(this, "logger", new EngridLogger("GDCP", "#00ff00", "#000000", "🤝"));
+    _defineProperty(this, "gdcpFields", gdcpFields);
+    _defineProperty(this, "geographicalRules", geographicalOptInRules);
+    _defineProperty(this, "defaultRules", defaultOptInRules);
+    _defineProperty(this, "strictRules", strictOptInRules);
+    _defineProperty(this, "activeRules", []);
+    _defineProperty(this, "strictMode", false);
+  }
+
+  /**
+   * Get the opt in rules for a given location ("{country}-{region}")
+   * If no rules are found for the region, fall back to the country
+   * If no rules are found for the country, fall back to "Other"
+   */
+  getRulesForLocation(location) {
+    //If we're in strict mode, always use that.
+    if (this.strictMode) {
+      this.logger.log(`Using strict mode rules`, this.strictRules);
+      return this.strictRules;
+    }
+
+    //Find an exact match for the location country+region "{country}-{region}"
+    let rule = this.geographicalRules.find(rule => rule.locations.includes(location));
+    if (rule) {
+      this.logger.log(`Found rules for location "${location}"`, rule.rules);
+      return rule.rules;
+    }
+
+    //Find a match for the location country "{country}"
+    const country = location.split("-")[0];
+    rule = this.geographicalRules.find(rule => rule.locations.includes(country));
+    if (rule) {
+      this.logger.log(`No exact rules for "${location}". Found rules for country "${country}"`, rule.rules);
+      return rule.rules;
+    }
+
+    //Fall back to the default rules
+    this.logger.log(`No rules found for "${location}" - falling back to default`, this.defaultRules);
+    return this.defaultRules;
+  }
+
+  /**
+   * Apply the opt in rules for a given location to each GDCP Field
+   * @return {checkedStateChangedFields} An array of GDCP Fields whose checked state has changed
+   * @return {activeRules} The rules that were applied
+   */
+  applyOptInRules(location) {
+    const locationRules = this.getRulesForLocation(location);
+    const checkedStateChangedFields = [];
+
+    //If the rules for the new location match rules for the current location, do nothing
+    if (locationRules === this.activeRules) {
+      this.logger.log(`Rules that match the rules for "${location}" are already active. Not applying new rules.`);
+      return {
+        activeRules: this.activeRules,
+        checkedStateChangedFields
+      };
+    }
+    this.activeRules = locationRules;
+    locationRules.forEach(rule => {
+      const gdcpField = this.gdcpFields.find(field => field.channel === rule.channel);
+      if (gdcpField) {
+        const checkedStateChanged = this.applyRule(rule, gdcpField);
+        if (checkedStateChanged) {
+          checkedStateChangedFields.push(gdcpField);
+        }
+      }
+    });
+    return {
+      activeRules: this.activeRules,
+      checkedStateChangedFields
+    };
+  }
+
+  /**
+   * Apply a single opt in rule to a GDCP Field.
+   * If the rule is not recognized, fall back to an unselected checkbox.
+   * If the field is optional, use the optional rule.
+   * @return {boolean} Whether the checked state of the GDCP field has changed
+   */
+  applyRule(rule, gdcpField) {
+    const dataInputEl = document.querySelector(`input[name="${gdcpField.dataFieldName}"]`);
+    if (!dataInputEl) {
+      this.logger.log(`Could not find data field for "${gdcpField.channel}" - skipping rule`);
+      return false;
+    }
+    let checkedStateChanged;
+    const activeRule = dataInputEl.closest(".en__field")?.classList.contains("en__mandatory") ? rule.rule : rule.optionalRule;
+    switch (activeRule) {
+      case "preselected_checkbox":
+        checkedStateChanged = this.preselectedCheckedRule(gdcpField);
+        break;
+      case "checkbox":
+        checkedStateChanged = this.checkboxRule(gdcpField);
+        break;
+      case "double_opt_in":
+        checkedStateChanged = this.doubleOptInRule(gdcpField);
+        break;
+      case "hidden":
+        checkedStateChanged = this.hiddenCheckboxRule(gdcpField);
+        break;
+      case "hidden_no_qcb":
+        checkedStateChanged = this.hiddenNoQcbRule(gdcpField);
+        break;
+      default:
+        this.logger.log(`Unknown rule "${rule.rule} - falling back to an unselected checkbox"`);
+        checkedStateChanged = this.checkboxRule(gdcpField);
+        break;
+    }
+    return checkedStateChanged;
+  }
+  setStrictMode(strictMode) {
+    this.strictMode = strictMode;
+  }
+
+  /**
+   * Rule for preselected checkbox
+   * Check the GDCP field and all its associated opt-in fields
+   * @return {boolean} Whether the checked state of the GDCP field has changed
+   */
+  preselectedCheckedRule(gdcpField) {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "preselected_checkbox");
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
+    return checkedStateChanged;
+  }
+
+  /**
+   * Rule for checkbox
+   * Uncheck the GDCP field and all its associated opt-in fields
+   * @return {boolean} Whether the checked state of the GDCP field has changed
+   */
+  checkboxRule(gdcpField) {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "checkbox");
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
+    return checkedStateChanged;
+  }
+
+  /**
+   * Rule for hidden checkbox
+   * Visually hide the GDCP field
+   * Show the hidden field text
+   * Check the GDCP field and all its associated opt-in fields
+   * @return {boolean} Whether the checked state of the GDCP field has changed
+   */
+  hiddenCheckboxRule(gdcpField) {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "hidden");
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, false);
+    return checkedStateChanged;
+  }
+
+  /**
+   * Rule for double opt-in
+   * @return {boolean} Whether the checked state of the GDCP field has changed
+   */
+  doubleOptInRule(gdcpField) {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "double_opt_in");
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false);
+    this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setDoubleOptIn(gdcpField.gdcpFieldName, true);
+    return checkedStateChanged;
+  }
+
+  /**
+   * Rule for hidden field that does not generate QCB record.
+   * @return {boolean} Whether the checked state of the GDCP field has changed
+   */
+  hiddenNoQcbRule(gdcpField) {
+    this.gdcpFieldManager.setRule(gdcpField.gdcpFieldName, "hidden_no_qcb");
+    const checkedStateChanged = this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, true);
+    this.gdcpFieldManager.setVisibility(gdcpField.gdcpFieldName, false);
+    return checkedStateChanged;
+  }
+}
+;// CONCATENATED MODULE: ./src/scripts/gdcp/config/pages.ts
+const pages = {
+  double_opt_in_email_trigger: "https://preserve.nature.org/page/159613/data/1",
+  postal_mail_qcb: "https://preserve.nature.org/page/159615/data/1"
+};
+;// CONCATENATED MODULE: ./src/scripts/gdcp/gdcp-manager.ts
+
+
+
+
+
+
+
+class GdcpManager {
+  constructor() {
+    _defineProperty(this, "logger", new EngridLogger("GDCP", "#00ff00", "#000000", "🤝"));
+    _defineProperty(this, "gdcpFieldManager", new GdcpFieldManager());
+    _defineProperty(this, "ruleHandler", new RuleHandler(this.gdcpFieldManager));
+    _defineProperty(this, "countryListenerAdded", false);
+    _defineProperty(this, "regionListenerAdded", false);
+    _defineProperty(this, "strictMode", window.GlobalDigitalComplianceStrictMode || false);
+    _defineProperty(this, "singleOptInMode", window.GlobalDigitalComplianceSingleOptIn || false);
+    _defineProperty(this, "gdcpFields", gdcpFields);
+    _defineProperty(this, "userLocation", "");
+    _defineProperty(this, "submissionFailed", !!(engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "checkSubmissionFailed") && window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed()));
+    _defineProperty(this, "_form", EnForm.getInstance());
+    _defineProperty(this, "pages", pages);
+    this.handleDoubleOptInEmail();
+    this.handlePostalMailQcb();
+    if (!this.shouldRun()) {
+      this.logger.log("GDCP is not running on this page.");
+      return;
+    }
+    this.ruleHandler.setStrictMode(this.strictMode);
+    this.logger.log(`GDCP is running. Strict mode is ${this.strictMode ? "active" : "not active"}.`);
+    this.setupGdcpFields().then(() => {
+      engrid_ENGrid.setBodyData("gdcp", "true");
+      this.addConsentStatementForExistingSupporters();
+      this.getInitialLocation().then(location => {
+        this.userLocation = location;
+        this.logger.log(`Initial User location is ${this.userLocation}`);
+        this.addStateFieldIfNeeded(this.userLocation);
+        if (this.submissionFailed) {
+          this.restoreFieldsStateFromSession();
+        } else {
+          this.applyRulesForLocation(this.userLocation, false);
+        }
+        this.watchForLocationChange();
+        this.setSingleOptInModeInitialState();
+        this.clearSessionState();
+      });
+    });
+    this.onSubmit();
+  }
+
+  /**
+   * List of Page IDs where GDCP should be active
+   */
+  shouldRun() {
+    return [158050, 158972].includes(engrid_ENGrid.getPageID()) || window.GlobalDigitalComplianceActive === true;
+  }
+
+  /**
+   * Handles getting the user's initial location
+   * In most cases this comes from CloudFlare
+   * but in cases where data is prefilled or the submission has failed we get it from the country and region fields
+   * fallback to "unknown" if no location data is found
+   */
+  async getInitialLocation() {
+    let location = "unknown";
+    const countryField = engrid_ENGrid.getField("supporter.country");
+    const regionField = engrid_ENGrid.getField("supporter.region");
+    const engridAutofill = this.getCookie("engrid-autofill");
+    const locationDataInUrl = engrid_ENGrid.getUrlParameter("supporter.country") || engrid_ENGrid.getUrlParameter("supporter.region") || engrid_ENGrid.getUrlParameter("ea.url.id") && !engrid_ENGrid.getUrlParameter("forwarded");
+
+    // Get location from Cloudflare
+    // Only run if there's no engrid-autofill cookie, the submission hasn't failed, and there's no location data in the URL
+    if (!engridAutofill && !this.submissionFailed && !locationDataInUrl) {
+      await fetch(`https://${window.location.hostname}/cdn-cgi/trace`).then(res => res.text()).then(t => {
+        let data = t.replace(/[\r\n]+/g, '","').replace(/=+/g, '":"');
+        data = '{"' + data.slice(0, data.lastIndexOf('","')) + '"}';
+        const jsonData = JSON.parse(data);
+        location = jsonData.loc;
+      }).catch(err => {
+        this.logger.log("No country field and error fetching location data. Falling back to US.", err);
+        location = "unknown";
+      });
+      return location;
+    }
+
+    // Get location from the country and region fields
+    if (countryField) {
+      location = engrid_ENGrid.getFieldValue("supporter.country");
+      if (regionField && engrid_ENGrid.getFieldValue("supporter.region") !== "") {
+        location += `-${engrid_ENGrid.getFieldValue("supporter.region")}`;
+      }
+      return location;
+    }
+
+    // No location data from Cloudflare + no location fields on page
+    // Return default "Unknown" location
+    return location;
+  }
+
+  /**
+   * Handle adding the state field to the page if the user's location is the US and the state field is missing
+   */
+  addStateFieldIfNeeded(location) {
+    // If strict mode is active we don't need to add the state field
+    if (this.strictMode) {
+      return;
+    }
+    if (location.startsWith("US") && !engrid_ENGrid.getField("supporter.region") && this.gdcpFieldManager.getFields().size > 0) {
+      this.logger.log("Location is US and state field is missing, adding state field to page");
+      this.createUSStatesField();
+    }
+  }
+
+  /**
+   * Create US states field and add it to the page
+   * When positioning on the page, we always use flexbox ordering
+   * to prevent issues with the i-hide i-50 etc helper classes
+   */
+  createUSStatesField() {
+    //If the state field is already on the page or we're in strict mode, no need to add it
+    if (engrid_ENGrid.getField("supporter.region") || this.strictMode) {
+      return;
+    }
+    const usStatesFieldHtml = `<div class="en__field en__field--select en__field--1984602 en__field--region">
+                                <label for="en__field_supporter_region" class="en__field__label" style="">State or Province</label>
+                                <div class="en__field__element en__field__element--select">
+                                <select id="en__field_supporter_region" class="en__field__input en__field__input--select" name="supporter.region" autocomplete="address-level1" aria-required="true"><option value="">SELECT STATE/PROVINCE</option><option value="AK">Alaska</option><option value="AL">Alabama</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CA">California</option><option value="CO">Colorado</option><option value="CT">Connecticut</option><option value="DE">Delaware</option><option value="DC">District of Columbia</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="HI">Hawaii</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="ME">Maine</option><option value="MD">Maryland</option><option value="MA">Massachusetts</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NH">New Hampshire</option><option value="NJ">New Jersey</option><option value="NM">New Mexico</option><option value="NY">New York</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="RI">Rhode Island</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VT">Vermont</option><option value="VA">Virginia</option><option value="WA">Washington</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option><option value="AA">Armed Forces Americas</option><option value="AE">Armed Forces Europe/Canada/Middle East/Africa</option><option value="AP">Armed Forces Pacific</option><option value="AS">American Samoa</option><option value="CZ">Canal Zone</option><option value="GU">Guam</option><option value="UM">Minor Outlying Islands</option><option value="MP">Northern Mariana Islands</option><option value="PR">Puerto Rico</option><option value="VI">Virgin Islands</option><option value="None">None</option></select>
+                                </div>
+                              </div>`;
+
+    //If the page has a country field we will position the state field after it
+    const countryField = document.querySelector(".en__field--country");
+    if (countryField) {
+      countryField.parentElement?.insertAdjacentHTML("beforeend", usStatesFieldHtml);
+
+      //Doing the ordering here to prevent issues with the i-hide i-50 etc helper classes
+      const children = countryField.parentElement?.children;
+      let countryOrder;
+      if (children) {
+        for (let i = 0; i < children.length; i++) {
+          const child = children[i];
+          child.style.order = i.toString();
+          if (child.classList.contains("en__field--country")) {
+            countryOrder = i;
+          }
+        }
+      }
+      document.querySelector(".en__field--region")?.setAttribute("style", `order: ${countryOrder}`);
+      this.watchForLocationChange();
+      return;
+    }
+
+    //Else, if the page has an email field we will position it at the top of the form block
+    const emailField = document.querySelector(".en__field--email");
+    if (emailField) {
+      emailField.parentElement?.insertAdjacentHTML("beforeend", usStatesFieldHtml);
+      const regionField = document.querySelector(".en__field--region");
+      if (regionField) {
+        //Position the region field as the first field inside the form block with the email field
+        //Use flex ordering to do this to not interfere with the form's default order (and any iX- helper classes)
+        regionField.style.order = "-1";
+      }
+      return;
+    }
+  }
+
+  /**
+   * Watch for changes in the user's location (country and region fields) and apply the opt in rules
+   */
+  watchForLocationChange() {
+    const countryField = engrid_ENGrid.getField("supporter.country");
+    const regionField = engrid_ENGrid.getField("supporter.region");
+    if (countryField && !this.countryListenerAdded) {
+      countryField.addEventListener("change", () => {
+        let location = engrid_ENGrid.getFieldValue("supporter.country");
+        if (engrid_ENGrid.getFieldValue("supporter.region")) {
+          location += `-${engrid_ENGrid.getFieldValue("supporter.region")}`;
+        }
+        this.userLocation = location;
+        this.addStateFieldIfNeeded(this.userLocation);
+        this.applyRulesForLocation(this.userLocation);
+      });
+      this.countryListenerAdded = true;
+    }
+    if (regionField && !this.regionListenerAdded) {
+      regionField.addEventListener("change", () => {
+        //Must always have country value - fall back to our initial value if country field if not on page
+        const country = engrid_ENGrid.getFieldValue("supporter.country") || this.userLocation.split("-")[0];
+        this.userLocation = `${country}-${engrid_ENGrid.getFieldValue("supporter.region")}`;
+        this.applyRulesForLocation(this.userLocation);
+      });
+      this.regionListenerAdded = true;
+    }
+  }
+
+  /**
+   * Setup the GDCP fields on the page
+   * Determines if the required fields are present for a channel and creates the GDCP field
+   * Hides the EN opt in fields for the GDCP field
+   */
+  async setupGdcpFields() {
+    for (const gdcpField of this.gdcpFields) {
+      const enFieldsAreOnPage = await this.enFieldsForGdcpFieldOnPage(gdcpField);
+      if (enFieldsAreOnPage) {
+        this.gdcpFieldManager.addField(gdcpField);
+        this.hideEnOptInFields(gdcpField);
+        if (!this.singleOptInMode) {
+          this.logger.log(`Creating GDCP field for "${gdcpField.channel}"`);
+          this.createGdcpField(gdcpField);
+        }
+      } else {
+        this.logger.log(`Did not find the required fields for channel "${gdcpField.channel}" - "${gdcpField.dataFieldName}" and any of opt in field(s) "${gdcpField.optInFieldNames.join(", ")}". Skipping adding GDCP field for this channel to page.`);
+      }
+    }
+    if (this.singleOptInMode && this.gdcpFieldManager.getFields().size > 0) {
+      this.logger.log("Single Opt-In mode is active, creating checkbox");
+      this.createSingleOptInCheckbox();
+    }
+  }
+  hideEnOptInFields(gdcpField) {
+    gdcpField.optInFieldNames.forEach(name => {
+      const input = document.querySelector(`[name="${name}"]`);
+      input?.closest(".en__field")?.classList.add("hide");
+    });
+  }
+
+  /**
+   * Creates the GDCP field element and adds it to the page
+   * Also adds an event listener to toggle all the opt in fields when the GDCP field is checked/unchecked
+   */
+  createGdcpField(gdcpField) {
+    const field = `
+      <div class="en__field en__field--checkbox en__field--000000 pseudo-en-field engrid-gdcp-field en__field--${gdcpField.gdcpFieldName}">
+          <div class="en__field__element en__field__element--checkbox">
+              <div class="en__field__item">
+                  <input 
+                    class="en__field__input en__field__input--checkbox" 
+                    id="en__field_${gdcpField.gdcpFieldName}" 
+                    name="${gdcpField.gdcpFieldName}" 
+                    type="checkbox" 
+                    value="Y"
+                  >
+                  <label class="en__field__label en__field__label--item" for="en__field_${gdcpField.gdcpFieldName}">
+                    ${gdcpField.gdcpFieldHtmlLabel}
+                  </label>
+              </div>
+              <div class="en__field__item">
+                <div class="gdcp-field-text-description ${gdcpField.channel}-description hide">
+                  ${gdcpField.gdcpFieldHtmlLabel}
+                </div>
+              </div>
+          </div>
+      </div>`;
+    const formElement = document.querySelector(`[name="${gdcpField.dataFieldName}"]`)?.closest(".en__field");
+    if (formElement) {
+      formElement.insertAdjacentHTML("beforeend", field);
+    }
+    const input = document.querySelector(`[name="${gdcpField.gdcpFieldName}"]`);
+    if (input) {
+      input.addEventListener("change", () => {
+        this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, input.checked, true);
+        this.gdcpFieldManager.setTouched(gdcpField.gdcpFieldName);
+      });
+    }
+    return input;
+  }
+
+  /**
+   * Check if the corresponding EN fields are present on the page
+   * for a given GDCP Opt In Field
+   * i.e. Its data field + any of the opt in fields
+   */
+  async enFieldsForGdcpFieldOnPage(gdcpField) {
+    const dataFieldPresent = document.querySelector(`[name="${gdcpField.dataFieldName}"]`);
+    const optInFieldsNames = gdcpField.optInFieldNames.map(name => `[name="${name}"]`).join(", ");
+    const optInFieldsPresent = document.querySelector(optInFieldsNames);
+    if (gdcpField.channel !== "postal_mail") {
+      return !!dataFieldPresent && !!optInFieldsPresent;
+    }
+    try {
+      const postalMailOptInFieldPresent = await this.postalMailOptInFieldPresent();
+      return !!dataFieldPresent && !!optInFieldsPresent && postalMailOptInFieldPresent;
+    } catch (e) {
+      this.logger.error("Error checking if opted into postal mail", e);
+      return false;
+    }
+  }
+  async postalMailOptInFieldPresent() {
+    const iframe = this.createChainedIframeForm(this.pages.postal_mail_qcb);
+    await new Promise((resolve, reject) => {
+      iframe.addEventListener("load", resolve);
+      iframe.addEventListener("error", reject);
+    });
+    const iframeDocument = iframe.contentDocument || iframe.contentWindow?.document;
+    let elementInIframe = iframeDocument?.querySelector("#en__field_supporter_questions_1942219");
+    return !!elementInIframe;
+  }
+
+  /**
+   * Apply the opt in rules for the user's location
+   * @param location The user's location
+   * @param scrollToChangedField Whether to scroll to the field highest up the page that has changed state
+   */
+  applyRulesForLocation(location, scrollToChangedField = true) {
+    const {
+      checkedStateChangedFields
+    } = this.ruleHandler.applyOptInRules(location);
+    if (scrollToChangedField) {
+      this.scrollUpToHighestChangedField(checkedStateChangedFields);
+    }
+  }
+
+  /**
+   * Scroll to the field highest up the page that has changed state
+   */
+  scrollUpToHighestChangedField(checkedStateChangedFields) {
+    if (checkedStateChangedFields.length) {
+      // Only rules that have a visible checkbox
+      const visibleFields = checkedStateChangedFields.filter(field => {
+        const gdcpField = this.gdcpFieldManager.getField(field.gdcpFieldName);
+        return gdcpField?.visible;
+      });
+
+      // Get the DOM element of the data field of the field highest up the page
+      const firstChangedField = visibleFields.map(field => {
+        return document.querySelector(`[name="${field.dataFieldName}"]`)?.closest(".en__field");
+      }).filter(el => el).reduce((a, b) => {
+        return a?.getBoundingClientRect().top < b?.getBoundingClientRect().top ? a : b;
+      });
+      if (firstChangedField) {
+        const fieldTop = firstChangedField.getBoundingClientRect().top + window.scrollY;
+        // Only scroll if the field is above the current scroll position
+        if (fieldTop < window.scrollY) {
+          firstChangedField.scrollIntoView({
+            behavior: "smooth"
+          });
+        }
+      }
+    }
+  }
+
+  /**
+   * Add a consent statement below the submit button for existing supporters
+   */
+  addConsentStatementForExistingSupporters() {
+    if (engrid_ENGrid.getFieldValue("supporter.emailAddress") && !this.submissionFailed) {
+      const submitButtonBlock = document.querySelector(".en__submit")?.parentElement;
+      const consentStatement = `
+        <div class="gdcp-consent-statement">
+          <p>
+            You previously provided your communication preferences. If you wish to change those preferences, please 
+            <a href="https://preserve.nature.org/page/87755/subscriptions/1?chain" target="_blank">click here</a>.
+          </p>
+        </div>
+      `;
+      submitButtonBlock?.insertAdjacentHTML("afterend", consentStatement);
+    }
+  }
+
+  /**
+   * Get the value of a cookie by name
+   */
+  getCookie(cookieName) {
+    const name = `${cookieName}=`;
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookieArray = decodedCookie.split(";");
+    for (let i = 0; i < cookieArray.length; i++) {
+      let cookie = cookieArray[i];
+      while (cookie.charAt(0) === " ") {
+        cookie = cookie.substring(1);
+      }
+      if (cookie.indexOf(name) === 0) {
+        return cookie.substring(name.length, cookie.length);
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Actions for when EN form is submitted
+   * @private
+   */
+  onSubmit() {
+    this._form.onSubmit.subscribe(() => {
+      // Save the GDCP fields state to session (for restoring in case of submission errors)
+      this.gdcpFieldManager.saveStateToSession();
+
+      // Save the double opt in email state to session (for triggering the opt in confirmation email)
+      const emailGdcpFieldName = this.gdcpFields.find(field => field.channel === "email")?.gdcpFieldName;
+      if (emailGdcpFieldName) {
+        const emailField = this.gdcpFieldManager.getField(emailGdcpFieldName);
+        if (emailField && emailField.checked && emailField.doubleOptIn) {
+          sessionStorage.setItem("gdcp-email-double-opt-in", "Y");
+        }
+      }
+
+      // If postal mail channel rule is NOT "hidden_no_qcb", save value to session
+      // to trigger the QCB for postal mail on thank you page load
+      const postalMailGdcpFieldName = this.gdcpFields.find(field => field.channel === "postal_mail")?.gdcpFieldName;
+      if (postalMailGdcpFieldName) {
+        const postalMailField = this.gdcpFieldManager.getField(postalMailGdcpFieldName);
+        if (postalMailField && postalMailField.checked && postalMailField.rule !== "hidden_no_qcb") {
+          sessionStorage.setItem("gdcp-postal-mail-create-qcb", "Y");
+        }
+      }
+    });
+  }
+
+  /**
+   * Restore the state of the GDCP + Opt In fields from session storage
+   * Used when the submission fails, instead of applying location-based rules again.
+   */
+  restoreFieldsStateFromSession() {
+    this.logger.log("Detected submission failure. Restoring GDCP + Opt In field states.");
+    this.gdcpFieldManager.applyStateFromSession();
+  }
+
+  /**
+   * Clear the session storage state
+   * @private
+   */
+  clearSessionState() {
+    sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
+    sessionStorage.removeItem("gdcp-email-double-opt-in");
+    this.gdcpFieldManager.clearStateFromSession();
+  }
+
+  /**
+   * Send double opt in email if the user has opted in and the page is not the first page
+   */
+  handleDoubleOptInEmail() {
+    const shouldSendDoubleOptInEmail = sessionStorage.getItem("gdcp-email-double-opt-in") === "Y" && !this.submissionFailed;
+    if (shouldSendDoubleOptInEmail) {
+      const iframe = this.createChainedIframeForm(this.pages.double_opt_in_email_trigger, true);
+      sessionStorage.removeItem("gdcp-email-double-opt-in");
+      this.logger.log(`Sending double opt in email using form: ${iframe.getAttribute("src")}`);
+    }
+  }
+
+  /**
+   * Send QCB for postal mail if we have the session data to do that
+   */
+  handlePostalMailQcb() {
+    const shouldCreateQcb = sessionStorage.getItem("gdcp-postal-mail-create-qcb") === "Y" && !this.submissionFailed;
+    if (shouldCreateQcb) {
+      const iframe = this.createChainedIframeForm(this.pages.postal_mail_qcb, true);
+      sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
+      this.logger.log(`Creating QCB for postal mail using form: ${iframe.getAttribute("src")}`);
+    }
+  }
+
+  /**
+   * Create an iframe form with autosubmit form
+   */
+  createChainedIframeForm(urlString, autoSubmit = false) {
+    const url = new URL(urlString);
+    url.searchParams.append("chain", "");
+    if (autoSubmit) {
+      url.searchParams.append("autosubmit", "Y");
+    }
+    const iframe = document.createElement("iframe");
+    iframe.src = url.toString();
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
+    return iframe;
+  }
+
+  /**
+   * Create a single opt in checkbox for the page
+   */
+  createSingleOptInCheckbox() {
+    const field = `
+      <div class="en__component en__component--formblock">
+          <div class="en__field en__field--checkbox en__field--000000 pseudo-en-field engrid-gdcp-field en__field--gdcp-single-opt-in">
+              <div class="en__field__element en__field__element--checkbox">
+                  <div class="en__field__item">
+                      <input
+                        class="en__field__input en__field__input--checkbox"
+                        id="en__field_gdcp-single-opt-in"
+                        name="engrid.gdcp-single-opt-in"
+                        type="checkbox"
+                        value="Y"
+                      >
+                      <label class="en__field__label en__field__label--item" for="en__field_gdcp-single-opt-in">
+                        I agree to receive communications from The Nature Conservancy.
+                      </label>
+                  </div>
+              </div>
+          </div>
+      </div>`;
+    const formElement = document.querySelector(".en__submit");
+    if (formElement) {
+      formElement.closest(".en__component--formblock")?.insertAdjacentHTML("beforebegin", field);
+    }
+    const input = document.querySelector(`[name="engrid.gdcp-single-opt-in"]`);
+    if (input) {
+      input.addEventListener("change", () => {
+        this.gdcpFields.forEach(gdcpField => {
+          this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, input.checked, true);
+          this.gdcpFieldManager.setTouched(gdcpField.gdcpFieldName);
+        });
+      });
+    }
+    return input;
+  }
+
+  /**
+   * Set the initial state of the GDCP fields to unchecked in single opt in mode
+   * Set them to touched so that any location rule change won't modify the checked state
+   * We still want the location based rules to apply so we have the double opt in and no qcb rules
+   */
+  setSingleOptInModeInitialState() {
+    if (this.singleOptInMode && !this.submissionFailed) {
+      this.logger.log("Single Opt-In Mode - Setting all opt-ins to unchecked as initial state.");
+      this.gdcpFields.forEach(gdcpField => {
+        this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false, true);
+        this.gdcpFieldManager.setTouched(gdcpField.gdcpFieldName);
+      });
+    }
+  }
+}
 ;// CONCATENATED MODULE: ./src/scripts/add-daf-banner.ts
 
 // This script adds a DAF banner to the donation form, only if the donnor is loading the page from a DAF form
@@ -22724,6 +23777,7 @@ class AddDAFBanner {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -22794,6 +23848,7 @@ const options = {
     new BequestLightbox();
     new Tooltip();
     new IHMO();
+    new GdcpManager();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();

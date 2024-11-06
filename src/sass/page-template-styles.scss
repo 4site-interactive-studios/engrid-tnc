@@ -530,8 +530,10 @@
     }
 
     @media screen and (min-width: 1024px) {
-      .body-banner {
-        display: none;
+      &:not(#en__pagebuilder) {
+        .body-banner {
+          display: none;
+        }
       }
     }
 
@@ -1238,7 +1240,7 @@
 
     .en__submit {
       border-bottom: none;
-      padding-bottom: 64px;
+      padding-bottom: 0;
       margin-bottom: 0;
       button {
         width: auto;
@@ -1476,7 +1478,7 @@
 
       #en__digitalWallet__stripeButtons__container,
       #en__digitalWallet__paypalTouch__container {
-        padding-bottom: 64px;
+        padding-bottom: 0;
       }
     }
 
@@ -1525,6 +1527,10 @@
       #en__upsellModal__no button {
         margin-bottom: 0;
       }
+    }
+
+    .body-main {
+      padding-bottom: 64px;
     }
 
     @media screen and (max-width: 992px) {
@@ -2902,4 +2908,5 @@
   @import "ihmo.scss";
   @import "ecard.scss";
   @import "./supporter-hub.scss";
+  @import "gdcp.scss";
 }
