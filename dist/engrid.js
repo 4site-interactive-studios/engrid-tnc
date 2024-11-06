@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 6, 2024 @ 11:20:49 ET
- *  By: michael
+ *  Date: Wednesday, November 6, 2024 @ 17:52:39 ET
+ *  By: fernando
  *  ENGrid styles: v0.19.9
  *  ENGrid scripts: v0.19.11
  *
@@ -23732,6 +23732,43 @@ class GdcpManager {
     }
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/add-daf-banner.ts
+
+// This script adds a DAF banner to the donation form, only if the donnor is loading the page from a DAF form
+
+class AddDAFBanner {
+  constructor() {
+    _defineProperty(this, "logger", new EngridLogger("AddDAFBanner", "lightgray", "darkblue", "🪙"));
+    if (!this.shouldRun()) return;
+    this.AddDAFBanner();
+  }
+  shouldRun() {
+    // Check if the URL contains the "fromDAF" query parameter
+    return window.location.search.includes("fromDAF");
+  }
+  AddDAFBanner() {
+    this.logger.log("Adding DAF Banner");
+    const giveBySelectWrapper = document.querySelector(".en__field--giveBySelect .en__field__element--radio");
+    if (!giveBySelectWrapper) {
+      this.logger.log("No giveBySelectWrapper found");
+      return;
+    }
+    const dafBannerContainer = `
+    <!-- DAF Banner (added dynamically) -->
+      <div class="en__component en__component--copyblock daf-banner">
+	      <p><a href="javascript:void(0)" onclick="history.back()">Click here</a> to make your donation using <strong>Donor Advised Funds (DAF)</strong></p>
+      </div>
+    `;
+    // Add the DAF banner to the top of the page, on .body-main
+    const bodyMain = document.querySelector(".body-main");
+    if (!bodyMain) {
+      this.logger.log("No bodyMain found");
+      return;
+    }
+    bodyMain.insertAdjacentHTML("afterbegin", dafBannerContainer);
+    this.logger.log("Banner added");
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -23740,6 +23777,7 @@ class GdcpManager {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -23815,6 +23853,7 @@ const options = {
     trackProcessingErrors(App);
     trackUserInteractions();
     new WidgetProgressBar();
+    new AddDAFBanner();
   },
   onSubmit: () => trackFormSubmit(App, DonationAmount),
   onResize: () => console.log("Starter Theme Window Resized"),
