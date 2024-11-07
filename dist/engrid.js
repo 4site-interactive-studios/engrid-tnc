@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, November 7, 2024 @ 07:39:19 ET
+ *  Date: Thursday, November 7, 2024 @ 13:38:36 ET
  *  By: michael
  *  ENGrid styles: v0.19.9
  *  ENGrid scripts: v0.19.11
@@ -21793,6 +21793,11 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         window.EngagingNetworks.require._defined.enjs.hideField("879592");
       }
     }
+  }
+  const bannerImageSrc = document.querySelector(".body-banner img")?.src;
+  const bodyBanner = document.querySelector(".body-banner");
+  if (bodyBanner && bannerImageSrc) {
+    bodyBanner.style.setProperty("--banner-image-src", `url(${bannerImageSrc})`);
   }
 };
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/typeof.js

@@ -2794,6 +2794,12 @@
   &[data-engrid-layout="rightright1col"][data-engrid-subtheme="multipage-survey"] {
     --engrid__body-main_background-color: #f8f8f8;
     --engrid__body-main_padding: 20px 18%;
+    --submit__button_background-color: var(--color-green);
+    --submit__button_border-color: var(--color-green);
+    --submit__button_background-color_hover: var(--color_black);
+    --submit__button_border-colo_hover: var(--color_black);
+    --submit__button_font-size: 1.25rem;
+    --submit__button_padding: 1rem 2rem;
 
     //Unused sections
     .body-header,
@@ -2805,6 +2811,15 @@
     }
 
     .body-main {
+      --h1_font-size: 60px;
+      --h1_font-weight: 400;
+      --h1_line-height: 1.12;
+      --p_font-size: 1.4rem;
+      --p_font-weight: 500;
+      --p_line-height: 1.45;
+
+      text-align: center;
+
       grid-row: body-main-start / content-footerSpacer-start;
       display: flex;
       flex-direction: column;
@@ -2818,14 +2833,12 @@
         max-width: 100%;
       }
 
-      * > :first-child {
+      > * > :first-child {
         margin-top: 0;
-        padding-top: 0;
       }
 
-      * > :last-child {
+      > * > :last-child {
         margin-bottom: 0;
-        padding-bottom: 0;
       }
     }
 
@@ -2866,6 +2879,140 @@
 
       div {
         width: 100%;
+      }
+    }
+
+    .en__field--radio.en__field--survey {
+      --radio_box-shadow_selected: none;
+      --radio_box-shadow_hover: none;
+      --radio_border-radius: 0;
+
+      input[type=radio]:checked+label:before {
+        background: #1a1a1a url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10.822' height='8.414' viewBox='0 0 10.822 8.414'><path d='M6,8,0,2,2.438,0' transform='translate(1.407 7.414) rotate(-90)' fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-miterlimit='10' stroke-width='2'/></svg>") center no-repeat;
+      }
+
+      > label {
+        display: flex;
+        font-size: 26px;
+        font-weight: 600;
+        line-height: 1.375;
+        text-align: left;
+
+        @media screen and (max-width: 1024px) {
+          font-size: 20px;
+        }
+      }
+
+      .en__field__item {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      .en__field__element--radio {
+        width: 100%;
+        margin-top: 20px;
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      .en__field__label--item {
+        align-items: center;
+        background-color: #fff;
+        border: 1px solid #cdcdcd;
+        display: flex;
+        padding: 1rem 1.25rem;
+        transition: all .2s ease-in-out;
+        text-align: left;
+        outline: none;
+      }
+    }
+
+    .en__submit {
+      a.button {
+        padding: 1.3rem 2.8rem;
+      }
+    }
+
+    .en__component--copyblock + .en__component--svblock {
+      margin-top: 4rem;
+    }
+
+    @media screen and (min-width: 1024px) {
+      &:not(#en__pagebuilder) {
+        .body-banner {
+          display: none;
+        }
+      }
+    }
+
+    @media screen and (max-width: 1200px) {
+      --engrid__body-main_padding: 1.25rem 3rem;
+    }
+
+    @media screen and (max-width: 1024px) {
+      --engrid__body-main_padding: 2.5rem 1rem;
+
+      .body-banner {
+        --media-attribution__margin: 0;
+        display: flex;
+        align-items: flex-end;
+
+        // Making a max-height banner work with how the media attribution works...
+        .en__component {
+          height: 300px;
+          width: 100%;
+          background-image: var(--banner-image-src);
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+        }
+
+        .media-with-attribution {
+          height: 300px;
+          width: 100%;
+        }
+
+        img {
+          display: none;
+        }
+
+
+        [data-tippy-root] {
+          max-width: 100%;
+        }
+
+        .media-with-attribution [data-tippy-root] .tippy-box {
+          border-radius: 0;
+          padding: 20px 58px 20px 20px;
+        }
+
+        .tippy-content {
+          padding: 0;
+        }
+      }
+
+      .body-main {
+        --h1_font-size: 36px;
+        --p_font-size: 18px;
+
+        grid-row: body-main;
+        padding-bottom: 2.5rem;
+      }
+
+      &:not(#en__pagebuilder) {
+        .page-backgroundImage {
+          display: none;
+        }
+      }
+
+      .content-header {
+        border-bottom: 1px solid #cdcdcd;
+      }
+
+      .main-page-footer {
+        border-top: 1px solid #cdcdcd;
+        padding-left: 16px;
+        padding-right: 16px;
       }
     }
   }

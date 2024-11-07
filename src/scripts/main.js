@@ -579,4 +579,13 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       }
     }
   }
+
+  const bannerImageSrc = document.querySelector(".body-banner img")?.src;
+  const bodyBanner = document.querySelector(".body-banner");
+  if (bodyBanner && bannerImageSrc) {
+    bodyBanner.style.setProperty(
+      "--banner-image-src",
+      `url(${bannerImageSrc})`
+    );
+  }
 };
