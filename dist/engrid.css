@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 6, 2024 @ 11:20:49 ET
+ *  Date: Thursday, November 7, 2024 @ 07:27:07 ET
  *  By: michael
  *  ENGrid styles: v0.19.9
  *  ENGrid scripts: v0.19.11
@@ -6468,10 +6468,10 @@ body:not(#en__pagebuilder)[data-engrid-no-body-bannerOverlay] .en__component--ad
 }
 @media screen and (min-width:1024px){
   [data-engrid-layout=rightright1col] #engrid>.en__component--advrow,[data-engrid-layout=rightright1col] form>.en__component--advrow{
-    grid-template-columns:[pc-start lpc-start] minmax(0, 1fr) [lpc-end cc-start lcc-start] minmax(0, 0) [lcc-end bc-start lbc-start] minmax(445px, 445px) [lbc-end rbc-start] minmax(445px, 445px) [rbc-end bc-end rcc-start] minmax(0, 0) [rcc-end cc-end rpc-start] minmax(0, 0) [rpc-end pc-end];
+    grid-template-columns:[pc-start lpc-start] minmax(0, 1fr) [lpc-end cc-start lcc-start] minmax(0, 0) [lcc-end bc-start lbc-start] minmax(25%, 25%) [lbc-end rbc-start] minmax(25%, 25%) [rbc-end bc-end rcc-start] minmax(0, 0) [rcc-end cc-end rpc-start] minmax(0, 0) [rpc-end pc-end];
   }
   [data-engrid-layout=rightright1col] form>.en__component--advrow>*{
-    grid-template-columns:[pc-start lpc-start] minmax(0, 1fr) [lpc-end cc-start lcc-start] minmax(0, 0) [lcc-end bc-start lbc-start] minmax(0, 445px) [lbc-end rbc-start] minmax(0, 445px) [rbc-end bc-end rcc-start] minmax(0, 0) [rcc-end cc-end rpc-start] minmax(0, 0) [rpc-end pc-end];
+    grid-template-columns:[pc-start lpc-start] minmax(0, 1fr) [lpc-end cc-start lcc-start] minmax(0, 0) [lcc-end bc-start lbc-start] minmax(0, 25%) [lbc-end rbc-start] minmax(0, 25%) [rbc-end bc-end rcc-start] minmax(0, 0) [rcc-end cc-end rpc-start] minmax(0, 0) [rpc-end pc-end];
   }
   [data-engrid-layout=rightright1col]:not(#en__pagebuilder) .page-backgroundImage{
     grid-row:page-start /  content-footerSpacer-end;
@@ -8797,7 +8797,7 @@ body[data-engrid-debug]:before{
     padding:0 15px;
   }
 }
-[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .body-banner .media-with-attribution figattribution,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .media-with-attribution:has(>.img-with-attribution) figattribution{
+[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .body-banner .media-with-attribution figattribution,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .media-with-attribution:has(>.img-with-attribution) figattribution,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .page-backgroundImage .media-with-attribution figattribution{
   --media-attribution__background-color:#fff;
   --media-attribution__color:#000;
   bottom:20px;
@@ -8805,13 +8805,13 @@ body[data-engrid-debug]:before{
   right:20px;
   z-index:9999999;
 }
-[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .body-banner .media-with-attribution [data-tippy-root],[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .media-with-attribution:has(>.img-with-attribution) [data-tippy-root]{
+[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .body-banner .media-with-attribution [data-tippy-root],[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .media-with-attribution:has(>.img-with-attribution) [data-tippy-root],[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .page-backgroundImage .media-with-attribution [data-tippy-root]{
   inset:0 !important;
   bottom:0 !important;
   transform:none !important;
   width:100% !important;
 }
-[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .body-banner .media-with-attribution [data-tippy-root] .tippy-box,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .media-with-attribution:has(>.img-with-attribution) [data-tippy-root] .tippy-box{
+[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .body-banner .media-with-attribution [data-tippy-root] .tippy-box,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .media-with-attribution:has(>.img-with-attribution) [data-tippy-root] .tippy-box,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .page-backgroundImage .media-with-attribution [data-tippy-root] .tippy-box{
   background-color:#000000bf;
   bottom:0;
   font-size:14px;
@@ -8820,7 +8820,7 @@ body[data-engrid-debug]:before{
   position:absolute;
   width:100%;
 }
-[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .body-banner .media-with-attribution [data-tippy-root] .tippy-arrow,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .media-with-attribution:has(>.img-with-attribution) [data-tippy-root] .tippy-arrow{
+[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .body-banner .media-with-attribution [data-tippy-root] .tippy-arrow,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .media-with-attribution:has(>.img-with-attribution) [data-tippy-root] .tippy-arrow,[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .page-backgroundImage .media-with-attribution [data-tippy-root] .tippy-arrow{
   display:none;
 }
 [data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) #en__digitalWallet{
@@ -9764,6 +9764,56 @@ body[data-engrid-debug]:before{
   [data-engrid-theme=tnc][data-engrid-layout=centercenter2col] .body-main h4{
     font-size:18px;
   }
+}
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey]{
+  --engrid__body-main_background-color:#f8f8f8;
+  --engrid__body-main_padding:20px 18%;
+}
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .body-bottom,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .body-header,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .body-title,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .body-top,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .content-preFooter{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .body-main{
+  align-items:center;
+  display:flex;
+  flex-direction:column;
+  grid-row:body-main-start /  content-footerSpacer-start;
+  justify-content:center;
+  padding-bottom:0;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .body-main{
+    grid-column:cc;
+    justify-content:flex-start;
+    max-width:100%;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage{
+  grid-column:pc /  lpc;
+  grid-row:body-main-start /  content-footerSpacer-start !important;
+}
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage:before{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage img{
+  display:block !important;
+}
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage figure.media-with-attribution,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage:not(:has(figure)){
+  background-image:none;
+  height:auto;
+  position:relative;
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage figure.media-with-attribution figattribution,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage:not(:has(figure)) figattribution{
+  left:auto;
+}
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .content-footer{
+  padding-top:0;
+}
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .main-page-footer{
+  border-top:none;
+}
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .main-page-footer div{
+  width:100%;
 }
 [data-engrid-theme=tnc] .engrid--ihmo-wrapper{
   border:1px solid #cdcdcd;
