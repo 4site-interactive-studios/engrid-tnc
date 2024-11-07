@@ -75,7 +75,7 @@
     text-decoration-color: #0079314d;
   }
 
-  // Background image positioning for leftleft1col
+  // Background image positioning for leftleft1col and rightright1col layouts
   @media screen and (min-width: 1024px) {
     &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
       .content-footerSpacer {
@@ -2810,37 +2810,50 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding-bottom: initial;
+      padding-bottom: 20px;
 
       @media screen and (max-width: 992px) {
         justify-content: flex-start;
         grid-column: cc;
         max-width: 100%;
       }
-    }
 
-    .page-backgroundImage {
-      grid-row: body-main-start / content-footerSpacer-start!important;
-      grid-column: pc / lpc;
-
-      &:before {
-        display: none;
+      * > :first-child {
+        margin-top: 0;
+        padding-top: 0;
       }
 
-      img {
-        display: block!important;
+      * > :last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
       }
     }
 
-    .page-backgroundImage:not(:has(figure)),
-    .page-backgroundImage figure.media-with-attribution {
-      background-image: none;
-      position: relative;
-      height: auto;
-      width: 100%;
+    // Background image styles on live page
+    &:not(#en__pagebuilder) {
+      .page-backgroundImage {
+        grid-row: body-main-start / content-footerSpacer-start!important;
+        grid-column: pc / lpc;
 
-      figattribution {
-        left: auto;
+        &:before {
+          display: none;
+        }
+
+        img {
+          display: block!important;
+        }
+      }
+
+      .page-backgroundImage:not(:has(figure)),
+      .page-backgroundImage figure.media-with-attribution {
+        background-image: none;
+        position: relative;
+        height: auto;
+        width: 100%;
+
+        figattribution {
+          left: auto;
+        }
       }
     }
 

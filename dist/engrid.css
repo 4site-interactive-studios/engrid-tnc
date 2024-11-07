@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, November 7, 2024 @ 07:27:07 ET
+ *  Date: Thursday, November 7, 2024 @ 07:39:19 ET
  *  By: michael
  *  ENGrid styles: v0.19.9
  *  ENGrid scripts: v0.19.11
@@ -9778,7 +9778,7 @@ body[data-engrid-debug]:before{
   flex-direction:column;
   grid-row:body-main-start /  content-footerSpacer-start;
   justify-content:center;
-  padding-bottom:0;
+  padding-bottom:20px;
 }
 @media screen and (max-width:992px){
   [data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .body-main{
@@ -9787,23 +9787,31 @@ body[data-engrid-debug]:before{
     max-width:100%;
   }
 }
-[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage{
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .body-main *>:first-child{
+  margin-top:0;
+  padding-top:0;
+}
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .body-main *>:last-child{
+  margin-bottom:0;
+  padding-bottom:0;
+}
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey]:not(#en__pagebuilder) .page-backgroundImage{
   grid-column:pc /  lpc;
   grid-row:body-main-start /  content-footerSpacer-start !important;
 }
-[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage:before{
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey]:not(#en__pagebuilder) .page-backgroundImage:before{
   display:none;
 }
-[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage img{
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey]:not(#en__pagebuilder) .page-backgroundImage img{
   display:block !important;
 }
-[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage figure.media-with-attribution,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage:not(:has(figure)){
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey]:not(#en__pagebuilder) .page-backgroundImage figure.media-with-attribution,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey]:not(#en__pagebuilder) .page-backgroundImage:not(:has(figure)){
   background-image:none;
   height:auto;
   position:relative;
   width:100%;
 }
-[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage figure.media-with-attribution figattribution,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .page-backgroundImage:not(:has(figure)) figattribution{
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey]:not(#en__pagebuilder) .page-backgroundImage figure.media-with-attribution figattribution,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey]:not(#en__pagebuilder) .page-backgroundImage:not(:has(figure)) figattribution{
   left:auto;
 }
 [data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .content-footer{
