@@ -25,6 +25,7 @@ import { Tooltip } from "./scripts/tooltip";
 import { IHMO } from "./scripts/ihmo";
 import { WidgetProgressBar } from "./scripts/widget-progress-bar";
 import { GdcpManager } from "./scripts/gdcp/gdcp-manager";
+import { AddDAFBanner } from "./scripts/add-daf-banner";
 
 declare global {
   interface Window {
@@ -113,6 +114,7 @@ const options: Options = {
     trackProcessingErrors(App);
     trackUserInteractions();
     new WidgetProgressBar();
+    new AddDAFBanner();
   },
   onSubmit: () => trackFormSubmit(App, DonationAmount),
   onResize: () => console.log("Starter Theme Window Resized"),
