@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, November 7, 2024 @ 13:45:57 ET
+ *  Date: Monday, November 11, 2024 @ 09:42:11 ET
  *  By: michael
  *  ENGrid styles: v0.19.9
  *  ENGrid scripts: v0.19.11
@@ -23617,8 +23617,9 @@ class GdcpManager {
       const postalMailGdcpFieldName = this.gdcpFields.find(field => field.channel === "postal_mail")?.gdcpFieldName;
       if (postalMailGdcpFieldName) {
         const postalMailField = this.gdcpFieldManager.getField(postalMailGdcpFieldName);
-        if (postalMailField && postalMailField.checked && postalMailField.rule !== "hidden_no_qcb") {
-          sessionStorage.setItem("gdcp-postal-mail-create-qcb", "Y");
+        if (postalMailField && postalMailField.rule !== "hidden_no_qcb") {
+          const value = postalMailField.checked ? "Y" : "N";
+          sessionStorage.setItem("gdcp-postal-mail-create-qcb", value);
         }
       }
     });
@@ -23659,9 +23660,9 @@ class GdcpManager {
    * Send QCB for postal mail if we have the session data to do that
    */
   handlePostalMailQcb() {
-    const shouldCreateQcb = sessionStorage.getItem("gdcp-postal-mail-create-qcb") === "Y" && !this.submissionFailed;
+    const shouldCreateQcb = sessionStorage.getItem("gdcp-postal-mail-create-qcb") && !this.submissionFailed;
     if (shouldCreateQcb) {
-      const iframe = this.createChainedIframeForm(this.pages.postal_mail_qcb, true);
+      const iframe = this.createChainedIframeForm(`${this.pages.postal_mail_qcb}?supporter.questions.1942219=${sessionStorage.getItem("gdcp-postal-mail-create-qcb")}`, true);
       sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
       this.logger.log(`Creating QCB for postal mail using form: ${iframe.getAttribute("src")}`);
     }

@@ -543,12 +543,9 @@ export class GdcpManager {
         const postalMailField = this.gdcpFieldManager.getField(
           postalMailGdcpFieldName
         );
-        if (
-          postalMailField &&
-          postalMailField.checked &&
-          postalMailField.rule !== "hidden_no_qcb"
-        ) {
-          sessionStorage.setItem("gdcp-postal-mail-create-qcb", "Y");
+        if (postalMailField && postalMailField.rule !== "hidden_no_qcb") {
+          const value = postalMailField.checked ? "Y" : "N";
+          sessionStorage.setItem("gdcp-postal-mail-create-qcb", value);
         }
       }
     });
@@ -600,12 +597,16 @@ export class GdcpManager {
    */
   private handlePostalMailQcb() {
     const shouldCreateQcb =
-      sessionStorage.getItem("gdcp-postal-mail-create-qcb") === "Y" &&
+      sessionStorage.getItem("gdcp-postal-mail-create-qcb") &&
       !this.submissionFailed;
 
     if (shouldCreateQcb) {
       const iframe = this.createChainedIframeForm(
-        this.pages.postal_mail_qcb,
+        `${
+          this.pages.postal_mail_qcb
+        }?supporter.questions.1942219=${sessionStorage.getItem(
+          "gdcp-postal-mail-create-qcb"
+        )}`,
         true
       );
       sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
