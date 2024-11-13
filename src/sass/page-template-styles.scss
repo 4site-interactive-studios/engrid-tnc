@@ -514,6 +514,20 @@
     }
   }
 
+  .button-green {
+    background-color: var(--color-green);
+    color: var(--color-white);
+    border-color: var(--color-green);
+    width: auto;
+    display: inline-block;
+    padding: 16px 30px;
+    min-width: 130px;
+
+    &:hover {
+      background-color: #000000;
+    }
+  }
+
   ///////////////////////////////////////////////////
   /*
   // End of global styles
