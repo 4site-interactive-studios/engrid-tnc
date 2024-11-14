@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 13, 2024 @ 12:16:57 ET
+ *  Date: Thursday, November 14, 2024 @ 10:18:00 ET
  *  By: michael
- *  ENGrid styles: v0.19.9
- *  ENGrid scripts: v0.19.11
+ *  ENGrid styles: v0.19.16
+ *  ENGrid scripts: v0.19.19
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -1808,24 +1808,48 @@ h2{
 }
 
 h3{
+  color:var(--h3_color);
+  font-family:var(--h3_font-family);
   font-size:var(--h3_font-size);
+  font-weight:var(--h3_font-weight);
+  line-height:var(--h3_line-height);
   margin-bottom:calc(1rem*var(--scale-down_40pct));
   margin-top:calc(2rem*var(--scale-down_40pct));
   text-transform:var(--h3_text-transform);
 }
 
-h3,h4,h5,h6{
-  color:var(--h3_color);
-  font-family:var(--h3_font-family);
-  font-weight:var(--h3_font-weight);
-  line-height:var(--h3_line-height);
+h4{
+  color:var(--h4_color);
+  font-family:var(--h4_font-family);
+  font-size:var(--h4_font-size);
+  font-weight:var(--h4_font-weight);
+  line-height:var(--h4_line-height);
+  text-transform:var(--h4_text-transform);
 }
 
-h4,h5,h6{
-  font-size:calc(var(--h3_font-size)*var(--scale-down_20pct));
-  margin-bottom:calc(1rem*var(--scale-down_80pct));
-  margin-top:calc(2rem*var(--scale-down_80pct));
-  text-transform:var(--h4_text-transform);
+h4,h5{
+  margin-bottom:calc(1rem*var(--scale-down_60pct));
+  margin-top:calc(2rem*var(--scale-down_60pct));
+}
+
+h5{
+  color:var(--h5_color);
+  font-family:var(--h5_font-family);
+  font-size:var(--h5_font-size);
+  font-weight:var(--h5_font-weight);
+  line-height:var(--h5_line-height);
+  text-transform:var(--h5_text-transform);
+}
+
+h6{
+  color:var(--h6_color);
+  font-family:var(--h6_font-family);
+  font-size:var(--h6_font-size);
+  font-weight:var(--h6_font-weight);
+  line-height:var(--h6_line-height);
+  margin-bottom:calc(1rem*var(--scale-down_60pct));
+  margin-top:calc(2rem*var(--scale-down_60pct));
+  text-transform:var(--h6_text-transform);
 }
 
 p{
