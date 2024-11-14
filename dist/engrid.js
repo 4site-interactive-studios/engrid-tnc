@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, November 14, 2024 @ 12:59:46 ET
+ *  Date: Thursday, November 14, 2024 @ 13:09:23 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -23730,7 +23730,7 @@ class GdcpManager {
         const iframe = this.createChainedIframeForm(this.pages.double_opt_in_email_trigger, true);
         sessionStorage.removeItem("gdcp-email-double-opt-in");
         this.logger.log(`Sending double opt in email using form: ${iframe.getAttribute("src")}`);
-      }, 2000);
+      }, 1000);
     }
   }
 
@@ -23749,7 +23749,7 @@ class GdcpManager {
         const iframe = this.createChainedIframeForm(url, true);
         sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
         this.logger.log(`Creating QCB for postal mail using form: ${iframe.getAttribute("src")}`);
-      }, 4000);
+      }, 2000);
     }
   }
 

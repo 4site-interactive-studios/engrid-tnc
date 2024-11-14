@@ -593,7 +593,7 @@ export class GdcpManager {
             "src"
           )}`
         );
-      }, 2000);
+      }, 1000);
     }
   }
 
@@ -619,7 +619,7 @@ export class GdcpManager {
             "src"
           )}`
         );
-      }, 4000);
+      }, 2000);
     }
   }
 
