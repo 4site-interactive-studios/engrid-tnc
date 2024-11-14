@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, November 14, 2024 @ 10:18:00 ET
+ *  Date: Thursday, November 14, 2024 @ 12:59:46 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -23725,9 +23725,12 @@ class GdcpManager {
   handleDoubleOptInEmail() {
     const shouldSendDoubleOptInEmail = sessionStorage.getItem("gdcp-email-double-opt-in") === "Y" && !this.submissionFailed;
     if (shouldSendDoubleOptInEmail) {
-      const iframe = this.createChainedIframeForm(this.pages.double_opt_in_email_trigger, true);
-      sessionStorage.removeItem("gdcp-email-double-opt-in");
-      this.logger.log(`Sending double opt in email using form: ${iframe.getAttribute("src")}`);
+      // Set timeout because EN does not work properly if multiple forms are submitted in quick succession
+      setTimeout(() => {
+        const iframe = this.createChainedIframeForm(this.pages.double_opt_in_email_trigger, true);
+        sessionStorage.removeItem("gdcp-email-double-opt-in");
+        this.logger.log(`Sending double opt in email using form: ${iframe.getAttribute("src")}`);
+      }, 2000);
     }
   }
 
@@ -23737,9 +23740,16 @@ class GdcpManager {
   handlePostalMailQcb() {
     const shouldCreateQcb = sessionStorage.getItem("gdcp-postal-mail-create-qcb") && !this.submissionFailed;
     if (shouldCreateQcb) {
-      const iframe = this.createChainedIframeForm(`${this.pages.postal_mail_qcb}?supporter.questions.1942219=${sessionStorage.getItem("gdcp-postal-mail-create-qcb")}`, true);
-      sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
-      this.logger.log(`Creating QCB for postal mail using form: ${iframe.getAttribute("src")}`);
+      let url = this.pages.postal_mail_qcb;
+      if (sessionStorage.getItem("gdcp-postal-mail-create-qcb") === "N") {
+        url += "?supporter.questions.1942219=N";
+      }
+      // Set timeout because EN does not work properly if multiple forms are submitted in quick succession
+      setTimeout(() => {
+        const iframe = this.createChainedIframeForm(url, true);
+        sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
+        this.logger.log(`Creating QCB for postal mail using form: ${iframe.getAttribute("src")}`);
+      }, 4000);
     }
   }
 

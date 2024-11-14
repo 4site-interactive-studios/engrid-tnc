@@ -581,14 +581,19 @@ export class GdcpManager {
       !this.submissionFailed;
 
     if (shouldSendDoubleOptInEmail) {
-      const iframe = this.createChainedIframeForm(
-        this.pages.double_opt_in_email_trigger,
-        true
-      );
-      sessionStorage.removeItem("gdcp-email-double-opt-in");
-      this.logger.log(
-        `Sending double opt in email using form: ${iframe.getAttribute("src")}`
-      );
+      // Set timeout because EN does not work properly if multiple forms are submitted in quick succession
+      setTimeout(() => {
+        const iframe = this.createChainedIframeForm(
+          this.pages.double_opt_in_email_trigger,
+          true
+        );
+        sessionStorage.removeItem("gdcp-email-double-opt-in");
+        this.logger.log(
+          `Sending double opt in email using form: ${iframe.getAttribute(
+            "src"
+          )}`
+        );
+      }, 2000);
     }
   }
 
@@ -601,18 +606,20 @@ export class GdcpManager {
       !this.submissionFailed;
 
     if (shouldCreateQcb) {
-      const iframe = this.createChainedIframeForm(
-        `${
-          this.pages.postal_mail_qcb
-        }?supporter.questions.1942219=${sessionStorage.getItem(
-          "gdcp-postal-mail-create-qcb"
-        )}`,
-        true
-      );
-      sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
-      this.logger.log(
-        `Creating QCB for postal mail using form: ${iframe.getAttribute("src")}`
-      );
+      let url = this.pages.postal_mail_qcb;
+      if (sessionStorage.getItem("gdcp-postal-mail-create-qcb") === "N") {
+        url += "?supporter.questions.1942219=N";
+      }
+      // Set timeout because EN does not work properly if multiple forms are submitted in quick succession
+      setTimeout(() => {
+        const iframe = this.createChainedIframeForm(url, true);
+        sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
+        this.logger.log(
+          `Creating QCB for postal mail using form: ${iframe.getAttribute(
+            "src"
+          )}`
+        );
+      }, 4000);
     }
   }
 
