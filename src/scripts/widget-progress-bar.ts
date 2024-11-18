@@ -66,9 +66,14 @@ export class WidgetProgressBar {
           .querySelector(".raised > div")
           ?.textContent?.replace(/\,/g, "") || "0"
       );
+      const newGoal = Math.ceil(supporters * this.increase);
+      // If new goal is NaN, don't alter progress bar and bail here
+      if (isNaN(newGoal)) {
+        this.logger.log("Error: New goal is NaN, not altering progress bar");
+        return;
+      }
       // Reset fill width so that animation runs once new width is set
       fill.style.width = "0";
-      const newGoal = Math.ceil(supporters * this.increase);
       const remainingElement = widget.querySelector(
         ".remaining > div:first-child span"
       ) as HTMLDivElement;
@@ -81,6 +86,6 @@ export class WidgetProgressBar {
   }
 
   private shouldRun(): boolean {
-    return !!this.widget;
+    return ENGrid.getPageType() !== "DONATION" && !!this.widget;
   }
 }

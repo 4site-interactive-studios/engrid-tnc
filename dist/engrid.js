@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, November 14, 2024 @ 13:09:23 ET
+ *  Date: Monday, November 18, 2024 @ 11:52:12 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -22744,9 +22744,14 @@ class WidgetProgressBar {
     if (percentage >= this.threshold) {
       this.logger.log("Incrementing goal");
       const supporters = parseInt(widget.querySelector(".raised > div")?.textContent?.replace(/\,/g, "") || "0");
+      const newGoal = Math.ceil(supporters * this.increase);
+      // If new goal is NaN, don't alter progress bar and bail here
+      if (isNaN(newGoal)) {
+        this.logger.log("Error: New goal is NaN, not altering progress bar");
+        return;
+      }
       // Reset fill width so that animation runs once new width is set
       fill.style.width = "0";
-      const newGoal = Math.ceil(supporters * this.increase);
       const remainingElement = widget.querySelector(".remaining > div:first-child span");
       if (remainingElement) {
         remainingElement.textContent = (newGoal - supporters).toLocaleString();
@@ -22756,7 +22761,7 @@ class WidgetProgressBar {
     }
   }
   shouldRun() {
-    return !!this.widget;
+    return engrid_ENGrid.getPageType() !== "DONATION" && !!this.widget;
   }
 }
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/config/gdcp-fields.ts
