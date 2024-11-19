@@ -619,7 +619,7 @@ export class GdcpManager {
             "src"
           )}`
         );
-      }, 2000);
+      }, 3500);
     }
   }
 

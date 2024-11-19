@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 19, 2024 @ 05:30:33 ET
+ *  Date: Tuesday, November 19, 2024 @ 05:35:12 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -23752,7 +23752,7 @@ class GdcpManager {
         const iframe = this.createChainedIframeForm(url, true);
         sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
         this.logger.log(`Creating QCB for postal mail using form: ${iframe.getAttribute("src")}`);
-      }, 2000);
+      }, 3500);
     }
   }
 
