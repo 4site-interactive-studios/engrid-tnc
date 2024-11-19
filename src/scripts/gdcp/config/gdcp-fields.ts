@@ -18,7 +18,6 @@ export const gdcpFields: GdcpField[] = [
     channel: "mobile_phone",
     dataFieldName: "supporter.phoneNumber2",
     optInFieldNames: [
-      "supporter.questions.1107654", // Permission to Contact Me
       "supporter.questions.848527", // Mobile Text Opt In
       "supporter.questions.848528", // Mobile Call Opt In
       "supporter.questions.1952175", // Interested in Mobile Text

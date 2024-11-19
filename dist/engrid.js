@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, November 18, 2024 @ 11:52:12 ET
+ *  Date: Tuesday, November 19, 2024 @ 05:30:33 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -22784,9 +22784,7 @@ const gdcpFields = [{
 }, {
   channel: "mobile_phone",
   dataFieldName: "supporter.phoneNumber2",
-  optInFieldNames: ["supporter.questions.1107654",
-  // Permission to Contact Me
-  "supporter.questions.848527",
+  optInFieldNames: ["supporter.questions.848527",
   // Mobile Text Opt In
   "supporter.questions.848528",
   // Mobile Call Opt In
