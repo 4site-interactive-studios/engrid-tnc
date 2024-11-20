@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 19, 2024 @ 05:35:12 ET
+ *  Date: Wednesday, November 20, 2024 @ 06:40:00 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -23044,7 +23044,7 @@ const geographicalOptInRules = [{
   locations: ["CA"],
   rules: [{
     channel: "email",
-    rule: "double_opt_in",
+    rule: "checkbox",
     optionalRule: "hidden"
   }, {
     channel: "mobile_phone",

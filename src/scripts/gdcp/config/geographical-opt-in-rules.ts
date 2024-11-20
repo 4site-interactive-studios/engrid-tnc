@@ -56,7 +56,7 @@ export const geographicalOptInRules: GeographicalRule[] = [
     rules: [
       {
         channel: "email",
-        rule: "double_opt_in",
+        rule: "checkbox",
         optionalRule: "hidden",
       },
       {
