@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 20, 2024 @ 06:40:00 ET
+ *  Date: Monday, November 25, 2024 @ 07:21:01 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -21953,16 +21953,6 @@ function trackEvent(eventName, eventData) {
   }
 }
 function trackFormSubmit(App, DonationAmount) {
-  //Other Data Capture submits
-  //Need to use pageJson directly here because App.getPageType() returns "SURVEY" for otherdatacapture pages and surveys
-  if (pageJson.pageType === "otherdatacapture") {
-    trackEvent("frm_emt_submit", {
-      form_type: "otherdatacapture",
-      form_name: utag_data.page_name.slice(0, -2),
-      email_signup_location: "otherdatacapture"
-    });
-  }
-
   //Donation page submits
   if (App.getPageType() === "DONATION" && App.getPageNumber() === 1) {
     const donationData = {};
@@ -22010,18 +22000,12 @@ function trackFormSubmit(App, DonationAmount) {
     sessionStorage.setItem("mobilePhoneData", JSON.stringify(mobilePhoneData));
   }
 
-  //Track ETT and petition submits
-  if (["ADVOCACY", "EMAILTOTARGET"].includes(App.getPageType())) {
-    let utagData = {};
-    let eventName = "";
-    /** @type {HTMLInputElement} */
-    const phoneOptIn = App.getField("supporter.questions.1107654");
-    if (phoneOptIn && phoneOptIn.checked) {
-      eventName = "frm_emt_txt_submit";
-      utagData.text_signup_location = pageJson.pageType;
-    } else {
-      eventName = "frm_emt_submit";
+  //Track ETT, petition, survey and data capture submits
+  if (["ADVOCACY", "EMAILTOTARGET", "SURVEY"].includes(App.getPageType())) {
+    if (App.getFieldValue("supporter.emailAddress") === "") {
+      return;
     }
+    let utagData = {};
     utagData.form_type = pageJson.pageType;
     utagData.form_name = utag_data.page_name.slice(0, -2);
     utagData.action_id = utag_data.form_name;
@@ -22038,8 +22022,34 @@ function trackFormSubmit(App, DonationAmount) {
     utagData.customer_postal_code = App.getFieldValue("supporter.postcode");
     utagData.customer_country = App.getFieldValue("supporter.country");
     utagData.const_phone = App.getFieldValue("supporter.phoneNumber2");
+    const eventName = getSubmitEventName(App);
+    if (eventName === "frm_emt_txt_submit" || eventName === "frm_emt_emo_txt_submit") {
+      utagData.text_signup_location = pageJson.pageType;
+    }
     trackEvent(eventName, utagData);
   }
+}
+function getSubmitEventName(App) {
+  const isOptedInToPhone = ["supporter.questions.848528", "supporter.questions.1952175", "supporter.questions.848527"].some(field => {
+    /** @type {HTMLInputElement} */
+    const el = App.getField(field);
+    return el && el.checked && App.getFieldValue("supporter.phoneNumber2") !== "";
+  });
+  const isOptedInToEmail = ["supporter.questions.848518", "supporter.questions.848520", "supporter.questions.848521", "supporter.questions.848522", "supporter.questions.848523"].some(field => {
+    /** @type {HTMLInputElement} */
+    const el = App.getField(field);
+    return el && el.checked;
+  });
+  if (isOptedInToEmail && isOptedInToPhone) {
+    return "frm_emt_emo_txt_submit";
+  }
+  if (isOptedInToPhone) {
+    return "frm_emt_txt_submit";
+  }
+  if (isOptedInToEmail) {
+    return "frm_emt_emo_submit";
+  }
+  return "frm_emt_submit";
 }
 function trackFormErrors() {
   let invalidFields = "";
