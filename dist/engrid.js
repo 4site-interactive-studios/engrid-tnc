@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 26, 2024 @ 10:28:59 ET
+ *  Date: Tuesday, December 3, 2024 @ 12:34:35 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -20312,6 +20312,137 @@ class ENValidators {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/modal.js
+
+class Modal {
+    constructor(options) {
+        this.modal = null;
+        this.defaultOptions = {
+            onClickOutside: "close",
+            addCloseButton: false,
+            closeButtonLabel: "Okay!",
+        };
+        this.focusTrapHandler = (e) => {
+            const modalElement = this.modal;
+            const focusableElements = [
+                ...modalElement.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'),
+            ];
+            const firstFocusable = focusableElements[0];
+            const lastFocusable = focusableElements[focusableElements.length - 1];
+            const isTabPressed = e.key === "Tab";
+            if (!isTabPressed) {
+                return;
+            }
+            if (e.shiftKey) {
+                if (document.activeElement === firstFocusable) {
+                    e.preventDefault();
+                    lastFocusable.focus();
+                }
+            }
+            else {
+                if (document.activeElement === lastFocusable) {
+                    e.preventDefault();
+                    firstFocusable.focus();
+                }
+            }
+        };
+        this.options = Object.assign(Object.assign({}, this.defaultOptions), options);
+        this.modalContent = this.getModalContent();
+        this.createModal();
+    }
+    createModal() {
+        var _a;
+        this.modal = document.createElement("div");
+        this.modal.classList.add("engrid-modal", "modal--hidden");
+        this.modal.setAttribute("aria-hidden", "true");
+        this.modal.setAttribute("role", "dialog");
+        this.modal.setAttribute("aria-modal", "true");
+        this.modal.setAttribute("tabindex", "-1");
+        this.modal.innerHTML = `
+      <div class="engrid-modal__overlay" tabindex="-1">
+        <div class="engrid-modal__container" tabindex="0">
+          <div class="engrid-modal__close" role="button" tabindex="0" aria-label="Close">
+            X
+          </div>
+          <div class="engrid-modal__body"></div>
+        </div>
+      </div>
+    `;
+        (_a = document.getElementById("engrid")) === null || _a === void 0 ? void 0 : _a.appendChild(this.modal);
+        const modalBody = this.modal.querySelector(".engrid-modal__body");
+        if (this.modalContent instanceof NodeList) {
+            this.modalContent.forEach((content) => {
+                modalBody === null || modalBody === void 0 ? void 0 : modalBody.appendChild(content);
+            });
+        }
+        else if (typeof this.modalContent === "string") {
+            modalBody === null || modalBody === void 0 ? void 0 : modalBody.insertAdjacentHTML("beforeend", this.modalContent);
+        }
+        else {
+            modalBody === null || modalBody === void 0 ? void 0 : modalBody.appendChild(this.modalContent);
+        }
+        if (this.options.addCloseButton) {
+            const button = document.createElement("button");
+            button.classList.add("engrid-modal__button");
+            button.textContent = this.options.closeButtonLabel;
+            button.addEventListener("click", () => {
+                this.close();
+            });
+            modalBody === null || modalBody === void 0 ? void 0 : modalBody.appendChild(button);
+        }
+        this.addEventListeners();
+    }
+    addEventListeners() {
+        var _a, _b, _c, _d, _e;
+        // Close event on top X
+        (_b = (_a = this.modal) === null || _a === void 0 ? void 0 : _a.querySelector(".engrid-modal__close")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", () => {
+            this.close();
+        });
+        // Bounce scale when clicking outside of modal
+        (_d = (_c = this.modal) === null || _c === void 0 ? void 0 : _c.querySelector(".engrid-modal__overlay")) === null || _d === void 0 ? void 0 : _d.addEventListener("click", (event) => {
+            if (event.target === event.currentTarget) {
+                if (this.options.onClickOutside === "close") {
+                    this.close();
+                }
+                else if (this.options.onClickOutside === "bounce") {
+                    const modal = document.querySelector(".engrid-modal");
+                    if (modal) {
+                        modal.classList.remove("engrid-modal--scale");
+                        void modal.clientWidth;
+                        modal.classList.add("engrid-modal--scale");
+                    }
+                }
+            }
+        });
+        // Close on "modal__close" click
+        const closeEls = (_e = this.modal) === null || _e === void 0 ? void 0 : _e.querySelectorAll(".modal__close");
+        closeEls === null || closeEls === void 0 ? void 0 : closeEls.forEach((el) => {
+            el.addEventListener("click", () => {
+                this.close();
+            });
+        });
+    }
+    open() {
+        var _a, _b, _c, _d;
+        engrid_ENGrid.setBodyData("has-lightbox", "true");
+        (_a = this.modal) === null || _a === void 0 ? void 0 : _a.classList.remove("modal--hidden");
+        (_b = this.modal) === null || _b === void 0 ? void 0 : _b.removeAttribute("aria-hidden");
+        const container = (_c = this.modal) === null || _c === void 0 ? void 0 : _c.querySelector(".engrid-modal__container");
+        container === null || container === void 0 ? void 0 : container.focus({ preventScroll: true });
+        (_d = this.modal) === null || _d === void 0 ? void 0 : _d.addEventListener("keydown", this.focusTrapHandler);
+    }
+    close() {
+        var _a, _b, _c;
+        engrid_ENGrid.setBodyData("has-lightbox", false);
+        (_a = this.modal) === null || _a === void 0 ? void 0 : _a.classList.add("modal--hidden");
+        (_b = this.modal) === null || _b === void 0 ? void 0 : _b.setAttribute("aria-hidden", "true");
+        (_c = this.modal) === null || _c === void 0 ? void 0 : _c.removeEventListener("keydown", this.focusTrapHandler);
+    }
+    getModalContent() {
+        return "<h1>Default Modal Content</h1>";
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/postal-code-validator.js
 
 
@@ -23873,6 +24004,233 @@ class AddDAFBanner {
     this.logger.log("Banner added");
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/quiz-lead-gen-modal.ts
+
+class QuizLeadGenModal extends Modal {
+  constructor() {
+    super({
+      onClickOutside: "bounce",
+      addCloseButton: false,
+      closeButtonLabel: ""
+    });
+
+    // const modalBody = document.querySelector(".engrid-modal__body");
+    // modalBody?.querySelector(".btn")?.addEventListener("click", (e) => {
+    //   console.log("clicked");
+    //   return false;
+    // });
+
+    console.log(this.modalContent);
+    this.openModal();
+  }
+  getModalContent() {
+    //return document.querySelector(".modal--lead-gen")?.innerHTML as string;
+    return document.querySelector(".modal--lead-gen");
+  }
+  openModal() {
+    engrid_ENGrid.setBodyData("bequest-lightbox", "open");
+    this.open();
+  }
+}
+;// CONCATENATED MODULE: ./src/scripts/quiz.ts
+
+
+
+class Quiz {
+  constructor() {
+    if (!this.shouldRun()) return;
+    this.addEventListeners();
+    this.showQuizResults();
+    this.createLeadGenModal();
+  }
+  shouldRun() {
+    return engrid_ENGrid.getBodyData("subpagetype") === "quiz";
+  }
+  createLeadGenModal() {
+    const leadGenModal = document.querySelector(".modal--lead-gen");
+    if (!leadGenModal) return;
+
+    // Set placeholder on mobile phone field so it can be selected with :placeholder-shown
+    leadGenModal.querySelector("#en__field_supporter_phoneNumber2")?.setAttribute("placeholder", " ");
+    const formType = this.getFormType(leadGenModal);
+    const modal = new QuizLeadGenModal();
+
+    // Fire tracking
+    setTimeout(function () {
+      trackEvent("lightbox_form_impression", {
+        lightbox_name: formType.lightbox_name,
+        form_type: formType.form_type,
+        form_name: formType.form_name
+      });
+    }, 100);
+  }
+  addEventListeners() {
+    // Handle check answer button click
+    const checkAnswerButton = document.querySelector(".quiz-answer .check-answer");
+    if (checkAnswerButton) {
+      checkAnswerButton.addEventListener("click", () => {
+        console.log("Check answer clicked");
+        const checkedAnswerEl = document.querySelector(".en__field__input--radio:checked");
+        if (!checkedAnswerEl) {
+          this.displayElement(".en__field__error", true);
+          return;
+        }
+        this.displayElement(".quiz-answer .en__submit", false);
+        this.displayElement(".en__field__error", false);
+        this.checkAnswer();
+      });
+    }
+
+    // Handle submit button click
+    const submitButton = document.querySelector('.en__submit button:not([type="button"])');
+    if (submitButton) {
+      submitButton.addEventListener("click", () => {
+        sessionStorage.setItem("alreadyAnswered", "false");
+      });
+    }
+
+    // Clicking any answer removes error message
+    [...document.querySelectorAll(".en__field__input--radio")].forEach(el => {
+      el.addEventListener("click", () => {
+        document.querySelector(".en__field__error")?.remove();
+      });
+    });
+
+    // Listen for validation error
+    const survey = document.querySelector(".en__field--survey");
+    if (survey) {
+      const mutationCallback = mutationsList => {
+        for (let i = 0; i < mutationsList.length; i++) {
+          if (mutationsList[i].addedNodes.length > 0) {
+            // Move error message to end of form
+            const el = document.querySelector(".en__field__error");
+            if (el) {
+              document.querySelector(".en__component--formblock")?.append(el);
+            }
+          }
+        }
+      };
+      const errorObserver = new MutationObserver(mutationCallback);
+      errorObserver.observe(survey, {
+        attributes: false,
+        childList: true,
+        subtree: false
+      });
+    }
+  }
+  checkAnswer() {
+    const correctAnswer = document.querySelector(".correct");
+    const incorrectAnswer = document.querySelector(".incorrect");
+    const selectedAnswerRadio = document.querySelector(".en__field__input--radio:checked");
+    const correctAnswerRadio = document.querySelector('.en__field__input--radio[value="1"]');
+    let questionCount = sessionStorage.getItem("questionCount") ? Number(sessionStorage.getItem("questionCount")) : 0;
+    let quizScore = sessionStorage.getItem("quizScore") ? Number(sessionStorage.getItem("quizScore")) : 0;
+    let alreadyAnswered = sessionStorage.getItem("alreadyAnswered") ? sessionStorage.getItem("alreadyAnswered") : "false";
+
+    // Prevent more answer clicks
+    document.querySelectorAll(".en__field__input--radio").forEach(el => {
+      el.setAttribute("disabled", "true");
+    });
+    if (correctAnswer && incorrectAnswer && correctAnswerRadio) {
+      // Check for correct answer
+      if (selectedAnswerRadio === correctAnswerRadio) {
+        correctAnswer.style.display = "inline";
+        // Update running score
+        if (alreadyAnswered === "false") {
+          quizScore++;
+        }
+      } else {
+        selectedAnswerRadio.nextElementSibling?.classList.add("is-incorrect");
+        incorrectAnswer.style.display = "inline";
+      }
+      correctAnswerRadio.nextElementSibling?.classList.add("is-correct");
+      // Show answer
+      this.displayElement(".quiz-answer p", true);
+      // Show next question button
+      this.displayElement(".en__component--formblock:last-child", true);
+      if (alreadyAnswered === "false") {
+        // Update running count of quiz questions
+        questionCount++;
+        sessionStorage.setItem("questionCount", questionCount.toString());
+        // Save running score
+        sessionStorage.setItem("quizScore", quizScore.toString());
+        sessionStorage.setItem("alreadyAnswered", "true");
+      }
+    }
+  }
+  displayElement(selector, visible) {
+    const el = document.querySelector(selector);
+    if (el) {
+      el.style.display = visible ? "block" : "none";
+    }
+  }
+  showQuizResults() {
+    if (engrid_ENGrid.getPageNumber() !== engrid_ENGrid.getPageCount()) return;
+
+    // Display quiz score
+    const quizScoreEl = document.querySelector(".js-quiz-score");
+    if (quizScoreEl && sessionStorage.getItem("quizScore")) {
+      quizScoreEl.textContent = sessionStorage.getItem("quizScore");
+    }
+
+    // Display number of questions
+    const questionCountEl = document.querySelector(".js-question-count");
+    if (questionCountEl && sessionStorage.getItem("questionCount")) {
+      questionCountEl.textContent = sessionStorage.getItem("questionCount");
+    }
+
+    // Clean up
+    sessionStorage.removeItem("quizScore");
+    sessionStorage.removeItem("questionCount");
+    sessionStorage.removeItem("alreadyAnswered");
+  }
+  getFormType(form) {
+    const emailUnsubscribeField = form.querySelector(".en__field--unsubscribe-from-emails:not(.en__hidden) .en__field__input--checkbox");
+    const emailUnsubscribeChecked = emailUnsubscribeField?.checked || false;
+    const mobilePhoneField = form.querySelector("#en__field_supporter_phoneNumber2:not(:placeholder-shown)");
+    const textOptInField = form.querySelector(".en__field--home-phone-opt-in .en__field__input--checkbox");
+    const textOptInChecked = textOptInField?.checked || false;
+    let formType = {
+      lightbox_name: `lightbox-${window.utag_data.page_name}`,
+      form_name: `lightbox-${window.utag_data.page_name}`,
+      email_signup_location: `lightbox-${window.utag_data.page_name}`,
+      event_name: "",
+      form_type: "",
+      text_signup_location: ""
+    };
+
+    //Unsubscribe not checked, mobile phone field exists and optin checked
+    if (!emailUnsubscribeChecked && mobilePhoneField && textOptInChecked) {
+      formType.event_name = "frm_ltbx_emt_emo_txt_txto_submit";
+      formType.form_type = "email_text_signup";
+      formType.text_signup_location = "lightbox-" + window.utag_data.page_name;
+      //Unsubscribe not checked, mobile phone field exists (and optin not checked)
+    } else if (!emailUnsubscribeChecked && mobilePhoneField) {
+      formType.event_name = "frm_ltbx_emt_emo_txt_submit";
+      formType.form_type = "email_text_signup";
+      formType.text_signup_location = "lightbox-" + window.utag_data.page_name;
+      //Unsubscribe not checked, no mobile phone field
+    } else if (!emailUnsubscribeChecked) {
+      formType.event_name = "frm_ltbx_emt_emo_submit";
+      formType.form_type = "email_signup";
+      //Unsubscribe checked, mobile phone field exists and optin checked
+    } else if (mobilePhoneField && textOptInChecked) {
+      formType.event_name = "rm_ltbx_emt_txt_txto_submit";
+      formType.form_type = "email_text_signup";
+      formType.text_signup_location = "lightbox-" + window.utag_data.page_name;
+      //Unsubscribe checked, mobile phone field exists and optin not checked
+    } else if (mobilePhoneField) {
+      formType.event_name = "frm_ltbx_emt_txt_submit";
+      formType.form_type = "email_text_signup";
+      formType.text_signup_location = "lightbox-" + window.utag_data.page_name;
+      //Unsubscribe checked, mobile phone field doesn't exist
+    } else {
+      formType.event_name = "frm_ltbx_emt_submit";
+      formType.form_type = "email_signup";
+    }
+    return formType;
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -23881,6 +24239,7 @@ class AddDAFBanner {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -23953,6 +24312,7 @@ const options = {
     new Tooltip();
     new IHMO();
     new GdcpManager();
+    new Quiz();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();

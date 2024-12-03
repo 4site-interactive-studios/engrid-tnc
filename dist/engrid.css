@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 26, 2024 @ 10:28:59 ET
+ *  Date: Tuesday, December 3, 2024 @ 12:34:35 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -8936,7 +8936,7 @@ body[data-engrid-debug]:before{
   bottom:20px;
   cursor:pointer;
   right:20px;
-  z-index:9999999;
+  z-index:50;
 }
 [data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .body-banner .media-with-attribution [data-tippy-root],[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .media-with-attribution:has(>.img-with-attribution) [data-tippy-root],[data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]) .page-backgroundImage .media-with-attribution [data-tippy-root]{
   inset:0 !important;
@@ -10011,7 +10011,6 @@ body[data-engrid-debug]:before{
   outline:none;
   padding:1rem 1.25rem;
   text-align:left;
-  transition:all .2s ease-in-out;
 }
 [data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__submit a.button{
   padding:1.3rem 2.8rem;
@@ -10533,6 +10532,52 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-gdcp=true] [class*=validationFail] .engrid-gdcp-field label{
   color:initial;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .correct,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .en__component--svblock+.en__component--copyblock p,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .en__component--svblock~.en__component--formblock:last-child,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .incorrect,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .quiz-answer .en__field__error{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .en__field--radio .en__field__label--item.is-incorrect{
+  border-color:#c5351c !important;
+  box-shadow:inset 0 0 0 4px #c5351c;
+  opacity:1;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .en__field--radio .en__field__label--item.is-incorrect:before{
+  background:#c5351c url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="8.957" height="8.837"><path d="m7.543 1.423-6 6M7.414 7.414l-6-6" fill="none" stroke="%23fff" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/></svg>') 50% no-repeat !important;
+  border-color:#c5351c !important;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .en__field--radio .en__field__label--item.is-correct{
+  border-color:#007931 !important;
+  box-shadow:inset 0 0 0 4px #007931;
+  opacity:1;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .en__field--radio .en__field__label--item.is-correct:before{
+  background-color:#007931 !important;
+  border-color:#007931;
+  transform:none;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .engrid-modal .btn-close,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .engrid-modal .engrid-modal__close{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .engrid-modal .en__component--formblock.narrow{
+  margin-left:auto;
+  margin-right:auto;
+  max-width:400px;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .engrid-modal .btn-lead-gen{
+  margin-left:auto;
+  margin-right:auto;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .engrid-modal .en__field__notice{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .engrid-modal .modal-title{
+  font-family:var(--sans-serif-fonts);
+  font-size:1.625rem;
+  font-weight:600;
+  line-height:1.3076;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .engrid-modal .en__component--copyblock+.en__component--formblock{
+  margin-top:2rem;
 }
 body{
   opacity:1;

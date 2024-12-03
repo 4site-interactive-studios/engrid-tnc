@@ -1,0 +1,76 @@
+&[data-engrid-subpagetype="quiz"] {
+  &:not(#en__pagebuilder) {
+    .en__component--svblock ~ .en__component--formblock:last-child {
+      display: none;
+    }
+
+    .en__component--svblock + .en__component--copyblock p {
+      display: none;
+    }
+
+    .quiz-answer .en__field__error {
+      display: none;
+    }
+
+    .correct,
+    .incorrect {
+      display: none;
+    }
+  }
+
+  .en__field--radio .en__field__label--item.is-incorrect {
+    border-color: #c5351c!important;
+    box-shadow: inset 0 0 0 4px #c5351c;
+    opacity: 1;
+  }
+
+  .en__field--radio .en__field__label--item.is-incorrect:before {
+    background: #c5351c url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='8.957' height='8.837' viewBox='0 0 8.957 8.837'><path d='M6,6,0,0' transform='translate(1.543 7.423) rotate(-90)' fill='none' stroke='#fff' stroke-linecap='round' stroke-linejoin='round' stroke-miterlimit='10' stroke-width='2'/><path d='M6,6,0,0' transform='translate(1.414 1.414)' fill='none' stroke='#fff' stroke-linecap='round' stroke-linejoin='round' stroke-miterlimit='10' stroke-width='2'/></svg>") center no-repeat !important;
+    border-color: #c5351c !important;
+  }
+
+  .en__field--radio .en__field__label--item.is-correct {
+    border-color: #007931!important;
+    box-shadow: inset 0 0 0 4px #007931;
+    opacity: 1;
+  }
+
+  .en__field--radio .en__field__label--item.is-correct:before {
+    background-color: #007931!important;
+    border-color: #007931;
+    transform: none;
+  }
+
+  .engrid-modal {
+    .engrid-modal__close,
+    .btn-close {
+      display: none;
+    }
+
+    .en__component--formblock.narrow {
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-lead-gen {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .en__field__notice {
+      display: none;
+    }
+
+    .modal-title {
+      font-family: var(--sans-serif-fonts);
+      font-size: 1.625rem;
+      line-height: 1.3076;
+      font-weight: 600;
+    }
+
+     .en__component--copyblock+.en__component--formblock {
+       margin-top: 2rem;
+     }
+  }
+}
