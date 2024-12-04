@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, December 3, 2024 @ 12:34:35 ET
+ *  Date: Wednesday, December 4, 2024 @ 06:42:55 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -8080,7 +8080,7 @@ body[data-engrid-debug]:before{
   line-height:15px;
   text-transform:uppercase;
 }
-[data-engrid-theme=tnc] .button-green{
+[data-engrid-theme=tnc] .btn-primary,[data-engrid-theme=tnc] .button-green{
   background-color:var(--color-green);
   border-color:var(--color-green);
   color:var(--color-white);
@@ -8089,7 +8089,7 @@ body[data-engrid-debug]:before{
   padding:16px 30px;
   width:auto;
 }
-[data-engrid-theme=tnc] .button-green:hover{
+[data-engrid-theme=tnc] .btn-primary:hover,[data-engrid-theme=tnc] .button-green:hover{
   background-color:#000;
 }
 [data-engrid-theme=tnc] .daf-banner{
@@ -10533,6 +10533,9 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-gdcp=true] [class*=validationFail] .engrid-gdcp-field label{
   color:initial;
 }
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]{
+  --submit__button_font-size:18px!important;
+}
 [data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .correct,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .en__component--svblock+.en__component--copyblock p,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .en__component--svblock~.en__component--formblock:last-child,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .incorrect,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .quiz-answer .en__field__error{
   display:none;
 }
@@ -10578,6 +10581,98 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .engrid-modal .en__component--copyblock+.en__component--formblock{
   margin-top:2rem;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-has-lightbox=true] [class*=validationFail] label:not(.engrid-modal [class*=validationFail] label){
+  color:initial;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .quiz-answer{
+  --p_font-size:1rem;
+  --p_font-weight:400;
+  --p_line-height:1.5;
+  text-align:left;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .en__component--copyblock+.en__component--formblock,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .en__component--copyblock+.en__component--svblock{
+  margin-top:0 !important;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main h1{
+  font-family:var(--sans-serif-fonts);
+  font-size:1.6rem;
+  font-weight:600;
+  line-height:1.3;
+  margin-bottom:1.6rem;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main p{
+  font-size:1.3rem;
+  font-weight:500;
+  line-height:1.4;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__component--socialshareblock{
+  margin:32px auto;
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__component--socialshareblock:before{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__socialShare{
+  align-items:center;
+  color:#fff;
+  display:inline-flex;
+  font-size:1rem;
+  font-weight:600;
+  justify-content:center;
+  margin-left:.75rem !important;
+  margin-right:.75rem !important;
+  -webkit-text-decoration:none;
+  text-decoration:none;
+  white-space:nowrap;
+  width:calc(50% - 1.5rem) !important;
+}
+@media screen and (max-width:768px){
+  [data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__socialShare{
+    width:100% !important;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__socialShare:hover{
+  border:0;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__socialShare:after{
+  margin-left:.5rem;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__socialShare img{
+  height:18px !important;
+  margin:0;
+  width:auto !important;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__component--socialshareblock .en__socialShares a{
+  box-sizing:border-box;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__socialShare--facebook{
+  background-color:#4267b2;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__socialShare--facebook:after{
+  content:"Share on Facebook";
+}
+@media screen and (max-width:768px){
+  [data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__socialShare--facebook{
+    margin-bottom:1rem !important;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__socialShare--twitter{
+  background-color:#1da1f2;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__socialShare--twitter:after{
+  content:"Share on Twitter";
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__submit{
+  margin-top:2rem;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz][data-engrid-last-page] .body-main .en__submit .btn{
+  font-size:1.25rem;
+  font-weight:700;
+  height:3em;
+  line-height:1.2;
+  padding:1.125rem 3rem;
+  text-transform:uppercase;
 }
 body{
   opacity:1;

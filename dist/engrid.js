@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, December 3, 2024 @ 12:34:35 ET
+ *  Date: Wednesday, December 4, 2024 @ 06:42:55 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -24014,17 +24014,12 @@ class QuizLeadGenModal extends Modal {
       closeButtonLabel: ""
     });
 
-    // const modalBody = document.querySelector(".engrid-modal__body");
-    // modalBody?.querySelector(".btn")?.addEventListener("click", (e) => {
-    //   console.log("clicked");
-    //   return false;
-    // });
-
-    console.log(this.modalContent);
+    // Move the modal inside the main EN form element
+    const modal = document.querySelector(".engrid-modal .modal--lead-gen")?.closest(".engrid-modal");
+    document.querySelector("#engrid > form")?.appendChild(modal);
     this.openModal();
   }
   getModalContent() {
-    //return document.querySelector(".modal--lead-gen")?.innerHTML as string;
     return document.querySelector(".modal--lead-gen");
   }
   openModal() {
@@ -24056,13 +24051,44 @@ class Quiz {
     const modal = new QuizLeadGenModal();
 
     // Fire tracking
-    setTimeout(function () {
-      trackEvent("lightbox_form_impression", {
+    trackEvent("lightbox_form_impression", {
+      lightbox_name: formType.lightbox_name,
+      form_type: formType.form_type,
+      form_name: formType.form_name
+    });
+
+    // when modal submit button  is clicked
+    document.querySelector(".modal--lead-gen .btn")?.addEventListener("click", e => {
+      e.preventDefault();
+      if (!this.validateModal()) return;
+      modal.close();
+      const formType = this.getFormType(leadGenModal);
+      trackEvent(formType.event_name, {
         lightbox_name: formType.lightbox_name,
         form_type: formType.form_type,
-        form_name: formType.form_name
+        form_name: formType.form_name,
+        text_signup_location: formType.text_signup_location,
+        email_signup_location: formType.email_signup_location
       });
-    }, 100);
+    });
+  }
+  validateModal() {
+    // Get EN validators
+    const validators = window.EngagingNetworks.require._defined.enValidation.validation.validators;
+
+    // Filter validators to only include those for fields in the modal
+    const validatorsInModal = validators.filter(validator => {
+      return !!document.querySelector(".modal--lead-gen .en__field--" + validator.field);
+    });
+
+    // Validate the visible fields
+    const validationResults = validatorsInModal.map(validator => {
+      validator.hideMessage();
+      return !validator.isVisible() || validator.test();
+    });
+
+    // Return true if all fields are valid
+    return validationResults.every(result => result);
   }
   addEventListeners() {
     // Handle check answer button click
@@ -24070,7 +24096,8 @@ class Quiz {
     if (checkAnswerButton) {
       checkAnswerButton.addEventListener("click", () => {
         console.log("Check answer clicked");
-        const checkedAnswerEl = document.querySelector(".en__field__input--radio:checked");
+        const checkedAnswerEl = document.querySelector(".en__component--svblock .en__field__input--radio:checked");
+        console.log(checkedAnswerEl);
         if (!checkedAnswerEl) {
           this.displayElement(".en__field__error", true);
           return;

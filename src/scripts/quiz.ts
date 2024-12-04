@@ -34,13 +34,60 @@ export class Quiz {
     const modal = new QuizLeadGenModal();
 
     // Fire tracking
-    setTimeout(function () {
-      trackEvent("lightbox_form_impression", {
-        lightbox_name: formType.lightbox_name,
-        form_type: formType.form_type,
-        form_name: formType.form_name,
+    trackEvent("lightbox_form_impression", {
+      lightbox_name: formType.lightbox_name,
+      form_type: formType.form_type,
+      form_name: formType.form_name,
+    });
+
+    // when modal submit button  is clicked
+    document
+      .querySelector(".modal--lead-gen .btn")
+      ?.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (!this.validateModal()) return;
+        modal.close();
+        const formType = this.getFormType(leadGenModal);
+        trackEvent(formType.event_name, {
+          lightbox_name: formType.lightbox_name,
+          form_type: formType.form_type,
+          form_name: formType.form_name,
+          text_signup_location: formType.text_signup_location,
+          email_signup_location: formType.email_signup_location,
+        });
       });
-    }, 100);
+  }
+
+  private validateModal() {
+    // Get EN validators
+    const validators = window.EngagingNetworks.require._defined.enValidation
+      .validation.validators as Array<{
+      field: string;
+      type: string;
+      format: string;
+      regex: string;
+      message: string;
+      hideMessage: () => void;
+      isVisible: () => boolean;
+      showMessage: () => void;
+      test: () => boolean;
+    }>;
+
+    // Filter validators to only include those for fields in the modal
+    const validatorsInModal = validators.filter((validator) => {
+      return !!document.querySelector(
+        ".modal--lead-gen .en__field--" + validator.field
+      );
+    });
+
+    // Validate the visible fields
+    const validationResults = validatorsInModal.map((validator) => {
+      validator.hideMessage();
+      return !validator.isVisible() || validator.test();
+    });
+
+    // Return true if all fields are valid
+    return validationResults.every((result) => result);
   }
 
   private addEventListeners() {
@@ -52,8 +99,9 @@ export class Quiz {
       checkAnswerButton.addEventListener("click", () => {
         console.log("Check answer clicked");
         const checkedAnswerEl = document.querySelector(
-          ".en__field__input--radio:checked"
+          ".en__component--svblock .en__field__input--radio:checked"
         );
+        console.log(checkedAnswerEl);
         if (!checkedAnswerEl) {
           this.displayElement(".en__field__error", true);
           return;

@@ -8,19 +8,16 @@ export class QuizLeadGenModal extends Modal {
       closeButtonLabel: "",
     });
 
-    // const modalBody = document.querySelector(".engrid-modal__body");
-    // modalBody?.querySelector(".btn")?.addEventListener("click", (e) => {
-    //   console.log("clicked");
-    //   return false;
-    // });
-
-    console.log(this.modalContent);
+    // Move the modal inside the main EN form element
+    const modal = document
+      .querySelector(".engrid-modal .modal--lead-gen")
+      ?.closest(".engrid-modal") as HTMLElement;
+    document.querySelector("#engrid > form")?.appendChild(modal);
 
     this.openModal();
   }
 
   getModalContent() {
-    //return document.querySelector(".modal--lead-gen")?.innerHTML as string;
     return document.querySelector(".modal--lead-gen") as HTMLElement;
   }
 

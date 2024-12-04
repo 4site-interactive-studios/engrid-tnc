@@ -514,7 +514,8 @@
     }
   }
 
-  .button-green {
+  .button-green,
+  .btn-primary {
     background-color: var(--color-green);
     color: var(--color-white);
     border-color: var(--color-green);
