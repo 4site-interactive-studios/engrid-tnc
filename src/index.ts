@@ -26,6 +26,7 @@ import { IHMO } from "./scripts/ihmo";
 import { WidgetProgressBar } from "./scripts/widget-progress-bar";
 import { GdcpManager } from "./scripts/gdcp/gdcp-manager";
 import { AddDAFBanner } from "./scripts/add-daf-banner";
+import { Quiz } from "./scripts/quiz";
 
 declare global {
   interface Window {
@@ -110,6 +111,7 @@ const options: Options = {
     new Tooltip();
     new IHMO();
     new GdcpManager();
+    new Quiz();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();
