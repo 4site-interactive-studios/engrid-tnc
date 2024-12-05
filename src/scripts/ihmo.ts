@@ -80,7 +80,7 @@ export class IHMO {
     },
   };
   private ihmoCheckbox: HTMLInputElement | null = document.querySelector(
-    '[name="transaction.inmem"]'
+    '[name="transaction.inmem"][type="checkbox"]'
   );
   private topForm: HTMLElement | null =
     document.querySelector(".ihmo-top-form");

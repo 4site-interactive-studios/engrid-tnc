@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, December 4, 2024 @ 06:42:55 ET
+ *  Date: Thursday, December 5, 2024 @ 07:18:33 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -22520,7 +22520,7 @@ class IHMO {
         }
       }
     });
-    _defineProperty(this, "ihmoCheckbox", document.querySelector('[name="transaction.inmem"]'));
+    _defineProperty(this, "ihmoCheckbox", document.querySelector('[name="transaction.inmem"][type="checkbox"]'));
     _defineProperty(this, "topForm", document.querySelector(".ihmo-top-form"));
     _defineProperty(this, "bottomForm", document.querySelector(".ihmo-bottom-form"));
     _defineProperty(this, "_donationFrequency", DonationFrequency.getInstance());
