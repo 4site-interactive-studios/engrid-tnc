@@ -3299,6 +3299,13 @@
         --p_line-height: 1.81;
         --p_font-family: var(--serif-fonts);
 
+        ul {
+          font-size: 1.375rem;
+          line-height: 1.81;
+          font-family: var(--serif-fonts);
+        }
+
+
         font-weight: normal;
         margin: 0 auto;
         max-width: none;
@@ -3307,6 +3314,9 @@
 
         @media screen and (max-width: 768px) {
           --p_font-size: 1.125rem;
+          ul {
+            font-size: 1.125rem;
+          }
         }
       }
     }
