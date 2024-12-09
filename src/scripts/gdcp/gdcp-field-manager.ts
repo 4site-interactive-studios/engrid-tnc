@@ -92,12 +92,14 @@ export class GdcpFieldManager {
           `Field ${fieldName} checked state not changed as it has been touched`,
           this.fields
         );
+        this.updateSessionStorage(field);
         return false;
       }
       const checkedStateChanged = field.checked !== checked;
       field.checked = checked;
       this.updateFieldChecked(fieldName);
       this.updateFieldOptInsChecked(fieldName);
+      this.updateSessionStorage(field);
       this.logger.log(
         `Field ${field.field.channel} and opt-ins checked: ${checked}`,
         this.fields
@@ -215,6 +217,49 @@ export class GdcpFieldManager {
         if (notice) {
           notice.classList.toggle("hide", field.visible);
         }
+      }
+    }
+  }
+
+  /**
+   * For fields/rules where we need session storage, update the session storage with the checked state
+   */
+  private updateSessionStorage(field: GdcpFieldState) {
+    // If the field is a postal mail field with the hidden_no_qcb rule, we need to remove the session storage item.
+    if (field.field.channel === "postal_mail") {
+      if (field.rule === "hidden_no_qcb") {
+        sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
+        this.logger.log(
+          `Postal mail has hidden_no_qcb rule, removing from session storage`
+        );
+      } else {
+        sessionStorage.setItem(
+          "gdcp-postal-mail-create-qcb",
+          JSON.stringify({
+            state: field.checked ? "Y" : "N",
+            page: window.location.pathname,
+          })
+        );
+        this.logger.log(
+          `Postal mail checked state updated in session storage to: ${field.checked}`
+        );
+      }
+    }
+
+    // If the field is an email field with the double opt-in rule, we need to update the session storage item.
+    if (field.field.channel === "email") {
+      if (field.rule === "double_opt_in" && field.checked) {
+        sessionStorage.setItem(
+          "gdcp-email-double-opt-in",
+          JSON.stringify({
+            state: "Y",
+            page: window.location.pathname,
+          })
+        );
+        this.logger.log(`Email double opt-in set in session storage`);
+      } else {
+        sessionStorage.removeItem("gdcp-email-double-opt-in");
+        this.logger.log(`Email double opt-in removed from session storage`);
       }
     }
   }
