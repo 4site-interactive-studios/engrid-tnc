@@ -33,45 +33,47 @@ export function trackEvent(eventName, eventData) {
   }
 }
 
+export function setDonationDataSessionStorage(App, DonationAmount) {
+  const donationData = {};
+  donationData.productId = utag_data.page_name.slice(0, -2);
+  donationData.campaignId = pageJson.campaignId;
+  donationData.campaignPageId = App.getPageID();
+  donationData.state = App.getFieldValue("supporter.region");
+  donationData.zipCode = App.getFieldValue("supporter.postcode");
+  donationData.emailAddress = App.getFieldValue("supporter.emailAddress");
+  donationData.originalDonationAmount = DonationAmount.getInstance().amount;
+  donationData.extraAmount = 0;
+  // New donationData fields for Google Ads Enhanced Conversions
+  donationData.firstName = App.getFieldValue("supporter.firstName");
+  donationData.lastName = App.getFieldValue("supporter.lastName");
+  donationData.address1 = App.getFieldValue("supporter.address1");
+  donationData.city = App.getFieldValue("supporter.city");
+  donationData.country = App.getFieldValue("supporter.country");
+  donationData.phoneNumber = App.getFieldValue("supporter.phoneNumber2");
+
+  /** @type {HTMLInputElement} */
+  //If fee cover is checked, set extra amount to 3% of donation amount and subtract from original donation amount
+  const feeCoverCheckbox = App.getField("transaction.feeCover");
+  if (feeCoverCheckbox && feeCoverCheckbox.checked) {
+    donationData.extraAmount = (
+      DonationAmount.getInstance().amount * 0.03
+    ).toFixed(2);
+    donationData.originalDonationAmount =
+      donationData.originalDonationAmount - donationData.extraAmount;
+  }
+
+  const sendEcardCheckbox = document.getElementById("en__field_embedded-ecard");
+  if (sendEcardCheckbox && sendEcardCheckbox.checked) {
+    donationData.ecardSelected = "true";
+  }
+
+  sessionStorage.setItem("donationData", JSON.stringify(donationData));
+}
+
 export function trackFormSubmit(App, DonationAmount) {
   //Donation page submits
   if (App.getPageType() === "DONATION" && App.getPageNumber() === 1) {
-    const donationData = {};
-    donationData.productId = utag_data.page_name.slice(0, -2);
-    donationData.campaignId = pageJson.campaignId;
-    donationData.campaignPageId = App.getPageID();
-    donationData.state = App.getFieldValue("supporter.region");
-    donationData.zipCode = App.getFieldValue("supporter.postcode");
-    donationData.emailAddress = App.getFieldValue("supporter.emailAddress");
-    donationData.originalDonationAmount = DonationAmount.getInstance().amount;
-    donationData.extraAmount = 0;
-    // New donationData fields for Google Ads Enhanced Conversions
-    donationData.firstName = App.getFieldValue("supporter.firstName");
-    donationData.lastName = App.getFieldValue("supporter.lastName");
-    donationData.address1 = App.getFieldValue("supporter.address1");
-    donationData.city = App.getFieldValue("supporter.city");
-    donationData.country = App.getFieldValue("supporter.country");
-    donationData.phoneNumber = App.getFieldValue("supporter.phoneNumber2");
-
-    /** @type {HTMLInputElement} */
-    //If fee cover is checked, set extra amount to 3% of donation amount and subtract from original donation amount
-    const feeCoverCheckbox = App.getField("transaction.feeCover");
-    if (feeCoverCheckbox && feeCoverCheckbox.checked) {
-      donationData.extraAmount = (
-        DonationAmount.getInstance().amount * 0.03
-      ).toFixed(2);
-      donationData.originalDonationAmount =
-        donationData.originalDonationAmount - donationData.extraAmount;
-    }
-
-    const sendEcardCheckbox = document.getElementById(
-      "en__field_embedded-ecard"
-    );
-    if (sendEcardCheckbox && sendEcardCheckbox.checked) {
-      donationData.ecardSelected = "true";
-    }
-
-    sessionStorage.setItem("donationData", JSON.stringify(donationData));
+    setDonationDataSessionStorage(App, DonationAmount);
   }
 
   //Mobile phone data (for "F32 - Real Time SMS Push" script - opts user into SMS via API)

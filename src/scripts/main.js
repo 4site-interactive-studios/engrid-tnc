@@ -1,3 +1,5 @@
+import { setDonationDataSessionStorage } from "./tracking";
+
 const tippy = require("tippy.js").default;
 
 export const customScript = function (App, DonationFrequency, DonationAmount) {
@@ -587,5 +589,19 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       "--banner-image-src",
       `url(${bannerImageSrc})`
     );
+  }
+
+  // Set the donation amount in sessionStorage when the mobile wallet iframe is focused
+  const mobileWalletContainer = document.getElementById("en__digitalWallet");
+  if (mobileWalletContainer) {
+    const dataListener = () => {
+      const iframe = mobileWalletContainer.getElementsByTagName("iframe");
+      if (document.activeElement === iframe[0]) {
+        setDonationDataSessionStorage(App, DonationAmount);
+        window.removeEventListener("blur", dataListener);
+      }
+    };
+
+    window.addEventListener("blur", dataListener);
   }
 };
