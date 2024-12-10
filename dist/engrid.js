@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, December 9, 2024 @ 10:08:08 ET
+ *  Date: Tuesday, December 10, 2024 @ 06:17:14 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -23032,12 +23032,14 @@ class GdcpFieldManager {
     if (field) {
       if (field.touched && !force) {
         this.logger.log(`Field ${fieldName} checked state not changed as it has been touched`, this.fields);
+        this.updateSessionStorage(field);
         return false;
       }
       const checkedStateChanged = field.checked !== checked;
       field.checked = checked;
       this.updateFieldChecked(fieldName);
       this.updateFieldOptInsChecked(fieldName);
+      this.updateSessionStorage(field);
       this.logger.log(`Field ${field.field.channel} and opt-ins checked: ${checked}`, this.fields);
       return checkedStateChanged;
     }
@@ -23138,6 +23140,39 @@ class GdcpFieldManager {
         if (notice) {
           notice.classList.toggle("hide", field.visible);
         }
+      }
+    }
+  }
+
+  /**
+   * For fields/rules where we need session storage, update the session storage with the checked state
+   */
+  updateSessionStorage(field) {
+    // If the field is a postal mail field with the hidden_no_qcb rule, we need to remove the session storage item.
+    if (field.field.channel === "postal_mail") {
+      if (field.rule === "hidden_no_qcb") {
+        sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
+        this.logger.log(`Postal mail has hidden_no_qcb rule, removing from session storage`);
+      } else {
+        sessionStorage.setItem("gdcp-postal-mail-create-qcb", JSON.stringify({
+          state: field.checked ? "Y" : "N",
+          page: window.location.pathname
+        }));
+        this.logger.log(`Postal mail checked state updated in session storage to: ${field.checked}`);
+      }
+    }
+
+    // If the field is an email field with the double opt-in rule, we need to update the session storage item.
+    if (field.field.channel === "email") {
+      if (field.rule === "double_opt_in" && field.checked) {
+        sessionStorage.setItem("gdcp-email-double-opt-in", JSON.stringify({
+          state: "Y",
+          page: window.location.pathname
+        }));
+        this.logger.log(`Email double opt-in set in session storage`);
+      } else {
+        sessionStorage.removeItem("gdcp-email-double-opt-in");
+        this.logger.log(`Email double opt-in removed from session storage`);
       }
     }
   }
@@ -23821,26 +23856,6 @@ class GdcpManager {
     this._form.onSubmit.subscribe(() => {
       // Save the GDCP fields state to session (for restoring in case of submission errors)
       this.gdcpFieldManager.saveStateToSession();
-
-      // Save the double opt in email state to session (for triggering the opt in confirmation email)
-      const emailGdcpFieldName = this.gdcpFields.find(field => field.channel === "email")?.gdcpFieldName;
-      if (emailGdcpFieldName) {
-        const emailField = this.gdcpFieldManager.getField(emailGdcpFieldName);
-        if (emailField && emailField.checked && emailField.doubleOptIn) {
-          sessionStorage.setItem("gdcp-email-double-opt-in", "Y");
-        }
-      }
-
-      // If postal mail channel rule is NOT "hidden_no_qcb", save value to session
-      // to trigger the QCB for postal mail on thank you page load
-      const postalMailGdcpFieldName = this.gdcpFields.find(field => field.channel === "postal_mail")?.gdcpFieldName;
-      if (postalMailGdcpFieldName) {
-        const postalMailField = this.gdcpFieldManager.getField(postalMailGdcpFieldName);
-        if (postalMailField && postalMailField.rule !== "hidden_no_qcb") {
-          const value = postalMailField.checked ? "Y" : "N";
-          sessionStorage.setItem("gdcp-postal-mail-create-qcb", value);
-        }
-      }
     });
   }
 
@@ -23858,8 +23873,6 @@ class GdcpManager {
    * @private
    */
   clearSessionState() {
-    sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
-    sessionStorage.removeItem("gdcp-email-double-opt-in");
     this.gdcpFieldManager.clearStateFromSession();
   }
 
@@ -23867,7 +23880,8 @@ class GdcpManager {
    * Send double opt in email if the user has opted in and the page is not the first page
    */
   handleDoubleOptInEmail() {
-    const shouldSendDoubleOptInEmail = sessionStorage.getItem("gdcp-email-double-opt-in") === "Y" && !this.submissionFailed;
+    const sessionData = JSON.parse(sessionStorage.getItem("gdcp-email-double-opt-in") || "{}");
+    const shouldSendDoubleOptInEmail = sessionData.page && sessionData.page !== window.location.pathname && !this.submissionFailed;
     if (shouldSendDoubleOptInEmail) {
       // Set timeout because EN does not work properly if multiple forms are submitted in quick succession
       setTimeout(() => {
@@ -23882,10 +23896,11 @@ class GdcpManager {
    * Send QCB for postal mail if we have the session data to do that
    */
   handlePostalMailQcb() {
-    const shouldCreateQcb = sessionStorage.getItem("gdcp-postal-mail-create-qcb") && !this.submissionFailed;
+    const sessionData = JSON.parse(sessionStorage.getItem("gdcp-postal-mail-create-qcb") || "{}");
+    const shouldCreateQcb = sessionData.page && sessionData.page !== window.location.pathname && !this.submissionFailed;
     if (shouldCreateQcb) {
       let url = this.pages.postal_mail_qcb;
-      if (sessionStorage.getItem("gdcp-postal-mail-create-qcb") === "N") {
+      if (sessionData.state === "N") {
         url += "?supporter.questions.1942219=N";
       }
       // Set timeout because EN does not work properly if multiple forms are submitted in quick succession

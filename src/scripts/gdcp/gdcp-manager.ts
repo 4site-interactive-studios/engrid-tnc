@@ -522,32 +522,6 @@ export class GdcpManager {
     this._form.onSubmit.subscribe(() => {
       // Save the GDCP fields state to session (for restoring in case of submission errors)
       this.gdcpFieldManager.saveStateToSession();
-
-      // Save the double opt in email state to session (for triggering the opt in confirmation email)
-      const emailGdcpFieldName = this.gdcpFields.find(
-        (field) => field.channel === "email"
-      )?.gdcpFieldName;
-      if (emailGdcpFieldName) {
-        const emailField = this.gdcpFieldManager.getField(emailGdcpFieldName);
-        if (emailField && emailField.checked && emailField.doubleOptIn) {
-          sessionStorage.setItem("gdcp-email-double-opt-in", "Y");
-        }
-      }
-
-      // If postal mail channel rule is NOT "hidden_no_qcb", save value to session
-      // to trigger the QCB for postal mail on thank you page load
-      const postalMailGdcpFieldName = this.gdcpFields.find(
-        (field) => field.channel === "postal_mail"
-      )?.gdcpFieldName;
-      if (postalMailGdcpFieldName) {
-        const postalMailField = this.gdcpFieldManager.getField(
-          postalMailGdcpFieldName
-        );
-        if (postalMailField && postalMailField.rule !== "hidden_no_qcb") {
-          const value = postalMailField.checked ? "Y" : "N";
-          sessionStorage.setItem("gdcp-postal-mail-create-qcb", value);
-        }
-      }
     });
   }
 
@@ -567,8 +541,6 @@ export class GdcpManager {
    * @private
    */
   private clearSessionState() {
-    sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
-    sessionStorage.removeItem("gdcp-email-double-opt-in");
     this.gdcpFieldManager.clearStateFromSession();
   }
 
@@ -576,8 +548,13 @@ export class GdcpManager {
    * Send double opt in email if the user has opted in and the page is not the first page
    */
   private handleDoubleOptInEmail() {
+    const sessionData = JSON.parse(
+      sessionStorage.getItem("gdcp-email-double-opt-in") || "{}"
+    );
+
     const shouldSendDoubleOptInEmail =
-      sessionStorage.getItem("gdcp-email-double-opt-in") === "Y" &&
+      sessionData.page &&
+      sessionData.page !== window.location.pathname &&
       !this.submissionFailed;
 
     if (shouldSendDoubleOptInEmail) {
@@ -601,13 +578,18 @@ export class GdcpManager {
    * Send QCB for postal mail if we have the session data to do that
    */
   private handlePostalMailQcb() {
+    const sessionData = JSON.parse(
+      sessionStorage.getItem("gdcp-postal-mail-create-qcb") || "{}"
+    );
+
     const shouldCreateQcb =
-      sessionStorage.getItem("gdcp-postal-mail-create-qcb") &&
+      sessionData.page &&
+      sessionData.page !== window.location.pathname &&
       !this.submissionFailed;
 
     if (shouldCreateQcb) {
       let url = this.pages.postal_mail_qcb;
-      if (sessionStorage.getItem("gdcp-postal-mail-create-qcb") === "N") {
+      if (sessionData.state === "N") {
         url += "?supporter.questions.1942219=N";
       }
       // Set timeout because EN does not work properly if multiple forms are submitted in quick succession
