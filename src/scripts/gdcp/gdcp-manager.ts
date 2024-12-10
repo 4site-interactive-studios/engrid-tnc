@@ -549,7 +549,7 @@ export class GdcpManager {
    */
   private handleDoubleOptInEmail() {
     const sessionData = JSON.parse(
-      sessionStorage.getItem("gdcp-postal-mail-create-qcb") || "{}"
+      sessionStorage.getItem("gdcp-email-double-opt-in") || "{}"
     );
 
     const shouldSendDoubleOptInEmail =

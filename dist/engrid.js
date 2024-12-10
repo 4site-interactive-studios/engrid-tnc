@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, December 9, 2024 @ 07:16:55 ET
+ *  Date: Tuesday, December 10, 2024 @ 06:13:43 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -23880,7 +23880,7 @@ class GdcpManager {
    * Send double opt in email if the user has opted in and the page is not the first page
    */
   handleDoubleOptInEmail() {
-    const sessionData = JSON.parse(sessionStorage.getItem("gdcp-postal-mail-create-qcb") || "{}");
+    const sessionData = JSON.parse(sessionStorage.getItem("gdcp-email-double-opt-in") || "{}");
     const shouldSendDoubleOptInEmail = sessionData.page && sessionData.page !== window.location.pathname && !this.submissionFailed;
     if (shouldSendDoubleOptInEmail) {
       // Set timeout because EN does not work properly if multiple forms are submitted in quick succession
