@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, December 10, 2024 @ 12:47:24 ET
+ *  Date: Wednesday, December 11, 2024 @ 07:47:32 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -10577,9 +10577,6 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .engrid-modal .btn-lead-gen{
   margin-left:auto;
   margin-right:auto;
-}
-[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .engrid-modal .en__field__notice{
-  display:none;
 }
 [data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .engrid-modal .modal-title{
   font-family:var(--sans-serif-fonts);
