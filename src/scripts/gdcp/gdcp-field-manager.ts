@@ -215,7 +215,11 @@ export class GdcpFieldManager {
           `.${field.field.channel}-description`
         ) as HTMLElement;
         if (notice) {
-          notice.classList.toggle("hide", field.visible);
+          // hide the notice if the field is visible or if the field has the hidden_no_qcb rule
+          notice.classList.toggle(
+            "hide",
+            field.visible || field.rule === "hidden_no_qcb"
+          );
         }
       }
     }

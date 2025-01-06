@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, December 11, 2024 @ 07:47:32 ET
+ *  Date: Monday, January 6, 2025 @ 12:24:23 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -23155,7 +23155,8 @@ class GdcpFieldManager {
         }
         const notice = document.querySelector(`.${field.field.channel}-description`);
         if (notice) {
-          notice.classList.toggle("hide", field.visible);
+          // hide the notice if the field is visible or if the field has the hidden_no_qcb rule
+          notice.classList.toggle("hide", field.visible || field.rule === "hidden_no_qcb");
         }
       }
     }
