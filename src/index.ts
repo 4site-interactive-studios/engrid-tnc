@@ -27,6 +27,7 @@ import { WidgetProgressBar } from "./scripts/widget-progress-bar";
 import { GdcpManager } from "./scripts/gdcp/gdcp-manager";
 import { AddDAFBanner } from "./scripts/add-daf-banner";
 import { Quiz } from "./scripts/quiz";
+import { BankAccountAgreementField } from "./scripts/bank-account-agreement-field";
 
 declare global {
   interface Window {
@@ -117,6 +118,7 @@ const options: Options = {
     trackUserInteractions();
     new WidgetProgressBar();
     new AddDAFBanner();
+    new BankAccountAgreementField();
   },
   onSubmit: () => trackFormSubmit(App, DonationAmount),
   onResize: () => console.log("Starter Theme Window Resized"),

@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, January 6, 2025 @ 12:24:23 ET
+ *  Date: Tuesday, January 7, 2025 @ 11:06:25 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -22240,38 +22240,6 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
       amt.setAmount(donationAmounts[donationIndex].value);
     }
   }
-
-  // When doing E-Check payment, make the bank account agreement field visible. Otherwise, it should be hidden
-  // so that there is not a validation error when the form is submitted.
-  const giveBySelectInputs = document.querySelectorAll("[name='transaction.giveBySelect']");
-  const bankAccountAgreementField = document.querySelector(".en__field--879592");
-  if (bankAccountAgreementField) {
-    giveBySelectInputs.forEach(input => {
-      input.addEventListener("change", () => {
-        if (input.value === "ACH") {
-          if (App.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "showField")) {
-            window.EngagingNetworks.require._defined.enjs.showField("879592");
-          }
-        } else {
-          if (App.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "hideField")) {
-            window.EngagingNetworks.require._defined.enjs.hideField("879592");
-          }
-        }
-      });
-    });
-
-    // Set the initial state of the bank account agreement field
-    const initialGiveBySelect = document.querySelector("[name='transaction.giveBySelect']:checked");
-    if (initialGiveBySelect && initialGiveBySelect.value === "ACH") {
-      if (App.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "showField")) {
-        window.EngagingNetworks.require._defined.enjs.showField("879592");
-      }
-    } else {
-      if (App.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "hideField")) {
-        window.EngagingNetworks.require._defined.enjs.hideField("879592");
-      }
-    }
-  }
   const bannerImageSrc = document.querySelector(".body-banner img")?.src;
   const bodyBanner = document.querySelector(".body-banner");
   if (bodyBanner && bannerImageSrc) {
@@ -24291,6 +24259,76 @@ class Quiz {
     return formType;
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/bank-account-agreement-field.ts
+
+/*
+  Use EN's built in showField and hideField functions to show/hide the bank account agreement field
+  based on the value of the giveBySelect field.
+  This is a workaround for having a conditionally visible field that is "required" by EN's validator.
+ */
+
+
+
+class BankAccountAgreementField {
+  constructor() {
+    _defineProperty(this, "logger", new EngridLogger("BankAccountAgreementField", "lightgray", "darkblue", "🏦"));
+    _defineProperty(this, "giveBySelectInputs", document.querySelectorAll("[name='transaction.giveBySelect']"));
+    _defineProperty(this, "bankAccountAgreementField", document.querySelector(".en__field--879592"));
+    if (!this.shouldRun()) return;
+    const initialGiveBySelect = this.getGiveBySelectValue();
+    if (initialGiveBySelect === "ACH") {
+      this.showBankAccountAgreementField();
+    } else {
+      this.hideBankAccountAgreementField();
+    }
+    this.addEventListeners();
+  }
+  shouldRun() {
+    return this.bankAccountAgreementField !== null && this.giveBySelectInputs.length > 0;
+  }
+  showBankAccountAgreementField() {
+    if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "hideField") && this.bankAccountAgreementField?.classList.contains("en__hidden")) {
+      this.logger.log("showing bank account agreement field");
+      window.EngagingNetworks.require._defined.enjs.showField("879592");
+    }
+  }
+  hideBankAccountAgreementField() {
+    if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "hideField") && !this.bankAccountAgreementField?.classList.contains("en__hidden")) {
+      this.logger.log("hiding bank account agreement field");
+      window.EngagingNetworks.require._defined.enjs.hideField("879592");
+    }
+  }
+  getGiveBySelectValue() {
+    const giveBySelect = document.querySelector("[name='transaction.giveBySelect']:checked");
+    return giveBySelect.value || "";
+  }
+  addEventListeners() {
+    // Adjust the bank account agreement field based on the value of the giveBySelect field
+    this.giveBySelectInputs.forEach(input => {
+      input.addEventListener("change", () => {
+        if (input.value === "ACH") {
+          this.showBankAccountAgreementField();
+        } else {
+          this.hideBankAccountAgreementField();
+        }
+      });
+    });
+
+    // Re-check the bank account agreement field when the form inputs lose focus.
+    // Because there may be a race condition where our script loads before EN's script
+    // We have to periodically re-check this condition
+    const formInputs = document.querySelectorAll("input, textarea, select");
+    formInputs.forEach(el => {
+      el.addEventListener("blur", () => {
+        if (this.getGiveBySelectValue() === "ACH") {
+          this.showBankAccountAgreementField();
+        } else {
+          this.hideBankAccountAgreementField();
+        }
+      });
+    });
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -24299,6 +24337,7 @@ class Quiz {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -24378,6 +24417,7 @@ const options = {
     trackUserInteractions();
     new WidgetProgressBar();
     new AddDAFBanner();
+    new BankAccountAgreementField();
   },
   onSubmit: () => trackFormSubmit(App, DonationAmount),
   onResize: () => console.log("Starter Theme Window Resized"),
