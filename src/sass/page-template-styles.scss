@@ -574,6 +574,90 @@
     }
   }
 
+  // For compatability when TNC migrates from their old templates
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  .accordion-item {
+    border-bottom: 1px solid #cdcdcd;
+  }
+
+  .accordion-header {
+    margin: 0;
+    button {
+      display: flex;
+      align-items: center;
+      border: none;
+      width: 100%;
+      text-align: left;
+      color: #1a1a1a;
+      font-size: 26px;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 0;
+
+      &:hover,
+      &:focus {
+        background-color: inherit;
+        color: inherit;
+      }
+
+      &:after {
+         flex-shrink: 0;
+         width: 16px;
+         height: 16px;
+         margin-left: auto;
+         content: "";
+         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17' viewBox='0 0 17 17'%3e%3cg transform='translate%281 1%29'%3e%3cg%3e%3cpath d='M0,.5H15' transform='translate%280 7%29' fill='none' stroke='%23007931' stroke-linecap='square' stroke-miterlimit='10' stroke-width='2'/%3e%3cpath d='M0,.5H15' transform='translate%288 0%29 rotate%2890%29' fill='none' stroke='%23007931' stroke-linecap='square' stroke-miterlimit='10' stroke-width='2'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
+         background-repeat: no-repeat;
+         background-size: 16px;
+       }
+
+      &:not(.collapsed):after {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='17' height='15' viewBox='0 0 17 15'%3e%3cg transform='translate%281%29'%3e%3cg transform='translate%280 7.5%29'%3e%3cpath d='M0,.5H15' transform='translate%280 -0.5%29' fill='none' stroke='%23007931' stroke-linecap='square' stroke-miterlimit='10' stroke-width='2'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e");
+      }
+    }
+  }
+
+  .accordion-collapse:not(.show) {
+    display: none;
+  }
+
+  .accordion-body {
+    --p_font-size: 18px;
+    --p_font-family: var(--serif-fonts);
+    --p_line-height: 1.66;
+    --default_font-family: var(--serif-fonts);
+    --default_font-size: 18px;
+    --default_font-weight: 400;
+    --default_line-height: 1.66;
+
+    a {
+      font-family: var(--serif-fonts);
+      text-decoration: none;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    li {
+      font-family: var(--default_font-family);
+      font-size: var(--default_font-size);
+      font-weight: var(--default_font-weight);
+      line-height: var(--default_line-height);
+    }
+  }
+
+
+
   ///////////////////////////////////////////////////
   /*
   // End of global styles
@@ -3356,6 +3440,16 @@
 
     &[data-engrid-layout="centercenter2col"] {
       --engrid__body-banner_padding: 0;
+      --engrid__body-top_padding: 0;
+      --engrid__body-main_padding: 0 0 0 110px;
+
+      .body-top {
+        grid-row: body-header-end /  body-main-end;
+      }
+
+      .body-main {
+        border: none;
+      }
 
       @media screen and (max-width: 767px) {
         .body-banner .en__component--copyblock {

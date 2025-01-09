@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 9, 2025 @ 08:32:01 ET
+ *  Date: Thursday, January 9, 2025 @ 12:08:56 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -8129,6 +8129,77 @@ body[data-engrid-debug]:before{
   width:0;
   z-index:-1;
 }
+[data-engrid-theme=tnc] .visually-hidden{
+  clip:rect(0, 0, 0, 0) !important;
+  border:0 !important;
+  height:1px !important;
+  margin:-1px !important;
+  overflow:hidden !important;
+  padding:0 !important;
+  position:absolute !important;
+  white-space:nowrap !important;
+  width:1px !important;
+}
+[data-engrid-theme=tnc] .accordion-item{
+  border-bottom:1px solid #cdcdcd;
+}
+[data-engrid-theme=tnc] .accordion-header{
+  margin:0;
+}
+[data-engrid-theme=tnc] .accordion-header button{
+  align-items:center;
+  border:none;
+  color:#1a1a1a;
+  display:flex;
+  font-size:26px;
+  font-weight:600;
+  line-height:1.5;
+  margin-bottom:0;
+  text-align:left;
+  width:100%;
+}
+[data-engrid-theme=tnc] .accordion-header button:focus,[data-engrid-theme=tnc] .accordion-header button:hover{
+  background-color:inherit;
+  color:inherit;
+}
+[data-engrid-theme=tnc] .accordion-header button:after{
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='17'%3E%3Cg fill='none' stroke='%23007931' stroke-linecap='square' stroke-miterlimit='10' stroke-width='2'%3E%3Cpath d='M1 8.5h15M8.5 1v15'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-size:16px;
+  content:"";
+  flex-shrink:0;
+  height:16px;
+  margin-left:auto;
+  width:16px;
+}
+[data-engrid-theme=tnc] .accordion-header button:not(.collapsed):after{
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='15'%3E%3Cpath d='M1 7.5h15' fill='none' stroke='%23007931' stroke-linecap='square' stroke-miterlimit='10' stroke-width='2'/%3E%3C/svg%3E");
+}
+[data-engrid-theme=tnc] .accordion-collapse:not(.show){
+  display:none;
+}
+[data-engrid-theme=tnc] .accordion-body{
+  --p_font-size:18px;
+  --p_font-family:var(--serif-fonts);
+  --p_line-height:1.66;
+  --default_font-family:var(--serif-fonts);
+  --default_font-size:18px;
+  --default_font-weight:400;
+  --default_line-height:1.66;
+}
+[data-engrid-theme=tnc] .accordion-body a{
+  font-family:var(--serif-fonts);
+  font-weight:700;
+  line-height:1.25;
+  -webkit-text-decoration:none;
+  text-decoration:none;
+}
+[data-engrid-theme=tnc] .accordion-body li{
+  font-family:var(--default_font-family);
+  font-size:var(--default_font-size);
+  font-weight:var(--default_font-weight);
+  line-height:var(--default_line-height);
+}
 [data-engrid-theme=tnc][data-engrid-layout=leftleft1col]{
   --click-to-expand__copy-area_height:200px;
 }
@@ -10232,6 +10303,14 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter2col]{
   --engrid__body-banner_padding:0;
+  --engrid__body-top_padding:0;
+  --engrid__body-main_padding:0 0 0 110px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter2col] .body-top{
+  grid-row:body-header-end /  body-main-end;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter2col] .body-main{
+  border:none;
 }
 @media screen and (max-width:767px){
   [data-engrid-theme=tnc][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter2col] .body-banner .en__component--copyblock{
