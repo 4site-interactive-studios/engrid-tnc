@@ -526,19 +526,24 @@ export class IHMO {
   private hideField(field: string | Element) {
     const el = field instanceof Element ? field : document.querySelector(field);
     if (el) {
-      el.classList.add("en__hidden");
-      el.querySelector(".en__field__input")?.setAttribute(
-        "disabled",
-        "disabled"
-      );
+      const identifier = [...el.classList]
+        .find((c) => c.match(/en__field--\d+/))
+        ?.replace("en__field--", "");
+      if (identifier) {
+        window.EngagingNetworks.require._defined.enjs.hideField(identifier);
+      }
     }
   }
 
   private showField(field: string | Element) {
     const el = field instanceof Element ? field : document.querySelector(field);
     if (el) {
-      el.classList.remove("en__hidden");
-      el.querySelector(".en__field__input")?.removeAttribute("disabled");
+      const identifier = [...el.classList]
+        .find((c) => c.match(/en__field--\d+/))
+        ?.replace("en__field--", "");
+      if (identifier) {
+        window.EngagingNetworks.require._defined.enjs.showField(identifier);
+      }
     }
   }
 }

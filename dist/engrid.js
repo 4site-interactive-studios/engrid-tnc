@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, January 7, 2025 @ 12:12:01 ET
+ *  Date: Tuesday, January 14, 2025 @ 12:33:35 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -22809,15 +22809,19 @@ class IHMO {
   hideField(field) {
     const el = field instanceof Element ? field : document.querySelector(field);
     if (el) {
-      el.classList.add("en__hidden");
-      el.querySelector(".en__field__input")?.setAttribute("disabled", "disabled");
+      const identifier = [...el.classList].find(c => c.match(/en__field--\d+/))?.replace("en__field--", "");
+      if (identifier) {
+        window.EngagingNetworks.require._defined.enjs.hideField(identifier);
+      }
     }
   }
   showField(field) {
     const el = field instanceof Element ? field : document.querySelector(field);
     if (el) {
-      el.classList.remove("en__hidden");
-      el.querySelector(".en__field__input")?.removeAttribute("disabled");
+      const identifier = [...el.classList].find(c => c.match(/en__field--\d+/))?.replace("en__field--", "");
+      if (identifier) {
+        window.EngagingNetworks.require._defined.enjs.showField(identifier);
+      }
     }
   }
 }
