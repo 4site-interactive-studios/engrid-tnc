@@ -1,10 +1,4 @@
 &[data-engrid-gdcp="true"] {
-  // transition styling - hide old opt in notices
-  .en__field--emailAddress .en__field__notice,
-  .en__field--phoneNumber2 .en__field__notice {
-    display: none
-  }
-
   // Force visibility of the new opt in fields, override any iX-hide classes
   .en__field [class*="en__field--engrid.gdcp"] {
     display: flex!important;
@@ -42,5 +36,13 @@
 
   [class*=validationFail] .engrid-gdcp-field label {
     color: initial;
+  }
+}
+
+// Hide the old opt in notices unless GDCP is explicitly disabled
+&:not([data-engrid-gdcp="false"]) {
+  .en__field--emailAddress .en__field__notice,
+  .en__field--phoneNumber2 .en__field__notice {
+    display: none
   }
 }

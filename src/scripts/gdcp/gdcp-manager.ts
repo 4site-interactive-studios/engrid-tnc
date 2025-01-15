@@ -48,6 +48,7 @@ export class GdcpManager {
     this.handleDoubleOptInEmail();
     this.handlePostalMailQcb();
     if (!this.shouldRun()) {
+      ENGrid.setBodyData("gdcp", "false");
       this.logger.log("GDCP is not running on this page.");
       return;
     }

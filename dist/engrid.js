@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 15, 2025 @ 07:02:43 ET
+ *  Date: Wednesday, January 15, 2025 @ 07:14:34 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -23485,6 +23485,7 @@ class GdcpManager {
     this.handleDoubleOptInEmail();
     this.handlePostalMailQcb();
     if (!this.shouldRun()) {
+      engrid_ENGrid.setBodyData("gdcp", "false");
       this.logger.log("GDCP is not running on this page.");
       return;
     }
