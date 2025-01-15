@@ -8,7 +8,7 @@ import { pages } from "./config/pages";
 
 declare global {
   interface Window {
-    GlobalDigitalComplianceActive?: boolean;
+    DisableGlobalDigitalCompliance?: boolean;
     GlobalDigitalComplianceStrictMode?: boolean;
     GlobalDigitalComplianceSingleOptIn?: boolean;
     EngagingNetworks: any;
@@ -78,13 +78,10 @@ export class GdcpManager {
   }
 
   /**
-   * List of Page IDs where GDCP should be active
+   * GDCP will run unless explicitly disabled
    */
   private shouldRun(): boolean {
-    return (
-      [158050, 158972].includes(ENGrid.getPageID()) ||
-      window.GlobalDigitalComplianceActive === true
-    );
+    return window.DisableGlobalDigitalCompliance !== true;
   }
 
   /**

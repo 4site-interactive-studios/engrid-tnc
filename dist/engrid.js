@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, January 14, 2025 @ 12:33:35 ET
+ *  Date: Wednesday, January 15, 2025 @ 07:02:43 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -23511,10 +23511,10 @@ class GdcpManager {
   }
 
   /**
-   * List of Page IDs where GDCP should be active
+   * GDCP will run unless explicitly disabled
    */
   shouldRun() {
-    return [158050, 158972].includes(engrid_ENGrid.getPageID()) || window.GlobalDigitalComplianceActive === true;
+    return window.DisableGlobalDigitalCompliance !== true;
   }
 
   /**
