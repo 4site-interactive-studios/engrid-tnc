@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 8, 2025 @ 11:48:35 ET
+ *  Date: Thursday, January 16, 2025 @ 07:04:34 ET
  *  By: michael
  *  ENGrid styles: v0.20.0
  *  ENGrid scripts: v0.20.4
@@ -23076,15 +23076,19 @@ class IHMO {
   hideField(field) {
     const el = field instanceof Element ? field : document.querySelector(field);
     if (el) {
-      el.classList.add("en__hidden");
-      el.querySelector(".en__field__input")?.setAttribute("disabled", "disabled");
+      const identifier = [...el.classList].find(c => c.match(/en__field--\d+/))?.replace("en__field--", "");
+      if (identifier) {
+        window.EngagingNetworks.require._defined.enjs.hideField(identifier);
+      }
     }
   }
   showField(field) {
     const el = field instanceof Element ? field : document.querySelector(field);
     if (el) {
-      el.classList.remove("en__hidden");
-      el.querySelector(".en__field__input")?.removeAttribute("disabled");
+      const identifier = [...el.classList].find(c => c.match(/en__field--\d+/))?.replace("en__field--", "");
+      if (identifier) {
+        window.EngagingNetworks.require._defined.enjs.showField(identifier);
+      }
     }
   }
 }
@@ -23748,6 +23752,7 @@ class GdcpManager {
     this.handleDoubleOptInEmail();
     this.handlePostalMailQcb();
     if (!this.shouldRun()) {
+      engrid_ENGrid.setBodyData("gdcp", "false");
       this.logger.log("GDCP is not running on this page.");
       return;
     }
@@ -23774,10 +23779,10 @@ class GdcpManager {
   }
 
   /**
-   * List of Page IDs where GDCP should be active
+   * GDCP will run unless explicitly disabled
    */
   shouldRun() {
-    return [158050, 158972].includes(engrid_ENGrid.getPageID()) || window.GlobalDigitalComplianceActive === true;
+    return window.DisableGlobalDigitalCompliance !== true;
   }
 
   /**
