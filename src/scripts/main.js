@@ -423,7 +423,6 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
   );
   const appealCode = urlParams.get("supporter.appealCode");
   if (giftDesignationField && appealCode) {
-    giftDesignationField.disabled = true;
     const giftDesignationNeededMostCheckbox = document.querySelector(
       "#en__field_supporter_questions_8785940"
     );

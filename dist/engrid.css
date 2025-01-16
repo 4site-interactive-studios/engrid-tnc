@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 16, 2025 @ 11:18:02 ET
+ *  Date: Thursday, January 16, 2025 @ 12:33:03 ET
  *  By: michael
- *  ENGrid styles: v0.20.0
- *  ENGrid scripts: v0.20.4
+ *  ENGrid styles: v0.19.16
+ *  ENGrid scripts: v0.19.19
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -4441,10 +4441,12 @@ button.en__eventOccurrence__select>label{
 }
 @keyframes spin{
   0%{
-    transform:rotate(0deg);
+    tranform:rotate(0deg);
+    -webkit-transform:rotate(0deg);
   }
   to{
-    transform:rotate(1turn);
+    tranform:rotate(1turn);
+    -webkit-transform:rotate(1turn);
   }
 }
 [data-engrid-theme]{
