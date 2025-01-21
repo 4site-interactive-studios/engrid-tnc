@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, January 21, 2025 @ 07:00:19 ET
+ *  Date: Tuesday, January 21, 2025 @ 08:33:49 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -8158,6 +8158,11 @@ body[data-engrid-debug]:before{
   text-align:left;
   width:100%;
 }
+@media screen and (max-width:767px){
+  [data-engrid-theme=tnc] .accordion-header button{
+    font-size:20px;
+  }
+}
 [data-engrid-theme=tnc] .accordion-header button:focus,[data-engrid-theme=tnc] .accordion-header button:hover{
   background-color:inherit;
   color:inherit;
@@ -10168,6 +10173,7 @@ body[data-engrid-debug]:before{
   grid-column:pc !important;
   grid-row:body-banner;
   margin-bottom:50px;
+  max-width:100% !important;
   text-align:center;
 }
 @media screen and (max-width:767px){
@@ -10253,6 +10259,16 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-subtheme=hero-banner] .en__component--svblock .en__field__label--positionabove{
   margin-bottom:20px;
 }
+[data-engrid-theme=tnc][data-engrid-subtheme=hero-banner] .body-main h3{
+  border-bottom:1px solid #cdcdcd;
+  color:#007931;
+  font-family:var(--default_font-family);
+  font-size:1rem;
+  font-weight:700;
+  margin:0 0 1.25rem;
+  padding-bottom:1rem;
+  text-transform:uppercase;
+}
 [data-engrid-theme=tnc][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top{
   border-bottom:1px solid #cdcdcd;
   color:var(--p_color);
@@ -10312,6 +10328,16 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter2col] .body-main{
   border:none;
 }
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter2col]{
+    --engrid__body_padding:0 14px;
+    --engrid__body-main_padding:0 14px;
+    --engrid__body-top_padding:20px 14px 0;
+  }
+  [data-engrid-theme=tnc][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter2col] .body-top{
+    grid-row:body-top;
+  }
+}
 @media screen and (max-width:767px){
   [data-engrid-theme=tnc][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter2col] .body-banner .en__component--copyblock{
     padding-bottom:32px;
@@ -10326,6 +10352,19 @@ body[data-engrid-debug]:before{
   [data-engrid-theme=tnc][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter2col] .body-banner .en__component--copyblock>:last-child{
     margin-bottom:0;
   }
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=hero-banner][data-engrid-thank-you=true] .body-top{
+  border-bottom:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=hero-banner][data-engrid-thank-you=true] .body-top h2{
+  font-family:var(--sans-serif-fonts);
+  font-size:40px;
+  font-weight:600;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=hero-banner][data-engrid-thank-you=true] .body-top h3{
+  font-family:var(--sans-serif-fonts);
+  font-size:30px;
+  font-weight:600;
 }
 [data-engrid-theme=tnc] .engrid--ihmo-wrapper{
   border:1px solid #cdcdcd;
