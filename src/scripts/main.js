@@ -533,4 +533,22 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
 
     window.addEventListener("blur", dataListener);
   }
+
+  // Accordion functionality
+  const accordion = document.querySelectorAll(".accordion-header");
+  accordion.forEach((button) => {
+    button.addEventListener("click", function () {
+      const button = this.querySelector(".accordion-button");
+      button.classList.toggle("collapsed");
+      const panel = this.nextElementSibling;
+      panel.classList.toggle("show");
+
+      document.querySelectorAll(".accordion-item").forEach((el) => {
+        if (el.contains(button)) return;
+
+        el.querySelector(".accordion-button").classList.add("collapsed");
+        el.querySelector(".accordion-collapse").classList.remove("show");
+      });
+    });
+  });
 };

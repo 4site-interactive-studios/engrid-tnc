@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 16, 2025 @ 12:33:03 ET
+ *  Date: Tuesday, January 21, 2025 @ 08:33:49 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -22262,6 +22262,22 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     };
     window.addEventListener("blur", dataListener);
   }
+
+  // Accordion functionality
+  const accordion = document.querySelectorAll(".accordion-header");
+  accordion.forEach(button => {
+    button.addEventListener("click", function () {
+      const button = this.querySelector(".accordion-button");
+      button.classList.toggle("collapsed");
+      const panel = this.nextElementSibling;
+      panel.classList.toggle("show");
+      document.querySelectorAll(".accordion-item").forEach(el => {
+        if (el.contains(button)) return;
+        el.querySelector(".accordion-button").classList.add("collapsed");
+        el.querySelector(".accordion-collapse").classList.remove("show");
+      });
+    });
+  });
 };
 ;// CONCATENATED MODULE: ./src/scripts/bequest-lightbox.ts
 
