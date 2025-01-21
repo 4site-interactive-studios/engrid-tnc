@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 9, 2025 @ 12:08:56 ET
+ *  Date: Tuesday, January 21, 2025 @ 07:00:19 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -10609,9 +10609,6 @@ body[data-engrid-debug]:before{
     flex:1 0 50%;
   }
 }
-[data-engrid-theme=tnc][data-engrid-gdcp=true] .en__field--emailAddress .en__field__notice,[data-engrid-theme=tnc][data-engrid-gdcp=true] .en__field--phoneNumber2 .en__field__notice{
-  display:none;
-}
 [data-engrid-theme=tnc][data-engrid-gdcp=true] .en__field [class*="en__field--engrid.gdcp"]{
   display:flex !important;
   flex-basis:100% !important;
@@ -10644,6 +10641,9 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-gdcp=true] [class*=validationFail] .engrid-gdcp-field label{
   color:initial;
+}
+[data-engrid-theme=tnc]:not([data-engrid-gdcp=false]) .en__field--emailAddress .en__field__notice,[data-engrid-theme=tnc]:not([data-engrid-gdcp=false]) .en__field--phoneNumber2 .en__field__notice{
+  display:none;
 }
 [data-engrid-theme=tnc][data-engrid-subpagetype=quiz]{
   --submit__button_font-size:18px!important;

@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 9, 2025 @ 12:08:56 ET
+ *  Date: Tuesday, January 21, 2025 @ 07:00:19 ET
  *  By: michael
  *  ENGrid styles: v0.19.16
  *  ENGrid scripts: v0.19.19
@@ -21671,6 +21671,11 @@ function setDonationDataSessionStorage(App, DonationAmount) {
   donationData.city = App.getFieldValue("supporter.city");
   donationData.country = App.getFieldValue("supporter.country");
   donationData.phoneNumber = App.getFieldValue("supporter.phoneNumber2");
+  donationData.isEmailOptInChecked = ["supporter.questions.848518", "supporter.questions.848520", "supporter.questions.848521", "supporter.questions.848522", "supporter.questions.848523"].some(field => {
+    /** @type {HTMLInputElement} */
+    const el = App.getField(field);
+    return el && el.checked;
+  });
 
   /** @type {HTMLInputElement} */
   //If fee cover is checked, set extra amount to 3% of donation amount and subtract from original donation amount
@@ -22171,7 +22176,6 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   const giftDesignationField = document.querySelector(".engrid-gift-designation #en__field_supporter_appealCode");
   const appealCode = urlParams.get("supporter.appealCode");
   if (giftDesignationField && appealCode) {
-    giftDesignationField.disabled = true;
     const giftDesignationNeededMostCheckbox = document.querySelector("#en__field_supporter_questions_8785940");
     const giftDesignationChooseCheckbox = document.querySelector("#en__field_supporter_questions_8785941");
     if (giftDesignationNeededMostCheckbox && giftDesignationChooseCheckbox) {
@@ -22825,15 +22829,19 @@ class IHMO {
   hideField(field) {
     const el = field instanceof Element ? field : document.querySelector(field);
     if (el) {
-      el.classList.add("en__hidden");
-      el.querySelector(".en__field__input")?.setAttribute("disabled", "disabled");
+      const identifier = [...el.classList].find(c => c.match(/en__field--\d+/))?.replace("en__field--", "");
+      if (identifier) {
+        window.EngagingNetworks.require._defined.enjs.hideField(identifier);
+      }
     }
   }
   showField(field) {
     const el = field instanceof Element ? field : document.querySelector(field);
     if (el) {
-      el.classList.remove("en__hidden");
-      el.querySelector(".en__field__input")?.removeAttribute("disabled");
+      const identifier = [...el.classList].find(c => c.match(/en__field--\d+/))?.replace("en__field--", "");
+      if (identifier) {
+        window.EngagingNetworks.require._defined.enjs.showField(identifier);
+      }
     }
   }
 }
@@ -23497,6 +23505,7 @@ class GdcpManager {
     this.handleDoubleOptInEmail();
     this.handlePostalMailQcb();
     if (!this.shouldRun()) {
+      engrid_ENGrid.setBodyData("gdcp", "false");
       this.logger.log("GDCP is not running on this page.");
       return;
     }
@@ -23523,10 +23532,10 @@ class GdcpManager {
   }
 
   /**
-   * List of Page IDs where GDCP should be active
+   * GDCP will run unless explicitly disabled
    */
   shouldRun() {
-    return [158050, 158972].includes(engrid_ENGrid.getPageID()) || window.GlobalDigitalComplianceActive === true;
+    return window.DisableGlobalDigitalCompliance !== true;
   }
 
   /**
