@@ -3361,6 +3361,18 @@
           min-height: 300px;
           object-fit: cover;
           object-position: left;
+
+          &.mobile-image-left {
+            object-position: left;
+          }
+
+          &.mobile-image-center {
+            object-position: center;
+          }
+
+          &.mobile-image-right {
+            object-position: right;
+          }
         }
       }
     }
