@@ -2976,7 +2976,7 @@
     // Background image styles on live page
     &:not(#en__pagebuilder) {
       .page-backgroundImage {
-        grid-row: body-main-start / content-footerSpacer-start!important;
+        grid-row: body-main-start / content-footerSpacer-start !important;
         grid-column: pc / lpc;
 
         &:before {
@@ -2984,7 +2984,7 @@
         }
 
         img {
-          display: block!important;
+          display: block !important;
         }
       }
 
@@ -3019,8 +3019,10 @@
       --radio_box-shadow_hover: none;
       --radio_border-radius: 0;
 
-      input[type=radio]:checked+label:before {
-        background: #1a1a1a url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10.822' height='8.414' viewBox='0 0 10.822 8.414'><path d='M6,8,0,2,2.438,0' transform='translate(1.407 7.414) rotate(-90)' fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-miterlimit='10' stroke-width='2'/></svg>") center no-repeat;
+      input[type="radio"]:checked + label:before {
+        background: #1a1a1a
+          url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='10.822' height='8.414' viewBox='0 0 10.822 8.414'><path d='M6,8,0,2,2.438,0' transform='translate(1.407 7.414) rotate(-90)' fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-miterlimit='10' stroke-width='2'/></svg>")
+          center no-repeat;
       }
 
       h3,
@@ -3112,7 +3114,6 @@
           display: none;
         }
 
-
         [data-tippy-root] {
           max-width: 100%;
         }
@@ -3158,7 +3159,9 @@
     --submit__button_background-color: var(--color-green);
     --submit__button_border-color: var(--color-green);
     --engrid__body-top_background-color: var(--engrid__body_background-color);
-    --engrid__body-banner_background-color: var(--engrid__body_background-color);
+    --engrid__body-banner_background-color: var(
+      --engrid__body_background-color
+    );
     --fields_spacing-block: 0.85rem;
 
     #engrid > .en__component--advrow,
@@ -3235,7 +3238,7 @@
         @media screen and (min-width: 768px) {
           &:after {
             bottom: 0;
-            background-color: rgba(0, 0, 0, .5);
+            background-color: rgba(0, 0, 0, 0.5);
             content: "";
             display: block;
             left: 0;
@@ -3279,12 +3282,12 @@
       grid-row: body-top;
       color: var(--p_color);
       padding-top: 40px;
-      padding-bottom: 18px!important;
+      padding-bottom: 18px !important;
       border-bottom: 1px solid #cdcdcd;
       margin-bottom: 40px;
 
       @media screen and (max-width: 992px) {
-        padding: 40px 14px 40px!important;
+        padding: 40px 14px 40px !important;
         width: calc(100% - 28px);
         margin-left: auto;
         margin-right: auto;
@@ -3304,7 +3307,6 @@
           line-height: 1.81;
           font-family: var(--serif-fonts);
         }
-
 
         font-weight: normal;
         margin: 0 auto;
@@ -3343,6 +3345,9 @@
       margin-bottom: 20px;
     }
   }
+
+  //Premiums
+  @import "./components/premiums";
 
   @import "ihmo.scss";
   @import "ecard.scss";
