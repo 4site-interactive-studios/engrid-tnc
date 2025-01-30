@@ -210,7 +210,7 @@ export class GdcpManager {
 
     //Else, if the page has an email field we will position it at the top of the form block
     const emailField = document.querySelector(
-      ".en__field--email"
+      ".en__field--email, .en__field--emailAddress"
     ) as HTMLElement;
     if (emailField) {
       emailField.parentElement?.insertAdjacentHTML(

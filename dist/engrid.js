@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 30, 2025 @ 10:50:21 ET
+ *  Date: Thursday, January 30, 2025 @ 12:45:05 ET
  *  By: michael
  *  ENGrid styles: v0.20.0
  *  ENGrid scripts: v0.20.4
@@ -23901,7 +23901,7 @@ class GdcpManager {
     }
 
     //Else, if the page has an email field we will position it at the top of the form block
-    const emailField = document.querySelector(".en__field--email");
+    const emailField = document.querySelector(".en__field--email, .en__field--emailAddress");
     if (emailField) {
       emailField.parentElement?.insertAdjacentHTML("beforeend", usStatesFieldHtml);
       const regionField = document.querySelector(".en__field--region");
