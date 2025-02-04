@@ -144,11 +144,13 @@ function getSubmitEventName(App) {
     "supporter.questions.848528",
     "supporter.questions.1952175",
     "supporter.questions.848527",
+    "supporter.questions.891102",
   ].some((field) => {
     /** @type {HTMLInputElement} */
     const el = App.getField(field);
     return (
-      el && el.checked && App.getFieldValue("supporter.phoneNumber2") !== ""
+      (el && el.checked && App.getFieldValue("supporter.phoneNumber2") !== "") ||
+        (el && el.checked && field.split('.')[2] === '891102' && App.getFieldValue("supporter.phoneNumber"))
     );
   });
 
