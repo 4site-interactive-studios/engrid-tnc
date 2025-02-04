@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 30, 2025 @ 12:45:05 ET
- *  By: michael
+ *  Date: Monday, February 3, 2025 @ 21:52:00 ET
+ *  By: say-re
  *  ENGrid styles: v0.20.0
  *  ENGrid scripts: v0.20.4
  *
@@ -22007,10 +22007,10 @@ function trackFormSubmit(App, DonationAmount) {
   }
 }
 function getSubmitEventName(App) {
-  const isOptedInToPhone = ["supporter.questions.848528", "supporter.questions.1952175", "supporter.questions.848527"].some(field => {
+  const isOptedInToPhone = ["supporter.questions.848528", "supporter.questions.1952175", "supporter.questions.848527", "supporter.questions.891102"].some(field => {
     /** @type {HTMLInputElement} */
     const el = App.getField(field);
-    return el && el.checked && App.getFieldValue("supporter.phoneNumber2") !== "";
+    return el && el.checked && App.getFieldValue("supporter.phoneNumber2") !== "" || el && el.checked && field.split('.')[2] === '891102' && App.getFieldValue("supporter.phoneNumber");
   });
   const isOptedInToEmail = ["supporter.questions.848518", "supporter.questions.848520", "supporter.questions.848521", "supporter.questions.848522", "supporter.questions.848523"].some(field => {
     /** @type {HTMLInputElement} */
