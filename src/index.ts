@@ -44,6 +44,26 @@ declare global {
       totalNumberOfGifts?: string;
     };
   }
+
+  const utag_data: {
+    channel: string;
+    constituent_id: string;
+    en_campaignId: string;
+    en_code: string;
+    en_page_count: number;
+    en_page_number: number;
+    en_txn6: string;
+    hier1: string;
+    locale: string;
+    page_category: string;
+    page_id: string;
+    page_name: string;
+    site_group: string;
+    site_section: string;
+    site_section_2: string;
+    site_section_3: string;
+    site_section_4: string;
+  };
 }
 
 const minimumAmount = window?.donationSettings?.minimumDonationAmount ?? 5;
