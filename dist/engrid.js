@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 30, 2025 @ 12:45:05 ET
+ *  Date: Tuesday, February 4, 2025 @ 10:55:14 ET
  *  By: michael
  *  ENGrid styles: v0.20.0
  *  ENGrid scripts: v0.20.4
@@ -24511,9 +24511,9 @@ class Quiz {
     const textOptInField = form.querySelector(".en__field--home-phone-opt-in .en__field__input--checkbox");
     const textOptInChecked = textOptInField?.checked || false;
     let formType = {
-      lightbox_name: `lightbox-${window.utag_data.page_name}`,
-      form_name: `lightbox-${window.utag_data.page_name}`,
-      email_signup_location: `lightbox-${window.utag_data.page_name}`,
+      lightbox_name: `lightbox-${utag_data.page_name ?? ""}`,
+      form_name: `lightbox-${utag_data.page_name ?? ""}`,
+      email_signup_location: `lightbox-${utag_data.page_name ?? ""}`,
       event_name: "",
       form_type: "",
       text_signup_location: ""
@@ -24523,12 +24523,12 @@ class Quiz {
     if (!emailUnsubscribeChecked && mobilePhoneField && textOptInChecked) {
       formType.event_name = "frm_ltbx_emt_emo_txt_txto_submit";
       formType.form_type = "email_text_signup";
-      formType.text_signup_location = "lightbox-" + window.utag_data.page_name;
+      formType.text_signup_location = `lightbox-${utag_data.page_name ?? ""}`;
       //Unsubscribe not checked, mobile phone field exists (and optin not checked)
     } else if (!emailUnsubscribeChecked && mobilePhoneField) {
       formType.event_name = "frm_ltbx_emt_emo_txt_submit";
       formType.form_type = "email_text_signup";
-      formType.text_signup_location = "lightbox-" + window.utag_data.page_name;
+      formType.text_signup_location = `lightbox-${utag_data.page_name ?? ""}`;
       //Unsubscribe not checked, no mobile phone field
     } else if (!emailUnsubscribeChecked) {
       formType.event_name = "frm_ltbx_emt_emo_submit";
@@ -24537,12 +24537,12 @@ class Quiz {
     } else if (mobilePhoneField && textOptInChecked) {
       formType.event_name = "rm_ltbx_emt_txt_txto_submit";
       formType.form_type = "email_text_signup";
-      formType.text_signup_location = "lightbox-" + window.utag_data.page_name;
+      formType.text_signup_location = `lightbox-${utag_data.page_name ?? ""}`;
       //Unsubscribe checked, mobile phone field exists and optin not checked
     } else if (mobilePhoneField) {
       formType.event_name = "frm_ltbx_emt_txt_submit";
       formType.form_type = "email_text_signup";
-      formType.text_signup_location = "lightbox-" + window.utag_data.page_name;
+      formType.text_signup_location = `lightbox-${utag_data.page_name ?? ""}`;
       //Unsubscribe checked, mobile phone field doesn't exist
     } else {
       formType.event_name = "frm_ltbx_emt_submit";
