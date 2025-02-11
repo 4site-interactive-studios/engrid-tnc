@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, January 24, 2025 @ 18:34:20 ET
+ *  Date: Monday, February 10, 2025 @ 20:46:59 ET
  *  By: fernando
  *  ENGrid styles: v0.20.0
  *  ENGrid scripts: v0.20.4
@@ -22540,74 +22540,74 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
       premiumTheme3Image.style.backgroundImage = "var(--premium_image_theme_3)";
     }
   };
-  if (premiumHeader2 || premiumHeader3) {
-    const premiumBlock = document.querySelector(".en__component--premiumgiftblock");
-    if (premiumBlock) {
-      //listen for the change event of name "en__pg" using event delegation
-      let selectedPremiumId = null;
-      let selectedVariantId = null;
-      ["change", "click"].forEach(event => {
-        premiumBlock.addEventListener(event, e => {
-          setTimeout(() => {
-            const selectedGift = document.querySelector('[name="en__pg"]:checked');
-            if (selectedGift) {
-              const selectedGiftImage = selectedGift.closest(".en__pg").querySelector("img");
-              const premiumTheme3Image = document.querySelector(".premium-theme-3 .premium-theme-3-image");
-              if (premiumTheme3Image) {
-                premiumTheme3Image.dataset.selectedGift = selectedGift.value;
-                if (selectedGiftImage) {
-                  premiumTheme3Image.style.backgroundImage = `url(${selectedGiftImage.src})`;
-                } else {
-                  premiumTheme3Image.style.backgroundImage = "var(--premium_image_theme_3)";
-                }
+  const premiumBlock = document.querySelector(".en__component--premiumgiftblock");
+  if (premiumBlock) {
+    //listen for the change event of name "en__pg" using event delegation
+    let selectedPremiumId = null;
+    let selectedVariantId = null;
+    ["change", "click"].forEach(event => {
+      premiumBlock.addEventListener(event, e => {
+        setTimeout(() => {
+          const selectedGift = document.querySelector('[name="en__pg"]:checked');
+          if (selectedGift) {
+            const selectedGiftImage = selectedGift.closest(".en__pg").querySelector("img");
+            const premiumTheme3Image = document.querySelector(".premium-theme-3 .premium-theme-3-image");
+            if (premiumTheme3Image) {
+              premiumTheme3Image.dataset.selectedGift = selectedGift.value;
+              if (selectedGiftImage) {
+                premiumTheme3Image.style.backgroundImage = `url(${selectedGiftImage.src})`;
+              } else {
+                premiumTheme3Image.style.backgroundImage = "var(--premium_image_theme_3)";
               }
-              selectedPremiumId = selectedGift.value;
-              selectedVariantId = App.getFieldValue("transaction.selprodvariantid");
             }
-          }, 250);
-        });
-      });
-
-      // Mutation observer to check if the "Maximized Their Gift" radio button is present. If it is, hide it.
-      const observer = new MutationObserver(mutationsList => {
-        //loop over the mutations and if we're adding a radio with the "checked" attribute, remove that attribute so nothing gets re-selected
-        //when the premiums list is re-rendered
-        for (const mutation of mutationsList) {
-          if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
-            mutation.addedNodes.forEach(node => {
-              if (typeof node.querySelector !== "function") return;
-              const preSelectedRadio = node.querySelector("input[checked]");
-              if (preSelectedRadio) {
-                preSelectedRadio.removeAttribute("checked");
-              }
-            });
+            selectedPremiumId = selectedGift.value;
+            selectedVariantId = App.getFieldValue("transaction.selprodvariantid");
+            sessionStorage.setItem("selectedPremiumId", selectedPremiumId);
+            sessionStorage.setItem("selectedVariantId", selectedVariantId);
           }
-        }
-        if (mutationsList.some(mutation => mutation.type === "childList")) {
-          // Re-select the previously selected gift when gift list is re-rendered
-          // If gift no longer exists, choose maximize my gift
-          if (selectedPremiumId && selectedVariantId) {
-            const selectedGift = document.querySelector(`input[type="radio"][name="en__pg"][value="${selectedPremiumId}"]`);
-            if (selectedGift) {
-              selectedGift.click();
-              window.setTimeout(() => {
-                App.setFieldValue("transaction.selprodvariantid", selectedVariantId);
-              }, 100);
-            } else {
-              maxMyGift();
+        }, 250);
+      });
+    });
+
+    // Mutation observer to check if the "Maximized Their Gift" radio button is present. If it is, hide it.
+    const observer = new MutationObserver(mutationsList => {
+      //loop over the mutations and if we're adding a radio with the "checked" attribute, remove that attribute so nothing gets re-selected
+      //when the premiums list is re-rendered
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+          mutation.addedNodes.forEach(node => {
+            if (typeof node.querySelector !== "function") return;
+            const preSelectedRadio = node.querySelector("input[checked]");
+            if (preSelectedRadio) {
+              preSelectedRadio.removeAttribute("checked");
             }
+          });
+        }
+      }
+      if (mutationsList.some(mutation => mutation.type === "childList")) {
+        // Re-select the previously selected gift when gift list is re-rendered
+        // If gift no longer exists, choose maximize my gift
+        if (selectedPremiumId && selectedVariantId) {
+          const selectedGift = document.querySelector(`input[type="radio"][name="en__pg"][value="${selectedPremiumId}"]`);
+          if (selectedGift) {
+            selectedGift.click();
+            window.setTimeout(() => {
+              App.setFieldValue("transaction.selprodvariantid", selectedVariantId);
+            }, 100);
           } else {
             maxMyGift();
           }
+        } else {
+          maxMyGift();
         }
-      });
-      // Start observing the target node for configured mutations
-      observer.observe(premiumBlock, {
-        attributes: true,
-        childList: true,
-        subtree: true
-      });
-    }
+      }
+    });
+    // Start observing the target node for configured mutations
+    observer.observe(premiumBlock, {
+      attributes: true,
+      childList: true,
+      subtree: true
+    });
   }
   // Premium Gifts Theme 2 Script
   if (premiumHeader2) {
