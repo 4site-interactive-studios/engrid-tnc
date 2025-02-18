@@ -672,6 +672,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     );
     // Move premium gift block to the premium items container
     if (premiumgiftblock && premium3ItemsContainer) {
+      premium3ItemsContainer.innerHTML = "";
       premium3ItemsContainer.appendChild(premiumgiftblock);
     }
   }
@@ -751,7 +752,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     const addCountryNotice = () => {
       if (!document.querySelector(".en__field--country .en__field__notice")) {
         App.addHtml(
-          '<div class="en__field__notice"><strong>Note:</strong> We are unable to mail thank-you gifts to donors outside the United States and its territories and have selected the "Mazimize my gift" option for you.</div>',
+          '<div class="en__field__notice"><strong>Note:</strong> We are unable to mail thank-you gifts to donors outside the United States and its territories and have selected the "Maximize my gift" option for you.</div>',
           ".en__field--country .en__field__element",
           "after"
         );
