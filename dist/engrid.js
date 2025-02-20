@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, February 4, 2025 @ 11:20:45 ET
+ *  Date: Thursday, February 20, 2025 @ 10:59:10 ET
  *  By: michael
  *  ENGrid styles: v0.20.0
  *  ENGrid scripts: v0.20.4
@@ -23197,7 +23197,8 @@ const gdcpFields = [{
   ],
   gdcpFieldName: "engrid.gdcp-email",
   // Don't edit this field
-  gdcpFieldHtmlLabel: `<span>I agree to receive email updates from The Nature Conservancy and understand I can unsubscribe at any time.</span>`
+  gdcpFieldHtmlLabel: `<span>I agree to receive email updates from The Nature Conservancy and understand I can unsubscribe at any time.</span>`,
+  gdcpFieldHtmlLabelEs: `<span>Acepto recibir noticias e información de The Nature Conservancy por correo electrónico y entiendo que puedo cancelar mi suscripción en cualquier momento.</span>`
 }, {
   channel: "mobile_phone",
   dataFieldName: "supporter.phoneNumber2",
@@ -23209,7 +23210,8 @@ const gdcpFields = [{
   ],
   gdcpFieldName: "engrid.gdcp-mobile_phone",
   // Don't edit this field
-  gdcpFieldHtmlLabel: `<span>I’d like to receive phone and text updates from The Nature Conservancy and understand I can unsubscribe at any time. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Mobile Terms & Conditions</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Privacy Statement</a>.</span>`
+  gdcpFieldHtmlLabel: `<span>I’d like to receive phone and text updates from The Nature Conservancy and understand I can unsubscribe at any time. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Mobile Terms & Conditions</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Privacy Statement</a>.</span>`,
+  gdcpFieldHtmlLabelEs: `<span>Me gustaría recibir notificaciones (en inglés) de The Nature Conservancy por teléfono o mensaje de texto y entiendo que podré cancelar mi suscripción en cualquier momento. <em>Pueden aplicarse tarifas de mensajes y datos, y la frecuencia de los mensajes puede variar. Envía STOP para cancelar o HELP para obtener ayuda.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Términos y Condiciones Móviles</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Declaración de Privacidad</a>.</span>`
 }, {
   channel: "home_phone",
   dataFieldName: "supporter.phoneNumber",
@@ -23217,7 +23219,8 @@ const gdcpFields = [{
   ],
   gdcpFieldName: "engrid.gdcp-home_phone",
   // Don't edit this field
-  gdcpFieldHtmlLabel: `<span>I give The Nature Conservancy permission to contact me by phone.</span>`
+  gdcpFieldHtmlLabel: `<span>I give The Nature Conservancy permission to contact me by phone.</span>`,
+  gdcpFieldHtmlLabelEs: `<span>I give The Nature Conservancy permission to contact me by phone.</span>`
 }, {
   channel: "postal_mail",
   dataFieldName: "supporter.postcode",
@@ -23225,7 +23228,8 @@ const gdcpFields = [{
   ],
   gdcpFieldName: "engrid.gdcp-postal_mail",
   // Don't edit this field
-  gdcpFieldHtmlLabel: `<span>The Nature Conservancy can send me updates about its work and other information by mail.</span>`
+  gdcpFieldHtmlLabel: `<span>The Nature Conservancy can send me updates about its work and other information by mail.</span>`,
+  gdcpFieldHtmlLabelEs: `<span>The Nature Conservancy puede enviarme información sobre su trabajo y otras novedades por correo postal.</span>`
 }];
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/gdcp-field-manager.ts
 
@@ -23979,6 +23983,8 @@ class GdcpManager {
    * Also adds an event listener to toggle all the opt in fields when the GDCP field is checked/unchecked
    */
   createGdcpField(gdcpField) {
+    // @ts-ignore
+    const fieldHtmlLabel = window.pageJson.locale.startsWith("es") ? gdcpField.gdcpFieldHtmlLabelEs : gdcpField.gdcpFieldHtmlLabel;
     const field = `
       <div class="en__field en__field--checkbox en__field--000000 pseudo-en-field engrid-gdcp-field en__field--${gdcpField.gdcpFieldName}">
           <div class="en__field__element en__field__element--checkbox">
@@ -23991,12 +23997,12 @@ class GdcpManager {
                     value="Y"
                   >
                   <label class="en__field__label en__field__label--item" for="en__field_${gdcpField.gdcpFieldName}">
-                    ${gdcpField.gdcpFieldHtmlLabel}
+                    ${fieldHtmlLabel}
                   </label>
               </div>
               <div class="en__field__item">
                 <div class="gdcp-field-text-description ${gdcpField.channel}-description hide">
-                  ${gdcpField.gdcpFieldHtmlLabel}
+                  ${fieldHtmlLabel}
                 </div>
               </div>
           </div>

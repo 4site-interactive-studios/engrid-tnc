@@ -316,6 +316,11 @@ export class GdcpManager {
    * Also adds an event listener to toggle all the opt in fields when the GDCP field is checked/unchecked
    */
   private createGdcpField(gdcpField: GdcpField): HTMLInputElement {
+    // @ts-ignore
+    const fieldHtmlLabel = window.pageJson.locale.startsWith("es")
+      ? gdcpField.gdcpFieldHtmlLabelEs
+      : gdcpField.gdcpFieldHtmlLabel;
+
     const field = `
       <div class="en__field en__field--checkbox en__field--000000 pseudo-en-field engrid-gdcp-field en__field--${gdcpField.gdcpFieldName}">
           <div class="en__field__element en__field__element--checkbox">
@@ -328,12 +333,12 @@ export class GdcpManager {
                     value="Y"
                   >
                   <label class="en__field__label en__field__label--item" for="en__field_${gdcpField.gdcpFieldName}">
-                    ${gdcpField.gdcpFieldHtmlLabel}
+                    ${fieldHtmlLabel}
                   </label>
               </div>
               <div class="en__field__item">
                 <div class="gdcp-field-text-description ${gdcpField.channel}-description hide">
-                  ${gdcpField.gdcpFieldHtmlLabel}
+                  ${fieldHtmlLabel}
                 </div>
               </div>
           </div>
