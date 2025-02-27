@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, February 18, 2025 @ 18:06:35 ET
+ *  Date: Wednesday, February 26, 2025 @ 23:37:00 ET
  *  By: fernando
  *  ENGrid styles: v0.20.0
  *  ENGrid scripts: v0.20.4
@@ -22281,10 +22281,39 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
       App.enParseDependencies();
     }
   }
+  function keepScrollPosition(elementBlock) {
+    const scrollY = window.scrollY;
+    const elementStyle = window.getComputedStyle(elementBlock);
+    const elementSize = parseInt(elementStyle.height, 10) + parseInt(elementStyle.marginTop.replace("px", "")) + parseInt(elementStyle.marginBottom.replace("px", ""));
+    window.scrollTo(0, scrollY - elementSize);
+    console.log(elementSize);
+  }
+
+  // If the frequency is annual, move the premium container content below the #en__field_auto_renew container
+  // If frequency is not annual, move the premium container content back to premium container
+  function movePremiumContainerContent(frequency) {
+    const premiumContainerContent = document.querySelector(".premium-container-content");
+    if (!premiumContainerContent) return;
+    const autoRenewField = document.getElementById("en__field_auto_renew");
+    const autoRenewContainer = autoRenewField?.closest(".en__component");
+    if (frequency === "annual") {
+      if (autoRenewContainer) {
+        autoRenewContainer.insertAdjacentElement("afterend", premiumContainerContent);
+      }
+    } else {
+      const premiumContainer = document.querySelector(".premium-container");
+      if (!premiumContainer || premiumContainer.querySelector(".en__component--premiumgiftblock")) return;
+      premiumContainer.appendChild(premiumContainerContent);
+    }
+    keepScrollPosition(premiumContainerContent);
+  }
 
   // Listen for changes to the donation frequency and amount
   freq.onFrequencyChange.subscribe(frequency => {
     setPremiumVisibility(frequency, amt.amount);
+    window.setTimeout(() => {
+      movePremiumContainerContent(frequency);
+    }, 100);
   });
   amt.onAmountChange.subscribe(amount => {
     setPremiumVisibility(freq.frequency, amount);
@@ -22542,6 +22571,18 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   };
   const premiumBlock = document.querySelector(".en__component--premiumgiftblock");
   if (premiumBlock) {
+    // Create a Premium Container
+    const premiumContainer = document.createElement("div");
+    premiumContainer.classList.add("premium-container");
+    premiumContainer.classList.add("en__component");
+    const premiumContainerContent = document.createElement("div");
+    premiumContainerContent.classList.add("premium-container-content");
+    premiumContainerContent.classList.add("en__component");
+    premiumContainer.appendChild(premiumContainerContent);
+    // Add the Premium Container after the Premium Block, then move the Premium Block inside the Premium Container
+    premiumBlock.insertAdjacentElement("afterend", premiumContainer);
+    premiumContainerContent.appendChild(premiumBlock);
+
     //listen for the change event of name "en__pg" using event delegation
     let selectedPremiumId = null;
     let selectedVariantId = null;
@@ -22626,16 +22667,25 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         }
       });
     }
+    const premiumContainerContent = document.querySelector(".premium-container-content");
+    if (premiumContainerContent) {
+      // Move premiumHeader2 to the start of the premiumContainerContent
+      premiumContainerContent.insertBefore(premiumHeader2, premiumContainerContent.firstChild);
+    }
   }
   // END Premium Gifts Theme 2 Script
   // Premium Gifts Theme 3 Script
   if (premiumHeader3) {
     const premium3ItemsContainer = document.querySelector(".premium-theme-3 .premium-theme-3-items-container");
     const premiumgiftblock = document.querySelector(".en__component--premiumgiftblock");
+    const premiumContainerContent = document.querySelector(".premium-container-content");
     // Move premium gift block to the premium items container
     if (premiumgiftblock && premium3ItemsContainer) {
       premium3ItemsContainer.innerHTML = "";
       premium3ItemsContainer.appendChild(premiumgiftblock);
+      if (premiumContainerContent) {
+        premiumContainerContent.appendChild(premiumHeader3);
+      }
     }
   }
   // END Premium Gifts Theme 3 Script
@@ -22662,14 +22712,10 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
       }
       if (!premiumBlock.hasAttribute("disabled")) {
         // Keep the page scroll position when the premium block is disabled (hidden)
-        const scrollY = window.scrollY;
-        const premiumStyle = window.getComputedStyle(premiumBlock);
-        const premiumSize = parseInt(premiumStyle.height, 10) + parseInt(premiumStyle.marginTop.replace("px", "")) + parseInt(premiumStyle.marginBottom.replace("px", ""));
+        keepScrollPosition(premiumBlock);
         premiumBlock.setAttribute("disabled", "disabled");
         premiumBlock.setAttribute("aria-disabled", "true");
         premiumBlock.setAttribute("data-disabled-message", message);
-        window.scrollTo(0, scrollY - premiumSize);
-        console.log(premiumSize);
       }
     };
     const enablePremiumBlock = () => {
