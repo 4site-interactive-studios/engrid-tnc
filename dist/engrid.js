@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, February 20, 2025 @ 10:59:10 ET
+ *  Date: Tuesday, March 4, 2025 @ 09:08:16 ET
  *  By: michael
- *  ENGrid styles: v0.20.0
- *  ENGrid scripts: v0.20.4
+ *  ENGrid styles: v0.20.9
+ *  ENGrid scripts: v0.20.8
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10311,6 +10311,7 @@ const OptionsDefaults = {
     PostalCodeValidator: false,
     CountryRedirect: false,
     WelcomeBack: false,
+    OptInLadder: false,
     PageLayouts: [
         "leftleft1col",
         "centerleft1col",
@@ -12002,7 +12003,8 @@ class AmountLabel {
         let amounts = document.querySelectorAll(".en__field--donationAmt label");
         const currencySymbol = engrid_ENGrid.getCurrencySymbol() || "";
         amounts.forEach((element) => {
-            if (!isNaN(element.innerText)) {
+            const amountText = element.innerText.replace(/,/g, "").replace(/\./g, "");
+            if (!isNaN(amountText)) {
                 element.innerText = currencySymbol + element.innerText;
             }
         });
@@ -19430,17 +19432,19 @@ class DigitalWallets {
 
 class MobileCTA {
     constructor() {
-        var _a, _b, _c;
+        var _a;
         // Initialize options with the MobileCTA value or false
         this.options = (_a = engrid_ENGrid.getOption("MobileCTA")) !== null && _a !== void 0 ? _a : false;
         this.buttonLabel = "";
         // Return early if the options object is falsy or the current page type is not in the options.pages array
-        if (!this.options ||
-            !((_b = this.options.pages) === null || _b === void 0 ? void 0 : _b.includes(engrid_ENGrid.getPageType())) ||
-            engrid_ENGrid.getPageNumber() !== 1)
+        if (!this.options || engrid_ENGrid.getPageNumber() !== 1) {
             return;
-        // Set the button label using the options.label or the default value "Take Action"
-        this.buttonLabel = (_c = this.options.label) !== null && _c !== void 0 ? _c : "Take Action";
+        }
+        const labelForPageType = this.options.find((option) => option.pageType === engrid_ENGrid.getPageType());
+        if (!labelForPageType)
+            return;
+        // Set the button label to the window.mobileCTAButtonLabel value or the label for the current page type
+        this.buttonLabel = window.mobileCTAButtonLabel || labelForPageType.label;
         this.renderButton();
         this.addEventListeners();
     }
@@ -19453,11 +19457,12 @@ class MobileCTA {
         const buttonContainer = document.createElement("div");
         const button = document.createElement("button");
         // Add necessary classes and set the initial display style for the button container
-        buttonContainer.classList.add("engrid-mobile-cta-container");
-        buttonContainer.style.display = "none";
+        buttonContainer.classList.add("engrid-mobile-cta-container", "hide-cta");
         button.classList.add("primary");
         // Set the button's innerHTML and add a click event listener
-        button.innerHTML = this.buttonLabel;
+        button.innerHTML =
+            this.buttonLabel +
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
         button.addEventListener("click", () => {
             formBlock.scrollIntoView({ behavior: "smooth" });
         });
@@ -19479,6 +19484,7 @@ class MobileCTA {
                 this.showButton();
             }
         };
+        toggleButton();
         // Add event listeners for load, resize, and scroll events to toggle the button visibility
         window.addEventListener("load", toggleButton);
         window.addEventListener("resize", toggleButton);
@@ -19488,13 +19494,13 @@ class MobileCTA {
     hideButton() {
         const buttonContainer = document.querySelector(".engrid-mobile-cta-container");
         if (buttonContainer)
-            buttonContainer.style.display = "none";
+            buttonContainer.classList.add("hide-cta");
     }
     // Show the button by setting the container's display style to "block"
     showButton() {
         const buttonContainer = document.querySelector(".engrid-mobile-cta-container");
         if (buttonContainer)
-            buttonContainer.style.display = "block";
+            buttonContainer.classList.remove("hide-cta");
     }
 }
 
@@ -21554,20 +21560,63 @@ class OptInLadder {
         }
     }
     runAsParent() {
-        // Grab all the checkboxes with the name starting with "supporter.questions"
-        const checkboxes = document.querySelectorAll('input[name^="supporter.questions"]');
-        if (checkboxes.length === 0) {
-            this.logger.log("No checkboxes found");
-            return;
-        }
-        this._form.onSubmit.subscribe(() => {
-            // Save the checkbox values to sessionStorage
-            this.saveOptInsToSessionStorage("parent");
-        });
         this.logger.log("Running as Parent");
-        if (ENGrid.getPageNumber() === 1) {
-            // Delete items from sessionStorage
-            this.clearSessionStorage();
+        if (ENGrid.getPageNumber() > 1 &&
+            ENGrid.getPageNumber() === ENGrid.getPageCount()) {
+            // We are on the Thank You Page as a Parent
+            // Check autoinject iFrame
+            const optInLadderOptions = ENGrid.getOption("OptInLadder");
+            if (!optInLadderOptions || !optInLadderOptions.iframeUrl) {
+                this.logger.log("Options not found");
+                return;
+            }
+            // Create an iFrame
+            const iframe = document.createElement("iframe");
+            iframe.src = optInLadderOptions.iframeUrl;
+            iframe.style.width = "100%";
+            iframe.style.height = "0";
+            iframe.scrolling = "no";
+            iframe.frameBorder = "0";
+            iframe.allowFullscreen = true;
+            iframe.allow = "payment";
+            iframe.classList.add("opt-in-ladder-iframe");
+            iframe.classList.add("engrid-iframe");
+            // If the page already has an iFrame with the same class, we don't need to add another one
+            const existingIframe = document.querySelector(".opt-in-ladder-iframe");
+            if (existingIframe) {
+                this.logger.log("iFrame already exists");
+                return;
+            }
+            // Check if the current page is part of the excludePageIDs
+            if (optInLadderOptions.excludePageIDs &&
+                optInLadderOptions.excludePageIDs.includes(ENGrid.getPageID())) {
+                this.logger.log("Current page is excluded");
+                return;
+            }
+            // Append the iFrame to the proper placement
+            const placementQuerySelector = optInLadderOptions.placementQuerySelector || ".body-top";
+            const placement = document.querySelector(placementQuerySelector);
+            if (!placement) {
+                this.logger.error("Placement not found");
+                return;
+            }
+            placement.appendChild(iframe);
+        }
+        else {
+            // Grab all the checkboxes with the name starting with "supporter.questions"
+            const checkboxes = document.querySelectorAll('input[name^="supporter.questions"]');
+            if (checkboxes.length === 0) {
+                this.logger.log("No checkboxes found");
+                return;
+            }
+            this._form.onSubmit.subscribe(() => {
+                // Save the checkbox values to sessionStorage
+                this.saveOptInsToSessionStorage("parent");
+            });
+            if (ENGrid.getPageNumber() === 1) {
+                // Delete items from sessionStorage
+                this.clearSessionStorage();
+            }
         }
     }
     runAsChildRegular() {
@@ -21753,7 +21802,7 @@ class OptInLadder {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.20.4";
+const AppVersion = "0.20.8";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
