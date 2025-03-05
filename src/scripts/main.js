@@ -226,27 +226,33 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     }
   }
 
-  function keepScrollPosition(elementBlock) {
+  function keepScrollPosition(elementBlock, direction = "up") {
+    if (!elementBlock) return;
     const scrollY = window.scrollY;
     const elementStyle = window.getComputedStyle(elementBlock);
     const elementSize =
       parseInt(elementStyle.height, 10) +
       parseInt(elementStyle.marginTop.replace("px", "")) +
       parseInt(elementStyle.marginBottom.replace("px", ""));
-    window.scrollTo(0, scrollY - elementSize);
+    window.setTimeout(() => {
+      window.scrollTo(
+        0,
+        direction === "up" ? scrollY - elementSize : scrollY + elementSize
+      );
+    }, 100);
     console.log(elementSize);
   }
 
   // If the frequency is annual, move the premium container content below the #en__field_auto_renew container
   // If frequency is not annual, move the premium container content back to premium container
-  function movePremiumContainerContent(frequency) {
+  function movePremiumContainerContent(direction = "up") {
     const premiumContainerContent = document.querySelector(
       ".premium-container-content"
     );
     if (!premiumContainerContent) return;
     const autoRenewField = document.getElementById("en__field_auto_renew");
     const autoRenewContainer = autoRenewField?.closest(".en__component");
-    if (frequency === "annual") {
+    if (direction === "down") {
       if (autoRenewContainer) {
         autoRenewContainer.insertAdjacentElement(
           "afterend",
@@ -263,15 +269,16 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
         return;
       premiumContainer.appendChild(premiumContainerContent);
     }
-    keepScrollPosition(premiumContainerContent);
   }
 
   // Listen for changes to the donation frequency and amount
   freq.onFrequencyChange.subscribe((frequency) => {
     setPremiumVisibility(frequency, amt.amount);
-    window.setTimeout(() => {
-      movePremiumContainerContent(frequency);
-    }, 100);
+    if (frequency !== "annual") {
+      window.setTimeout(() => {
+        movePremiumContainerContent("up");
+      }, 100);
+    }
   });
   amt.onAmountChange.subscribe((amount) => {
     setPremiumVisibility(freq.frequency, amount);
@@ -337,6 +344,13 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       App.setBodyData("auto-renew-on-page", "true");
       App.setBodyData("auto-renew-active", autoRenew.checked.toString());
       extRef2Input.value = autoRenew.checked ? "auto_renew" : "";
+
+      autoRenew.addEventListener("change", () => {
+        const autoRenewActive = autoRenew.checked;
+        if (autoRenewActive) {
+          movePremiumContainerContent("down");
+        }
+      });
 
       freq.onFrequencyChange.subscribe((frequency) => {
         if (frequency === "annual") {
@@ -784,7 +798,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       }
       if (!premiumBlock.hasAttribute("disabled")) {
         // Keep the page scroll position when the premium block is disabled (hidden)
-        keepScrollPosition(premiumBlock);
+        keepScrollPosition(premiumBlock, "up");
         premiumBlock.setAttribute("disabled", "disabled");
         premiumBlock.setAttribute("aria-disabled", "true");
         premiumBlock.setAttribute("data-disabled-message", message);
