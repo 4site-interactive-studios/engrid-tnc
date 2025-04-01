@@ -597,6 +597,25 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     ".premium-theme-3 .premium-theme-3-header"
   );
   const maxMyGift = () => {
+    // If the selectedPremiumId is zero, we will maximize the gift
+    const maxRadio = document.querySelector(
+      ".en__pg:last-child input[type='radio'][name='en__pg'][value='0']"
+    );
+    const premiumTheme3Image = document.querySelector(
+      ".premium-theme-3 .premium-theme-3-image"
+    );
+    if (maxRadio) {
+      maxRadio.checked = true;
+      maxRadio.click();
+      setTimeout(() => {
+        App.setFieldValue("transaction.selprodvariantid", "");
+      }, 150);
+    }
+    if (premiumTheme3Image) {
+      premiumTheme3Image.style.backgroundImage = "var(--premium_image_theme_3)";
+    }
+  };
+  const setDefaultPremium = () => {
     if ("selectedPremiumId" in window) {
       if (window.selectedPremiumId > 0) {
         // We will not maximize the gift if the selectedPremiumId is already set
@@ -610,23 +629,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
         return;
       } else {
         // If the selectedPremiumId is zero, we will maximize the gift
-        const maxRadio = document.querySelector(
-          ".en__pg:last-child input[type='radio'][name='en__pg'][value='0']"
-        );
-        const premiumTheme3Image = document.querySelector(
-          ".premium-theme-3 .premium-theme-3-image"
-        );
-        if (maxRadio) {
-          maxRadio.checked = true;
-          maxRadio.click();
-          setTimeout(() => {
-            App.setFieldValue("transaction.selprodvariantid", "");
-          }, 150);
-        }
-        if (premiumTheme3Image) {
-          premiumTheme3Image.style.backgroundImage =
-            "var(--premium_image_theme_3)";
-        }
+        maxMyGift();
       }
     } else {
       // If the selectedPremiumId is not set, we will select the first gift
@@ -641,7 +644,9 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       `input[type="radio"][name="en__pg"][value="${premiumId}"]`
     );
     if (selectedGift) {
-      selectedGift.click();
+      window.setTimeout(() => {
+        selectedGift.click();
+      }, 10);
       const engridPremiumYes = document.querySelector("#engrid_premium_yes");
       const engridPremiumNo = document.querySelector("#engrid_premium_no");
       if (engridPremiumNo) {
@@ -703,6 +708,8 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
             );
             sessionStorage.setItem("selectedPremiumId", selectedPremiumId);
             sessionStorage.setItem("selectedVariantId", selectedVariantId);
+            if (parseInt(selectedPremiumId) > 0)
+              window.selectedPremiumId = selectedPremiumId;
           }
         }, 250);
       });
@@ -740,10 +747,10 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
               );
             }, 100);
           } else {
-            maxMyGift();
+            setDefaultPremium();
           }
         } else {
-          maxMyGift();
+          setDefaultPremium();
         }
       }
     });
@@ -762,6 +769,11 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       yesButton.addEventListener("click", function () {
         const yesChecked = yesButton.checked;
         noButton.checked = !yesChecked;
+        if (!yesChecked) {
+          maxMyGift();
+        } else {
+          setDefaultPremium();
+        }
       });
       noButton.addEventListener("click", function () {
         const noChecked = noButton.checked;
@@ -887,7 +899,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     if (
       !window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed()
     ) {
-      maxMyGift();
+      setDefaultPremium();
     } else {
       window.setTimeout(() => {
         selectPremiumFromSession();
@@ -896,14 +908,14 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     if (App.getUrlParameter("premium") !== "international" && country) {
       if (country.value !== "US") {
         const countryText = country.options[country.selectedIndex].text;
-        maxMyGift();
+        setDefaultPremium();
         disablePremiumBlock(`Gifts Disabled in ${countryText}`);
         addCountryNotice();
       }
       country.addEventListener("change", () => {
         if (country.value !== "US") {
           const countryText = country.options[country.selectedIndex].text;
-          maxMyGift();
+          setDefaultPremium();
           disablePremiumBlock(`Gifts Disabled in ${countryText}`);
           addCountryNotice();
         } else {
@@ -914,7 +926,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       freq.onFrequencyChange.subscribe((s) => {
         if (country.value !== "US") {
           const countryText = country.options[country.selectedIndex].text;
-          maxMyGift();
+          setDefaultPremium();
           disablePremiumBlock(`Gifts Disabled in ${countryText}`);
         } else {
           enablePremiumBlock();
