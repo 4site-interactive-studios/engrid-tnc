@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 1, 2025 @ 11:28:09 ET
+ *  Date: Tuesday, April 1, 2025 @ 13:58:43 ET
  *  By: fernando
  *  ENGrid styles: v0.20.0
  *  ENGrid scripts: v0.20.4
@@ -22567,24 +22567,34 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   const premiumHeader2 = document.querySelector(".premium-theme-2 .premium-theme-2-header");
   const premiumHeader3 = document.querySelector(".premium-theme-3 .premium-theme-3-header");
   const maxMyGift = () => {
-    if ("selectedPremiumId" in window && window.selectedPremiumId > 0) {
-      // We will not maximize the gift if the selectedPremiumId is already set
-      const premiumFound = selectPremiumById(window.selectedPremiumId);
-      if (premiumFound) {
+    if ("selectedPremiumId" in window) {
+      if (window.selectedPremiumId > 0) {
+        // We will not maximize the gift if the selectedPremiumId is already set
+        const premiumFound = selectPremiumById(window.selectedPremiumId);
+        if (!premiumFound) {
+          const firstGift = document.querySelector(".en__pg:first-child input[type='radio'][name='en__pg']");
+          if (firstGift && firstGift.value) selectPremiumById(firstGift.value);
+        }
         return;
+      } else {
+        // If the selectedPremiumId is zero, we will maximize the gift
+        const maxRadio = document.querySelector(".en__pg:last-child input[type='radio'][name='en__pg'][value='0']");
+        const premiumTheme3Image = document.querySelector(".premium-theme-3 .premium-theme-3-image");
+        if (maxRadio) {
+          maxRadio.checked = true;
+          maxRadio.click();
+          setTimeout(() => {
+            App.setFieldValue("transaction.selprodvariantid", "");
+          }, 150);
+        }
+        if (premiumTheme3Image) {
+          premiumTheme3Image.style.backgroundImage = "var(--premium_image_theme_3)";
+        }
       }
-    }
-    const maxRadio = document.querySelector(".en__pg:last-child input[type='radio'][name='en__pg'][value='0']");
-    const premiumTheme3Image = document.querySelector(".premium-theme-3 .premium-theme-3-image");
-    if (maxRadio) {
-      maxRadio.checked = true;
-      maxRadio.click();
-      setTimeout(() => {
-        App.setFieldValue("transaction.selprodvariantid", "");
-      }, 150);
-    }
-    if (premiumTheme3Image) {
-      premiumTheme3Image.style.backgroundImage = "var(--premium_image_theme_3)";
+    } else {
+      // If the selectedPremiumId is not set, we will select the first gift
+      const firstGift = document.querySelector(".en__pg:first-child input[type='radio'][name='en__pg']");
+      if (firstGift && firstGift.value) selectPremiumById(firstGift.value);
     }
   };
   const selectPremiumById = premiumId => {
