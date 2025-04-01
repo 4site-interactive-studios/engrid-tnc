@@ -597,6 +597,13 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     ".premium-theme-3 .premium-theme-3-header"
   );
   const maxMyGift = () => {
+    if ("selectedPremiumId" in window && window.selectedPremiumId > 0) {
+      // We will not maximize the gift if the selectedPremiumId is already set
+      const premiumFound = selectPremiumById(window.selectedPremiumId);
+      if (premiumFound) {
+        return;
+      }
+    }
     const maxRadio = document.querySelector(
       ".en__pg:last-child input[type='radio'][name='en__pg'][value='0']"
     );
@@ -612,6 +619,25 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     }
     if (premiumTheme3Image) {
       premiumTheme3Image.style.backgroundImage = "var(--premium_image_theme_3)";
+    }
+  };
+  const selectPremiumById = (premiumId) => {
+    const selectedGift = document.querySelector(
+      `input[type="radio"][name="en__pg"][value="${premiumId}"]`
+    );
+    if (selectedGift) {
+      selectedGift.click();
+      const engridPremiumYes = document.querySelector("#engrid_premium_yes");
+      const engridPremiumNo = document.querySelector("#engrid_premium_no");
+      if (engridPremiumNo) {
+        engridPremiumNo.checked = false;
+      }
+      if (engridPremiumYes) {
+        engridPremiumYes.checked = true;
+      }
+      return true;
+    } else {
+      return false;
     }
   };
   const premiumBlock = document.querySelector(
@@ -631,7 +657,8 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     premiumContainerContent.appendChild(premiumBlock);
 
     //listen for the change event of name "en__pg" using event delegation
-    let selectedPremiumId = null;
+    let selectedPremiumId =
+      "selectedPremiumId" in window ? window.selectedPremiumId : null;
     let selectedVariantId = null;
     ["change", "click"].forEach((event) => {
       premiumBlock.addEventListener(event, (e) => {
@@ -771,7 +798,10 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     const country = App.getField("supporter.country");
 
     const selectPremiumFromSession = () => {
-      const selectedPremiumId = sessionStorage.getItem("selectedPremiumId");
+      const selectedPremiumId =
+        window.selectedPremiumId ||
+        sessionStorage.getItem("selectedPremiumId") ||
+        null;
       const selectedVariantId = sessionStorage.getItem("selectedVariantId");
       if (selectedPremiumId && selectedVariantId) {
         const selectedGift = document.querySelector(

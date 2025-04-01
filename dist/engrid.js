@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 5, 2025 @ 15:43:19 ET
+ *  Date: Tuesday, April 1, 2025 @ 11:28:09 ET
  *  By: fernando
  *  ENGrid styles: v0.20.0
  *  ENGrid scripts: v0.20.4
@@ -22567,6 +22567,13 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   const premiumHeader2 = document.querySelector(".premium-theme-2 .premium-theme-2-header");
   const premiumHeader3 = document.querySelector(".premium-theme-3 .premium-theme-3-header");
   const maxMyGift = () => {
+    if ("selectedPremiumId" in window && window.selectedPremiumId > 0) {
+      // We will not maximize the gift if the selectedPremiumId is already set
+      const premiumFound = selectPremiumById(window.selectedPremiumId);
+      if (premiumFound) {
+        return;
+      }
+    }
     const maxRadio = document.querySelector(".en__pg:last-child input[type='radio'][name='en__pg'][value='0']");
     const premiumTheme3Image = document.querySelector(".premium-theme-3 .premium-theme-3-image");
     if (maxRadio) {
@@ -22578,6 +22585,23 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     }
     if (premiumTheme3Image) {
       premiumTheme3Image.style.backgroundImage = "var(--premium_image_theme_3)";
+    }
+  };
+  const selectPremiumById = premiumId => {
+    const selectedGift = document.querySelector(`input[type="radio"][name="en__pg"][value="${premiumId}"]`);
+    if (selectedGift) {
+      selectedGift.click();
+      const engridPremiumYes = document.querySelector("#engrid_premium_yes");
+      const engridPremiumNo = document.querySelector("#engrid_premium_no");
+      if (engridPremiumNo) {
+        engridPremiumNo.checked = false;
+      }
+      if (engridPremiumYes) {
+        engridPremiumYes.checked = true;
+      }
+      return true;
+    } else {
+      return false;
     }
   };
   const premiumBlock = document.querySelector(".en__component--premiumgiftblock");
@@ -22595,7 +22619,7 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     premiumContainerContent.appendChild(premiumBlock);
 
     //listen for the change event of name "en__pg" using event delegation
-    let selectedPremiumId = null;
+    let selectedPremiumId = "selectedPremiumId" in window ? window.selectedPremiumId : null;
     let selectedVariantId = null;
     ["change", "click"].forEach(event => {
       premiumBlock.addEventListener(event, e => {
@@ -22704,7 +22728,7 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   if ("pageJson" in window && "pageType" in window.pageJson && window.pageJson.pageType === "premiumgift") {
     const country = App.getField("supporter.country");
     const selectPremiumFromSession = () => {
-      const selectedPremiumId = sessionStorage.getItem("selectedPremiumId");
+      const selectedPremiumId = window.selectedPremiumId || sessionStorage.getItem("selectedPremiumId") || null;
       const selectedVariantId = sessionStorage.getItem("selectedVariantId");
       if (selectedPremiumId && selectedVariantId) {
         const selectedGift = document.querySelector(`input[type="radio"][name="en__pg"][value="${selectedPremiumId}"]`);
