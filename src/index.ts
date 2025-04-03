@@ -28,6 +28,7 @@ import { GdcpManager } from "./scripts/gdcp/gdcp-manager";
 import { AddDAFBanner } from "./scripts/add-daf-banner";
 import { Quiz } from "./scripts/quiz";
 import { BankAccountAgreementField } from "./scripts/bank-account-agreement-field";
+import { GroupQuiz } from "./scripts/group-quiz";
 
 declare global {
   interface Window {
@@ -133,6 +134,7 @@ const options: Options = {
     new IHMO();
     new GdcpManager();
     new Quiz();
+    new GroupQuiz();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();
