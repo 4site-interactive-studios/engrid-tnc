@@ -1,17 +1,28 @@
-import { ENGrid } from "@4site/engrid-scripts";
+import { ENGrid, EngridLogger } from "@4site/engrid-scripts";
 import { QuizLeadGenModal } from "./quiz-lead-gen-modal";
 import { trackEvent } from "./tracking";
 
 export class Quiz {
+  private logger: EngridLogger = new EngridLogger(
+    "Quiz",
+    "#FFFFFF",
+    "#4d9068",
+    "🛠️"
+  );
+
   constructor() {
     if (!this.shouldRun()) return;
+    this.logger.log("Initializing Quiz");
     this.addEventListeners();
     this.showQuizResults();
     this.createLeadGenModal();
   }
 
   private shouldRun() {
-    return ENGrid.getBodyData("subpagetype") === "quiz";
+    return (
+      ENGrid.getBodyData("subpagetype") === "quiz" &&
+      !document.querySelector(".en__component--advrow.group-quiz")
+    );
   }
 
   private createLeadGenModal() {

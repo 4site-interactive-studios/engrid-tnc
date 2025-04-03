@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, March 4, 2025 @ 09:08:16 ET
+ *  Date: Thursday, April 3, 2025 @ 12:58:00 ET
  *  By: michael
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
@@ -24379,15 +24379,18 @@ class QuizLeadGenModal extends Modal {
 
 
 
+
 class Quiz {
   constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("Quiz", "#FFFFFF", "#4d9068", "🛠️"));
     if (!this.shouldRun()) return;
+    this.logger.log("Initializing Quiz");
     this.addEventListeners();
     this.showQuizResults();
     this.createLeadGenModal();
   }
   shouldRun() {
-    return engrid_ENGrid.getBodyData("subpagetype") === "quiz";
+    return engrid_ENGrid.getBodyData("subpagetype") === "quiz" && !document.querySelector(".en__component--advrow.group-quiz");
   }
   createLeadGenModal() {
     const leadGenModal = document.querySelector(".modal--lead-gen");
@@ -24676,6 +24679,50 @@ class BankAccountAgreementField {
     });
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/group-quiz.ts
+
+
+class GroupQuiz {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("Quiz", "#FFFFFF", "#4d9068", "🛠️"));
+    if (!this.shouldRun()) return;
+    this.logger.log("Initializing Group Quiz");
+
+    // If we have the session key, add body data attribute for conditional styling
+    const quizGroup = sessionStorage.getItem("quiz-group");
+    if (quizGroup) {
+      engrid_ENGrid.setBodyData("quiz-group", quizGroup);
+    }
+
+    // Add conditional class from image to its parent element, and set banner image
+    const quizImages = document.querySelectorAll("figure.media-with-attribution img[class*='showif-group']");
+    [...quizImages].forEach(img => {
+      let parent = img.closest(".en__component--imageblock");
+      parent = parent ?? img.closest("figure.media-with-attribution");
+      const showifGroupClass = [...img.classList].find(cssClass => cssClass.includes("showif-group"));
+      if (parent && showifGroupClass) {
+        parent.classList.add(showifGroupClass);
+      }
+      const bodyBanner = document.querySelector(".body-banner");
+      if (bodyBanner && showifGroupClass === "showif-group" + sessionStorage.getItem("quiz-group")) {
+        bodyBanner.style.setProperty("--banner-image-src", `url(${img?.src})`);
+      }
+    });
+
+    // On page with the main question, set the session key for the group
+    const questionInputs = document.querySelectorAll(".group-question input[name*='transaction.svblock']");
+    [...questionInputs].forEach(input => {
+      input.addEventListener("change", e => {
+        const target = e.target;
+        const index = [...questionInputs].indexOf(target) + 1;
+        sessionStorage.setItem("quiz-group", index.toString());
+      });
+    });
+  }
+  shouldRun() {
+    return engrid_ENGrid.getBodyData("subpagetype") === "quiz" && document.querySelector(".en__component--advrow.group-quiz");
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -24684,6 +24731,7 @@ class BankAccountAgreementField {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -24759,6 +24807,7 @@ const options = {
     new IHMO();
     new GdcpManager();
     new Quiz();
+    new GroupQuiz();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();

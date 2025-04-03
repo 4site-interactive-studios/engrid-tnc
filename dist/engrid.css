@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, March 4, 2025 @ 09:08:16 ET
+ *  Date: Thursday, April 3, 2025 @ 12:58:00 ET
  *  By: michael
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
@@ -10051,15 +10051,15 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .main-page-footer div{
   width:100%;
 }
-[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio{
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--checkbox.en__field--survey,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--checkbox,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio{
   --radio_box-shadow_selected:none;
   --radio_box-shadow_hover:none;
   --radio_border-radius:0;
 }
-[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey input[type=radio]:checked+label:before,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio input[type=radio]:checked+label:before{
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--checkbox.en__field--survey input[type=checkbox]:checked+label:before,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--checkbox.en__field--survey input[type=radio]:checked+label:before,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey input[type=checkbox]:checked+label:before,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey input[type=radio]:checked+label:before,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--checkbox input[type=checkbox]:checked+label:before,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--checkbox input[type=radio]:checked+label:before,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio input[type=checkbox]:checked+label:before,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio input[type=radio]:checked+label:before{
   background:#1a1a1a url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="10.822" height="8.414"><path d="m9.407 1.414-6 6-2-2.438" fill="none" stroke="%23fff" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2"/></svg>') 50% no-repeat;
 }
-[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey h3,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey>label,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio h3,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio>label{
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--checkbox.en__field--survey h3,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--checkbox.en__field--survey>label,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey h3,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey>label,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--checkbox h3,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--checkbox>label,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio h3,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio>label{
   align-items:flex-start;
   display:flex;
   font-family:var(--sans-serif-fonts);
@@ -10070,21 +10070,21 @@ body[data-engrid-debug]:before{
   text-align:left;
 }
 @media screen and (max-width:1024px){
-  [data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey h3,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey>label,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio h3,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio>label{
+  [data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--checkbox.en__field--survey h3,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--checkbox.en__field--survey>label,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey h3,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey>label,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--checkbox h3,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--checkbox>label,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio h3,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio>label{
     font-size:20px;
   }
 }
-[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey .en__field__item,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio .en__field__item{
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--checkbox.en__field--survey .en__field__item,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey .en__field__item,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--checkbox .en__field__item,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio .en__field__item{
   padding-left:0;
   padding-right:0;
 }
-[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey .en__field__element--radio,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio .en__field__element--radio{
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--checkbox.en__field--survey .en__field__element--checkbox,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--checkbox.en__field--survey .en__field__element--radio,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey .en__field__element--checkbox,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey .en__field__element--radio,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--checkbox .en__field__element--checkbox,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--checkbox .en__field__element--radio,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio .en__field__element--checkbox,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio .en__field__element--radio{
   margin-left:0;
   margin-right:0;
   margin-top:20px;
   width:100%;
 }
-[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey .en__field__label--item,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio .en__field__label--item{
+[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--checkbox.en__field--survey .en__field__label--item,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .en__field--radio.en__field--survey .en__field__label--item,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--checkbox .en__field__label--item,[data-engrid-theme=tnc][data-engrid-layout=rightright1col][data-engrid-subtheme=multipage-survey] .survey-style .en__field--radio .en__field__label--item{
   align-items:center;
   background-color:#fff;
   border:1px solid #cdcdcd;
@@ -10701,9 +10701,9 @@ body[data-engrid-debug]:before{
   display:none;
 }
 [data-engrid-theme=tnc][data-engrid-subpagetype=quiz]{
-  --submit__button_font-size:18px!important;
+  --submit__button_font-size:18px !important;
 }
-[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .correct,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .en__component--svblock+.en__component--copyblock p,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .en__component--svblock~.en__component--formblock:last-child,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .incorrect,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .quiz-answer .en__field__error{
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .correct,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .en__component--advrow:not(.group-quiz) .en__component--svblock~.en__component--formblock:last-child,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .en__component--svblock+.en__component--copyblock p,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .incorrect,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder) .quiz-answer .en__field__error{
   display:none;
 }
 [data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .en__field--radio .en__field__label--item.is-incorrect{
@@ -10724,6 +10724,9 @@ body[data-engrid-debug]:before{
   background-color:#007931 !important;
   border-color:#007931;
   transform:none;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .en__component--svblock .en__mandatory>label:before{
+  content:"";
 }
 [data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .engrid-modal .btn-close,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .engrid-modal .engrid-modal__close{
   display:none;
@@ -10837,6 +10840,19 @@ body[data-engrid-debug]:before{
   line-height:1.2;
   padding:1.125rem 3rem;
   text-transform:uppercase;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-quiz-group="1"]) .showif-group1,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-quiz-group="2"]) .showif-group2,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-quiz-group="3"]) .showif-group3,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-quiz-group="4"]) .showif-group4,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-quiz-group="5"]) .showif-group5,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-quiz-group="6"]) .showif-group6,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-quiz-group="1"] .hideif-group1,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-quiz-group="2"] .hideif-group2,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-quiz-group="3"] .hideif-group3,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-quiz-group="4"] .hideif-group4,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-quiz-group="5"] .hideif-group5,[data-engrid-theme=tnc][data-engrid-subpagetype=quiz]:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-quiz-group="6"] .hideif-group6{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .quiz-result{
+  border-bottom:1px solid #949494;
+  border-top:1px solid #949494;
+  margin:30px auto;
+  padding:20px;
+}
+[data-engrid-theme=tnc][data-engrid-subpagetype=quiz] .group-quiz .button-green{
+  font-weight:700;
+  margin:2rem 0 1rem;
 }
 body{
   opacity:1;
