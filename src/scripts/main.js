@@ -42,7 +42,9 @@ export const customScript = function (
         floatingButton.className = "arrow";
         floatingButton.innerHTML = `<div class='en__submit'><a class='pseduo__en__submit_button' href='#firstElement'>${floatingButtonLabel}</a></div>`;
         const advRow = document.querySelector(".en__component--advrow");
-        advRow.append(floatingButton);
+        if (advRow) {
+          advRow.append(floatingButton);
+        }
         floatingButton
           .querySelector(".pseduo__en__submit_button")
           .addEventListener("click", function (e) {
@@ -183,7 +185,7 @@ export const customScript = function (
     document.querySelector(".en__field--title > label"),
     "title",
     "Why do you ask for this?",
-    "Many of our online actions link up with public officials’ web mail forms in order to deliver your message on your behalf. Many of these public officials’ forms require the Mr./Mrs./Miss field and, unfortunately, we do not have control over which of these titles are presented as options. We must adhere to what the officials are using in order for your message to be delivered."
+    "Many of our online actions link up with public officials' web mail forms in order to deliver your message on your behalf. Many of these public officials' forms require the Mr./Mrs./Miss field and, unfortunately, we do not have control over which of these titles are presented as options. We must adhere to what the officials are using in order for your message to be delivered."
   );
 
   /**
@@ -232,13 +234,15 @@ export const customScript = function (
 
   // Listen for changes to the donation frequency and amount
   const freq = DonationFrequency.getInstance();
-  const amt = DonationAmount.getInstance();
-  freq.onFrequencyChange.subscribe((frequency) => {
-    setPremiumVisibility(frequency, amt.amount);
-  });
-  amt.onAmountChange.subscribe((amount) => {
-    setPremiumVisibility(freq.frequency, amount);
-  });
+  const amt = DonationAmount?.getInstance();
+  if (freq && amt) {
+    freq.onFrequencyChange.subscribe((frequency) => {
+      setPremiumVisibility(frequency, amt.amount);
+    });
+    amt.onAmountChange.subscribe((amount) => {
+      setPremiumVisibility(freq.frequency, amount);
+    });
+  }
 
   // Move Premium donation elements into their container
   let premiumDonationEls = document.querySelectorAll(
