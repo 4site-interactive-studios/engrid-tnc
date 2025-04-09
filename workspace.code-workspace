@@ -1,13 +1,10 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "../engrid-scripts"
-		}
-	],
-	"settings": {
-		"liveServer.settings.multiRootWorkspaceName": "engrid"
-	}
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "engrid"
+  }
 }
