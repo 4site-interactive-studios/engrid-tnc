@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 8, 2025 @ 22:11:14 ET
+ *  Date: Tuesday, April 8, 2025 @ 22:50:08 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
@@ -10384,9 +10384,8 @@ body[data-engrid-debug]:before{
   font-size:30px;
   font-weight:600;
 }
-[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not([data-engrid-embedded]) #engrid{
-  margin:0 auto;
-  max-width:270px;
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]{
+  --give-by-select__button_count:1;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep]#en__pagebuilder #engrid,[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not([data-engrid-embedded]){
   margin:0 auto;
@@ -10822,6 +10821,32 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not([data-engrid-embedded])[data-engrid-subtheme=multistep] .en__captcha__placeholder{
   background-size:100% !important;
   width:270px !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .radio-to-buttons_donationAmt .en__field__item.en__field__item--other{
+  flex-basis:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__component--formblock:has(.en__captcha){
+  margin:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__captcha{
+  margin:0;
+  max-width:270px;
+  padding:0;
+  transform-origin:left;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__submit button{
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .digital-wallets-wrapper{
+  margin-left:0;
+  margin-right:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] #en__digitalWallet,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__digitalWallet__button{
+  max-width:270px !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__digitalWallet__container{
+  padding-left:0 !important;
+  padding-right:0 !important;
 }
 [data-engrid-theme=tnc] .engrid--ihmo-wrapper{
   border:1px solid #cdcdcd;

@@ -3534,13 +3534,6 @@
     }
   }
 
-  &[data-engrid-subtheme="multistep"]:not([data-engrid-embedded]) {
-    #engrid {
-      max-width: 270px;
-      margin: 0 auto;
-    }
-  }
-
   &[data-engrid-subtheme="multistep"] {
     @import "./multistep";
   }

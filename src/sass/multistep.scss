@@ -1,4 +1,6 @@
 & {
+  --give-by-select__button_count: 1;
+
   //     --fields_spacing-inline: 5px;
   //     --fields_spacing-block: 4px;
   //     .body-main {
@@ -899,5 +901,39 @@
       background-size: 100% !important;
       width: 270px !important;
     }
+  }
+
+  .radio-to-buttons_donationAmt .en__field__item.en__field__item--other {
+    flex-basis: 100%;
+  }
+
+  .en__component--formblock:has(.en__captcha) {
+    margin: 0;
+  }
+
+  .en__captcha {
+    margin: 0;
+    max-width: 270px;
+    padding: 0;
+    transform-origin: left;
+  }
+
+  .en__submit button {
+    width: 100%;
+  }
+
+  .digital-wallets-wrapper {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  #en__digitalWallet,
+  .en__digitalWallet__button {
+    max-width: 270px !important;
+  }
+
+  .en__digitalWallet__container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
