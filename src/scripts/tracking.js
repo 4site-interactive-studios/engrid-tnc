@@ -50,6 +50,17 @@ export function setDonationDataSessionStorage(App, DonationAmount) {
   donationData.city = App.getFieldValue("supporter.city");
   donationData.country = App.getFieldValue("supporter.country");
   donationData.phoneNumber = App.getFieldValue("supporter.phoneNumber2");
+  donationData.isEmailOptInChecked = [
+    "supporter.questions.848518",
+    "supporter.questions.848520",
+    "supporter.questions.848521",
+    "supporter.questions.848522",
+    "supporter.questions.848523",
+  ].some((field) => {
+    /** @type {HTMLInputElement} */
+    const el = App.getField(field);
+    return el && el.checked;
+  });
 
   /** @type {HTMLInputElement} */
   //If fee cover is checked, set extra amount to 3% of donation amount and subtract from original donation amount
@@ -133,11 +144,13 @@ function getSubmitEventName(App) {
     "supporter.questions.848528",
     "supporter.questions.1952175",
     "supporter.questions.848527",
+    "supporter.questions.891102",
   ].some((field) => {
     /** @type {HTMLInputElement} */
     const el = App.getField(field);
     return (
-      el && el.checked && App.getFieldValue("supporter.phoneNumber2") !== ""
+      (el && el.checked && App.getFieldValue("supporter.phoneNumber2") !== "") ||
+        (el && el.checked && field.split('.')[2] === '891102' && App.getFieldValue("supporter.phoneNumber"))
     );
   });
 

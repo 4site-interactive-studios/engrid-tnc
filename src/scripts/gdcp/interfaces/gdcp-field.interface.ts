@@ -6,4 +6,5 @@ export interface GdcpField {
   optInFieldNames: string[];
   gdcpFieldName: string;
   gdcpFieldHtmlLabel: string;
+  gdcpFieldHtmlLabelEs: string;
 }

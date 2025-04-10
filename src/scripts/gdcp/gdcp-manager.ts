@@ -8,7 +8,7 @@ import { pages } from "./config/pages";
 
 declare global {
   interface Window {
-    GlobalDigitalComplianceActive?: boolean;
+    DisableGlobalDigitalCompliance?: boolean;
     GlobalDigitalComplianceStrictMode?: boolean;
     GlobalDigitalComplianceSingleOptIn?: boolean;
     EngagingNetworks: any;
@@ -48,6 +48,7 @@ export class GdcpManager {
     this.handleDoubleOptInEmail();
     this.handlePostalMailQcb();
     if (!this.shouldRun()) {
+      ENGrid.setBodyData("gdcp", "false");
       this.logger.log("GDCP is not running on this page.");
       return;
     }
@@ -78,13 +79,10 @@ export class GdcpManager {
   }
 
   /**
-   * List of Page IDs where GDCP should be active
+   * GDCP will run unless explicitly disabled
    */
   private shouldRun(): boolean {
-    return (
-      [158050, 158972].includes(ENGrid.getPageID()) ||
-      window.GlobalDigitalComplianceActive === true
-    );
+    return window.DisableGlobalDigitalCompliance !== true;
   }
 
   /**
@@ -212,7 +210,7 @@ export class GdcpManager {
 
     //Else, if the page has an email field we will position it at the top of the form block
     const emailField = document.querySelector(
-      ".en__field--email"
+      ".en__field--email, .en__field--emailAddress"
     ) as HTMLElement;
     if (emailField) {
       emailField.parentElement?.insertAdjacentHTML(
@@ -318,6 +316,11 @@ export class GdcpManager {
    * Also adds an event listener to toggle all the opt in fields when the GDCP field is checked/unchecked
    */
   private createGdcpField(gdcpField: GdcpField): HTMLInputElement {
+    // @ts-ignore
+    const fieldHtmlLabel = window.pageJson.locale.startsWith("es")
+      ? gdcpField.gdcpFieldHtmlLabelEs
+      : gdcpField.gdcpFieldHtmlLabel;
+
     const field = `
       <div class="en__field en__field--checkbox en__field--000000 pseudo-en-field engrid-gdcp-field en__field--${gdcpField.gdcpFieldName}">
           <div class="en__field__element en__field__element--checkbox">
@@ -330,12 +333,12 @@ export class GdcpManager {
                     value="Y"
                   >
                   <label class="en__field__label en__field__label--item" for="en__field_${gdcpField.gdcpFieldName}">
-                    ${gdcpField.gdcpFieldHtmlLabel}
+                    ${fieldHtmlLabel}
                   </label>
               </div>
               <div class="en__field__item">
                 <div class="gdcp-field-text-description ${gdcpField.channel}-description hide">
-                  ${gdcpField.gdcpFieldHtmlLabel}
+                  ${fieldHtmlLabel}
                 </div>
               </div>
           </div>

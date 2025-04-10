@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 10, 2025 @ 10:24:06 ET
+ *  Date: Thursday, April 10, 2025 @ 11:07:30 ET
  *  By: fernando
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
@@ -21987,6 +21987,11 @@ function setDonationDataSessionStorage(App, DonationAmount) {
   donationData.city = App.getFieldValue("supporter.city");
   donationData.country = App.getFieldValue("supporter.country");
   donationData.phoneNumber = App.getFieldValue("supporter.phoneNumber2");
+  donationData.isEmailOptInChecked = ["supporter.questions.848518", "supporter.questions.848520", "supporter.questions.848521", "supporter.questions.848522", "supporter.questions.848523"].some(field => {
+    /** @type {HTMLInputElement} */
+    const el = App.getField(field);
+    return el && el.checked;
+  });
 
   /** @type {HTMLInputElement} */
   //If fee cover is checked, set extra amount to 3% of donation amount and subtract from original donation amount
@@ -22051,10 +22056,10 @@ function trackFormSubmit(App, DonationAmount) {
   }
 }
 function getSubmitEventName(App) {
-  const isOptedInToPhone = ["supporter.questions.848528", "supporter.questions.1952175", "supporter.questions.848527"].some(field => {
+  const isOptedInToPhone = ["supporter.questions.848528", "supporter.questions.1952175", "supporter.questions.848527", "supporter.questions.891102"].some(field => {
     /** @type {HTMLInputElement} */
     const el = App.getField(field);
-    return el && el.checked && App.getFieldValue("supporter.phoneNumber2") !== "";
+    return el && el.checked && App.getFieldValue("supporter.phoneNumber2") !== "" || el && el.checked && field.split('.')[2] === '891102' && App.getFieldValue("supporter.phoneNumber");
   });
   const isOptedInToEmail = ["supporter.questions.848518", "supporter.questions.848520", "supporter.questions.848521", "supporter.questions.848522", "supporter.questions.848523"].some(field => {
     /** @type {HTMLInputElement} */
@@ -22526,7 +22531,6 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   const giftDesignationField = document.querySelector(".engrid-gift-designation #en__field_supporter_appealCode");
   const appealCode = urlParams.get("supporter.appealCode");
   if (giftDesignationField && appealCode) {
-    giftDesignationField.disabled = true;
     const giftDesignationNeededMostCheckbox = document.querySelector("#en__field_supporter_questions_8785940");
     const giftDesignationChooseCheckbox = document.querySelector("#en__field_supporter_questions_8785941");
     if (giftDesignationNeededMostCheckbox && giftDesignationChooseCheckbox) {
@@ -22613,6 +22617,22 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     };
     window.addEventListener("blur", dataListener);
   }
+
+  // Accordion functionality
+  const accordion = document.querySelectorAll(".accordion-header");
+  accordion.forEach(button => {
+    button.addEventListener("click", function () {
+      const button = this.querySelector(".accordion-button");
+      button.classList.toggle("collapsed");
+      const panel = this.nextElementSibling;
+      panel.classList.toggle("show");
+      document.querySelectorAll(".accordion-item").forEach(el => {
+        if (el.contains(button)) return;
+        el.querySelector(".accordion-button").classList.add("collapsed");
+        el.querySelector(".accordion-collapse").classList.remove("show");
+      });
+    });
+  });
   const premiumHeader2 = document.querySelector(".premium-theme-2 .premium-theme-2-header");
   const premiumHeader3 = document.querySelector(".premium-theme-3 .premium-theme-3-header");
   const maxMyGift = () => {
@@ -23437,15 +23457,19 @@ class IHMO {
   hideField(field) {
     const el = field instanceof Element ? field : document.querySelector(field);
     if (el) {
-      el.classList.add("en__hidden");
-      el.querySelector(".en__field__input")?.setAttribute("disabled", "disabled");
+      const identifier = [...el.classList].find(c => c.match(/en__field--\d+/))?.replace("en__field--", "");
+      if (identifier) {
+        window.EngagingNetworks.require._defined.enjs.hideField(identifier);
+      }
     }
   }
   showField(field) {
     const el = field instanceof Element ? field : document.querySelector(field);
     if (el) {
-      el.classList.remove("en__hidden");
-      el.querySelector(".en__field__input")?.removeAttribute("disabled");
+      const identifier = [...el.classList].find(c => c.match(/en__field--\d+/))?.replace("en__field--", "");
+      if (identifier) {
+        window.EngagingNetworks.require._defined.enjs.showField(identifier);
+      }
     }
   }
 }
@@ -23534,7 +23558,8 @@ const gdcpFields = [{
   ],
   gdcpFieldName: "engrid.gdcp-email",
   // Don't edit this field
-  gdcpFieldHtmlLabel: `<span>I agree to receive email updates from The Nature Conservancy and understand I can unsubscribe at any time.</span>`
+  gdcpFieldHtmlLabel: `<span>I agree to receive email updates from The Nature Conservancy and understand I can unsubscribe at any time.</span>`,
+  gdcpFieldHtmlLabelEs: `<span>Acepto recibir noticias e información de The Nature Conservancy por correo electrónico y entiendo que puedo cancelar mi suscripción en cualquier momento.</span>`
 }, {
   channel: "mobile_phone",
   dataFieldName: "supporter.phoneNumber2",
@@ -23546,7 +23571,8 @@ const gdcpFields = [{
   ],
   gdcpFieldName: "engrid.gdcp-mobile_phone",
   // Don't edit this field
-  gdcpFieldHtmlLabel: `<span>I’d like to receive phone and text updates from The Nature Conservancy and understand I can unsubscribe at any time. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Mobile Terms & Conditions</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Privacy Statement</a>.</span>`
+  gdcpFieldHtmlLabel: `<span>I’d like to receive phone and text updates from The Nature Conservancy and understand I can unsubscribe at any time. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Mobile Terms & Conditions</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Privacy Statement</a>.</span>`,
+  gdcpFieldHtmlLabelEs: `<span>Me gustaría recibir notificaciones (en inglés) de The Nature Conservancy por teléfono o mensaje de texto y entiendo que podré cancelar mi suscripción en cualquier momento. <em>Pueden aplicarse tarifas de mensajes y datos, y la frecuencia de los mensajes puede variar. Envía STOP para cancelar o HELP para obtener ayuda.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Términos y Condiciones Móviles</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Declaración de Privacidad</a>.</span>`
 }, {
   channel: "home_phone",
   dataFieldName: "supporter.phoneNumber",
@@ -23554,7 +23580,8 @@ const gdcpFields = [{
   ],
   gdcpFieldName: "engrid.gdcp-home_phone",
   // Don't edit this field
-  gdcpFieldHtmlLabel: `<span>I give The Nature Conservancy permission to contact me by phone.</span>`
+  gdcpFieldHtmlLabel: `<span>I give The Nature Conservancy permission to contact me by phone.</span>`,
+  gdcpFieldHtmlLabelEs: `<span>I give The Nature Conservancy permission to contact me by phone.</span>`
 }, {
   channel: "postal_mail",
   dataFieldName: "supporter.postcode",
@@ -23562,7 +23589,8 @@ const gdcpFields = [{
   ],
   gdcpFieldName: "engrid.gdcp-postal_mail",
   // Don't edit this field
-  gdcpFieldHtmlLabel: `<span>The Nature Conservancy can send me updates about its work and other information by mail.</span>`
+  gdcpFieldHtmlLabel: `<span>The Nature Conservancy can send me updates about its work and other information by mail.</span>`,
+  gdcpFieldHtmlLabelEs: `<span>The Nature Conservancy puede enviarme información sobre su trabajo y otras novedades por correo postal.</span>`
 }];
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/gdcp-field-manager.ts
 
@@ -24109,6 +24137,7 @@ class GdcpManager {
     this.handleDoubleOptInEmail();
     this.handlePostalMailQcb();
     if (!this.shouldRun()) {
+      engrid_ENGrid.setBodyData("gdcp", "false");
       this.logger.log("GDCP is not running on this page.");
       return;
     }
@@ -24135,10 +24164,10 @@ class GdcpManager {
   }
 
   /**
-   * List of Page IDs where GDCP should be active
+   * GDCP will run unless explicitly disabled
    */
   shouldRun() {
-    return [158050, 158972].includes(engrid_ENGrid.getPageID()) || window.GlobalDigitalComplianceActive === true;
+    return window.DisableGlobalDigitalCompliance !== true;
   }
 
   /**
@@ -24237,7 +24266,7 @@ class GdcpManager {
     }
 
     //Else, if the page has an email field we will position it at the top of the form block
-    const emailField = document.querySelector(".en__field--email");
+    const emailField = document.querySelector(".en__field--email, .en__field--emailAddress");
     if (emailField) {
       emailField.parentElement?.insertAdjacentHTML("beforeend", usStatesFieldHtml);
       const regionField = document.querySelector(".en__field--region");
@@ -24315,6 +24344,8 @@ class GdcpManager {
    * Also adds an event listener to toggle all the opt in fields when the GDCP field is checked/unchecked
    */
   createGdcpField(gdcpField) {
+    // @ts-ignore
+    const fieldHtmlLabel = window.pageJson.locale.startsWith("es") ? gdcpField.gdcpFieldHtmlLabelEs : gdcpField.gdcpFieldHtmlLabel;
     const field = `
       <div class="en__field en__field--checkbox en__field--000000 pseudo-en-field engrid-gdcp-field en__field--${gdcpField.gdcpFieldName}">
           <div class="en__field__element en__field__element--checkbox">
@@ -24327,12 +24358,12 @@ class GdcpManager {
                     value="Y"
                   >
                   <label class="en__field__label en__field__label--item" for="en__field_${gdcpField.gdcpFieldName}">
-                    ${gdcpField.gdcpFieldHtmlLabel}
+                    ${fieldHtmlLabel}
                   </label>
               </div>
               <div class="en__field__item">
                 <div class="gdcp-field-text-description ${gdcpField.channel}-description hide">
-                  ${gdcpField.gdcpFieldHtmlLabel}
+                  ${fieldHtmlLabel}
                 </div>
               </div>
           </div>
@@ -24660,15 +24691,18 @@ class QuizLeadGenModal extends Modal {
 
 
 
+
 class Quiz {
   constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("Quiz", "#FFFFFF", "#4d9068", "🛠️"));
     if (!this.shouldRun()) return;
+    this.logger.log("Initializing Quiz");
     this.addEventListeners();
     this.showQuizResults();
     this.createLeadGenModal();
   }
   shouldRun() {
-    return engrid_ENGrid.getBodyData("subpagetype") === "quiz";
+    return engrid_ENGrid.getBodyData("subpagetype") === "quiz" && !document.querySelector(".en__component--advrow.group-quiz");
   }
   createLeadGenModal() {
     const leadGenModal = document.querySelector(".modal--lead-gen");
@@ -24847,9 +24881,9 @@ class Quiz {
     const textOptInField = form.querySelector(".en__field--home-phone-opt-in .en__field__input--checkbox");
     const textOptInChecked = textOptInField?.checked || false;
     let formType = {
-      lightbox_name: `lightbox-${window.utag_data.page_name}`,
-      form_name: `lightbox-${window.utag_data.page_name}`,
-      email_signup_location: `lightbox-${window.utag_data.page_name}`,
+      lightbox_name: `lightbox-${utag_data.page_name ?? ""}`,
+      form_name: `lightbox-${utag_data.page_name ?? ""}`,
+      email_signup_location: `lightbox-${utag_data.page_name ?? ""}`,
       event_name: "",
       form_type: "",
       text_signup_location: ""
@@ -24859,12 +24893,12 @@ class Quiz {
     if (!emailUnsubscribeChecked && mobilePhoneField && textOptInChecked) {
       formType.event_name = "frm_ltbx_emt_emo_txt_txto_submit";
       formType.form_type = "email_text_signup";
-      formType.text_signup_location = "lightbox-" + window.utag_data.page_name;
+      formType.text_signup_location = `lightbox-${utag_data.page_name ?? ""}`;
       //Unsubscribe not checked, mobile phone field exists (and optin not checked)
     } else if (!emailUnsubscribeChecked && mobilePhoneField) {
       formType.event_name = "frm_ltbx_emt_emo_txt_submit";
       formType.form_type = "email_text_signup";
-      formType.text_signup_location = "lightbox-" + window.utag_data.page_name;
+      formType.text_signup_location = `lightbox-${utag_data.page_name ?? ""}`;
       //Unsubscribe not checked, no mobile phone field
     } else if (!emailUnsubscribeChecked) {
       formType.event_name = "frm_ltbx_emt_emo_submit";
@@ -24873,12 +24907,12 @@ class Quiz {
     } else if (mobilePhoneField && textOptInChecked) {
       formType.event_name = "rm_ltbx_emt_txt_txto_submit";
       formType.form_type = "email_text_signup";
-      formType.text_signup_location = "lightbox-" + window.utag_data.page_name;
+      formType.text_signup_location = `lightbox-${utag_data.page_name ?? ""}`;
       //Unsubscribe checked, mobile phone field exists and optin not checked
     } else if (mobilePhoneField) {
       formType.event_name = "frm_ltbx_emt_txt_submit";
       formType.form_type = "email_text_signup";
-      formType.text_signup_location = "lightbox-" + window.utag_data.page_name;
+      formType.text_signup_location = `lightbox-${utag_data.page_name ?? ""}`;
       //Unsubscribe checked, mobile phone field doesn't exist
     } else {
       formType.event_name = "frm_ltbx_emt_submit";
@@ -24957,6 +24991,50 @@ class BankAccountAgreementField {
     });
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/group-quiz.ts
+
+
+class GroupQuiz {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("Quiz", "#FFFFFF", "#4d9068", "🛠️"));
+    if (!this.shouldRun()) return;
+    this.logger.log("Initializing Group Quiz");
+
+    // If we have the session key, add body data attribute for conditional styling
+    const quizGroup = sessionStorage.getItem("quiz-group");
+    if (quizGroup) {
+      engrid_ENGrid.setBodyData("quiz-group", quizGroup);
+    }
+
+    // Add conditional class from image to its parent element, and set banner image
+    const quizImages = document.querySelectorAll("figure.media-with-attribution img[class*='showif-group']");
+    [...quizImages].forEach(img => {
+      let parent = img.closest(".en__component--imageblock");
+      parent = parent ?? img.closest("figure.media-with-attribution");
+      const showifGroupClass = [...img.classList].find(cssClass => cssClass.includes("showif-group"));
+      if (parent && showifGroupClass) {
+        parent.classList.add(showifGroupClass);
+      }
+      const bodyBanner = document.querySelector(".body-banner");
+      if (bodyBanner && showifGroupClass === "showif-group" + sessionStorage.getItem("quiz-group")) {
+        bodyBanner.style.setProperty("--banner-image-src", `url(${img?.src})`);
+      }
+    });
+
+    // On page with the main question, set the session key for the group
+    const questionInputs = document.querySelectorAll(".group-question input[name*='transaction.svblock']");
+    [...questionInputs].forEach(input => {
+      input.addEventListener("change", e => {
+        const target = e.target;
+        const index = [...questionInputs].indexOf(target) + 1;
+        sessionStorage.setItem("quiz-group", index.toString());
+      });
+    });
+  }
+  shouldRun() {
+    return engrid_ENGrid.getBodyData("subpagetype") === "quiz" && document.querySelector(".en__component--advrow.group-quiz");
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -24965,6 +25043,7 @@ class BankAccountAgreementField {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -25040,6 +25119,7 @@ const options = {
     new IHMO();
     new GdcpManager();
     new Quiz();
+    new GroupQuiz();
     trackUrlParams();
     trackProcessingErrors(App);
     trackUserInteractions();
