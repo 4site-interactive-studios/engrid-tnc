@@ -3,6 +3,8 @@ import { setDonationDataSessionStorage } from "./tracking";
 const tippy = require("tippy.js").default;
 
 export const customScript = function (App, DonationFrequency, DonationAmount) {
+  const freq = DonationFrequency.getInstance();
+  const amt = DonationAmount.getInstance();
   console.log("ENGrid client scripts are executing");
   // Add your client scripts here
   var checkForServerError = document.querySelector(".en__errorList *");
@@ -224,11 +226,59 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     }
   }
 
+  function keepScrollPosition(elementBlock, direction = "up") {
+    if (!elementBlock) return;
+    const scrollY = window.scrollY;
+    const elementStyle = window.getComputedStyle(elementBlock);
+    const elementSize =
+      parseInt(elementStyle.height, 10) +
+      parseInt(elementStyle.marginTop.replace("px", "")) +
+      parseInt(elementStyle.marginBottom.replace("px", ""));
+    window.setTimeout(() => {
+      window.scrollTo(
+        0,
+        direction === "up" ? scrollY - elementSize : scrollY + elementSize
+      );
+    }, 100);
+    console.log(elementSize);
+  }
+
+  // If the frequency is annual, move the premium container content below the #en__field_auto_renew container
+  // If frequency is not annual, move the premium container content back to premium container
+  function movePremiumContainerContent(direction = "up") {
+    const premiumContainerContent = document.querySelector(
+      ".premium-container-content"
+    );
+    if (!premiumContainerContent) return;
+    const autoRenewField = document.getElementById("en__field_auto_renew");
+    const autoRenewContainer = autoRenewField?.closest(".en__component");
+    if (direction === "down") {
+      if (autoRenewContainer) {
+        autoRenewContainer.insertAdjacentElement(
+          "afterend",
+          premiumContainerContent
+        );
+      }
+    } else {
+      const premiumContainer = document.querySelector(".premium-container");
+      // If the premium container is not found, or the premium container already contains the premium container content, return
+      if (
+        !premiumContainer ||
+        premiumContainer.querySelector(".en__component--premiumgiftblock")
+      )
+        return;
+      premiumContainer.appendChild(premiumContainerContent);
+    }
+  }
+
   // Listen for changes to the donation frequency and amount
-  const freq = DonationFrequency.getInstance();
-  const amt = DonationAmount.getInstance();
   freq.onFrequencyChange.subscribe((frequency) => {
     setPremiumVisibility(frequency, amt.amount);
+    if (frequency !== "annual") {
+      window.setTimeout(() => {
+        movePremiumContainerContent("up");
+      }, 100);
+    }
   });
   amt.onAmountChange.subscribe((amount) => {
     setPremiumVisibility(freq.frequency, amount);
@@ -295,7 +345,13 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       App.setBodyData("auto-renew-active", autoRenew.checked.toString());
       extRef2Input.value = autoRenew.checked ? "auto_renew" : "";
 
-      const freq = DonationFrequency.getInstance();
+      autoRenew.addEventListener("change", () => {
+        const autoRenewActive = autoRenew.checked;
+        if (autoRenewActive) {
+          movePremiumContainerContent("down");
+        }
+      });
+
       freq.onFrequencyChange.subscribe((frequency) => {
         if (frequency === "annual") {
           App.setBodyData("auto-renew-active", "true");
@@ -551,4 +607,349 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       });
     });
   });
+  const premiumHeader2 = document.querySelector(
+    ".premium-theme-2 .premium-theme-2-header"
+  );
+  const premiumHeader3 = document.querySelector(
+    ".premium-theme-3 .premium-theme-3-header"
+  );
+  const maxMyGift = () => {
+    // If the selectedPremiumId is zero, we will maximize the gift
+    const maxRadio = document.querySelector(
+      ".en__pg:last-child input[type='radio'][name='en__pg'][value='0']"
+    );
+    const premiumTheme3Image = document.querySelector(
+      ".premium-theme-3 .premium-theme-3-image"
+    );
+    if (maxRadio) {
+      maxRadio.checked = true;
+      maxRadio.click();
+      setTimeout(() => {
+        App.setFieldValue("transaction.selprodvariantid", "");
+      }, 150);
+    }
+    if (premiumTheme3Image) {
+      premiumTheme3Image.style.backgroundImage = "var(--premium_image_theme_3)";
+    }
+  };
+  const setDefaultPremium = () => {
+    if ("selectedPremiumId" in window) {
+      if (window.selectedPremiumId > 0) {
+        // We will not maximize the gift if the selectedPremiumId is already set
+        const premiumFound = selectPremiumById(window.selectedPremiumId);
+        if (!premiumFound) {
+          const firstGift = document.querySelector(
+            ".en__pg:first-child input[type='radio'][name='en__pg']"
+          );
+          if (firstGift && firstGift.value) selectPremiumById(firstGift.value);
+        }
+        return;
+      } else {
+        // If the selectedPremiumId is zero, we will maximize the gift
+        maxMyGift();
+      }
+    } else {
+      // If the selectedPremiumId is not set, we will select the first gift
+      const firstGift = document.querySelector(
+        ".en__pg:first-child input[type='radio'][name='en__pg']"
+      );
+      if (firstGift && firstGift.value) selectPremiumById(firstGift.value);
+    }
+  };
+  const selectPremiumById = (premiumId) => {
+    const selectedGift = document.querySelector(
+      `input[type="radio"][name="en__pg"][value="${premiumId}"]`
+    );
+    if (selectedGift) {
+      window.setTimeout(() => {
+        selectedGift.click();
+      }, 10);
+      const engridPremiumYes = document.querySelector("#engrid_premium_yes");
+      const engridPremiumNo = document.querySelector("#engrid_premium_no");
+      if (engridPremiumNo) {
+        engridPremiumNo.checked = false;
+      }
+      if (engridPremiumYes) {
+        engridPremiumYes.checked = true;
+      }
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const premiumBlock = document.querySelector(
+    ".en__component--premiumgiftblock"
+  );
+  if (premiumBlock) {
+    // Create a Premium Container
+    const premiumContainer = document.createElement("div");
+    premiumContainer.classList.add("premium-container");
+    premiumContainer.classList.add("en__component");
+    const premiumContainerContent = document.createElement("div");
+    premiumContainerContent.classList.add("premium-container-content");
+    premiumContainerContent.classList.add("en__component");
+    premiumContainer.appendChild(premiumContainerContent);
+    // Add the Premium Container after the Premium Block, then move the Premium Block inside the Premium Container
+    premiumBlock.insertAdjacentElement("afterend", premiumContainer);
+    premiumContainerContent.appendChild(premiumBlock);
+
+    //listen for the change event of name "en__pg" using event delegation
+    let selectedPremiumId =
+      "selectedPremiumId" in window ? window.selectedPremiumId : null;
+    let selectedVariantId = null;
+    ["change", "click"].forEach((event) => {
+      premiumBlock.addEventListener(event, (e) => {
+        setTimeout(() => {
+          const selectedGift = document.querySelector(
+            '[name="en__pg"]:checked'
+          );
+          if (selectedGift) {
+            const selectedGiftImage = selectedGift
+              .closest(".en__pg")
+              .querySelector("img");
+            const premiumTheme3Image = document.querySelector(
+              ".premium-theme-3 .premium-theme-3-image"
+            );
+            if (premiumTheme3Image) {
+              premiumTheme3Image.dataset.selectedGift = selectedGift.value;
+              if (selectedGiftImage) {
+                premiumTheme3Image.style.backgroundImage = `url(${selectedGiftImage.src})`;
+              } else {
+                premiumTheme3Image.style.backgroundImage =
+                  "var(--premium_image_theme_3)";
+              }
+            }
+            selectedPremiumId = selectedGift.value;
+            selectedVariantId = App.getFieldValue(
+              "transaction.selprodvariantid"
+            );
+            sessionStorage.setItem("selectedPremiumId", selectedPremiumId);
+            sessionStorage.setItem("selectedVariantId", selectedVariantId);
+            if (parseInt(selectedPremiumId) > 0)
+              window.selectedPremiumId = selectedPremiumId;
+          }
+        }, 250);
+      });
+    });
+
+    // Mutation observer to check if the "Maximized Their Gift" radio button is present. If it is, hide it.
+    const observer = new MutationObserver((mutationsList) => {
+      //loop over the mutations and if we're adding a radio with the "checked" attribute, remove that attribute so nothing gets re-selected
+      //when the premiums list is re-rendered
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+          mutation.addedNodes.forEach((node) => {
+            if (typeof node.querySelector !== "function") return;
+            const preSelectedRadio = node.querySelector("input[checked]");
+            if (preSelectedRadio) {
+              preSelectedRadio.removeAttribute("checked");
+            }
+          });
+        }
+      }
+
+      if (mutationsList.some((mutation) => mutation.type === "childList")) {
+        // Re-select the previously selected gift when gift list is re-rendered
+        // If gift no longer exists, choose maximize my gift
+        if (selectedPremiumId && selectedVariantId) {
+          const selectedGift = document.querySelector(
+            `input[type="radio"][name="en__pg"][value="${selectedPremiumId}"]`
+          );
+          if (selectedGift) {
+            selectedGift.click();
+            window.setTimeout(() => {
+              App.setFieldValue(
+                "transaction.selprodvariantid",
+                selectedVariantId
+              );
+            }, 100);
+          } else {
+            setDefaultPremium();
+          }
+        } else {
+          setDefaultPremium();
+        }
+      }
+    });
+    // Start observing the target node for configured mutations
+    observer.observe(premiumBlock, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+    });
+  }
+  // Premium Gifts Theme 2 Script
+  if (premiumHeader2) {
+    const yesButton = premiumHeader2.querySelector("#engrid_premium_yes");
+    const noButton = premiumHeader2.querySelector("#engrid_premium_no");
+    if (yesButton && noButton) {
+      yesButton.addEventListener("click", function () {
+        const yesChecked = yesButton.checked;
+        noButton.checked = !yesChecked;
+        if (!yesChecked) {
+          maxMyGift();
+        } else {
+          setDefaultPremium();
+        }
+      });
+      noButton.addEventListener("click", function () {
+        const noChecked = noButton.checked;
+        yesButton.checked = !noChecked;
+        if (noChecked) {
+          maxMyGift();
+        }
+      });
+    }
+    const premiumContainerContent = document.querySelector(
+      ".premium-container-content"
+    );
+    if (premiumContainerContent) {
+      // Move premiumHeader2 to the start of the premiumContainerContent
+      premiumContainerContent.insertBefore(
+        premiumHeader2,
+        premiumContainerContent.firstChild
+      );
+    }
+  }
+  // END Premium Gifts Theme 2 Script
+  // Premium Gifts Theme 3 Script
+  if (premiumHeader3) {
+    const premium3ItemsContainer = document.querySelector(
+      ".premium-theme-3 .premium-theme-3-items-container"
+    );
+    const premiumgiftblock = document.querySelector(
+      ".en__component--premiumgiftblock"
+    );
+    const premiumContainerContent = document.querySelector(
+      ".premium-container-content"
+    );
+    // Move premium gift block to the premium items container
+    if (premiumgiftblock && premium3ItemsContainer) {
+      premium3ItemsContainer.innerHTML = "";
+      premium3ItemsContainer.appendChild(premiumgiftblock);
+      if (premiumContainerContent) {
+        premiumContainerContent.appendChild(premiumHeader3);
+      }
+    }
+  }
+  // END Premium Gifts Theme 3 Script
+  // Limit premium availability to U.S. addresses only - START
+  if (
+    "pageJson" in window &&
+    "pageType" in window.pageJson &&
+    window.pageJson.pageType === "premiumgift"
+  ) {
+    const country = App.getField("supporter.country");
+
+    const selectPremiumFromSession = () => {
+      const selectedPremiumId =
+        window.selectedPremiumId ||
+        sessionStorage.getItem("selectedPremiumId") ||
+        null;
+      const selectedVariantId = sessionStorage.getItem("selectedVariantId");
+      if (selectedPremiumId && selectedVariantId) {
+        const selectedGift = document.querySelector(
+          `input[type="radio"][name="en__pg"][value="${selectedPremiumId}"]`
+        );
+        if (selectedGift) {
+          selectedGift.click();
+          window.setTimeout(() => {
+            App.setFieldValue(
+              "transaction.selprodvariantid",
+              selectedVariantId
+            );
+          }, 100);
+        }
+      }
+    };
+
+    const disablePremiumBlock = (message = "Gifts Disabled") => {
+      const premiumBlock = document.querySelector(
+        ".premium-theme-3-header, .en__component--premiumgiftblock"
+      );
+      if (!premiumBlock || premiumBlock.dataset.dataAnnualDisabled === "true") {
+        return;
+      }
+      if (!premiumBlock.hasAttribute("disabled")) {
+        // Keep the page scroll position when the premium block is disabled (hidden)
+        keepScrollPosition(premiumBlock, "up");
+        premiumBlock.setAttribute("disabled", "disabled");
+        premiumBlock.setAttribute("aria-disabled", "true");
+        premiumBlock.setAttribute("data-disabled-message", message);
+      }
+    };
+
+    const enablePremiumBlock = () => {
+      const premiumBlock = document.querySelector(
+        ".premium-theme-3-header, .en__component--premiumgiftblock"
+      );
+      if (!premiumBlock || premiumBlock.dataset.dataAnnualDisabled === "true") {
+        return;
+      }
+      if (premiumBlock.hasAttribute("disabled")) {
+        // Keep the page scroll position when the premium block is enabled (shown)
+        const scrollY = window.scrollY;
+        const premiumStyle = window.getComputedStyle(premiumBlock);
+        premiumBlock.removeAttribute("disabled");
+        premiumBlock.removeAttribute("aria-disabled");
+        premiumBlock.removeAttribute("data-disabled-message");
+        const premiumSize =
+          parseInt(premiumStyle.height, 10) +
+          parseInt(premiumStyle.marginTop.replace("px", "")) +
+          parseInt(premiumStyle.marginBottom.replace("px", ""));
+        window.scrollTo(0, scrollY + premiumSize);
+        console.log(premiumSize);
+      }
+    };
+    const addCountryNotice = () => {
+      if (!document.querySelector(".en__field--country .en__field__notice")) {
+        App.addHtml(
+          '<div class="en__field__notice"><strong>Note:</strong> We are unable to mail thank-you gifts to donors outside the United States and its territories and have selected the "Maximize my gift" option for you.</div>',
+          ".en__field--country .en__field__element",
+          "after"
+        );
+      }
+    };
+    const removeCountryNotice = () => {
+      App.removeHtml(".en__field--country .en__field__notice");
+    };
+    if (
+      !window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed()
+    ) {
+      setDefaultPremium();
+    } else {
+      window.setTimeout(() => {
+        selectPremiumFromSession();
+      }, 1000);
+    }
+    if (App.getUrlParameter("premium") !== "international" && country) {
+      if (country.value !== "US") {
+        const countryText = country.options[country.selectedIndex].text;
+        setDefaultPremium();
+        disablePremiumBlock(`Gifts Disabled in ${countryText}`);
+        addCountryNotice();
+      }
+      country.addEventListener("change", () => {
+        if (country.value !== "US") {
+          const countryText = country.options[country.selectedIndex].text;
+          setDefaultPremium();
+          disablePremiumBlock(`Gifts Disabled in ${countryText}`);
+          addCountryNotice();
+        } else {
+          enablePremiumBlock();
+          removeCountryNotice();
+        }
+      });
+      freq.onFrequencyChange.subscribe((s) => {
+        if (country.value !== "US") {
+          const countryText = country.options[country.selectedIndex].text;
+          setDefaultPremium();
+          disablePremiumBlock(`Gifts Disabled in ${countryText}`);
+        } else {
+          enablePremiumBlock();
+        }
+      });
+    }
+  }
+  // Limit premium availability to U.S. addresses only - END
 };
