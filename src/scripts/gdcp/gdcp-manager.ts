@@ -693,4 +693,13 @@ export class GdcpManager {
       });
     }
   }
+
+  /**
+   * Opt out of all GDCP fields
+   */
+  optOutOfAll() {
+    this.gdcpFields.forEach((gdcpField) => {
+      this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false, true);
+    });
+  }
 }

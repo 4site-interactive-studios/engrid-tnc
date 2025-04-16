@@ -663,6 +663,22 @@
     }
   }
 
+  .btn-block {
+    width: 100%;
+  }
+
+  .btn-dark {
+    background-color: #1a1a1a;
+    color: white;
+    text-transform: uppercase;
+    border: 1px solid #1a1a1a;
+
+    &:hover {
+      background-color: #3c3c3c;
+      border-color: #3c3c3c;
+    }
+  }
+
   ///////////////////////////////////////////////////
   /*
   // End of global styles

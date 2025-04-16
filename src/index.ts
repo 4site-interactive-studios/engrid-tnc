@@ -128,11 +128,11 @@ const options: Options = {
     },
   },
   onLoad: () => {
-    customScript(App, DonationFrequency, DonationAmount);
+    const gdcp = new GdcpManager();
+    customScript(App, DonationFrequency, DonationAmount, gdcp);
     new BequestLightbox();
     new Tooltip();
     new IHMO();
-    new GdcpManager();
     new Quiz();
     new GroupQuiz();
     trackUrlParams();

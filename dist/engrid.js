@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 10, 2025 @ 11:07:30 ET
- *  By: fernando
+ *  Date: Wednesday, April 16, 2025 @ 13:34:57 ET
+ *  By: michael
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
  *
@@ -22172,7 +22172,7 @@ function trackUserInteractions() {
 ;// CONCATENATED MODULE: ./src/scripts/main.js
 
 const main_tippy = (__webpack_require__(9244)/* ["default"] */ .Ay);
-const customScript = function (App, DonationFrequency, DonationAmount) {
+const customScript = function (App, DonationFrequency, DonationAmount, GDCPManager) {
   const freq = DonationFrequency.getInstance();
   const amt = DonationAmount.getInstance();
   console.log("ENGrid client scripts are executing");
@@ -22906,6 +22906,51 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     }
   }
   // Limit premium availability to U.S. addresses only - END
+
+  //Member Care Features - START
+  const generateEmailButton = document.getElementById("generateEmail");
+  const editEmailButton = document.getElementById("editEmail");
+  const emailAddressField = App.getField("supporter.emailAddress");
+
+  // Generate fake email, set field to readonly, and hide the generate button, opt out of opt-ins
+  generateEmailButton?.addEventListener("click", () => {
+    App.setFieldValue("supporter.emailAddress", `${new Date().getTime()}.first.last@fakeemail.com`);
+    emailAddressField?.setAttribute("readonly", "readonly");
+    GDCPManager.optOutOfAll();
+    generateEmailButton.classList.add("hide");
+    editEmailButton.classList.remove("hide");
+    editEmailButton.removeAttribute("style");
+  });
+
+  // Reset email, remove readonly attribute, and show the generate button
+  editEmailButton?.addEventListener("click", () => {
+    App.setFieldValue("supporter.emailAddress", ``);
+    emailAddressField?.removeAttribute("readonly");
+    generateEmailButton.classList.remove("hide");
+    editEmailButton.classList.add("hide");
+  });
+
+  // Set the revenue note in the transaction comments field
+  function setRevenueNote() {
+    const staffEmail = document.getElementById("en__field_supporter_questions_1274560")?.value;
+    const revNote = document.getElementById("en__field_supporter_questions_1274561")?.value;
+    App.setFieldValue("transaction.comments", `CC Entry Manual Updates: ${staffEmail} || ${revNote}`);
+  }
+
+  // Add event listeners to the revenue note fields
+  [...document.querySelectorAll("#en__field_supporter_questions_1274560, #en__field_supporter_questions_1274561")].forEach(el => {
+    el.addEventListener("input", setRevenueNote);
+  });
+  const revNoteCheckbox = document.getElementById("en__field_supporter_questions_1274559");
+  if (revNoteCheckbox) {
+    revNoteCheckbox.addEventListener("change", () => {
+      if (revNoteCheckbox.checked) {
+        setRevenueNote();
+      } else {
+        App.setFieldValue("transaction.comments", "");
+      }
+    });
+  }
 };
 ;// CONCATENATED MODULE: ./src/scripts/bequest-lightbox.ts
 
@@ -24626,6 +24671,15 @@ class GdcpManager {
       });
     }
   }
+
+  /**
+   * Opt out of all GDCP fields
+   */
+  optOutOfAll() {
+    this.gdcpFields.forEach(gdcpField => {
+      this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false, true);
+    });
+  }
 }
 ;// CONCATENATED MODULE: ./src/scripts/add-daf-banner.ts
 
@@ -25113,11 +25167,11 @@ const options = {
     }
   },
   onLoad: () => {
-    customScript(App, DonationFrequency, DonationAmount);
+    const gdcp = new GdcpManager();
+    customScript(App, DonationFrequency, DonationAmount, gdcp);
     new BequestLightbox();
     new Tooltip();
     new IHMO();
-    new GdcpManager();
     new Quiz();
     new GroupQuiz();
     trackUrlParams();
