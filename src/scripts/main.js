@@ -963,26 +963,28 @@ export const customScript = function (
   const editEmailButton = document.getElementById("editEmail");
   const emailAddressField = App.getField("supporter.emailAddress");
 
-  // Generate fake email, set field to readonly, and hide the generate button, opt out of opt-ins
-  generateEmailButton?.addEventListener("click", () => {
-    App.setFieldValue(
-      "supporter.emailAddress",
-      `${new Date().getTime()}.first.last@fakeemail.com`
-    );
-    emailAddressField?.setAttribute("readonly", "readonly");
-    GDCPManager.optOutOfAll();
-    generateEmailButton.classList.add("hide");
-    editEmailButton.classList.remove("hide");
-    editEmailButton.removeAttribute("style");
-  });
+  if (generateEmailButton && editEmailButton) {
+    // Generate fake email, set field to readonly, and hide the generate button, opt out of opt-ins
+    generateEmailButton.addEventListener("click", () => {
+      App.setFieldValue(
+        "supporter.emailAddress",
+        `${new Date().getTime()}.first.last@fakeemail.com`
+      );
+      emailAddressField?.setAttribute("readonly", "readonly");
+      GDCPManager.optOutOfAll();
+      generateEmailButton.classList.add("hide");
+      editEmailButton.classList.remove("hide");
+      editEmailButton.removeAttribute("style");
+    });
 
-  // Reset email, remove readonly attribute, and show the generate button
-  editEmailButton?.addEventListener("click", () => {
-    App.setFieldValue("supporter.emailAddress", ``);
-    emailAddressField?.removeAttribute("readonly");
-    generateEmailButton.classList.remove("hide");
-    editEmailButton.classList.add("hide");
-  });
+    // Reset email, remove readonly attribute, and show the generate button
+    editEmailButton.addEventListener("click", () => {
+      App.setFieldValue("supporter.emailAddress", ``);
+      emailAddressField?.removeAttribute("readonly");
+      generateEmailButton.classList.remove("hide");
+      editEmailButton.classList.add("hide");
+    });
+  }
 
   // Set the revenue note in the transaction comments field
   function setRevenueNote() {
