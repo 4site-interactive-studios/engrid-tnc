@@ -126,6 +126,7 @@ export function trackFormSubmit(App, DonationAmount) {
     utagData.customer_postal_code = App.getFieldValue("supporter.postcode");
     utagData.customer_country = App.getFieldValue("supporter.country");
     utagData.const_phone = App.getFieldValue("supporter.phoneNumber2");
+    utagData.email = App.getFieldValue("supporter.email");
 
     const eventName = getSubmitEventName(App);
     if (
