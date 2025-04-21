@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 10, 2025 @ 11:07:30 ET
- *  By: fernando
+ *  Date: Monday, April 21, 2025 @ 16:45:24 ET
+ *  By: say-re
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
  *
@@ -22048,6 +22048,7 @@ function trackFormSubmit(App, DonationAmount) {
     utagData.customer_postal_code = App.getFieldValue("supporter.postcode");
     utagData.customer_country = App.getFieldValue("supporter.country");
     utagData.const_phone = App.getFieldValue("supporter.phoneNumber2");
+    utagData.email = App.getFieldValue("supporter.email");
     const eventName = getSubmitEventName(App);
     if (eventName === "frm_emt_txt_submit" || eventName === "frm_emt_emo_txt_submit") {
       utagData.text_signup_location = pageJson.pageType;
