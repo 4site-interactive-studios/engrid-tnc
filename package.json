@@ -9,7 +9,7 @@
     "build": "npm run production & npm run minify",
     "production": "webpack --config webpack.prod.js",
     "minify": "webpack --config webpack.min.js",
-    "update": "npm update @4site/engrid-common @4site/engrid-styles",
+    "update": "npm update @4site/engrid-scripts @4site/engrid-styles",
     "rebuild": "npm run update;npm run build"
   },
   "keywords": [
@@ -26,7 +26,7 @@
   "license": "Unlicense",
   "url": "https://github.com/4site-interactive-studios/engrid",
   "devDependencies": {
-    "@4site/engrid-common": "*",
+    "@4site/engrid-scripts": "*",
     "@4site/engrid-styles": "*",
     "@babel/core": "^7.14.3",
     "@babel/plugin-proposal-class-properties": "7.13.0",
@@ -44,7 +44,7 @@
     "mini-css-extract-plugin": "^1.6.2",
     "popper.js": "^1.16.1",
     "postcss-loader": "^6.1.0",
-    "postcss-preset-env": "^6.7.0",
+    "postcss-preset-env": "^9.3.0",
     "prettier": "2.4.1",
     "sass": "^1.49.0",
     "sass-loader": "^12.1.0",

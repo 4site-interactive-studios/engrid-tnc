@@ -1,0 +1,48 @@
+&[data-engrid-gdcp="true"] {
+  // Force visibility of the new opt in fields, override any iX-hide classes
+  .en__field [class*="en__field--engrid.gdcp"] {
+    display: flex!important;
+    flex-basis: 100%!important;
+    margin-bottom: 0;
+
+    .en__field__item {
+      padding-bottom: 0;
+    }
+
+    label a {
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .gdcp-field-text-description span {
+      font-weight: 500;
+      a {
+        font-weight: bold;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .gdcp-consent-statement {
+    p {
+      font-size: 14px;
+      line-height: 1.3;
+    }
+    a {
+      font-weight: bold;
+      text-decoration: none;
+    }
+  }
+
+  [class*=validationFail] .engrid-gdcp-field label {
+    color: initial;
+  }
+}
+
+// Hide the old opt in notices unless GDCP is explicitly disabled
+&:not([data-engrid-gdcp="false"]) {
+  .en__field--emailAddress .en__field__notice,
+  .en__field--phoneNumber2 .en__field__notice {
+    display: none
+  }
+}
