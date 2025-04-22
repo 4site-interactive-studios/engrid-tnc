@@ -996,7 +996,9 @@ export const customScript = function (
     )?.value;
     App.setFieldValue(
       "transaction.comments",
-      `CC Entry Manual Updates: ${staffEmail} || ${revNote}`
+      `CC Entry Manual Updates: ${
+        staffEmail ? staffEmail + " ||" : ""
+      } ${revNote}`
     );
   }
 

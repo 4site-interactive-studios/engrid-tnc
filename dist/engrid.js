@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 17, 2025 @ 07:24:56 ET
+ *  Date: Tuesday, April 22, 2025 @ 12:03:48 ET
  *  By: michael
- *  ENGrid styles: v0.20.9
- *  ENGrid scripts: v0.20.8
+ *  ENGrid styles: v0.21.3
+ *  ENGrid scripts: v0.21.5
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -27782,9 +27782,9 @@ class VGS {
   validate() {
     if (this.paymentTypeField.value.toLowerCase() === "card" || this.paymentTypeField.value.toLowerCase() === "visa" || this.paymentTypeField.value.toLowerCase() === "vi") {
       const cardContainer = document.querySelector(".en__field--vgs.en__field--ccnumber");
-      const cardEmpty = cardContainer === null || cardContainer === void 0 ? void 0 : cardContainer.querySelector(".vgs-collect-container__empty");
+      const cardEmpty = cardContainer.querySelector(".vgs-collect-container__empty");
       const cvvContainer = document.querySelector(".en__field--vgs.en__field--ccvv");
-      const cvvEmpty = cvvContainer === null || cvvContainer === void 0 ? void 0 : cvvContainer.querySelector(".vgs-collect-container__empty");
+      const cvvEmpty = cvvContainer.querySelector(".vgs-collect-container__empty");
       if (cardContainer && cardEmpty) {
         window.setTimeout(() => {
           engrid_ENGrid.setError(cardContainer, "Please enter a valid card number");
@@ -29804,7 +29804,7 @@ const customScript = function (App, DonationFrequency, DonationAmount, GDCPManag
   function setRevenueNote() {
     const staffEmail = document.getElementById("en__field_supporter_questions_1274560")?.value;
     const revNote = document.getElementById("en__field_supporter_questions_1274561")?.value;
-    App.setFieldValue("transaction.comments", `CC Entry Manual Updates: ${staffEmail} || ${revNote}`);
+    App.setFieldValue("transaction.comments", `CC Entry Manual Updates: ${staffEmail ? staffEmail + " ||" : ""} ${revNote}`);
   }
 
   // Add event listeners to the revenue note fields
@@ -30550,6 +30550,9 @@ class dist_engrid_ENGrid {
             return window.pageJson.pageNumber;
         return null;
     }
+    static isThankYouPage() {
+        return this.getPageNumber() === this.getPageCount();
+    }
     // Return the current page ID
     static getPageID() {
         if ("pageJson" in window)
@@ -30570,6 +30573,7 @@ class dist_engrid_ENGrid {
     static getPageType() {
         if ("pageJson" in window && "pageType" in window.pageJson) {
             switch (window.pageJson.pageType) {
+                case "p2pdonation":
                 case "donation":
                 case "premiumgift":
                     return "DONATION";
@@ -30589,6 +30593,9 @@ class dist_engrid_ENGrid {
                     break;
                 case "emailsubscribeform":
                     return "SUBSCRIBEFORM";
+                    break;
+                case "event":
+                    return "EVENT";
                     break;
                 case "supporterhub":
                     return "SUPPORTERHUB";
@@ -31506,6 +31513,7 @@ class app_App extends dist_engrid_ENGrid {
         new thank_you_page_conditional_content_ThankYouPageConditionalContent();
         new embedded_ecard_EmbeddedEcard();
         new checkbox_label_CheckboxLabel();
+        new PostDonationEmbed();
         //Debug panel
         let showDebugPanel = this.options.Debug;
         try {
@@ -38029,6 +38037,9 @@ class event_tickets_EventTickets {
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/swap-amounts.js
 // This script allows you to override the default donation amounts in Engaging Networks
 // with a custom list of amounts.
+// If the URL contains a query parameter "engrid-amounts" with a comma separated values, the script will load the
+// amounts from the parameter and set them as the default amounts for the donation
+// form.
 /**
  * Example:
  * window.EngridAmounts = {
@@ -38062,6 +38073,7 @@ class swap_amounts_SwapAmounts {
         this._frequency = donation_frequency_DonationFrequency.getInstance();
         this.defaultChange = false;
         this.swapped = false;
+        this.loadAmountsFromUrl();
         if (!this.shouldRun())
             return;
         this._frequency.onFrequencyChange.subscribe(() => this.swapAmounts());
@@ -38077,6 +38089,25 @@ class swap_amounts_SwapAmounts {
                 this.defaultChange = true;
             }
         });
+    }
+    loadAmountsFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const amounts = urlParams.get("engrid-amounts");
+        if (amounts) {
+            const amountArray = amounts.split(",").map((amt) => amt.trim());
+            const defaultAmount = parseFloat(dist_engrid_ENGrid.getUrlParameter("transaction.donationAmt")) || parseFloat(amountArray[0]);
+            const amountsObj = {};
+            for (let i = 0; i < amountArray.length; i++) {
+                amountsObj[amountArray[i].toString()] = isNaN(parseFloat(amountArray[i]))
+                    ? amountArray[i]
+                    : parseFloat(amountArray[i]);
+            }
+            amountsObj["Other"] = "other";
+            window.EngridAmounts = {
+                onetime: { amounts: amountsObj, default: defaultAmount },
+                monthly: { amounts: amountsObj, default: defaultAmount },
+            };
+        }
     }
     swapAmounts() {
         if (this._frequency.frequency in window.EngridAmounts) {
@@ -38625,6 +38656,7 @@ debug_panel_DebugPanel.debugSessionStorageKey = "engrid_debug_panel";
 class debug_hidden_fields_DebugHiddenFields {
     constructor() {
         this.logger = new dist_logger_EngridLogger("Debug hidden fields", "#f0f0f0", "#ff0000", "🫣");
+        this.ignoreFields = ["transaction.paycurrency"];
         // Query all hidden input elements within the specified selectors
         const fields = document.querySelectorAll(".en__component--row [type='hidden'][class*='en_'], .engrid-added-input[type='hidden']");
         // Check if there are any hidden fields
@@ -38637,6 +38669,11 @@ class debug_hidden_fields_DebugHiddenFields {
                 .join(", ")}`);
             // Iterate through each hidden input element
             fields.forEach((el) => {
+                // Check if the field name is in the ignore list
+                if (this.ignoreFields.includes(el.name)) {
+                    this.logger.log(`Ignoring field: ${el.name} because it is in the ignore list`);
+                    return;
+                }
                 // Change the input type to 'text' and add the required classes
                 el.type = "text";
                 el.classList.add("en__field__input", "en__field__input--text");
@@ -40368,7 +40405,6 @@ class vgs_VGS {
                 autoComplete: "cc-exp",
                 validations: ["required", "validCardExpirationDate"],
                 css: styles,
-                yearLength: 2,
             },
         };
         // Deep merge the default options with the options set in the theme
@@ -40437,9 +40473,9 @@ class vgs_VGS {
             this.paymentTypeField.value.toLowerCase() === "visa" ||
             this.paymentTypeField.value.toLowerCase() === "vi") {
             const cardContainer = document.querySelector(".en__field--vgs.en__field--ccnumber");
-            const cardEmpty = cardContainer.querySelector(".vgs-collect-container__empty");
+            const cardEmpty = cardContainer === null || cardContainer === void 0 ? void 0 : cardContainer.querySelector(".vgs-collect-container__empty");
             const cvvContainer = document.querySelector(".en__field--vgs.en__field--ccvv");
-            const cvvEmpty = cvvContainer.querySelector(".vgs-collect-container__empty");
+            const cvvEmpty = cvvContainer === null || cvvContainer === void 0 ? void 0 : cvvContainer.querySelector(".vgs-collect-container__empty");
             if (cardContainer && cardEmpty) {
                 window.setTimeout(() => {
                     dist_engrid_ENGrid.setError(cardContainer, "Please enter a valid card number");
@@ -40766,6 +40802,8 @@ class embedded_ecard_EmbeddedEcard {
         this.options = embedded_ecard_options_EmbeddedEcardOptionsDefaults;
         this._form = events_en_form_EnForm.getInstance();
         this.isSubmitting = false;
+        this.ecardFormActive = false;
+        this.iframe = null;
         // For the page hosting the embedded ecard
         if (this.onHostPage()) {
             // Clean up session variables if the page is reloaded, and it isn't a submission failure
@@ -40827,7 +40865,8 @@ class embedded_ecard_EmbeddedEcard {
         </div>
       </div>`;
         container.appendChild(checkbox);
-        container.appendChild(this.createIframe(this.options.pageUrl));
+        this.iframe = this.createIframe(this.options.pageUrl);
+        container.appendChild(this.iframe);
         (_a = document
             .querySelector(this.options.anchor)) === null || _a === void 0 ? void 0 : _a.insertAdjacentElement(this.options.placement, container);
     }
@@ -40843,28 +40882,64 @@ class embedded_ecard_EmbeddedEcard {
         return iframe;
     }
     addEventListeners() {
-        const iframe = document.querySelector(".engrid-iframe--embedded-ecard");
         const sendEcardCheckbox = document.getElementById("en__field_embedded-ecard");
-        // Initialize based on checkbox's default state
-        if (sendEcardCheckbox === null || sendEcardCheckbox === void 0 ? void 0 : sendEcardCheckbox.checked) {
+        this.toggleEcardForm(sendEcardCheckbox.checked);
+        sendEcardCheckbox === null || sendEcardCheckbox === void 0 ? void 0 : sendEcardCheckbox.addEventListener("change", (e) => {
+            const checkbox = e.target;
+            this.toggleEcardForm(checkbox.checked);
+        });
+        this._form.onValidate.subscribe(this.validateRecipients.bind(this));
+    }
+    validateRecipients() {
+        var _a, _b, _c, _d;
+        if (!this.ecardFormActive || !this._form.validate)
+            return;
+        this.logger.log("Validating ecard");
+        let embeddedEcardData = JSON.parse(sessionStorage.getItem("engrid-embedded-ecard") || "{}");
+        // Testing if the ecard recipient data is set and valid
+        if (!embeddedEcardData.formData ||
+            !embeddedEcardData.formData.recipients ||
+            embeddedEcardData.formData.recipients.length == 0 ||
+            embeddedEcardData.formData.recipients.some((recipient) => {
+                const recipientName = recipient.name;
+                const recipientEmail = recipient.email;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return (recipientName === "" ||
+                    recipientEmail === "" ||
+                    !emailRegex.test(recipientEmail));
+            })) {
+            this.logger.log("Ecard recipients validation failed");
+            this._form.validate = false;
+            this.sendPostMessage(this.iframe, "recipient_error");
+            const iframeDoc = ((_a = this.iframe) === null || _a === void 0 ? void 0 : _a.contentDocument) || ((_c = (_b = this.iframe) === null || _b === void 0 ? void 0 : _b.contentWindow) === null || _c === void 0 ? void 0 : _c.document);
+            if (!iframeDoc)
+                return;
+            const scrollTarget = iframeDoc.querySelector(".en__ecardrecipients");
+            if (!scrollTarget)
+                return;
+            const iframeRect = (_d = this.iframe) === null || _d === void 0 ? void 0 : _d.getBoundingClientRect();
+            if (!iframeRect)
+                return;
+            const elementRect = scrollTarget.getBoundingClientRect();
+            window.scrollTo({
+                top: iframeRect.top + elementRect.top + window.scrollY - 10,
+                behavior: "smooth",
+            });
+        }
+    }
+    toggleEcardForm(visible) {
+        const iframe = document.querySelector(".engrid-iframe--embedded-ecard");
+        this.ecardFormActive = visible;
+        if (visible) {
             iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: block");
             sessionStorage.setItem("engrid-send-embedded-ecard", "true");
+            this.logger.log("Ecard form is visible");
         }
         else {
             iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: none");
             sessionStorage.removeItem("engrid-send-embedded-ecard");
+            this.logger.log("Ecard form is hidden");
         }
-        sendEcardCheckbox === null || sendEcardCheckbox === void 0 ? void 0 : sendEcardCheckbox.addEventListener("change", (e) => {
-            const checkbox = e.target;
-            if (checkbox === null || checkbox === void 0 ? void 0 : checkbox.checked) {
-                iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: block");
-                sessionStorage.setItem("engrid-send-embedded-ecard", "true");
-            }
-            else {
-                iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: none");
-                sessionStorage.removeItem("engrid-send-embedded-ecard");
-            }
-        });
     }
     setEmbeddedEcardSessionData() {
         let ecardVariant = document.querySelector("[name='friend.ecard']");
@@ -40956,6 +41031,15 @@ class embedded_ecard_EmbeddedEcard {
                 ecardVariant.dispatchEvent(new Event("input"));
             });
         });
+        // Remove the recipient error message when the user starts typing in the recipient fields
+        [recipientName, recipientEmail].forEach((el) => {
+            el.addEventListener("input", () => {
+                const recipientDetails = document.querySelector(".en__ecardrecipients__detail");
+                const error = document.querySelector(".engrid__recipient__error");
+                recipientDetails === null || recipientDetails === void 0 ? void 0 : recipientDetails.classList.remove("validationFail");
+                error === null || error === void 0 ? void 0 : error.classList.add("hide");
+            });
+        });
         window.addEventListener("message", (e) => {
             if (e.origin !== location.origin || !e.data.action)
                 return;
@@ -40990,6 +41074,18 @@ class embedded_ecard_EmbeddedEcard {
                     recipientName.dispatchEvent(new Event("input"));
                     recipientEmail.dispatchEvent(new Event("input"));
                     break;
+                case "recipient_error":
+                    const recipientDetails = document.querySelector(".en__ecardrecipients__detail");
+                    const error = document.querySelector(".engrid__recipient__error");
+                    if (error) {
+                        error.classList.remove("hide");
+                    }
+                    else {
+                        recipientDetails === null || recipientDetails === void 0 ? void 0 : recipientDetails.insertAdjacentHTML("afterend", "<div class='en__field__error engrid__recipient__error'>Please provide the details for your eCard recipient</div>");
+                    }
+                    recipientDetails === null || recipientDetails === void 0 ? void 0 : recipientDetails.classList.add("validationFail");
+                    window.dispatchEvent(new Event("resize"));
+                    break;
             }
         });
         this.sendPostMessage("parent", "ecard_form_ready");
@@ -41010,6 +41106,8 @@ class embedded_ecard_EmbeddedEcard {
     }
     sendPostMessage(target, action, data = {}) {
         var _a;
+        if (!target)
+            return;
         const message = Object.assign({ action }, data);
         if (target === "parent") {
             window.parent.postMessage(message, location.origin);
@@ -41395,11 +41493,70 @@ class optin_ladder_OptInLadder {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/post-donation-embed.js
+// This component only works on Thank You pages and the current page IS NOT embedded as an iframe.
+// It searches for a post-donation tag (engrid-post-donation)
+// and if it exists, it will replace it with an iframe of the current donation page, replacing the
+// "/donate/2" with "/donate/1" and adding a ?chain.
+// It has 2 parameters:
+// 1. params: the URL parameters to pass to the iframe
+// 2. amounts: comma separated list of amounts to pass to the iframe
+
+class PostDonationEmbed {
+    constructor() {
+        this.logger = new dist_logger_EngridLogger("PostDonationEmbed", "red", "white", "🖼️");
+        if (!this.shouldRun())
+            return;
+        this.logger.log("Post Donation Tag found");
+        const postDonationTag = document.querySelector("engrid-post-donation");
+        // Get current page URL
+        let currentUrl = new URL(window.location.href);
+        // Modify the path: replace "/donate/2" with "/donate/1"
+        currentUrl.pathname = currentUrl.pathname.replace("/donate/2", "/donate/1");
+        // Extract parameters from the <engrid-post-donation> tag
+        let params = postDonationTag.getAttribute("params") || "";
+        let amounts = postDonationTag.getAttribute("amounts");
+        // Format parameters correctly
+        let searchParams = new URLSearchParams(params.replace(/&/g, "&"));
+        let paramString = searchParams
+            .toString()
+            .replace(/%5B/g, "[")
+            .replace(/%5D/g, "]");
+        // Construct new URL with "chain" parameter
+        let newUrl = `${currentUrl.origin}${currentUrl.pathname}?chain&${paramString}`;
+        if (amounts) {
+            newUrl += `&engrid-amounts=${amounts}`;
+        }
+        // Create the iframe element
+        let iframe = document.createElement("iframe");
+        iframe.setAttribute("loading", "lazy");
+        iframe.setAttribute("width", "100%");
+        iframe.setAttribute("scrolling", "no");
+        iframe.setAttribute("class", "engrid-iframe thank-you-page-donation");
+        iframe.setAttribute("src", newUrl);
+        iframe.setAttribute("frameborder", "0");
+        iframe.setAttribute("allowfullscreen", "");
+        iframe.setAttribute("allowpaymentrequest", "true");
+        iframe.setAttribute("allow", "payment");
+        // Replace <engrid-post-donation> with the iframe
+        postDonationTag.replaceWith(iframe);
+    }
+    shouldRun() {
+        return (dist_engrid_ENGrid.isThankYouPage() &&
+            this.hasPostDonationTag() &&
+            dist_engrid_ENGrid.getBodyData("embedded") === null);
+    }
+    hasPostDonationTag() {
+        return !!document.querySelector("engrid-post-donation");
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const version_AppVersion = "0.20.8";
+const version_AppVersion = "0.21.5";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
 
 
 
