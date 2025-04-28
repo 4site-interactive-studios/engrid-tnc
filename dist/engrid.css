@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, April 27, 2025 @ 23:39:45 ET
+ *  Date: Monday, April 28, 2025 @ 01:07:59 ET
  *  By: fernando
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
@@ -10636,7 +10636,7 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] h1{
   color:var(--h1_color);
   font-family:var(--h1_font-family);
-  font-size:50px;
+  font-size:42px;
   font-stretch:normal;
   font-style:normal;
   font-weight:900;
