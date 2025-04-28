@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 10, 2025 @ 11:07:30 ET
- *  By: fernando
+ *  Date: Thursday, April 10, 2025 @ 13:02:10 ET
+ *  By: michael
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
  *
@@ -22906,6 +22906,26 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     }
   }
   // Limit premium availability to U.S. addresses only - END
+
+  // Premium form shipping block - START
+  const shippingCheckbox = document.querySelector("#en__field_supporter_questions_2133569");
+  shippingCheckbox?.addEventListener("change", function () {
+    const shippingEnabled = document.querySelector("#en__field_transaction_shipenabled");
+    if (shippingEnabled) {
+      shippingEnabled.checked = !this.checked;
+      shippingEnabled.dispatchEvent(new Event("change", {
+        bubbles: true
+      }));
+    }
+  });
+  // Premium form shipping block - END
+
+  // Move text to below the Premium Gift Header.
+  const pgInfo = document.querySelector(".insert-after--pg-header");
+  const pgHeader = document.querySelector(".en__pgHeader");
+  if (pgHeader && pgInfo) {
+    pgHeader.insertAdjacentElement("afterend", pgInfo);
+  }
 };
 ;// CONCATENATED MODULE: ./src/scripts/bequest-lightbox.ts
 
