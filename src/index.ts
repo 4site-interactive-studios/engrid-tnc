@@ -131,9 +131,10 @@ const options: Options = {
   },
   onLoad: () => {
     (<any>window).DonationLightboxForm = DonationLightboxForm;
-    new DonationLightboxForm(DonationAmount, DonationFrequency, App);
-    customScript(App, EnForm);
     customScript(App, DonationFrequency, DonationAmount);
+    if (App.getBodyData("subtheme") === "multistep") {
+      new DonationLightboxForm(DonationAmount, DonationFrequency, App);
+    }
     new BequestLightbox();
     new Tooltip();
     new IHMO();

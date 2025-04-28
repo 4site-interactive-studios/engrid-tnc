@@ -20,31 +20,34 @@ export default class DonationLightboxForm {
     );
     console.log("DonationLightboxForm: constructor");
 
-    // Adjust Email Tooltip
-    const emailTooltip = document.querySelector(".email-tooltip");
-    console.log(tippy, emailTooltip);
-    if (emailTooltip && tippy) {
-      const emailTooltipContent = emailTooltip.innerHTML;
-      // Replace the emailTooltip content with an i icon
-      emailTooltip.innerHTML = `
+    // Adjust Field Tooltip
+    const fieldTooltip = document.querySelectorAll(".en__field__notice");
+    if (fieldTooltip && tippy) {
+      fieldTooltip.forEach((tooltip) => {
+        const fieldTooltipContent = tooltip.innerHTML;
+        // Replace the tooltip content with an i icon
+        tooltip.innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" style="width: 20px; height: 20px;">
         <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" />
       </svg>
     `;
-      // Move the tooltip block to the email field
-      const emailField = document.querySelector(".en__field--emailAddress");
-      if (emailField) {
-        emailField.appendChild(emailTooltip);
-      }
-      // Add the emailTooltip content to the tippy instance
-      tippy(emailTooltip, {
-        content: emailTooltipContent,
-        allowHTML: true,
-        arrow: true,
-        arrowType: "default",
-        placement: "top",
-        trigger: "click mouseenter focus",
-        interactive: true,
+        // Move the tooltip block to the email field
+        const parentField = tooltip
+          .closest(".en__field")
+          .querySelector(".en__field__element");
+        if (parentField) {
+          parentField.appendChild(tooltip);
+        }
+        // Add the tooltip content to the tippy instance
+        tippy(tooltip, {
+          content: fieldTooltipContent,
+          allowHTML: true,
+          arrow: true,
+          arrowType: "default",
+          placement: "top",
+          trigger: "click mouseenter focus",
+          interactive: true,
+        });
       });
     }
 
@@ -167,17 +170,6 @@ export default class DonationLightboxForm {
             }
           }
         }, 100);
-      } else {
-        App.watchForError(() => {
-          const errorMessage = document.querySelector(".en__error");
-          const errorMessageText =
-            errorMessage && errorMessage.textContent.split(". ").length > 1
-              ? errorMessage.textContent.split(". ")[1]
-              : errorMessage.textContent;
-          if (errorMessageText) {
-            this.sendMessage("error", errorMessageText);
-          }
-        });
       }
       document
         .querySelectorAll("form.en__component input.en__field__input")
@@ -195,13 +187,15 @@ export default class DonationLightboxForm {
                 (nextSectionId > currentSectionId + 1 &&
                   !this.isVisible(this.sections[currentSectionId + 1]));
 
-              if (focusIsOnNextSection && this.validateForm(currentSectionId)) {
-                // Only scroll if the current section doesn't have radio elements
-                const radioElement =
-                  this.sections[currentSectionId].querySelector(
-                    ".en__field--radio"
-                  );
-                if (!radioElement) this.scrollToElement(e);
+              // if (focusIsOnNextSection && this.validateForm(currentSectionId)) {
+              if (focusIsOnNextSection) {
+                // // Only scroll if the current section doesn't have radio elements
+                // const radioElement =
+                //   this.sections[currentSectionId].querySelector(
+                //     ".en__field--radio"
+                //   );
+                // if (!radioElement) this.scrollToElement(e);
+                return;
               }
             }, 50);
             // If the field is the credit card number, remove the error class from the parent
@@ -285,6 +279,9 @@ export default class DonationLightboxForm {
             this.scrollToElement(
               document.querySelector(".en__field--ccnumber")
             );
+          } else if (error.innerHTML.toLowerCase().indexOf("captcha") > -1) {
+            console.error("Captcha Error");
+            this.scrollToElement(document.querySelector(".en__captcha"));
           } else {
             this.sendMessage("error", error.textContent);
           }
@@ -735,6 +732,19 @@ export default class DonationLightboxForm {
           }
         }
       }
+    }
+
+    // Validate Recaptcha
+    const recaptchaResponse = form.querySelector("#g-recaptcha-response");
+    const recapchaSection = this.getSectionId(recaptchaResponse);
+    if (
+      recaptchaResponse &&
+      recaptchaResponse.value === "" &&
+      (sectionId === false || sectionId == recapchaSection)
+    ) {
+      this.scrollToElement(recaptchaResponse);
+      this.sendMessage("error", "Please complete the reCAPTCHA");
+      return false;
     }
 
     // Validate Everything else

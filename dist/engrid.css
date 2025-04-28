@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 8, 2025 @ 22:50:08 ET
- *  By: 4Site
+ *  Date: Sunday, April 27, 2025 @ 23:39:45 ET
+ *  By: fernando
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
  *
@@ -10386,6 +10386,15 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep]{
   --give-by-select__button_count:1;
+  --recurring-frequency__button_text-transform:uppercase;
+  --give-monthly-donation-amount-appended-label:"/month";
+  --input_padding:0.8rem 1rem;
+  --button_padding:1rem 1.2rem;
+  --fields_spacing-inline:0.4rem;
+  --fields_spacing-block:0.4rem;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] [data-section-id="0"] .en__field>label{
+  display:none !important;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep]#en__pagebuilder #engrid,[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not([data-engrid-embedded]){
   margin:0 auto;
@@ -10424,10 +10433,22 @@ body[data-engrid-debug]:before{
   text-align:right;
   width:calc(100% - 100px);
 }
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] h1,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] h2{
+  color:var(--color-green);
+  font-family:var(--default_font-family);
+  font-size:var(--default_font-size);
+  font-weight:700;
+  text-align:center;
+  text-transform:uppercase;
+}
 @media only screen and (max-width:320px){
   [data-engrid-theme=tnc][data-engrid-subtheme=multistep] #engrid{
     zoom:.85;
   }
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-transaction-recurring-frequency=monthly] .radio-to-buttons_donationAmt .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:after{
+  margin-left:2px;
+  opacity:1;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field--validationFailed .en__field__error{
   display:none;
@@ -10541,6 +10562,9 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded] #launcher{
   display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded] #onetrust-consent-sdk{
+  display:none !important;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded] form.en__component{
   display:grid;
@@ -10681,7 +10705,6 @@ body[data-engrid-debug]:before{
   font-size:18px;
   margin-bottom:20px;
   margin-top:0;
-  text-align-last:left;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .padlock-icon{
   align-items:center;
@@ -10739,6 +10762,50 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .digital-wallets-wrapper div{
   width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__element{
+  align-items:center;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  margin:0 auto;
+  position:relative;
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item{
+  flex-basis:100%;
+  margin:0;
+  padding:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item label{
+  align-items:center;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  font-size:14px;
+  font-weight:600;
+  justify-content:center;
+  padding-bottom:10px;
+  padding-top:50px;
+  text-align:center;
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item label span{
+  line-height:1;
+  margin-top:10px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item .payment-flags,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item label:after{
+  border:4px solid #0000;
+  border-bottom:0;
+  display:block;
+  margin-top:75px;
+  max-height:50px;
+  position:absolute;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item input:checked+label:after{
+  border-color:var(--give-by-select__button_background-color_checked);
+  border-bottom:0;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] #en__field_transaction_paycurrency{
   font-size:14px;
@@ -10801,7 +10868,7 @@ body[data-engrid-debug]:before{
   display:none;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .transaction-fee-opt-in{
-  margin-top:2rem;
+  margin-top:.5rem;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not([data-engrid-embedded]):not([data-engrid-subtheme=multistep])[data-engrid-js-loading=finished]:before{
   background:linear-gradient(180deg, #fff 50%, #000 0);
@@ -10823,7 +10890,11 @@ body[data-engrid-debug]:before{
   width:270px !important;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .radio-to-buttons_donationAmt .en__field__item.en__field__item--other{
+  --input_padding:0.8rem 1rem 0.8rem 2rem;
   flex-basis:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .radio-to-buttons_donationAmt .en__field__item.en__field__item--other:before{
+  top:1.1rem;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__component--formblock:has(.en__captcha){
   margin:0;
@@ -10847,6 +10918,20 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__digitalWallet__container{
   padding-left:0 !important;
   padding-right:0 !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .donation-nudge{
+  margin-top:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .donation-nudge p{
+  font-size:16px !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .donation-nudge img{
+  margin-right:20px;
+  max-width:40px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field__notice{
+  position:absolute;
+  right:17px;
 }
 [data-engrid-theme=tnc] .engrid--ihmo-wrapper{
   border:1px solid #cdcdcd;

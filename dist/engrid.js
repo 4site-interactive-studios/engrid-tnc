@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 8, 2025 @ 22:50:08 ET
- *  By: 4Site
+ *  Date: Sunday, April 27, 2025 @ 23:39:45 ET
+ *  By: fernando
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
  *
@@ -22362,31 +22362,32 @@ class DonationLightboxForm {
     this.isDonation = ["donation", "premiumgift"].includes(window.pageJson.pageType);
     console.log("DonationLightboxForm: constructor");
 
-    // Adjust Email Tooltip
-    const emailTooltip = document.querySelector(".email-tooltip");
-    console.log(donation_lightbox_form_tippy, emailTooltip);
-    if (emailTooltip && donation_lightbox_form_tippy) {
-      const emailTooltipContent = emailTooltip.innerHTML;
-      // Replace the emailTooltip content with an i icon
-      emailTooltip.innerHTML = `
+    // Adjust Field Tooltip
+    const fieldTooltip = document.querySelectorAll(".en__field__notice");
+    if (fieldTooltip && donation_lightbox_form_tippy) {
+      fieldTooltip.forEach(tooltip => {
+        const fieldTooltipContent = tooltip.innerHTML;
+        // Replace the tooltip content with an i icon
+        tooltip.innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" style="width: 20px; height: 20px;">
         <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" />
       </svg>
     `;
-      // Move the tooltip block to the email field
-      const emailField = document.querySelector(".en__field--emailAddress");
-      if (emailField) {
-        emailField.appendChild(emailTooltip);
-      }
-      // Add the emailTooltip content to the tippy instance
-      donation_lightbox_form_tippy(emailTooltip, {
-        content: emailTooltipContent,
-        allowHTML: true,
-        arrow: true,
-        arrowType: "default",
-        placement: "top",
-        trigger: "click mouseenter focus",
-        interactive: true
+        // Move the tooltip block to the email field
+        const parentField = tooltip.closest(".en__field").querySelector(".en__field__element");
+        if (parentField) {
+          parentField.appendChild(tooltip);
+        }
+        // Add the tooltip content to the tippy instance
+        donation_lightbox_form_tippy(tooltip, {
+          content: fieldTooltipContent,
+          allowHTML: true,
+          arrow: true,
+          arrowType: "default",
+          placement: "top",
+          trigger: "click mouseenter focus",
+          interactive: true
+        });
       });
     }
 
@@ -22463,14 +22464,6 @@ class DonationLightboxForm {
             }
           }
         }, 100);
-      } else {
-        App.watchForError(() => {
-          const errorMessage = document.querySelector(".en__error");
-          const errorMessageText = errorMessage && errorMessage.textContent.split(". ").length > 1 ? errorMessage.textContent.split(". ")[1] : errorMessage.textContent;
-          if (errorMessageText) {
-            this.sendMessage("error", errorMessageText);
-          }
-        });
       }
       document.querySelectorAll("form.en__component input.en__field__input").forEach(e => {
         e.addEventListener("focus", event => {
@@ -22480,10 +22473,16 @@ class DonationLightboxForm {
           console.log("Focus on", nextSectionId, currentSectionId);
           setTimeout(() => {
             const focusIsOnNextSection = nextSectionId === currentSectionId + 1 || nextSectionId > currentSectionId + 1 && !this.isVisible(this.sections[currentSectionId + 1]);
-            if (focusIsOnNextSection && this.validateForm(currentSectionId)) {
-              // Only scroll if the current section doesn't have radio elements
-              const radioElement = this.sections[currentSectionId].querySelector(".en__field--radio");
-              if (!radioElement) this.scrollToElement(e);
+
+            // if (focusIsOnNextSection && this.validateForm(currentSectionId)) {
+            if (focusIsOnNextSection) {
+              // // Only scroll if the current section doesn't have radio elements
+              // const radioElement =
+              //   this.sections[currentSectionId].querySelector(
+              //     ".en__field--radio"
+              //   );
+              // if (!radioElement) this.scrollToElement(e);
+              return;
             }
           }, 50);
           // If the field is the credit card number, remove the error class from the parent
@@ -22554,6 +22553,9 @@ class DonationLightboxForm {
           if (error.innerHTML.toLowerCase().indexOf("processing") > -1) {
             this.sendMessage("error", "Sorry! There's a problem processing your donation.");
             this.scrollToElement(document.querySelector(".en__field--ccnumber"));
+          } else if (error.innerHTML.toLowerCase().indexOf("captcha") > -1) {
+            console.error("Captcha Error");
+            this.scrollToElement(document.querySelector(".en__captcha"));
           } else {
             this.sendMessage("error", error.textContent);
           }
@@ -22918,6 +22920,15 @@ class DonationLightboxForm {
           }
         }
       }
+    }
+
+    // Validate Recaptcha
+    const recaptchaResponse = form.querySelector("#g-recaptcha-response");
+    const recapchaSection = this.getSectionId(recaptchaResponse);
+    if (recaptchaResponse && recaptchaResponse.value === "" && (sectionId === false || sectionId == recapchaSection)) {
+      this.scrollToElement(recaptchaResponse);
+      this.sendMessage("error", "Please complete the reCAPTCHA");
+      return false;
     }
 
     // Validate Everything else
@@ -23527,7 +23538,7 @@ function trackUserInteractions() {
 ;// CONCATENATED MODULE: ./src/scripts/main.js
 
 const main_tippy = (__webpack_require__(9244)/* ["default"] */ .Ay);
-const customScript = function (App, DonationFrequency, DonationAmount, EnForm) {
+const customScript = function (App, DonationFrequency, DonationAmount) {
   // console.log("ENGrid client scripts are executing");
 
   // Add your client scripts here
@@ -23982,6 +23993,10 @@ const customScript = function (App, DonationFrequency, DonationAmount, EnForm) {
   const accountHolderField = document.querySelector('input[name="supporter.NOT_TAGGED_79"]');
   if (accountHolderField) {
     accountHolderField.setAttribute("placeholder", "Account Holder's Name");
+  }
+  const bankNameField = document.querySelector('input[name="transaction.bankname"]');
+  if (bankNameField) {
+    bankNameField.setAttribute("placeholder", "Account Holder Name");
   }
 
   // Update required fields
@@ -26316,9 +26331,10 @@ const options = {
   },
   onLoad: () => {
     window.DonationLightboxForm = DonationLightboxForm;
-    new DonationLightboxForm(DonationAmount, DonationFrequency, App);
-    customScript(App, en_form_EnForm);
     customScript(App, DonationFrequency, DonationAmount);
+    if (App.getBodyData("subtheme") === "multistep") {
+      new DonationLightboxForm(DonationAmount, DonationFrequency, App);
+    }
     new BequestLightbox();
     new Tooltip();
     new IHMO();

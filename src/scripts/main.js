@@ -2,12 +2,7 @@ import { setDonationDataSessionStorage } from "./tracking";
 
 const tippy = require("tippy.js").default;
 
-export const customScript = function (
-  App,
-  DonationFrequency,
-  DonationAmount,
-  EnForm
-) {
+export const customScript = function (App, DonationFrequency, DonationAmount) {
   // console.log("ENGrid client scripts are executing");
 
   // Add your client scripts here
@@ -601,6 +596,14 @@ export const customScript = function (
   );
   if (accountHolderField) {
     accountHolderField.setAttribute("placeholder", "Account Holder's Name");
+  }
+
+  const bankNameField = document.querySelector(
+    'input[name="transaction.bankname"]'
+  );
+
+  if (bankNameField) {
+    bankNameField.setAttribute("placeholder", "Account Holder Name");
   }
 
   // Update required fields
