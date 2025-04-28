@@ -958,6 +958,28 @@ export const customScript = function (
   }
   // Limit premium availability to U.S. addresses only - END
 
+  // Premium form shipping block - START
+  const shippingCheckbox = document.querySelector(
+    "#en__field_supporter_questions_2133569"
+  );
+  shippingCheckbox?.addEventListener("change", function () {
+    const shippingEnabled = document.querySelector(
+      "#en__field_transaction_shipenabled"
+    );
+    if (shippingEnabled) {
+      shippingEnabled.checked = !this.checked;
+      shippingEnabled.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  });
+  // Premium form shipping block - END
+
+  // Move text to below the Premium Gift Header.
+  const pgInfo = document.querySelector(".insert-after--pg-header");
+  const pgHeader = document.querySelector(".en__pgHeader");
+  if (pgHeader && pgInfo) {
+    pgHeader.insertAdjacentElement("afterend", pgInfo);
+  }
+
   //Member Care Features - START
   const generateEmailButton = document.getElementById("generateEmail");
   const editEmailButton = document.getElementById("editEmail");
