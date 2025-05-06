@@ -884,6 +884,8 @@
   }
   .en__captcha {
     margin-top: 15px;
+    transform: scale(0.895);
+    transform-origin: left;
   }
   // Temporarily hide the Credit Card Holder Name field
   .en__field--creditCardHolderName {

@@ -14,6 +14,7 @@ export default class DonationLightboxForm {
       return;
     this.amount = DonationAmount;
     this.frequency = DonationFrequency;
+    this.app = App;
     this.ipCountry = "";
     this.isDonation = ["donation", "premiumgift"].includes(
       window.pageJson.pageType
@@ -421,7 +422,7 @@ export default class DonationLightboxForm {
               const paymentType = document.querySelector(
                 "#en__field_transaction_paymenttype"
               ).value;
-              if (paymentType != "paypal") {
+              if (paymentType.toLowerCase() != "paypal") {
                 this.sendMessage("status", "loading");
               } else {
                 // If Paypal, submit the form on a new tab
@@ -605,8 +606,8 @@ export default class DonationLightboxForm {
         "paypaltouch",
         "stripedigitalwallet",
         "daf",
-      ].includes(paymentType.value);
-      const isBankPayment = paymentType.value === "ach";
+      ].includes(paymentType.value.toLowerCase());
+      const isBankPayment = paymentType.value.toLowerCase() === "ach";
       console.log(
         "DonationLightboxForm: validateForm",
         ccnumberBlock,
@@ -906,15 +907,22 @@ export default class DonationLightboxForm {
   }
   changeSubmitButton() {
     const submit = document.querySelector(".section-navigation__submit");
-    const amount = this.checkNested(
+    let amount = this.checkNested(
       window.EngagingNetworks,
       "require",
       "_defined",
       "enjs",
       "getDonationTotal"
     )
-      ? "$" + window.EngagingNetworks.require._defined.enjs.getDonationTotal()
+      ? "$" +
+        this.app.formatNumber(
+          window.EngagingNetworks.require._defined.enjs.getDonationTotal()
+        )
       : null;
+    // If amount ends with .00, remove it
+    if (amount && amount.endsWith(".00")) {
+      amount = amount.slice(0, -3);
+    }
     let frequency = this.frequency.getInstance().frequency;
     let label = submit ? submit.dataset.label : "";
     frequency = frequency === "onetime" ? "" : "<small>/mo</small>";
@@ -1043,6 +1051,20 @@ export default class DonationLightboxForm {
           }, 100);
         });
       });
+    }
+    const recaptchaContainer = document.querySelector(".en__captcha");
+    if (recaptchaContainer) {
+      if (typeof window._grecaptchaExpireCallback === "function") {
+        // Add our own callback to the recaptcha
+        const oldCallback = window._grecaptchaExpireCallback;
+        window._grecaptchaExpireCallback = () => {
+          oldCallback();
+          window.setTimeout(() => {
+            this.scrollToElement(recaptchaContainer.closest(".en__component"));
+            this.sendMessage("error", "reCAPTCHA expired");
+          }, 400);
+        };
+      }
     }
   }
   // paymentType is any of the values from the giveBySelect radio buttons

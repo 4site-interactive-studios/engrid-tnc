@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, April 28, 2025 @ 01:07:59 ET
+ *  Date: Tuesday, May 6, 2025 @ 18:29:00 ET
  *  By: fernando
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
@@ -22358,6 +22358,7 @@ class DonationLightboxForm {
     if (!this.isIframe() || document.querySelector("body").dataset.engridSubtheme !== "multistep") return;
     this.amount = DonationAmount;
     this.frequency = DonationFrequency;
+    this.app = App;
     this.ipCountry = "";
     this.isDonation = ["donation", "premiumgift"].includes(window.pageJson.pageType);
     console.log("DonationLightboxForm: constructor");
@@ -22675,7 +22676,7 @@ class DonationLightboxForm {
             }));
             // Only shows cortain if payment is not paypal
             const paymentType = document.querySelector("#en__field_transaction_paymenttype").value;
-            if (paymentType != "paypal") {
+            if (paymentType.toLowerCase() != "paypal") {
               this.sendMessage("status", "loading");
             } else {
               // If Paypal, submit the form on a new tab
@@ -22828,8 +22829,8 @@ class DonationLightboxForm {
       const ccnumber = form.querySelector("#en__field_transaction_ccnumber");
       const ccnumberBlock = form.querySelector(".en__field--ccnumber");
       const ccnumberSection = this.getSectionId(ccnumberBlock);
-      const isDigitalWalletPayment = ["paypal", "paypaltouch", "stripedigitalwallet", "daf"].includes(paymentType.value);
-      const isBankPayment = paymentType.value === "ach";
+      const isDigitalWalletPayment = ["paypal", "paypaltouch", "stripedigitalwallet", "daf"].includes(paymentType.value.toLowerCase());
+      const isBankPayment = paymentType.value.toLowerCase() === "ach";
       console.log("DonationLightboxForm: validateForm", ccnumberBlock, ccnumberSection);
       if (!isDigitalWalletPayment && !isBankPayment && (sectionId === false || sectionId == ccnumberSection) && checkCard) {
         if (!paymentType || !paymentType.value) {
@@ -23081,7 +23082,11 @@ class DonationLightboxForm {
   }
   changeSubmitButton() {
     const submit = document.querySelector(".section-navigation__submit");
-    const amount = this.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "getDonationTotal") ? "$" + window.EngagingNetworks.require._defined.enjs.getDonationTotal() : null;
+    let amount = this.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "getDonationTotal") ? "$" + this.app.formatNumber(window.EngagingNetworks.require._defined.enjs.getDonationTotal()) : null;
+    // If amount ends with .00, remove it
+    if (amount && amount.endsWith(".00")) {
+      amount = amount.slice(0, -3);
+    }
     let frequency = this.frequency.getInstance().frequency;
     let label = submit ? submit.dataset.label : "";
     frequency = frequency === "onetime" ? "" : "<small>/mo</small>";
@@ -23180,6 +23185,20 @@ class DonationLightboxForm {
           }, 100);
         });
       });
+    }
+    const recaptchaContainer = document.querySelector(".en__captcha");
+    if (recaptchaContainer) {
+      if (typeof window._grecaptchaExpireCallback === "function") {
+        // Add our own callback to the recaptcha
+        const oldCallback = window._grecaptchaExpireCallback;
+        window._grecaptchaExpireCallback = () => {
+          oldCallback();
+          window.setTimeout(() => {
+            this.scrollToElement(recaptchaContainer.closest(".en__component"));
+            this.sendMessage("error", "reCAPTCHA expired");
+          }, 400);
+        };
+      }
     }
   }
   // paymentType is any of the values from the giveBySelect radio buttons

@@ -20,7 +20,7 @@
   --input_background-color: #ffffff;
   --input_border-color: #949494;
   --input_border-radius: 0px;
-  --input_padding: 1.5ch 2ch;
+  --input_padding: 0.75rem 1rem;
   --button_font-size: 14px;
   --button_font-weight: bold;
   --button_background-color: #007931;
@@ -35,6 +35,8 @@
   --radio_color: var(--color-green);
   --radio_box-shadow_selected: inset 0 0 0 6px var(--color-green);
   --share-lead-text: "TELL YOUR FRIENDS";
+
+  --select_padding-right: 1.3rem;
 
   // Hiding unused page sections
   .page-alert,
@@ -120,7 +122,7 @@
 
     &:before {
       content: "*";
-      margin-right: 0.5ch;
+      margin-right: 0.25rem;
     }
   }
 
@@ -769,7 +771,7 @@
     .arrow .en__submit button:after,
     .arrow .en__submit a:after {
       float: none;
-      margin-left: 0.5ch;
+      margin-left: 0.25rem;
       margin-right: 0;
       transition: margin 0.3s, background-color 0.3s;
     }
@@ -780,12 +782,12 @@
       opacity: 0.9;
       display: inline-block;
       position: relative;
-      left: 1ch;
+      left: 0.5rem;
       text-decoration: none;
     }
 
     .arrow .en__submit button:hover:after {
-      margin-left: 2ch;
+      margin-left: 1rem;
     }
 
     .asterisks-required {
@@ -1007,7 +1009,7 @@
       justify-content: flex-start !important;
       &:before {
         content: "*";
-        margin-right: 0.5ch;
+        margin-right: 0.25rem;
       }
     }
 
@@ -1017,7 +1019,7 @@
         justify-content: flex-start !important;
         &:before {
           content: "*";
-          margin-right: 0.5ch;
+          margin-right: 0.25rem;
         }
       }
     }
