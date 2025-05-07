@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 10, 2025 @ 13:02:10 ET
+ *  Date: Wednesday, May 7, 2025 @ 09:22:43 ET
  *  By: michael
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
@@ -23189,6 +23189,7 @@ class IHMO {
     this.configureForm(this.giftType, this.giftNotification);
     this.addEventListeners();
     this.hideAllFields();
+    this.setDefaultSourceCodes();
     // If IHMO is checked, save the gift details and set the source code
     if (this.ihmoCheckbox?.checked) {
       this.saveGiftDetails();
@@ -23370,13 +23371,13 @@ class IHMO {
       // if "use my gift where it's needed most" option is selected, do not change the source code"
       return;
     }
-    const sourceEnd = sourceCodeContainer.value.substring(sourceCodeContainer.value.length - 6, sourceCodeContainer.value.length - 2);
+    const sourceEnd = sourceCodeContainer.value.substring(sourceCodeContainer.value.length - 6);
     if (giftType === "HONORARY") {
-      sourceCodeContainer.value = sourceCodeContainer.value.replace(sourceEnd, "TRIH");
+      sourceCodeContainer.value = sourceCodeContainer.value.replace(sourceEnd, "TRIHXX");
     } else if (giftType === "MEMORIAL") {
-      sourceCodeContainer.value = sourceCodeContainer.value.replace(sourceEnd, "TRIM");
+      sourceCodeContainer.value = sourceCodeContainer.value.replace(sourceEnd, "TRIMXX");
     } else {
-      sourceCodeContainer.value = sourceCodeContainer.value.replace(sourceEnd, "0XXX");
+      sourceCodeContainer.value = sourceCodeContainer.getAttribute("data-default-source-code") || "";
     }
     engrid_ENGrid.setBodyData("source-code", this.sourceCodeField.value);
   }
@@ -23491,6 +23492,25 @@ class IHMO {
         window.EngagingNetworks.require._defined.enjs.showField(identifier);
       }
     }
+  }
+
+  /*
+   * Set the default source codes as a data attribute
+   */
+  setDefaultSourceCodes() {
+    if (!this.sourceCodeField) return;
+    if (this.sourceCodeField instanceof HTMLInputElement) {
+      // If the source code field is an input, set the default source code as a data attribute
+      this.sourceCodeField.setAttribute("data-default-source-code", this.sourceCodeField.value);
+      return;
+    }
+
+    // If the source code field is a select, set the default source code as a data attribute on each option
+    this.sourceCodeField.querySelectorAll("option").forEach(option => {
+      if (option && option.value) {
+        option.setAttribute("data-default-source-code", option.value);
+      }
+    });
   }
 }
 ;// CONCATENATED MODULE: ./src/scripts/widget-progress-bar.ts
