@@ -167,7 +167,7 @@
   }
 
   .en__pg__optionType {
-    --select_padding: 1.2ch 1.6ch;
+    --select_padding: 0.6rem 0.8rem;
     --select_font-size: 16px;
     --select_line-height: 24px;
     select {
@@ -351,7 +351,7 @@
         flex: 0 0 auto;
         height: var(--checkbox_height);
         justify-content: center;
-        margin-right: max(var(--fields_spacing-inline), 1ch, 0.5rem);
+        margin-right: max(var(--fields_spacing-inline), 0.5rem);
         min-width: var(--checkbox_width);
         padding-left: var(--checkbox_padding-left);
         padding-top: var(--checkbox_padding-top);

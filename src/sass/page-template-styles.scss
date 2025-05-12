@@ -20,7 +20,7 @@
   --input_background-color: #ffffff;
   --input_border-color: #949494;
   --input_border-radius: 0px;
-  --input_padding: 1.5ch 2ch;
+  --input_padding: 0.75rem 1rem;
   --button_font-size: 14px;
   --button_font-weight: bold;
   --button_background-color: #007931;
@@ -35,6 +35,9 @@
   --radio_color: var(--color-green);
   --radio_box-shadow_selected: inset 0 0 0 6px var(--color-green);
   --share-lead-text: "TELL YOUR FRIENDS";
+  --media-attribution__margin: 0.75rem;
+  --media-attribution__padding: 0.75rem;
+  --select_padding-right: 1.3rem;
 
   --premium__image_max-width: 130px;
   --premium__image_max-height: 130px;
@@ -123,7 +126,7 @@
 
     &:before {
       content: "*";
-      margin-right: 0.5ch;
+      margin-right: 0.25rem;
     }
   }
 
@@ -772,7 +775,7 @@
     .arrow .en__submit button:after,
     .arrow .en__submit a:after {
       float: none;
-      margin-left: 0.5ch;
+      margin-left: 0.25rem;
       margin-right: 0;
       transition: margin 0.3s, background-color 0.3s;
     }
@@ -783,12 +786,12 @@
       opacity: 0.9;
       display: inline-block;
       position: relative;
-      left: 1ch;
+      left: 0.5rem;
       text-decoration: none;
     }
 
     .arrow .en__submit button:hover:after {
-      margin-left: 2ch;
+      margin-left: 1rem;
     }
 
     .asterisks-required {
@@ -888,6 +891,11 @@
         margin-bottom: -51px;
       }
     }
+  }
+
+  input[type="checkbox"]+label:before,
+  input[type="radio"]+label:before {
+    margin-right: max(var(--fields_spacing-inline), .5rem);
   }
 
   // Global styles for ENgrid migration - everything except the old gated content page layout
@@ -1010,7 +1018,7 @@
       justify-content: flex-start !important;
       &:before {
         content: "*";
-        margin-right: 0.5ch;
+        margin-right: 0.25rem;
       }
     }
 
@@ -1020,7 +1028,7 @@
         justify-content: flex-start !important;
         &:before {
           content: "*";
-          margin-right: 0.5ch;
+          margin-right: 0.25rem;
         }
       }
     }
