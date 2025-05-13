@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 6, 2025 @ 18:29:00 ET
+ *  Date: Monday, May 12, 2025 @ 23:56:51 ET
  *  By: fernando
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
@@ -22720,6 +22720,20 @@ class DonationLightboxForm {
       digitalWallets.prepend(backLink);
     }
   }
+  // Update section-count based on visible sections
+  updateSectionCount() {
+    console.log("DonationLightboxForm: updateSectionCount");
+    const visibleSections = Array.from(this.sections).filter(section => this.isVisible(section));
+    visibleSections.forEach((section, key) => {
+      const sectionCount = section.querySelector(".section-count");
+      const sectionCurrent = section.querySelector(".section-count__current");
+      const sectionTotal = section.querySelector(".section-count__total");
+      if (sectionCount && sectionCurrent && sectionTotal) {
+        sectionCurrent.innerHTML = key + 1;
+        sectionTotal.innerHTML = visibleSections.length;
+      }
+    });
+  }
   // Scroll to a section
   scrollToSection(sectionId, fromSectionId) {
     console.log("DonationLightboxForm: scrollToSection", sectionId);
@@ -23276,6 +23290,7 @@ class DonationLightboxForm {
       section.style.display = shouldShow ? "block" : "none";
       console.log(`${shouldShow ? "Showing" : "Hiding"} section ${sectionId} (payment type: ${ptValue})`);
     });
+    this.updateSectionCount();
   }
 }
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/typeof.js

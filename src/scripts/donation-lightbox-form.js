@@ -477,6 +477,22 @@ export default class DonationLightboxForm {
       digitalWallets.prepend(backLink);
     }
   }
+  // Update section-count based on visible sections
+  updateSectionCount() {
+    console.log("DonationLightboxForm: updateSectionCount");
+    const visibleSections = Array.from(this.sections).filter((section) =>
+      this.isVisible(section)
+    );
+    visibleSections.forEach((section, key) => {
+      const sectionCount = section.querySelector(".section-count");
+      const sectionCurrent = section.querySelector(".section-count__current");
+      const sectionTotal = section.querySelector(".section-count__total");
+      if (sectionCount && sectionCurrent && sectionTotal) {
+        sectionCurrent.innerHTML = key + 1;
+        sectionTotal.innerHTML = visibleSections.length;
+      }
+    });
+  }
   // Scroll to a section
   scrollToSection(sectionId, fromSectionId) {
     console.log("DonationLightboxForm: scrollToSection", sectionId);
@@ -1182,5 +1198,6 @@ export default class DonationLightboxForm {
         } section ${sectionId} (payment type: ${ptValue})`
       );
     });
+    this.updateSectionCount();
   }
 }
