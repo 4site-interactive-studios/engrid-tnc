@@ -666,6 +666,60 @@
     }
   }
 
+  .engrid--frequency-upsell-modal {
+    .engrid-modal__overlay {
+      align-items: center;
+    }
+
+    .engrid-modal__container {
+      max-width: 650px;
+    }
+
+    .engrid-modal__body {
+      margin: 0;
+      padding: 30px;
+    }
+
+    .frequency-upsell-modal__title {
+      font-family: var(--default_font-family);
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .frequency-upsell-modal__para {
+      font-family: var(--serif-fonts);
+      font-size: 20px;
+      line-height: 1.3;
+    }
+
+    #frequency-upsell-yes {
+      background-color: var(--color-green);
+      color: var(--color-white);
+      border-color: var(--color-green);
+      width: 100%;
+      padding: 16px 30px;
+      min-height: 60px;
+
+      &:hover {
+        background-color: #000000;
+      }
+    }
+
+    #frequency-upsell-no {
+      color: var(--color-green);
+      background-color: var(--color-white);
+      border-color: var(--color-green);
+      width: 100%;
+      padding: 16px 30px;
+      min-height: 60px;
+
+      &:hover {
+        background-color: var(--color-green);
+        color: var(--color-white);
+      }
+    }
+  }
+
   ///////////////////////////////////////////////////
   /*
   // End of global styles
@@ -897,6 +951,8 @@
   input[type="radio"]+label:before {
     margin-right: max(var(--fields_spacing-inline), .5rem);
   }
+
+
 
   // Global styles for ENgrid migration - everything except the old gated content page layout
   // Specifically excludes the old gated content page layout to prevent conflicts
