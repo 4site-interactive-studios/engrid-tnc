@@ -188,7 +188,7 @@
     }
   }
 
-  &:not([data-engrid-bequest-lightbox="open"]):not(#en__pagebuilder) {
+  &:not([data-engrid-bequest-lightbox="open"]):not([data-engrid-has-lightbox="true"]):not(#en__pagebuilder) {
     .engrid-modal {
       display: none;
     }
