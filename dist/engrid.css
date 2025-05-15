@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, May 14, 2025 @ 08:03:01 ET
+ *  Date: Thursday, May 15, 2025 @ 11:17:00 ET
  *  By: michael
  *  ENGrid styles: v0.21.3
  *  ENGrid scripts: v0.21.5
@@ -8277,6 +8277,37 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc] .engrid--frequency-upsell-modal #frequency-upsell-no:hover{
   background-color:var(--color-green);
   color:var(--color-white);
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .engrid-modal__container{
+  border:none;
+  max-width:960px;
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .engrid-modal__body{
+  display:flex;
+  max-width:100%;
+  padding:0;
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .engrid-modal__body>div{
+  flex-basis:50%;
+}
+@media (max-width:600px){
+  [data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .engrid-modal__body{
+    flex-direction:column;
+  }
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .frequency-upsell-modal__secondary-content{
+  background-image:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/modal-bg.jpg?v=1747320734000);
+  background-position:50%;
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+@media (max-width:600px){
+  [data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .frequency-upsell-modal__secondary-content{
+    min-height:200px;
+  }
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .frequency-upsell-modal__content{
+  padding:30px;
 }
 [data-engrid-theme=tnc][data-engrid-layout=leftleft1col]{
   --click-to-expand__copy-area_height:200px;

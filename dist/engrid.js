@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, May 14, 2025 @ 08:03:01 ET
+ *  Date: Thursday, May 15, 2025 @ 11:17:00 ET
  *  By: michael
  *  ENGrid styles: v0.21.3
  *  ENGrid scripts: v0.21.5
@@ -18000,6 +18000,7 @@ const FrequencyUpsellOptionsDefaults = {
   noButton: "NO! Process my gift as a one-time gift of ${upsell_amount}",
   upsellFrequency: "annual",
   upsellFromFrequency: ["onetime"],
+  customClass: "",
   upsellAmount: currentAmount => currentAmount,
   onAccept: () => {},
   onDecline: () => {}
@@ -27691,7 +27692,10 @@ class Modal {
     this.modal = document.createElement("div");
     this.modal.classList.add("engrid-modal", "modal--hidden");
     if (this.options.customClass && this.options.customClass !== "") {
-      this.modal.classList.add(this.options.customClass);
+      this.options.customClass.split(" ").forEach(customClass => {
+        if (!customClass) return;
+        this.modal.classList.add(customClass);
+      });
     }
     if (this.options.showCloseX) {
       this.modal.classList.add("engrid-modal--close-x");
@@ -29175,7 +29179,7 @@ class FrequencyUpsellModal extends Modal {
   constructor(upsellOptions) {
     super({
       onClickOutside: "bounce",
-      customClass: "engrid--frequency-upsell-modal",
+      customClass: `engrid--frequency-upsell-modal ${upsellOptions.customClass}`,
       showCloseX: false
     });
     this._amountWithFees = 0;
@@ -29201,6 +29205,7 @@ class FrequencyUpsellModal extends Modal {
   getModalContent() {
     if (!this.upsellOptions) return "";
     return `
+    <div class="frequency-upsell-modal__secondary-content"></div>
     <div class="frequency-upsell-modal__content">
       <div class="frequency-upsell-modal__text">
         <h2 class="frequency-upsell-modal__title">${this.replaceAmountTokens(this.upsellOptions.title)}</h2>

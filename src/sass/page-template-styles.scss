@@ -720,6 +720,41 @@
     }
   }
 
+  .engrid--frequency-upsell-modal.modal--image-left {
+    .engrid-modal__container {
+      max-width: 960px;
+      border: none;
+    }
+
+    .engrid-modal__body {
+      padding: 0;
+      max-width: 100%;
+      display: flex;
+      > div {
+        flex-basis: 50%;
+      }
+
+      @media (max-width: 600px) {
+        flex-direction: column;
+      }
+    }
+
+    .frequency-upsell-modal__secondary-content {
+      background-image: url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/modal-bg.jpg?v=1747320734000);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      @media (max-width: 600px) {
+        min-height: 200px;
+      }
+    }
+
+    .frequency-upsell-modal__content {
+      padding: 30px;
+    }
+  }
+
   ///////////////////////////////////////////////////
   /*
   // End of global styles
