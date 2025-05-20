@@ -110,6 +110,31 @@ export default class DonationLightboxForm {
             console.error("PageData Error:", error);
           });
       }
+      const bequestContainer = document.querySelector(".bequest-container");
+      const bequestBtn = document.querySelector(".bequest-btn");
+      if (bequestContainer && bequestBtn) {
+        bequestBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const overlay = document.querySelector(".engrid-modal__overlay");
+          if (overlay) {
+            overlay.classList.toggle("hide");
+            if (!overlay.classList.contains("hide")) {
+              // Listen for the close event from iframe
+              window.addEventListener(
+                "message",
+                function (event) {
+                  if (event.data === "iframeSubmitted") {
+                    overlay.classList.add("hide");
+                    bequestContainer.classList.add("hide");
+                    bequestBtn.classList.add("hide");
+                  }
+                },
+                false
+              );
+            }
+          }
+        });
+      }
       return false;
     }
     if (!this.sections.length) {

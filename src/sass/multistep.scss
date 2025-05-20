@@ -513,7 +513,7 @@
     }
     form.en__component {
       & > .en__component {
-        padding: 100px 30px;
+        padding: 50px 30px;
         margin: auto;
       }
     }
@@ -534,7 +534,7 @@
     }
     h1 {
       font-family: var(--h1_font-family);
-      font-size: 42px;
+      font-size: 38px;
       font-weight: 900;
       font-stretch: normal;
       font-style: normal;
@@ -559,6 +559,24 @@
         font-weight: 500;
         line-height: 1.5;
         // color: #007cf9;
+      }
+    }
+    .bequest-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      bottom: 0;
+      background-color: #4f606c;
+      .engrid-modal__body {
+        iframe {
+          height: 300px;
+          border: none;
+          margin-bottom: 0 !important;
+        }
+      }
+      .engrid-modal__container {
+        top: 20px;
       }
     }
   }

@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 20, 2025 @ 12:54:15 ET
+ *  Date: Tuesday, May 20, 2025 @ 14:00:31 ET
  *  By: fernando
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
@@ -22429,6 +22429,27 @@ class DonationLightboxForm {
           }
         }).catch(error => {
           console.error("PageData Error:", error);
+        });
+      }
+      const bequestContainer = document.querySelector(".bequest-container");
+      const bequestBtn = document.querySelector(".bequest-btn");
+      if (bequestContainer && bequestBtn) {
+        bequestBtn.addEventListener("click", e => {
+          e.preventDefault();
+          const overlay = document.querySelector(".engrid-modal__overlay");
+          if (overlay) {
+            overlay.classList.toggle("hide");
+            if (!overlay.classList.contains("hide")) {
+              // Listen for the close event from iframe
+              window.addEventListener("message", function (event) {
+                if (event.data === "iframeSubmitted") {
+                  overlay.classList.add("hide");
+                  bequestContainer.classList.add("hide");
+                  bequestBtn.classList.add("hide");
+                }
+              }, false);
+            }
+          }
         });
       }
       return false;

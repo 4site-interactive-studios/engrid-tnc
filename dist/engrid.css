@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 20, 2025 @ 12:54:15 ET
+ *  Date: Tuesday, May 20, 2025 @ 14:00:31 ET
  *  By: fernando
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
@@ -10617,7 +10617,7 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] form.en__component>.en__component{
   margin:auto;
-  padding:100px 30px;
+  padding:50px 30px;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] footer{
   background-image:url('data:image/svg+xml;utf8,<svg fill="none" height="132" viewBox="0 0 400 132" width="400" xmlns="http://www.w3.org/2000/svg"> <path d="M0 110.582L400 0v128c0 2.209-1.791 4-4 4H0v-21.418z" fill="%23A3D1D6"></path> <path d="M0 73.5L400 132H0V73.5z" fill="%23007cf9"></path></svg>');
@@ -10637,7 +10637,7 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] h1{
   color:var(--h1_color);
   font-family:var(--h1_font-family);
-  font-size:42px;
+  font-size:38px;
   font-stretch:normal;
   font-style:normal;
   font-weight:900;
@@ -10660,6 +10660,22 @@ body[data-engrid-debug]:before{
   font-size:12px;
   font-weight:500;
   line-height:1.5;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] .bequest-modal{
+  background-color:#4f606c;
+  bottom:0;
+  left:0;
+  position:fixed;
+  top:0;
+  width:100vw;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] .bequest-modal .engrid-modal__body iframe{
+  border:none;
+  height:300px;
+  margin-bottom:0 !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] .bequest-modal .engrid-modal__container{
+  top:20px;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field--emailAddress{
   position:relative;
