@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, May 12, 2025 @ 23:56:51 ET
+ *  Date: Tuesday, May 20, 2025 @ 12:54:15 ET
  *  By: fernando
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
@@ -10934,6 +10934,62 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field__notice{
   position:absolute;
   right:17px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] [data-upsell-section=true] .en__component--column{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-buttons{
+  margin-bottom:4rem;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-buttons button{
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-buttons button svg{
+  display:inline-block;
+  height:auto;
+  margin-right:5px;
+  max-height:35px;
+  max-width:35px;
+  transition:transform .3s ease-in-out;
+  vertical-align:middle;
+  width:auto;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary{
+  background-color:var(--color_primary);
+  border:1px solid var(--color_primary);
+  color:var(--button_background-color);
+  padding:10px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary svg{
+  margin-left:-35px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary:hover{
+  background-color:var(--button_background-color);
+  border:1px solid var(--color_primary);
+  color:var(--color_primary);
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary:hover svg{
+  transform:scale(1.2);
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-reject-button{
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  line-height:1.2;
+  margin-bottom:0;
+  margin-top:0;
+  padding:0;
+  text-align:center;
+  -webkit-text-decoration:none;
+  text-decoration:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-reject-button:hover{
+  background-color:var(--button_background-color);
+  color:var(--button_color);
+  -webkit-text-decoration:underline;
+  text-decoration:underline;
 }
 [data-engrid-theme=tnc] .engrid--ihmo-wrapper{
   border:1px solid #cdcdcd;

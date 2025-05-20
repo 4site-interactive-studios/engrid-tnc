@@ -19,6 +19,8 @@ export default class DonationLightboxForm {
     this.isDonation = ["donation", "premiumgift"].includes(
       window.pageJson.pageType
     );
+    this.upsellSection = null;
+    this.upsellSectionId = null;
     console.log("DonationLightboxForm: constructor");
 
     // Adjust Field Tooltip
@@ -252,6 +254,7 @@ export default class DonationLightboxForm {
 
     this.addEvents();
     this.changeSubmitButton();
+    this.hideAnnualFrequency();
     this.sendMessage("status", "loaded");
     // Check if theres a color value in the url
     const urlParams = new URLSearchParams(window.location.search);
@@ -324,6 +327,13 @@ export default class DonationLightboxForm {
     console.log("DonationLightboxForm: buildSectionNavigation");
     this.sections.forEach((section, key) => {
       section.dataset.sectionId = key;
+      const isUpsellSection = section.querySelector(".upsell-buttons");
+      if (isUpsellSection) {
+        this.upsellSection = section;
+        this.upsellSectionId = key;
+        section.dataset.upsellSection = true;
+        this.replaceUpsellMergeTags();
+      }
       const sectionNavigation = document.createElement("div");
       sectionNavigation.classList.add("section-navigation");
       const sectionCount = document.createElement("div");
@@ -352,6 +362,15 @@ export default class DonationLightboxForm {
           <span>Give Now</span>
         </button>
       `;
+        } else if (key == this.upsellSectionId) {
+          // Add only the back button to the upsell section
+          sectionNavigation.innerHTML = `
+        <button class="section-navigation__previous" aria-label="Back" data-section-id="${key}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16">
+              <path fill="currentColor" d="M7.214.786c.434-.434 1.138-.434 1.572 0 .433.434.433 1.137 0 1.571L4.57 6.572h10.172c.694 0 1.257.563 1.257 1.257s-.563 1.257-1.257 1.257H4.229l4.557 4.557c.433.434.433 1.137 0 1.571-.434.434-1.138.434-1.572 0L0 8 7.214.786z"/>
+          </svg>
+        </button>
+        `;
         } else {
           sectionNavigation.innerHTML = `
         <button class="section-navigation__previous" aria-label="Back" data-section-id="${key}">
@@ -367,7 +386,7 @@ export default class DonationLightboxForm {
         </button>
       `;
         }
-        if (key + 1 < sectionTotal) {
+        if (key + 1 < sectionTotal && key != this.upsellSectionId) {
           sectionCount.innerHTML = `
           <span class="section-count__current">${key + 1}</span> of
           <span class="section-count__total">${sectionTotal}</span>
@@ -413,8 +432,7 @@ export default class DonationLightboxForm {
                 JSON.stringify({
                   name: document.querySelector("#en__field_supporter_firstName")
                     .value,
-                  amount:
-                    EngagingNetworks.require._defined.enjs.getDonationTotal(),
+                  amount: this.getDonationTotal(),
                   frequency: this.frequency.getInstance().frequency,
                 })
               );
@@ -513,6 +531,12 @@ export default class DonationLightboxForm {
       return;
     }
 
+    // If scrolling to the first section, remove upsold attribute and reset upsell section
+    if (sectionId == 0 && this.upsellSection) {
+      this.upsellSection.removeAttribute("data-upsold");
+      this.refreshUpsellSection();
+    }
+
     if (this.sections[sectionId]) {
       console.log(section);
       this.currentSectionId = sectionId;
@@ -573,7 +597,7 @@ export default class DonationLightboxForm {
         }
       }
       // Validate Amount
-      const amount = EngagingNetworks.require._defined.enjs.getDonationTotal();
+      const amount = this.getDonationTotal();
       const amountBlock = form.querySelector(".en__field--donationAmt");
       const amountSection = this.getSectionId(amountBlock);
       if (sectionId === false || sectionId == amountSection) {
@@ -923,25 +947,21 @@ export default class DonationLightboxForm {
   }
   changeSubmitButton() {
     const submit = document.querySelector(".section-navigation__submit");
-    let amount = this.checkNested(
-      window.EngagingNetworks,
-      "require",
-      "_defined",
-      "enjs",
-      "getDonationTotal"
-    )
-      ? "$" +
-        this.app.formatNumber(
-          window.EngagingNetworks.require._defined.enjs.getDonationTotal()
-        )
-      : null;
+    let amount = "$" + this.app.formatNumber(this.getDonationTotal());
     // If amount ends with .00, remove it
     if (amount && amount.endsWith(".00")) {
       amount = amount.slice(0, -3);
     }
     let frequency = this.frequency.getInstance().frequency;
     let label = submit ? submit.dataset.label : "";
-    frequency = frequency === "onetime" ? "" : "<small>/mo</small>";
+    frequency =
+      frequency === "onetime"
+        ? ""
+        : frequency === "monthly"
+        ? "<small>/mo</small>"
+        : frequency === "annual"
+        ? "<small>/yr</small>"
+        : "";
 
     if (amount) {
       label = label.replace("$AMOUNT", amount);
@@ -1082,6 +1102,37 @@ export default class DonationLightboxForm {
         };
       }
     }
+    if (this.upsellSection) {
+      this.frequency
+        .getInstance()
+        .onFrequencyChange.subscribe(() => this.refreshUpsellSection());
+      this.amount
+        .getInstance()
+        .onAmountChange.subscribe(() => this.refreshUpsellSection());
+      const upsellButtons = this.upsellSection.querySelectorAll(
+        ".upsell-buttons button"
+      );
+      upsellButtons.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          const upsellFrequency = btn.dataset.freq || "onetime";
+          const upsellAmount =
+            parseFloat(btn.dataset.amount) || this.getDonationTotal();
+          if (upsellAmount === 0) {
+            return;
+          }
+          if (upsellFrequency === "onetime") {
+            this.upsellSection.dataset.upsold = "false";
+          } else {
+            this.upsellSection.dataset.upsold = "true";
+          }
+          this.amount.getInstance().setAmount(upsellAmount);
+          this.frequency.getInstance().setFrequency(upsellFrequency);
+          this.scrollToElement(document.querySelector(".give-by-select"));
+          // this.changeSubmitButton();
+        });
+      });
+    }
   }
   // paymentType is any of the values from the giveBySelect radio buttons
   // it can also be false, in which case it will try to get the value from the paymentType field
@@ -1199,5 +1250,150 @@ export default class DonationLightboxForm {
       );
     });
     this.updateSectionCount();
+  }
+  getDonationTotal() {
+    return this.checkNested(
+      window.EngagingNetworks,
+      "require",
+      "_defined",
+      "enjs",
+      "getDonationTotal"
+    )
+      ? window.EngagingNetworks.require._defined.enjs.getDonationTotal()
+      : 0;
+  }
+  // Return the Suggested Upsell Amount
+  getUpsellAmount(freq = "monthly") {
+    const amount = this.getDonationTotal();
+    let upsellAmount = 0;
+    if (
+      "EngridMultistepUpsell" in window &&
+      freq in window.EngridMultistepUpsell
+    ) {
+      const amountRange = window.EngridMultistepUpsell[freq];
+      for (let i = 0; i < amountRange.length; i++) {
+        let val = amountRange[i];
+        if (upsellAmount == 0 && amount <= val.max) {
+          upsellAmount = val.suggestion;
+          if (upsellAmount === 0) return 0;
+          if (typeof upsellAmount !== "number") {
+            const suggestionMath = upsellAmount.replace(
+              "amount",
+              amount.toFixed(2)
+            );
+            upsellAmount = parseFloat(
+              Function('"use strict";return (' + suggestionMath + ")")()
+            );
+          }
+          break;
+        }
+      }
+    }
+    return upsellAmount;
+  }
+  replaceUpsellMergeTags() {
+    if (this.upsellSection === null) return;
+    const upsellSectionContent = this.upsellSection.querySelector(
+      ".en__component--column"
+    );
+    if (!upsellSectionContent) return;
+    let content = upsellSectionContent.innerHTML;
+    content = content.replace(
+      /{old-amount}/g,
+      "<span class='upsell_amount'></span>"
+    );
+    content = content.replace(
+      /{new-amount-monthly}/g,
+      "<span class='upsell_suggestion_monthly'></span>"
+    );
+    content = content.replace(
+      /{new-amount-annual}/g,
+      "<span class='upsell_suggestion_annual'></span>"
+    );
+    upsellSectionContent.innerHTML = content;
+  }
+  refreshUpsellSection() {
+    if (this.upsellSection === null || this.upsellSection.dataset.upsold)
+      return;
+    // Update merge tags
+    const amount = this.getDonationTotal();
+    const upsellAmountMonthly = this.getUpsellAmount("monthly");
+    const upsellAmountAnnual = this.getUpsellAmount("annual");
+    const oldAmounts = this.upsellSection.querySelectorAll(".upsell_amount");
+    const newAmountsMonthly = this.upsellSection.querySelectorAll(
+      ".upsell_suggestion_monthly"
+    );
+    const newAmountsAnnual = this.upsellSection.querySelectorAll(
+      ".upsell_suggestion_annual"
+    );
+    const monthlyBtn = this.upsellSection.querySelector(
+      ".upsell-buttons button[data-freq='monthly']"
+    );
+    const annualBtn = this.upsellSection.querySelector(
+      ".upsell-buttons button[data-freq='annual']"
+    );
+    const onetimeBtn = this.upsellSection.querySelector(
+      ".upsell-buttons button[data-freq='onetime']"
+    );
+    if (monthlyBtn) {
+      monthlyBtn.dataset.amount = upsellAmountMonthly;
+    }
+    if (annualBtn) {
+      annualBtn.dataset.amount = upsellAmountAnnual;
+    }
+    if (onetimeBtn) {
+      onetimeBtn.dataset.amount = amount;
+    }
+    if (oldAmounts) {
+      let upsellOnetimeAmount = "$" + this.app.formatNumber(amount);
+      if (upsellOnetimeAmount.endsWith(".00")) {
+        upsellOnetimeAmount = upsellOnetimeAmount.slice(0, -3);
+      }
+      oldAmounts.forEach((oldAmount) => {
+        oldAmount.innerHTML = upsellOnetimeAmount;
+      });
+    }
+    if (newAmountsMonthly) {
+      let upsellMonthlyAmount =
+        "$" + this.app.formatNumber(upsellAmountMonthly);
+      if (upsellMonthlyAmount.endsWith(".00")) {
+        upsellMonthlyAmount = upsellMonthlyAmount.slice(0, -3);
+      }
+      newAmountsMonthly.forEach((newAmount) => {
+        newAmount.innerHTML = upsellMonthlyAmount;
+      });
+    }
+    if (newAmountsAnnual) {
+      let upsellAnnualAmount = "$" + this.app.formatNumber(upsellAmountAnnual);
+      if (upsellAnnualAmount.endsWith(".00")) {
+        upsellAnnualAmount = upsellAnnualAmount.slice(0, -3);
+      }
+      newAmountsAnnual.forEach((newAmount) => {
+        newAmount.innerHTML = upsellAnnualAmount;
+      });
+    }
+    // If frequency is anything other than onetime, hide the upsell section
+    window.setTimeout(() => {
+      const frequency = this.frequency.getInstance().frequency;
+      if (this.upsellSection && !this.upsellSection.dataset.upsold) {
+        if (frequency === "onetime") {
+          this.upsellSection.style.display = "block";
+        } else {
+          this.upsellSection.style.display = "none";
+        }
+      }
+    }, 1000);
+    // Update visibility
+  }
+  hideAnnualFrequency() {
+    const annualFreqField = document.querySelector(
+      "[name='transaction.recurrfreq'][value='ANNUAL']"
+    );
+    if (annualFreqField) {
+      const annualFrequency = annualFreqField.closest(".en__field__item");
+      if (annualFrequency) {
+        annualFrequency.classList.add("hide");
+      }
+    }
   }
 }

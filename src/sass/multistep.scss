@@ -976,4 +976,60 @@
     position: absolute;
     right: 17px;
   }
+  [data-upsell-section="true"] {
+    .en__component--column {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+  .upsell-buttons {
+    margin-bottom: 4rem;
+    button {
+      width: 100%;
+      svg {
+        margin-right: 5px;
+        max-width: 35px;
+        max-height: 35px;
+        height: auto;
+        width: auto;
+        display: inline-block;
+        vertical-align: middle;
+        transition: transform 0.3s ease-in-out;
+      }
+    }
+  }
+  .upsell-primary {
+    background-color: var(--color_primary);
+    color: var(--button_background-color);
+    border: 1px solid var(--color_primary);
+    padding: 10px;
+    svg {
+      margin-left: -35px;
+    }
+    &:hover {
+      background-color: var(--button_background-color);
+      color: var(--color_primary);
+      border: 1px solid var(--color_primary);
+      svg {
+        transform: scale(1.2);
+      }
+    }
+  }
+  .upsell-reject-button {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    &:hover {
+      color: var(--button_color);
+      background-color: var(--button_background-color);
+      text-decoration: underline;
+    }
+  }
 }
