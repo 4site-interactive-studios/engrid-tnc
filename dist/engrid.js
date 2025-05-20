@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 20, 2025 @ 07:27:01 ET
+ *  Date: Tuesday, May 20, 2025 @ 08:07:11 ET
  *  By: michael
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.4
@@ -18680,7 +18680,7 @@ class engrid_ENGrid {
     const submit = document.querySelector(".en__submit button");
     if (!submit) return false;
     let submitButtonProcessingHTML = `<span class='loader-wrapper'><span class='loader loader-quart'></span><span class='submit-button-text-wrapper'>${label}</span></span>`;
-    if (submit.innerHTML === submitButtonProcessingHTML) {
+    if (submit.innerHTML.includes("loader-wrapper")) {
       // If we are already processing, don't override the originalText again
       return false;
     }
