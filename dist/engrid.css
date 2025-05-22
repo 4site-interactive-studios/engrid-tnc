@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 22, 2025 @ 07:24:02 ET
+ *  Date: Thursday, May 22, 2025 @ 07:28:10 ET
  *  By: michael
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.5
@@ -7825,7 +7825,7 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-modal=open]:not(#en__pagebuilder) .body-bottom{
   z-index:7;
 }
-[data-engrid-theme=tnc]:not([data-engrid-bequest-lightbox=open]):not(#en__pagebuilder) .engrid-modal{
+[data-engrid-theme=tnc]:not([data-engrid-bequest-lightbox=open]):not([data-engrid-has-lightbox=true]):not(#en__pagebuilder) .engrid-modal{
   display:none;
 }
 [data-engrid-theme=tnc] .engrid-modal{
@@ -8234,6 +8234,80 @@ body[data-engrid-debug]:before{
   font-size:var(--default_font-size);
   font-weight:var(--default_font-weight);
   line-height:var(--default_line-height);
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal .engrid-modal__overlay{
+  align-items:center;
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal .engrid-modal__container{
+  max-width:650px;
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal .engrid-modal__body{
+  margin:0;
+  padding:30px;
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal .frequency-upsell-modal__title{
+  font-family:var(--default_font-family);
+  font-weight:600;
+  line-height:1.3;
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal .frequency-upsell-modal__para{
+  font-family:var(--serif-fonts);
+  font-size:20px;
+  line-height:1.3;
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal #frequency-upsell-yes{
+  background-color:var(--color-green);
+  border-color:var(--color-green);
+  color:var(--color-white);
+  min-height:60px;
+  padding:16px 30px;
+  width:100%;
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal #frequency-upsell-yes:hover{
+  background-color:#000;
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal #frequency-upsell-no{
+  background-color:var(--color-white);
+  border-color:var(--color-green);
+  color:var(--color-green);
+  min-height:60px;
+  padding:16px 30px;
+  width:100%;
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal #frequency-upsell-no:hover{
+  background-color:var(--color-green);
+  color:var(--color-white);
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .engrid-modal__container{
+  border:none;
+  max-width:960px;
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .engrid-modal__body{
+  display:flex;
+  max-width:100%;
+  padding:0;
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .engrid-modal__body>div{
+  flex-basis:50%;
+}
+@media (max-width:600px){
+  [data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .engrid-modal__body{
+    flex-direction:column;
+  }
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .frequency-upsell-modal__secondary-content{
+  background-image:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/modal-bg.jpg?v=1747320734000);
+  background-position:50%;
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+@media (max-width:600px){
+  [data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .frequency-upsell-modal__secondary-content{
+    min-height:200px;
+  }
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .frequency-upsell-modal__content{
+  padding:30px;
 }
 [data-engrid-theme=tnc][data-engrid-layout=leftleft1col]{
   --click-to-expand__copy-area_height:200px;
