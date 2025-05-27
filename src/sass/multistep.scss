@@ -76,14 +76,14 @@
     flex-wrap: wrap;
     font-size: 12px;
     dt {
-      width: 100px;
+      width: 150px;
       font-weight: 700;
       border-bottom: 1px solid #2e2e2c33;
       padding: 5px 0;
     }
     dd {
       margin-left: auto;
-      width: calc(100% - 100px);
+      width: calc(100% - 150px);
       text-align: right;
       border-bottom: 1px solid #2e2e2c33;
       padding: 5px 0;

@@ -411,7 +411,7 @@ export default class DonationLightboxForm {
         </button>
       `;
         }
-        if (key + 1 < sectionTotal && key != this.upsellSectionId) {
+        if (key + 1 < sectionTotal) {
           sectionCount.innerHTML = `
           <span class="section-count__current">${key + 1}</span> of
           <span class="section-count__total">${sectionTotal}</span>
@@ -1087,6 +1087,9 @@ export default class DonationLightboxForm {
     this.frequency
       .getInstance()
       .onFrequencyChange.subscribe(() => this.changeSubmitButton());
+    this.frequency.getInstance().onFrequencyChange.subscribe(() => {
+      this.showHideDynamicSection(false);
+    });
     this.amount
       .getInstance()
       .onAmountChange.subscribe(() => this.changeSubmitButton());
@@ -1233,7 +1236,10 @@ export default class DonationLightboxForm {
 
     // First, handle sections without giveBySelect- elements
     this.sections.forEach((section, sectionId) => {
-      if (!sectionsWithGiveBySelect.has(sectionId)) {
+      if (
+        !sectionsWithGiveBySelect.has(sectionId) &&
+        sectionId !== this.upsellSectionId
+      ) {
         section.style.display = "block";
         console.log(`Showing section ${sectionId} (no giveBySelect elements)`);
       }
@@ -1407,6 +1413,7 @@ export default class DonationLightboxForm {
           this.upsellSection.style.display = "none";
         }
       }
+      this.updateSectionCount();
     }, 1000);
     // Update visibility
   }

@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 20, 2025 @ 14:00:31 ET
+ *  Date: Tuesday, May 27, 2025 @ 13:51:15 ET
  *  By: fernando
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.8
@@ -22678,7 +22678,7 @@ class DonationLightboxForm {
         </button>
       `;
         }
-        if (key + 1 < sectionTotal && key != this.upsellSectionId) {
+        if (key + 1 < sectionTotal) {
           sectionCount.innerHTML = `
           <span class="section-count__current">${key + 1}</span> of
           <span class="section-count__total">${sectionTotal}</span>
@@ -23226,6 +23226,9 @@ class DonationLightboxForm {
     }
     this.frequency.getInstance().onFrequencyChange.subscribe(s => this.bounceArrow(s));
     this.frequency.getInstance().onFrequencyChange.subscribe(() => this.changeSubmitButton());
+    this.frequency.getInstance().onFrequencyChange.subscribe(() => {
+      this.showHideDynamicSection(false);
+    });
     this.amount.getInstance().onAmountChange.subscribe(() => this.changeSubmitButton());
     // Payment Type Radio Change
     const paymentType = document.querySelectorAll("input[name='transaction.giveBySelect']");
@@ -23332,7 +23335,7 @@ class DonationLightboxForm {
 
     // First, handle sections without giveBySelect- elements
     this.sections.forEach((section, sectionId) => {
-      if (!sectionsWithGiveBySelect.has(sectionId)) {
+      if (!sectionsWithGiveBySelect.has(sectionId) && sectionId !== this.upsellSectionId) {
         section.style.display = "block";
         console.log(`Showing section ${sectionId} (no giveBySelect elements)`);
       }
@@ -23454,6 +23457,7 @@ class DonationLightboxForm {
           this.upsellSection.style.display = "none";
         }
       }
+      this.updateSectionCount();
     }, 1000);
     // Update visibility
   }
