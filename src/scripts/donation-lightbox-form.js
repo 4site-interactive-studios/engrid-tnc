@@ -327,6 +327,18 @@ export default class DonationLightboxForm {
         }
       }
     });
+    // Custom class and label for the Stripe Digital Wallets Payment Method
+    const digitalWallets = document.querySelector(
+      ".give-by-select .stripedigitalwallet"
+    );
+    if (digitalWallets) {
+      const digitalWalletsLabel = digitalWallets.querySelector("span");
+      if (digitalWalletsLabel) {
+        const isApplePay = window.hasOwnProperty("ApplePaySession");
+        digitalWalletsLabel.innerHTML = isApplePay ? "APPLE PAY" : "GOOGLE PAY";
+        digitalWallets.classList.add(isApplePay ? "apple-pay" : "google-pay");
+      }
+    }
   }
   // Send iframe message to parent
   sendMessage(key, value) {
