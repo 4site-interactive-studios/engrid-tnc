@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, May 28, 2025 @ 23:02:10 ET
+ *  Date: Wednesday, May 28, 2025 @ 23:27:59 ET
  *  By: fernando
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.6
@@ -25102,6 +25102,53 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   if (pgHeader && pgInfo) {
     pgHeader.insertAdjacentElement("afterend", pgInfo);
   }
+  // Set specific placeholders
+  const creditCardField = document.querySelector('input[name="supporter.creditCardHolderName"]');
+  if (creditCardField) {
+    creditCardField.setAttribute("placeholder", "Card Holder Name");
+  }
+  const accountHolderField = document.querySelector('input[name="supporter.NOT_TAGGED_79"]');
+  if (accountHolderField) {
+    accountHolderField.setAttribute("placeholder", "Account Holder's Name");
+  }
+  const bankNameField = document.querySelector('input[name="transaction.bankname"]');
+  if (bankNameField) {
+    bankNameField.setAttribute("placeholder", "Account Holder Name");
+  }
+
+  // Add placeholder to the Mobile Phone Field
+  let enFieldMobilePhone = document.querySelector("input#en__field_supporter_phoneNumber2");
+  if (enFieldMobilePhone) {
+    enFieldMobilePhone.placeholder = "Mobile / Phone (Optional)";
+  }
+  const observerConfig = {
+    attributes: true,
+    attributeFilter: ["placeholder", "aria-required"],
+    subtree: true
+  };
+  const updatePlaceholder = field => {
+    if (field.name === "transaction.donationAmt.other") {
+      return; // Exclude specific field
+    }
+    const isFieldRequired = field.required || field.getAttribute("aria-required") === "true" || field.closest(".en__component--formblock.i-required");
+    const placeholder = field.getAttribute("placeholder");
+    if (placeholder) {
+      if (isFieldRequired && !placeholder.endsWith("*")) {
+        field.setAttribute("placeholder", `${placeholder}*`);
+      } else if (!isFieldRequired && placeholder.endsWith("*")) {
+        field.setAttribute("placeholder", placeholder.slice(0, -1));
+      }
+    }
+  };
+  // Update required fields
+  const fields = document.querySelectorAll("input[placeholder], textarea[placeholder]");
+  fields.forEach(field => {
+    updatePlaceholder(field);
+
+    // Observe placeholder and aria-required changes
+    const observer = new MutationObserver(() => updatePlaceholder(field));
+    observer.observe(field, observerConfig);
+  });
 };
 ;// CONCATENATED MODULE: ./src/scripts/bequest-lightbox.ts
 

@@ -3634,10 +3634,6 @@
     }
   }
 
-  &[data-engrid-subtheme="multistep"] {
-    @import "./multistep";
-  }
-
   // SUBTHEME: simple-1col
   &[data-engrid-subtheme="boxed-content"] {
     @media screen and (min-width: 760px) {
@@ -3715,6 +3711,10 @@
     .en__component--formblock:has(+ .ihmo-closed + .premium-container) {
       padding-bottom: 30px;
     }
+  }
+
+  &[data-engrid-subtheme="multistep"] {
+    @import "./multistep";
   }
 
   //Premiums
