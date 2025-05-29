@@ -1,0 +1,437 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.en__component--premiumgiftblock {
+  animation: fadeIn 0.5s ease-in-out;
+  &[disabled="disabled"],
+  &[data-annual-disabled] {
+    display: none !important; // We can comment this out to show the premium gift block even when it is disabled
+  }
+  &[disabled="disabled"] {
+    pointer-events: none;
+    opacity: 0.5;
+    filter: grayscale(1);
+    .en__pgHeader {
+      visibility: hidden;
+    }
+    &::before {
+      content: attr(data-disabled-message);
+      background-color: initial;
+      border-color: var(--premium__border-color);
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-width: var(--premium__border-width);
+      color: var(--h2_color);
+      font-family: var(--h2_font-family);
+      font-size: var(--h2_font-size);
+      font-weight: var(--h2_font-weight);
+      line-height: 1;
+      margin-bottom: calc(1rem * var(--scale-down_20pct));
+      margin-top: calc(2rem * var(--scale-down_20pct));
+      padding: 0;
+      text-transform: var(--h2_text-transform);
+      position: absolute;
+      top: -25px;
+    }
+  }
+  --maximize_my_donation_image: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Tabor-Park-optimized.jpg");
+  margin: 64px 0 7px;
+
+  .en__pgHeader {
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 1.8rem;
+    border-bottom: 1px solid #cdcdcd;
+    margin: 0 0 1.25rem;
+    padding-bottom: 1rem;
+  }
+
+  .en__pg__body {
+    align-items: start;
+    column-gap: 20px;
+    padding: 0;
+    padding-bottom: 1rem;
+    grid-template-columns: min-content 276px var(--premium__image_max-width);
+    @media (max-width: 600px) {
+      grid-template-columns: min-content auto var(--premium__image_max-width);
+      --premium__image_max-width: 80px;
+    }
+    .en__pg__image:hover {
+      transform: none;
+      margin: 0 !important;
+      position: relative;
+    }
+  }
+
+  .en__pg__select {
+    align-self: start;
+    padding-top: 5px;
+  }
+
+  .en__pg__name {
+    font-family: var(--default_font-family);
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 3px;
+  }
+
+  .en__pg__description {
+    align-self: start;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+}
+
+// On premium pages, when the visitor is not in the US, hide the premium gift options other than the no gift option
+&:not([data-engrid-demo])[data-engrid-page-type="premiumgift"]:not([data-engrid-country="US"])
+  .en__pgList[data-nogift] {
+  // Force the no gift option to always appear selected
+  .en__pg__select input:before {
+    background-color: var(--radio_background-color_selected);
+    border-color: var(--radio_border-color_selected);
+    box-shadow: var(--radio_box-shadow_selected);
+    color: var(--radio_color_selected);
+  }
+
+  .en__pg:last-child .en__pg__body {
+    --premium__item_background-color: #e9f7f6;
+  }
+
+  // Hide the other premium options
+  // We might want to make these visible in debug mode
+  .en__pg:not(:last-child) {
+    display: none;
+  }
+}
+
+.en__pgList {
+  animation: fadeIn 0.5s ease-in-out;
+  .en__pg--selected {
+    --premium__item_background-color: rgba(186, 215, 195, 1);
+  }
+  // When the no gift option is present, move it from the last premium option to being the first premium option
+  &[data-nogift] {
+    display: grid;
+
+    .en__pg:last-child {
+      grid-row: 1 / 2;
+
+      .en__pg__detail::before {
+        content: "Please no gift, maximize my donation!";
+        display: block;
+        font-family: var(--default_font-family);
+        text-transform: var(--h2_text-transform);
+        line-height: var(--h2_line-height);
+        font-size: 16px;
+        margin-bottom: 3px;
+        font-weight: 500;
+      }
+
+      .en__pg__display {
+        background-image: var(--maximize_my_donation_image);
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 130px;
+
+        @media screen and (max-width: 628px) {
+          background-position: left center;
+          width: var(--premium__image_max-width);
+          max-width: 100%;
+        }
+      }
+    }
+  }
+
+  .en__pg__body {
+    grid-template-areas: "en__pg__select en__pg__detail en__pg__display" ". en__pg__detail-mobile .";
+    grid-template-columns: min-content auto var(--premium__image_max-width);
+    gap: 0 max(calc(var(--fields_spacing-inline) * 2), 0.5rem);
+    padding: 20px;
+    @media screen and (max-width: 628px) {
+      padding: 10px;
+    }
+  }
+
+  .en__pg__detail {
+    margin-bottom: 4px;
+    max-width: 500px;
+    .en__pg__optionTypes {
+      display: none;
+    }
+  }
+
+  .en__pg__optionType {
+    --select_padding: 0.6rem 0.8rem;
+    --select_font-size: 16px;
+    --select_line-height: 24px;
+    select {
+      min-width: 80px;
+      margin-top: calc(var(--fields_spacing-inline) * 0.5);
+    }
+    label {
+      line-height: var(--select_line-height);
+      font-size: 14px;
+    }
+  }
+}
+
+// Theme 2
+.premium-theme-2 {
+  .en__component--premiumgiftblock {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+
+    .en__pgHeader,
+    .en__pg:last-child {
+      display: none;
+    }
+
+    .en__pgList {
+      gap: 10px;
+    }
+
+    .en__pg__body {
+      grid-template-areas: "en__pg__display en__pg__detail en__pg__select" ". en__pg__detail-mobile .";
+      grid-template-columns: var(--premium__image_max-width) auto min-content;
+      gap: 0 max(calc(var(--fields_spacing-inline) * 2), 0.5rem);
+      padding: 8px 0;
+      // .en__pg__select {
+      //   display: none;
+      // }
+      &:hover {
+        .en__pg__select::before {
+          border-color: #007931;
+        }
+      }
+    }
+    .en__pg__detail {
+      align-self: center;
+      max-width: 350px;
+    }
+    .en__pg__select {
+      width: 135px;
+      align-self: center;
+      text-align: center;
+      @media screen and (max-width: 628px) {
+        width: 80px;
+      }
+      input {
+        display: none;
+      }
+      &::before {
+        content: "SELECT";
+        display: block;
+        font-family: var(--default_font-family);
+        font-size: 14px;
+        line-height: 1;
+        color: #007931;
+        font-weight: 700;
+        padding: 20px;
+        border: 1px solid #cdcdcd;
+        transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        @media screen and (max-width: 628px) {
+          padding: 10px 5px;
+        }
+      }
+    }
+    .en__pg--selected {
+      --premium__item_background-color: transparent;
+      .en__pg__select::before {
+        content: "SELECTED";
+        background-color: #007931;
+        color: #fff;
+        border-color: #007931;
+      }
+    }
+    .en__pg__name {
+    }
+    .en__pg__description {
+      font-size: 16px;
+      line-height: normal;
+      font-weight: 500;
+    }
+  }
+  .premium-theme-2-header {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease-in-out;
+    h2 {
+      font-size: 20px;
+    }
+    p,
+    h2 {
+      text-align: center;
+      margin: 10px auto;
+    }
+    .en__field--checkbox {
+      padding-bottom: 0;
+      &:last-child {
+        padding-bottom: 20px;
+      }
+    }
+  }
+  &:has(.en__component--premiumgiftblock[style*="none"]),
+  &:has(.en__component--premiumgiftblock[disabled="disabled"]) {
+    .premium-theme-2-header {
+      display: none;
+    }
+  }
+  &:has(#engrid_premium_no:checked) {
+    .en__pgList {
+      display: none;
+    }
+  }
+}
+
+// Theme 3
+.premium-theme-3 {
+  --premium_image_theme_3: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Tabor-Park-optimized.jpg");
+  .en__component--premiumgiftblock {
+    width: 100%;
+    margin: 0 auto;
+
+    .en__pgHeader,
+    .en__pg__display {
+      display: none;
+    }
+    .en__pg:last-child {
+      .en__pg__detail:before {
+        content: none;
+      }
+    }
+    .en__pg:not(:last-child) {
+      .en__pg__description {
+        display: none;
+      }
+    }
+
+    .en__pg__body {
+      grid-template-areas: "en__pg__select en__pg__detail";
+      grid-template-columns: min-content auto;
+      gap: 0 max(calc(var(--fields_spacing-inline) * 2), 0.5rem);
+      padding: calc(var(--fields_spacing-block)) 0;
+      // .en__pg__select {
+      //   display: none;
+      // }
+      &:hover {
+        .en__pg__select::before {
+          border-color: var(--checkbox_border-color_hover);
+        }
+      }
+    }
+    .en__pg__detail {
+      align-self: center;
+    }
+    .en__pg__select {
+      width: 18px;
+      margin-top: 5px;
+      padding-top: 0;
+      text-align: center;
+      input {
+        display: none;
+      }
+      &::before {
+        align-items: center;
+        background-color: var(--checkbox_background-color);
+        border-color: var(--checkbox_border-color);
+        border-radius: var(--checkbox_border-radius);
+        border-style: solid;
+        border-width: var(--checkbox_border-width);
+        color: var(--checkbox_color);
+        content: "";
+        display: flex;
+        flex: 0 0 auto;
+        height: var(--checkbox_height);
+        justify-content: center;
+        margin-right: max(var(--fields_spacing-inline), 0.5rem);
+        min-width: var(--checkbox_width);
+        padding-left: var(--checkbox_padding-left);
+        padding-top: var(--checkbox_padding-top);
+        position: relative;
+        top: var(--checkbox_top);
+        width: var(--checkbox_width);
+      }
+    }
+    .en__pg--selected {
+      --premium__item_background-color: transparent;
+      .en__pg__select::before {
+        background-color: var(--checkbox_background-color_checked);
+        border-color: var(--checkbox_border-color_checked);
+        color: var(--checkbox_color_checked);
+        content: var(--checkbox_content_checked);
+      }
+    }
+    .en__pg__name,
+    .en__pg__description {
+      margin-bottom: 0;
+      font-size: 16px;
+      font-weight: 400;
+    }
+  }
+  .premium-theme-3-header {
+    width: 100%;
+    border: 1px solid var(--donation-amount__button_border-color);
+    margin-top: 40px;
+    animation: fadeIn 0.5s ease-in-out;
+    &[disabled="disabled"] {
+      display: none;
+    }
+    h2 {
+      font-size: 22px;
+    }
+    #premium-theme-3-container {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 10px;
+      @media screen and (max-width: 628px) {
+        flex-wrap: wrap;
+      }
+
+      .premium-theme-3-image {
+        width: 40%;
+        min-width: 100px;
+        height: auto;
+        background-image: var(--premium_image_theme_3);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        &[data-selected-gift="0"] {
+          background-size: cover;
+        }
+        @media screen and (max-width: 628px) {
+          width: 100%;
+          height: 150px;
+        }
+      }
+      .premium-theme-3-items {
+        width: 60%;
+        padding: 10px 30px;
+        @media screen and (max-width: 628px) {
+          width: 100%;
+          padding: 10px 20px;
+        }
+        h2,
+        p {
+          margin: 0;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+  &:has(.en__component--premiumgiftblock[style*="none"]),
+  &:has(.en__component--premiumgiftblock[disabled="disabled"]) {
+    .premium-theme-3-header {
+      display: none;
+    }
+  }
+}

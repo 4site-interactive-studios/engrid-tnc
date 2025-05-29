@@ -102,6 +102,7 @@ export class IHMO {
     this.configureForm(this.giftType, this.giftNotification);
     this.addEventListeners();
     this.hideAllFields();
+    this.setDefaultSourceCodes();
     // If IHMO is checked, save the gift details and set the source code
     if (this.ihmoCheckbox?.checked) {
       this.saveGiftDetails();
@@ -356,25 +357,22 @@ export class IHMO {
     }
 
     const sourceEnd = sourceCodeContainer.value.substring(
-      sourceCodeContainer.value.length - 6,
-      sourceCodeContainer.value.length - 2
+      sourceCodeContainer.value.length - 6
     );
 
     if (giftType === "HONORARY") {
       sourceCodeContainer.value = sourceCodeContainer.value.replace(
         sourceEnd,
-        "TRIH"
+        "TRIHXX"
       );
     } else if (giftType === "MEMORIAL") {
       sourceCodeContainer.value = sourceCodeContainer.value.replace(
         sourceEnd,
-        "TRIM"
+        "TRIMXX"
       );
     } else {
-      sourceCodeContainer.value = sourceCodeContainer.value.replace(
-        sourceEnd,
-        "0XXX"
-      );
+      sourceCodeContainer.value =
+        sourceCodeContainer.getAttribute("data-default-source-code") || "";
     }
 
     ENGrid.setBodyData("source-code", this.sourceCodeField.value);
@@ -545,5 +543,28 @@ export class IHMO {
         window.EngagingNetworks.require._defined.enjs.showField(identifier);
       }
     }
+  }
+
+  /*
+   * Set the default source codes as a data attribute
+   */
+  private setDefaultSourceCodes() {
+    if (!this.sourceCodeField) return;
+
+    if (this.sourceCodeField instanceof HTMLInputElement) {
+      // If the source code field is an input, set the default source code as a data attribute
+      this.sourceCodeField.setAttribute(
+        "data-default-source-code",
+        this.sourceCodeField.value
+      );
+      return;
+    }
+
+    // If the source code field is a select, set the default source code as a data attribute on each option
+    this.sourceCodeField.querySelectorAll("option").forEach((option) => {
+      if (option && option.value) {
+        option.setAttribute("data-default-source-code", option.value);
+      }
+    });
   }
 }

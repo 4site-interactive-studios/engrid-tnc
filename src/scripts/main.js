@@ -3,8 +3,9 @@ import { setDonationDataSessionStorage } from "./tracking";
 const tippy = require("tippy.js").default;
 
 export const customScript = function (App, DonationFrequency, DonationAmount) {
-  // console.log("ENGrid client scripts are executing");
-
+  const freq = DonationFrequency.getInstance();
+  const amt = DonationAmount.getInstance();
+  console.log("ENGrid client scripts are executing");
   // Add your client scripts here
   var checkForServerError = document.querySelector(".en__errorList *");
   if (checkForServerError) {
@@ -227,17 +228,63 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     }
   }
 
-  // Listen for changes to the donation frequency and amount
-  const freq = DonationFrequency.getInstance();
-  const amt = DonationAmount?.getInstance();
-  if (freq && amt) {
-    freq.onFrequencyChange.subscribe((frequency) => {
-      setPremiumVisibility(frequency, amt.amount);
-    });
-    amt.onAmountChange.subscribe((amount) => {
-      setPremiumVisibility(freq.frequency, amount);
-    });
+  function keepScrollPosition(elementBlock, direction = "up") {
+    if (!elementBlock) return;
+    const scrollY = window.scrollY;
+    const elementStyle = window.getComputedStyle(elementBlock);
+    const elementSize =
+      parseInt(elementStyle.height, 10) +
+      parseInt(elementStyle.marginTop.replace("px", "")) +
+      parseInt(elementStyle.marginBottom.replace("px", ""));
+    window.setTimeout(() => {
+      window.scrollTo(
+        0,
+        direction === "up" ? scrollY - elementSize : scrollY + elementSize
+      );
+    }, 100);
+    console.log(elementSize);
   }
+
+  // If the frequency is annual, move the premium container content below the #en__field_auto_renew container
+  // If frequency is not annual, move the premium container content back to premium container
+  function movePremiumContainerContent(direction = "up") {
+    const premiumContainerContent = document.querySelector(
+      ".premium-container-content"
+    );
+    if (!premiumContainerContent) return;
+    const autoRenewField = document.getElementById("en__field_auto_renew");
+    const autoRenewContainer = autoRenewField?.closest(".en__component");
+    if (direction === "down") {
+      if (autoRenewContainer) {
+        autoRenewContainer.insertAdjacentElement(
+          "afterend",
+          premiumContainerContent
+        );
+      }
+    } else {
+      const premiumContainer = document.querySelector(".premium-container");
+      // If the premium container is not found, or the premium container already contains the premium container content, return
+      if (
+        !premiumContainer ||
+        premiumContainer.querySelector(".en__component--premiumgiftblock")
+      )
+        return;
+      premiumContainer.appendChild(premiumContainerContent);
+    }
+  }
+
+  // Listen for changes to the donation frequency and amount
+  freq.onFrequencyChange.subscribe((frequency) => {
+    setPremiumVisibility(frequency, amt.amount);
+    if (frequency !== "annual") {
+      window.setTimeout(() => {
+        movePremiumContainerContent("up");
+      }, 100);
+    }
+  });
+  amt.onAmountChange.subscribe((amount) => {
+    setPremiumVisibility(freq.frequency, amount);
+  });
 
   // Move Premium donation elements into their container
   let premiumDonationEls = document.querySelectorAll(
@@ -300,7 +347,13 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       App.setBodyData("auto-renew-active", autoRenew.checked.toString());
       extRef2Input.value = autoRenew.checked ? "auto_renew" : "";
 
-      const freq = DonationFrequency.getInstance();
+      autoRenew.addEventListener("change", () => {
+        const autoRenewActive = autoRenew.checked;
+        if (autoRenewActive) {
+          movePremiumContainerContent("down");
+        }
+      });
+
       freq.onFrequencyChange.subscribe((frequency) => {
         if (frequency === "annual") {
           App.setBodyData("auto-renew-active", "true");
@@ -556,196 +609,371 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       });
     });
   });
-
-  const observerConfig = {
-    attributes: true,
-    attributeFilter: ["placeholder", "aria-required"],
-    subtree: true,
-  };
-
-  const updatePlaceholder = (field) => {
-    if (field.name === "transaction.donationAmt.other") {
-      return; // Exclude specific field
-    }
-
-    const isFieldRequired =
-      field.required ||
-      field.getAttribute("aria-required") === "true" ||
-      field.closest(".en__component--formblock.i-required");
-    const placeholder = field.getAttribute("placeholder");
-
-    if (placeholder) {
-      if (isFieldRequired && !placeholder.endsWith("*")) {
-        field.setAttribute("placeholder", `${placeholder}*`);
-      } else if (!isFieldRequired && placeholder.endsWith("*")) {
-        field.setAttribute("placeholder", placeholder.slice(0, -1));
-      }
-    }
-  };
-
-  // Set specific placeholders
-  const creditCardField = document.querySelector(
-    'input[name="supporter.creditCardHolderName"]'
+  const premiumHeader2 = document.querySelector(
+    ".premium-theme-2 .premium-theme-2-header"
   );
-  if (creditCardField) {
-    creditCardField.setAttribute("placeholder", "Card Holder Name");
-  }
-
-  const accountHolderField = document.querySelector(
-    'input[name="supporter.NOT_TAGGED_79"]'
+  const premiumHeader3 = document.querySelector(
+    ".premium-theme-3 .premium-theme-3-header"
   );
-  if (accountHolderField) {
-    accountHolderField.setAttribute("placeholder", "Account Holder's Name");
-  }
-
-  const bankNameField = document.querySelector(
-    'input[name="transaction.bankname"]'
-  );
-
-  if (bankNameField) {
-    bankNameField.setAttribute("placeholder", "Account Holder Name");
-  }
-
-  // Update required fields
-  const fields = document.querySelectorAll(
-    "input[placeholder], textarea[placeholder]"
-  );
-  fields.forEach((field) => {
-    updatePlaceholder(field);
-
-    // Observe placeholder and aria-required changes
-    const observer = new MutationObserver(() => updatePlaceholder(field));
-    observer.observe(field, observerConfig);
-  });
-
-  // Add placeholder to the Mobile Phone Field
-  let enFieldMobilePhone = document.querySelectorAll(
-    "input#en__field_supporter_phoneNumber2"
-  )[0];
-  if (enFieldMobilePhone) {
-    enFieldMobilePhone.placeholder = "Mobile / Phone (Optional)";
-  }
-
-  // Function to update placeholders dynamically
-  function updatePlaceholders() {
-    const donationFields = document.querySelectorAll(
-      ".en__field--donationAmt .en__field__item"
+  const maxMyGift = () => {
+    // If the selectedPremiumId is zero, we will maximize the gift
+    const maxRadio = document.querySelector(
+      ".en__pg:last-child input[type='radio'][name='en__pg'][value='0']"
     );
-
-    donationFields.forEach((field, index) => {
-      const input = field.querySelector(
-        "input[name='transaction.donationAmt.other']"
+    const premiumTheme3Image = document.querySelector(
+      ".premium-theme-3 .premium-theme-3-image"
+    );
+    if (maxRadio) {
+      maxRadio.checked = true;
+      maxRadio.click();
+      setTimeout(() => {
+        App.setFieldValue("transaction.selprodvariantid", "");
+      }, 150);
+    }
+    if (premiumTheme3Image) {
+      premiumTheme3Image.style.backgroundImage = "var(--premium_image_theme_3)";
+    }
+  };
+  const setDefaultPremium = () => {
+    if ("selectedPremiumId" in window) {
+      if (window.selectedPremiumId > 0) {
+        // We will not maximize the gift if the selectedPremiumId is already set
+        const premiumFound = selectPremiumById(window.selectedPremiumId);
+        if (!premiumFound) {
+          const firstGift = document.querySelector(
+            ".en__pg:first-child input[type='radio'][name='en__pg']"
+          );
+          if (firstGift && firstGift.value) selectPremiumById(firstGift.value);
+        }
+        return;
+      } else {
+        // If the selectedPremiumId is zero, we will maximize the gift
+        maxMyGift();
+      }
+    } else {
+      // If the selectedPremiumId is not set, we will select the first gift
+      const firstGift = document.querySelector(
+        ".en__pg:first-child input[type='radio'][name='en__pg']"
       );
+      if (firstGift && firstGift.value) selectPremiumById(firstGift.value);
+    }
+  };
+  const selectPremiumById = (premiumId) => {
+    const selectedGift = document.querySelector(
+      `input[type="radio"][name="en__pg"][value="${premiumId}"]`
+    );
+    if (selectedGift) {
+      window.setTimeout(() => {
+        selectedGift.click();
+      }, 10);
+      const engridPremiumYes = document.querySelector("#engrid_premium_yes");
+      const engridPremiumNo = document.querySelector("#engrid_premium_no");
+      if (engridPremiumNo) {
+        engridPremiumNo.checked = false;
+      }
+      if (engridPremiumYes) {
+        engridPremiumYes.checked = true;
+      }
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const premiumBlock = document.querySelector(
+    ".en__component--premiumgiftblock"
+  );
+  if (premiumBlock) {
+    // Create a Premium Container
+    const premiumContainer = document.createElement("div");
+    premiumContainer.classList.add("premium-container");
+    premiumContainer.classList.add("en__component");
+    const premiumContainerContent = document.createElement("div");
+    premiumContainerContent.classList.add("premium-container-content");
+    premiumContainerContent.classList.add("en__component");
+    premiumContainer.appendChild(premiumContainerContent);
+    // Add the Premium Container after the Premium Block, then move the Premium Block inside the Premium Container
+    premiumBlock.insertAdjacentElement("afterend", premiumContainer);
+    premiumContainerContent.appendChild(premiumBlock);
 
-      if (input) {
-        const placeholder =
-          index === 4 || index === 7 ? "Enter Other Amount" : "Other";
-
-        // Set initial placeholder
-        input.placeholder = placeholder;
-
-        // Use focusin to clear placeholder
-        input.addEventListener("focusin", function () {
-          this.placeholder = ""; // Always clear placeholder on focus
-        });
-
-        // Use focusout to restore placeholder only if value and visual content are empty
-        input.addEventListener("focusout", function () {
-          if (!this.value && isVisuallyEmpty(this)) {
-            this.placeholder = placeholder; // Restore only when value and pseudo-content are empty
+    //listen for the change event of name "en__pg" using event delegation
+    let selectedPremiumId =
+      "selectedPremiumId" in window ? window.selectedPremiumId : null;
+    let selectedVariantId = null;
+    ["change", "click"].forEach((event) => {
+      premiumBlock.addEventListener(event, (e) => {
+        setTimeout(() => {
+          const selectedGift = document.querySelector(
+            '[name="en__pg"]:checked'
+          );
+          if (selectedGift) {
+            const selectedGiftImage = selectedGift
+              .closest(".en__pg")
+              .querySelector("img");
+            const premiumTheme3Image = document.querySelector(
+              ".premium-theme-3 .premium-theme-3-image"
+            );
+            if (premiumTheme3Image) {
+              premiumTheme3Image.dataset.selectedGift = selectedGift.value;
+              if (selectedGiftImage) {
+                premiumTheme3Image.style.backgroundImage = `url(${selectedGiftImage.src})`;
+              } else {
+                premiumTheme3Image.style.backgroundImage =
+                  "var(--premium_image_theme_3)";
+              }
+            }
+            selectedPremiumId = selectedGift.value;
+            selectedVariantId = App.getFieldValue(
+              "transaction.selprodvariantid"
+            );
+            sessionStorage.setItem("selectedPremiumId", selectedPremiumId);
+            sessionStorage.setItem("selectedVariantId", selectedVariantId);
+            if (parseInt(selectedPremiumId) > 0)
+              window.selectedPremiumId = selectedPremiumId;
           }
-        });
+        }, 250);
+      });
+    });
+
+    // Mutation observer to check if the "Maximized Their Gift" radio button is present. If it is, hide it.
+    const observer = new MutationObserver((mutationsList) => {
+      //loop over the mutations and if we're adding a radio with the "checked" attribute, remove that attribute so nothing gets re-selected
+      //when the premiums list is re-rendered
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+          mutation.addedNodes.forEach((node) => {
+            if (typeof node.querySelector !== "function") return;
+            const preSelectedRadio = node.querySelector("input[checked]");
+            if (preSelectedRadio) {
+              preSelectedRadio.removeAttribute("checked");
+            }
+          });
+        }
+      }
+
+      if (mutationsList.some((mutation) => mutation.type === "childList")) {
+        // Re-select the previously selected gift when gift list is re-rendered
+        // If gift no longer exists, choose maximize my gift
+        if (selectedPremiumId && selectedVariantId) {
+          const selectedGift = document.querySelector(
+            `input[type="radio"][name="en__pg"][value="${selectedPremiumId}"]`
+          );
+          if (selectedGift) {
+            selectedGift.click();
+            window.setTimeout(() => {
+              App.setFieldValue(
+                "transaction.selprodvariantid",
+                selectedVariantId
+              );
+            }, 100);
+          } else {
+            setDefaultPremium();
+          }
+        } else {
+          setDefaultPremium();
+        }
       }
     });
-  }
-
-  // Helper function to check if input is visually empty
-  function isVisuallyEmpty(input) {
-    // Check if the ::before pseudo-element has visible content
-    const beforeContent = window
-      .getComputedStyle(input, "::before")
-      .getPropertyValue("content");
-    return (
-      beforeContent === "none" ||
-      beforeContent === '""' ||
-      beforeContent.trim() === ""
-    ); // Adjust based on your styles
-  }
-
-  // Set up MutationObserver (same as before)
-  const targetNode = document.querySelector(".en__field--donationAmt");
-  if (targetNode) {
-    const observer = new MutationObserver(updatePlaceholders);
-
-    observer.observe(targetNode, {
+    // Start observing the target node for configured mutations
+    observer.observe(premiumBlock, {
+      attributes: true,
       childList: true,
       subtree: true,
     });
-
-    updatePlaceholders();
   }
+  // Premium Gifts Theme 2 Script
+  if (premiumHeader2) {
+    const yesButton = premiumHeader2.querySelector("#engrid_premium_yes");
+    const noButton = premiumHeader2.querySelector("#engrid_premium_no");
+    if (yesButton && noButton) {
+      yesButton.addEventListener("click", function () {
+        const yesChecked = yesButton.checked;
+        noButton.checked = !yesChecked;
+        if (!yesChecked) {
+          maxMyGift();
+        } else {
+          setDefaultPremium();
+        }
+      });
+      noButton.addEventListener("click", function () {
+        const noChecked = noButton.checked;
+        yesButton.checked = !noChecked;
+        if (noChecked) {
+          maxMyGift();
+        }
+      });
+    }
+    const premiumContainerContent = document.querySelector(
+      ".premium-container-content"
+    );
+    if (premiumContainerContent) {
+      // Move premiumHeader2 to the start of the premiumContainerContent
+      premiumContainerContent.insertBefore(
+        premiumHeader2,
+        premiumContainerContent.firstChild
+      );
+    }
+  }
+  // END Premium Gifts Theme 2 Script
+  // Premium Gifts Theme 3 Script
+  if (premiumHeader3) {
+    const premium3ItemsContainer = document.querySelector(
+      ".premium-theme-3 .premium-theme-3-items-container"
+    );
+    const premiumgiftblock = document.querySelector(
+      ".en__component--premiumgiftblock"
+    );
+    const premiumContainerContent = document.querySelector(
+      ".premium-container-content"
+    );
+    // Move premium gift block to the premium items container
+    if (premiumgiftblock && premium3ItemsContainer) {
+      premium3ItemsContainer.innerHTML = "";
+      premium3ItemsContainer.appendChild(premiumgiftblock);
+      if (premiumContainerContent) {
+        premiumContainerContent.appendChild(premiumHeader3);
+      }
+    }
+  }
+  // END Premium Gifts Theme 3 Script
+  // Limit premium availability to U.S. addresses only - START
+  if (
+    "pageJson" in window &&
+    "pageType" in window.pageJson &&
+    window.pageJson.pageType === "premiumgift"
+  ) {
+    const country = App.getField("supporter.country");
 
-  // Function to handle mobile phone number opt-in checkbox
-  // function setupPhoneOptInCheckbox() {
-  //   // console.log("Setting up mobile phone opt-in checkbox functionality");
-  //   const mobilePhoneInput = document.querySelector(
-  //     'input[name="supporter.phoneNumber2"]'
-  //   );
-  //   const optInCheckbox = document.querySelector(
-  //     'input[name="supporter.questions.829861"]'
-  //   );
+    const selectPremiumFromSession = () => {
+      const selectedPremiumId =
+        window.selectedPremiumId ||
+        sessionStorage.getItem("selectedPremiumId") ||
+        null;
+      const selectedVariantId = sessionStorage.getItem("selectedVariantId");
+      if (selectedPremiumId && selectedVariantId) {
+        const selectedGift = document.querySelector(
+          `input[type="radio"][name="en__pg"][value="${selectedPremiumId}"]`
+        );
+        if (selectedGift) {
+          selectedGift.click();
+          window.setTimeout(() => {
+            App.setFieldValue(
+              "transaction.selprodvariantid",
+              selectedVariantId
+            );
+          }, 100);
+        }
+      }
+    };
 
-  //   // console.log("Mobile phone input found:", mobilePhoneInput);
-  //   // console.log("Mobile opt-in checkbox found:", optInCheckbox);
+    const disablePremiumBlock = (message = "Gifts Disabled") => {
+      const premiumBlock = document.querySelector(
+        ".premium-theme-3-header, .en__component--premiumgiftblock"
+      );
+      if (!premiumBlock || premiumBlock.dataset.dataAnnualDisabled === "true") {
+        return;
+      }
+      if (!premiumBlock.hasAttribute("disabled")) {
+        // Keep the page scroll position when the premium block is disabled (hidden)
+        keepScrollPosition(premiumBlock, "up");
+        premiumBlock.setAttribute("disabled", "disabled");
+        premiumBlock.setAttribute("aria-disabled", "true");
+        premiumBlock.setAttribute("data-disabled-message", message);
+      }
+    };
 
-  //   if (mobilePhoneInput && optInCheckbox) {
-  //     // Initial check when page loads
-  //     if (mobilePhoneInput.value && mobilePhoneInput.value.trim() !== "") {
-  //       // console.log("Initial mobile phone value exists, checking opt-in box");
-  //       optInCheckbox.checked = true;
-  //     } else {
-  //       // console.log("No initial mobile phone value, unchecking opt-in box");
-  //       optInCheckbox.checked = false;
-  //     }
+    const enablePremiumBlock = () => {
+      const premiumBlock = document.querySelector(
+        ".premium-theme-3-header, .en__component--premiumgiftblock"
+      );
+      if (!premiumBlock || premiumBlock.dataset.dataAnnualDisabled === "true") {
+        return;
+      }
+      if (premiumBlock.hasAttribute("disabled")) {
+        // Keep the page scroll position when the premium block is enabled (shown)
+        const scrollY = window.scrollY;
+        const premiumStyle = window.getComputedStyle(premiumBlock);
+        premiumBlock.removeAttribute("disabled");
+        premiumBlock.removeAttribute("aria-disabled");
+        premiumBlock.removeAttribute("data-disabled-message");
+        const premiumSize =
+          parseInt(premiumStyle.height, 10) +
+          parseInt(premiumStyle.marginTop.replace("px", "")) +
+          parseInt(premiumStyle.marginBottom.replace("px", ""));
+        window.scrollTo(0, scrollY + premiumSize);
+        console.log(premiumSize);
+      }
+    };
+    const addCountryNotice = () => {
+      if (!document.querySelector(".en__field--country .en__field__notice")) {
+        App.addHtml(
+          '<div class="en__field__notice"><strong>Note:</strong> We are unable to mail thank-you gifts to donors outside the United States and its territories and have selected the "Maximize my gift" option for you.</div>',
+          ".en__field--country .en__field__element",
+          "after"
+        );
+      }
+    };
+    const removeCountryNotice = () => {
+      App.removeHtml(".en__field--country .en__field__notice");
+    };
+    if (
+      !window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed()
+    ) {
+      setDefaultPremium();
+    } else {
+      window.setTimeout(() => {
+        selectPremiumFromSession();
+      }, 1000);
+    }
+    if (App.getUrlParameter("premium") !== "international" && country) {
+      if (country.value !== "US") {
+        const countryText = country.options[country.selectedIndex].text;
+        setDefaultPremium();
+        disablePremiumBlock(`Gifts Disabled in ${countryText}`);
+        addCountryNotice();
+      }
+      country.addEventListener("change", () => {
+        if (country.value !== "US") {
+          const countryText = country.options[country.selectedIndex].text;
+          setDefaultPremium();
+          disablePremiumBlock(`Gifts Disabled in ${countryText}`);
+          addCountryNotice();
+        } else {
+          enablePremiumBlock();
+          removeCountryNotice();
+        }
+      });
+      freq.onFrequencyChange.subscribe((s) => {
+        if (country.value !== "US") {
+          const countryText = country.options[country.selectedIndex].text;
+          setDefaultPremium();
+          disablePremiumBlock(`Gifts Disabled in ${countryText}`);
+        } else {
+          enablePremiumBlock();
+        }
+      });
+    }
+  }
+  // Limit premium availability to U.S. addresses only - END
 
-  //     // Add event listeners for input changes
-  //     mobilePhoneInput.addEventListener("input", function () {
-  //       // console.log("Mobile phone input changed:", this.value);
-  //       if (this.value && this.value.trim() !== "") {
-  //         // console.log("Setting mobile opt-in checkbox to checked");
-  //         optInCheckbox.checked = true;
-  //       } else {
-  //         // console.log("Setting mobile opt-in checkbox to unchecked");
-  //         optInCheckbox.checked = false;
-  //       }
-  //     });
+  // Premium form shipping block - START
+  const shippingCheckbox = document.querySelector(
+    "#en__field_supporter_questions_2133569"
+  );
+  shippingCheckbox?.addEventListener("change", function () {
+    const shippingEnabled = document.querySelector(
+      "#en__field_transaction_shipenabled"
+    );
+    if (shippingEnabled) {
+      shippingEnabled.checked = !this.checked;
+      shippingEnabled.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+  });
+  // Premium form shipping block - END
 
-  //     // Also listen for change events (for autofill, etc.)
-  //     mobilePhoneInput.addEventListener("change", function () {
-  //       // console.log("Mobile phone input change event:", this.value);
-  //       if (this.value && this.value.trim() !== "") {
-  //         // console.log(
-  //         //   "Setting mobile opt-in checkbox to checked (from change event)"
-  //         // );
-  //         optInCheckbox.checked = true;
-  //       } else {
-  //         // console.log(
-  //         //   "Setting mobile opt-in checkbox to unchecked (from change event)"
-  //         // );
-  //         optInCheckbox.checked = false;
-  //       }
-  //     });
-  //   } else {
-  //     // console.log("Could not find mobile phone input or opt-in checkbox");
-  //   }
-  // }
-
-  // // Call the function to set up the mobile phone opt-in checkbox behavior only for multistep forms
-  // // console.log("Checking if multistep form before initializing phone opt-in");
-  // if (document.body.getAttribute("data-engrid-subtheme") === "multistep") {
-  //   // console.log(
-  //   //   "Multistep form detected, initializing mobile phone opt-in checkbox setup"
-  //   // );
-  //   setupPhoneOptInCheckbox();
-  // }
+  // Move text to below the Premium Gift Header.
+  const pgInfo = document.querySelector(".insert-after--pg-header");
+  const pgHeader = document.querySelector(".en__pgHeader");
+  if (pgHeader && pgInfo) {
+    pgHeader.insertAdjacentElement("afterend", pgInfo);
+  }
 };
