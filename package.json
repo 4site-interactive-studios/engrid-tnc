@@ -48,6 +48,7 @@
     "prettier": "2.4.1",
     "sass": "^1.49.0",
     "sass-loader": "^12.1.0",
+    "smoothscroll-polyfill": "^0.4.4",
     "style-loader": "^3.0.0",
     "typescript": "^3.9.7",
     "webpack": "^5.37.0",

@@ -982,12 +982,10 @@
     }
   }
 
-  input[type="checkbox"]+label:before,
-  input[type="radio"]+label:before {
-    margin-right: max(var(--fields_spacing-inline), .5rem);
+  input[type="checkbox"] + label:before,
+  input[type="radio"] + label:before {
+    margin-right: max(var(--fields_spacing-inline), 0.5rem);
   }
-
-
 
   // Global styles for ENgrid migration - everything except the old gated content page layout
   // Specifically excludes the old gated content page layout to prevent conflicts
@@ -3653,11 +3651,11 @@
       }
 
       .engrid--ihmo-wrapper:after {
-        content: '';
+        content: "";
         position: absolute;
         height: calc(100% + 50px);
         width: calc(100% + 60px);
-        background: #F2F7F4;
+        background: #f2f7f4;
         top: -20px;
         left: -30px;
         z-index: -10;
@@ -3666,7 +3664,7 @@
 
     @media screen and (max-width: 760px) {
       .body-main {
-        padding: 0!important;
+        padding: 0 !important;
       }
 
       .body-main > .en__component {
@@ -3684,7 +3682,7 @@
     }
 
     .body-main > .en__component {
-      background-color: #F2F7F4;
+      background-color: #f2f7f4;
     }
 
     .body-main > .en__component--copyblock.form-heading {
@@ -3695,15 +3693,15 @@
     .body-main > .en__component:has(+ .visually-hidden--web),
     #en__digitalWallet__stripeButtons,
     .en__submit {
-      padding-bottom: 30px!important;
+      padding-bottom: 30px !important;
     }
 
     .form-heading {
-      margin-top: 48px!important;
+      margin-top: 48px !important;
     }
 
     .en__component--premiumgiftblock {
-      margin-top: 48px!important;
+      margin-top: 48px !important;
     }
 
     .premium-container.en__component:has(.en__component--premiumgiftblock:not([disabled])) {
@@ -3713,6 +3711,10 @@
     .en__component--formblock:has(+ .ihmo-closed + .premium-container) {
       padding-bottom: 30px;
     }
+  }
+
+  &[data-engrid-subtheme="multistep"] {
+    @import "./multistep";
   }
 
   //Premiums

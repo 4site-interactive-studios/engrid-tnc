@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 22, 2025 @ 07:28:10 ET
- *  By: michael
+ *  Date: Wednesday, May 28, 2025 @ 23:27:59 ET
+ *  By: fernando
  *  ENGrid styles: v0.22.4
- *  ENGrid scripts: v0.22.5
+ *  ENGrid scripts: v0.22.6
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10541,6 +10541,649 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=boxed-content] .en__component--formblock:has(+.ihmo-closed+.premium-container){
   padding-bottom:30px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]{
+  --give-by-select__button_count:1;
+  --recurring-frequency__button_text-transform:uppercase;
+  --give-monthly-donation-amount-appended-label:"/month";
+  --input_padding:0.8rem 1rem;
+  --button_padding:1rem 1.2rem;
+  --fields_spacing-inline:0.4rem;
+  --fields_spacing-block:0.4rem;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] [data-section-id="0"] .en__field>label{
+  display:none !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]#en__pagebuilder #engrid,[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not([data-engrid-embedded]){
+  margin:0 auto;
+  max-width:270px;
+  padding-bottom:1rem;
+  padding-top:1rem;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not([data-engrid-embedded]):before{
+  content:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]#en__pagebuilder #engrid>.en__component--row .en__component,[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder):not([data-engrid-embedded]) #engrid>.en__component--row .en__component{
+  padding:0;
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .mt-10{
+  margin-top:10px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .mt-20{
+  margin-top:20px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .summary-table{
+  display:flex;
+  flex-wrap:wrap;
+  font-size:12px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .summary-table dt{
+  border-bottom:1px solid #2e2e2c33;
+  font-weight:700;
+  padding:5px 0;
+  width:150px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .summary-table dd{
+  border-bottom:1px solid #2e2e2c33;
+  margin-left:auto;
+  padding:5px 0;
+  text-align:right;
+  width:calc(100% - 150px);
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] h1,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] h2{
+  color:var(--color-green);
+  font-family:var(--default_font-family);
+  font-size:var(--default_font-size);
+  font-weight:700;
+  text-align:center;
+  text-transform:uppercase;
+}
+@media only screen and (max-width:320px){
+  [data-engrid-theme=tnc][data-engrid-subtheme=multistep] #engrid{
+    zoom:.85;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-transaction-recurring-frequency=monthly] .radio-to-buttons_donationAmt .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:after{
+  margin-left:2px;
+  opacity:1;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field--validationFailed .en__field__error{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component{
+  position:relative;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation{
+  align-items:flex-start;
+  bottom:0;
+  display:flex;
+  justify-content:space-between;
+  position:absolute;
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button{
+  align-items:center;
+  backface-visibility:hidden;
+  border:0;
+  border-radius:var(--button_border-radius);
+  color:#fff;
+  cursor:pointer;
+  display:flex;
+  font-family:Roboto,sans-serif;
+  font-size:20px;
+  font-stretch:normal;
+  font-style:normal;
+  font-weight:700;
+  height:50px;
+  justify-content:center;
+  letter-spacing:.84px;
+  margin-bottom:0;
+  min-width:60px;
+  padding:0 12px;
+  position:relative;
+  transform:translateZ(0);
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button small{
+  font-size:10px;
+  font-weight:400;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__previous{
+  color:var(--ran__green);
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__previous:before{
+  background-color:#eff6fe;
+  border-radius:var(--submit__button_border-radius);
+  bottom:0;
+  content:"";
+  left:0;
+  opacity:.3;
+  position:absolute;
+  right:0;
+  top:0;
+  transition:opacity .2s;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__previous:hover:before{
+  opacity:.5;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__next,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__submit{
+  background-color:var(--color_primary);
+  opacity:1;
+  width:190px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__next svg,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__submit svg{
+  transform:translateX(15px);
+  transition:transform .3s ease-in-out;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__next:hover,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__submit:hover{
+  background-color:var(--color_primary);
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__next:hover svg,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__submit:hover svg{
+  transform:translateX(30px);
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button[data-section-id="0"]{
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-count{
+  bottom:-30px;
+  color:var(--ran__green);
+  font-size:10px;
+  font-stretch:normal;
+  font-style:normal;
+  letter-spacing:.84px;
+  position:absolute;
+  right:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component .section-count span{
+  font-weight:700;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] form.en__component>.en__component>.en__component{
+  min-width:auto;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field--ccnumber input{
+  background-position:50%;
+  background-size:30px !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field--checkbox{
+  --checkbox_font-size:14px;
+  --checkbox_line-height:18.2px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field--checkbox>label{
+  display:none !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .credit-card-flags{
+  margin-bottom:25px;
+  text-align:center;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded]{
+  height:100vh;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded] #launcher{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded] #onetrust-consent-sdk{
+  display:none !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded] form.en__component{
+  display:grid;
+  grid-auto-flow:column;
+  margin:0 auto;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded] form.en__component>.en__component{
+  height:100vh;
+  padding:45px 40px;
+  width:350px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded] form.en__component>.en__component>.en__component{
+  height:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded] form.en__component .en__component--row>.en__component--column .en__component:first-of-type>:first-child{
+  margin-top:0;
+  padding-top:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded] form.en__component .en__component--row>.en__component--column .en__component:last-of-type>:last-child{
+  margin-bottom:0;
+  padding-bottom:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded] .en__errorHeader,[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded] .en__errorList,[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-embedded] .en__submit{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .has-error .en__field__input,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .has-error .en__field__input--other,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .has-error label{
+  background-color:#ffeeeb66;
+  border-color:var(--error__color) !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] .en__component--imageblock{
+  border-radius:100%;
+  height:150px;
+  position:relative;
+  width:150px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] .en__component--imageblock img{
+  border-radius:100%;
+  height:150px !important;
+  object-fit:cover;
+  width:150px !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] .en__component--imageblock:after,[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] .en__component--imageblock:before{
+  content:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="46" height="38" fill="none" viewBox="0 0 46 38"><path fill="%23C92533" d="M33.707 0C29.268 0 25.174 2.166 23 5.664 20.826 2.166 16.732 0 12.293 0 5.504 0 0 5.693 0 11.83 0 27.245 23 38 23 38s23-10.755 23-26.17C46 5.693 40.496 0 33.707 0z"/></svg>');
+  height:38px;
+  position:absolute;
+  right:0;
+  top:0;
+  width:46px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] form.en__component>.en__component{
+  margin:auto;
+  padding:50px 30px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] footer{
+  background-image:url('data:image/svg+xml;utf8,<svg fill="none" height="132" viewBox="0 0 400 132" width="400" xmlns="http://www.w3.org/2000/svg"> <path d="M0 110.582L400 0v128c0 2.209-1.791 4-4 4H0v-21.418z" fill="%23A3D1D6"></path> <path d="M0 73.5L400 132H0V73.5z" fill="%23007cf9"></path></svg>');
+  background-position:bottom;
+  background-repeat:no-repeat;
+  background-size:contain;
+  bottom:0;
+  height:132px;
+  left:0;
+  position:fixed;
+  width:100vw;
+  z-index:-1;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] footer svg{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] h1{
+  color:var(--h1_color);
+  font-family:var(--h1_font-family);
+  font-size:38px;
+  font-stretch:normal;
+  font-style:normal;
+  font-weight:900;
+  letter-spacing:normal;
+  line-height:.83;
+  margin-bottom:15px;
+  text-align:left;
+  white-space:nowrap;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] p{
+  font-size:16px;
+  font-stretch:normal;
+  font-style:normal;
+  font-weight:400;
+  letter-spacing:normal;
+  line-height:1.63;
+  text-align:left;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] p.small{
+  font-size:12px;
+  font-weight:500;
+  line-height:1.5;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] .bequest-modal{
+  background-color:#4f606c;
+  bottom:0;
+  left:0;
+  position:fixed;
+  top:0;
+  width:100vw;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] .bequest-modal .engrid-modal__body iframe{
+  border:none;
+  height:300px;
+  margin-bottom:0 !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-thank-you] .bequest-modal .engrid-modal__container{
+  top:20px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field--emailAddress{
+  position:relative;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field--emailAddress .en__field__error{
+  background-color:var(--error__color);
+  border-bottom-left-radius:3px;
+  border-bottom-right-radius:3px;
+  color:#fff;
+  display:block;
+  font-size:.75rem;
+  line-height:1;
+  margin-top:-5px;
+  padding:5px 10px;
+  transition:opacity .3s ease-in-out,bottom .3s ease-in-out,z-index .3s ease-in-out;
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .mobile-logo{
+  margin-top:-15px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .mobile-title-block h2{
+  margin-bottom:5px;
+  margin-top:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .mobile-title-block p{
+  line-height:1.2;
+  margin:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .inline-upsell-box{
+  margin:15px auto 0;
+  min-height:92px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .inline-upsell-box strong{
+  font-weight:600;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .inline-upsell-box.recurring-frequency-y-show{
+  padding:4px 8px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .inline-upsell-box.recurring-frequency-y-show em,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .inline-upsell-box.recurring-frequency-y-show strong{
+  font-size:12px;
+  line-height:1.6;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] h2{
+  font-size:18px;
+  margin-bottom:20px;
+  margin-top:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .padlock-icon{
+  align-items:center;
+  display:flex;
+  margin-bottom:20px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .padlock-icon h2{
+  margin:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .padlock-icon img{
+  margin:0 !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .giveBySelect-card label{
+  display:flex !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field--opt-universal-opt-in{
+  margin-top:15px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .donation-summary{
+  background:#b8cf9533;
+  border:0;
+  border-radius:4px;
+  line-height:160%;
+  margin-bottom:15px;
+  padding:20px 25px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .donation-summary p{
+  font-size:16px;
+  font-weight:400;
+  margin:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .back-link{
+  display:none;
+  font-size:15px;
+  font-style:italic;
+  font-weight:400;
+  line-height:24px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-payment-type=daf] [data-last-section=true] .section-navigation,[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-payment-type=paypaltouch] [data-last-section=true] .section-navigation,[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-payment-type=stripedigitalwallet] [data-last-section=true] .section-navigation{
+  display:none !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-payment-type=daf] .back-link,[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-payment-type=paypaltouch] .back-link,[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-engrid-payment-type=stripedigitalwallet] .back-link{
+  display:block;
+  -webkit-text-decoration:none;
+  text-decoration:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep][data-conditonally-hide-show-digital-wallet-elements] #en__digitalWallet .en__digitalWallet__container{
+  margin-top:0 !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .digital-wallets-wrapper{
+  align-items:center;
+  display:flex;
+  flex-direction:column-reverse;
+  justify-content:center;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .digital-wallets-wrapper div{
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__element{
+  align-items:center;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  margin:0 auto;
+  position:relative;
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item{
+  flex-basis:100% !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item label{
+  align-items:center;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  font-size:14px;
+  font-weight:600;
+  height:52px;
+  justify-content:center;
+  padding:10px 0 10px 50px;
+  position:relative;
+  text-align:center;
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item label span{
+  line-height:1;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item label[for=en__field_transaction_giveBySelect1]:after{
+  background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEwAAABMCAYAAADHl1ErAAAACXBIWXMAABYlAAAWJQFJUiTwAAAB8ElEQVR4nO2c4W3CMBBGz1H/NyNkAzoCo2SDrkI3YJSOABt0g9IJXBnOqUkMyifUqkrek04RlvMjT2c7sc6EGKPBfBpcaSBMBGEiCBNBmAjCRBAmgjARhIkgTARhIggTQZhK2q0Yh5l1ZrYzs0PqsrI4+LN3VTeThkvntUm6Fbuxn2E/LITQmtm7mW08Sb/MbO9tpxhjui6WEMLWzJKDdO3N7Nmf9ZjaYoyn8y8X1o6GXxLV1lJyDeE+9oWPQ/ZRG4b9WkVVpqe+8LLLo7ErM6t248qllZnWBc+uV5+zumGsQjm3f/ic9tb4JGeeXcga4U723rptilVx0avgg2Q3m/JNn+y6zeAm+GSWUi/c7L5yfB77RJhACOHs6WnuLfmGpTI3YditEEGYCMJEECaCMJHZqySvHRfIMBGEiSBMBGEiCBNBmAjCRBAmgjARhIkgTGT2t+R/59EdYXZcfwmEiSBMBGEiCBNZzCr5VzvCZJjIIMxrPKFC6abMsHbaFcZuGq8StqKwDqZkN8emKBbrvawHCtxJ7y1nVxQF34lxUXBupOy8EtWy88jBhknUDjbkPhyd+Xn2l9lHZ8rgcNZVTA5nTYRFjv/dPf7HvzuJ8C0pgjARhIkgTARhIggTQZgIwkQQJoIwEYSJIEwEYQpm9g2Ro5zhLcuLBwAAAABJRU5ErkJggg==");
+  background-size:70%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item label[for=en__field_transaction_giveBySelect2]:after{
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 36 36' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath class='clr-i-outline clr-i-outline-path-1' d='M16 16h15v2H16z'/%3E%3Cpath class='clr-i-outline clr-i-outline-path-2' d='M20 21h11v2H20z'/%3E%3Cpath class='clr-i-outline clr-i-outline-path-3' d='M34 8H12.93a8.35 8.35 0 0 1 .79 2H33v16H3v-6.1a7.83 7.83 0 0 1-2-1.34V27a1 1 0 0 0 1 1h32a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1Z'/%3E%3Cpath class='clr-i-outline clr-i-outline-path-4' d='M6.57 18.68a6.17 6.17 0 0 0 4.32-1.59 1.2 1.2 0 0 0 .36-.84 1.08 1.08 0 0 0-1.09-1.11 1 1 0 0 0-.71.25 4.32 4.32 0 0 1-2.84 1 3.35 3.35 0 0 1-3.46-3h7.53A1.29 1.29 0 0 0 12 12.06a5.68 5.68 0 0 0-5.73-5.92A6 6 0 0 0 .4 12.4a6 6 0 0 0 6.17 6.28ZM6.25 8.39c1.82 0 2.87 1.39 3 3.16H3.13c.25-1.86 1.43-3.16 3.12-3.16Z'/%3E%3Cpath fill='none' d='M0 0h36v36H0z'/%3E%3C/svg%3E");
+  background-size:70%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item label[for=en__field_transaction_giveBySelect3]:after{
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg width='48' height='48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='24' cy='24' r='20' fill='%230070BA'/%3E%3Cpath d='M32.33 18.098a11.51 11.51 0 0 1-.076.437c-.984 5.051-4.35 6.796-8.648 6.796h-2.189c-.525 0-.968.382-1.05.9l-1.12 7.107-.318 2.015a.56.56 0 0 0 .553.647h3.881c.46 0 .85-.334.923-.787l.038-.198.731-4.638.047-.254a.934.934 0 0 1 .922-.79h.581c3.761 0 6.705-1.526 7.566-5.945.36-1.846.173-3.387-.778-4.471a3.713 3.713 0 0 0-1.063-.82z' fill='%23fff' fill-opacity='.6'/%3E%3Cpath d='M31.3 17.687a7.792 7.792 0 0 0-.956-.212 12.092 12.092 0 0 0-1.93-.141h-5.846a.93.93 0 0 0-.922.789L20.402 26l-.036.23c.082-.518.525-.9 1.05-.9h2.19c4.298 0 7.664-1.746 8.648-6.796.03-.15.054-.295.076-.438a5.24 5.24 0 0 0-.809-.34 7.151 7.151 0 0 0-.22-.07z' fill='%23fff' fill-opacity='.8'/%3E%3Cpath d='M21.646 18.123a.93.93 0 0 1 .922-.788h5.847c.693 0 1.34.045 1.93.14a7.808 7.808 0 0 1 1.178.28c.29.098.56.211.808.343.293-1.867-.002-3.138-1.012-4.289C30.207 12.542 28.2 12 25.63 12h-7.46c-.525 0-.973.382-1.054.901l-3.107 19.696a.64.64 0 0 0 .632.741h4.606l1.156-7.337 1.244-7.878z' fill='%23fff'/%3E%3C/svg%3E");
+  background-size:70%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item.apple-pay label:after{
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg width='800' height='800' viewBox='0 -29.75 165.5 165.5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M150.7 0h-139c-1 0-2.1.1-3.1.3-1 .2-2 .5-3 1-.9.4-1.8 1.1-2.5 1.8S1.7 4.7 1.3 5.6c-.5.9-.8 1.9-1 3-.2 1-.2 2.1-.3 3.1v82.5c0 1 .1 2.1.3 3.1.2 1 .5 2 1 3 .5.9 1.1 1.8 1.8 2.5s1.6 1.4 2.5 1.8c.9.5 1.9.8 3 1 1 .2 2.1.2 3.1.3h142.1c1 0 2.1-.1 3.1-.3 1-.2 2-.5 3-1 .9-.5 1.8-1.1 2.5-1.8s1.4-1.6 1.8-2.5c.5-.9.8-1.9 1-3 .2-1 .2-2.1.3-3.1V11.7c0-1-.1-2.1-.3-3.1-.2-1-.5-2-1-3-.5-.9-1.1-1.8-1.8-2.5s-1.6-1.4-2.5-1.8c-.9-.5-1.9-.8-3-1-1-.2-2.1-.2-3.1-.3h-3.1z'/%3E%3Cpath d='M150.7 3.5h3.1c.8 0 1.7.1 2.6.2.8.1 1.4.3 2 .6.6.3 1.1.7 1.6 1.2s.9 1 1.2 1.6c.3.6.5 1.2.6 2 .2.9.2 1.8.2 2.6v82.5c0 .8-.1 1.7-.2 2.6-.1.7-.3 1.4-.6 2-.3.6-.7 1.1-1.2 1.6s-1 .9-1.6 1.2c-.6.3-1.2.5-2 .6-.9.2-1.8.2-2.6.2H11.7c-.7 0-1.7-.1-2.6-.2-.7-.1-1.4-.3-2-.7-.6-.3-1.1-.7-1.6-1.2s-.9-1-1.2-1.6c-.3-.6-.5-1.2-.6-2-.2-.9-.2-1.8-.2-2.6V11.7c0-.8.1-1.7.2-2.6.1-.7.3-1.4.6-2 .3-.6.7-1.1 1.2-1.6s1-.9 1.6-1.2c.6-.3 1.2-.5 2-.6.9-.2 1.8-.2 2.6-.2h139' style='fill:%23fff'/%3E%3Cpath d='M45.2 35.6c1.4-1.8 2.4-4.2 2.1-6.6-2.1.1-4.6 1.4-6.1 3.1-1.3 1.5-2.5 4-2.2 6.3 2.4.3 4.7-1 6.2-2.8m2.1 3.4c-3.4-.2-6.3 1.9-7.9 1.9-1.6 0-4.1-1.8-6.8-1.8-3.5.1-6.7 2-8.5 5.2-3.6 6.3-1 15.6 2.6 20.7 1.7 2.5 3.8 5.3 6.5 5.2 2.6-.1 3.6-1.7 6.7-1.7s4 1.7 6.8 1.6c2.8-.1 4.6-2.5 6.3-5.1 2-2.9 2.8-5.7 2.8-5.8-.1-.1-5.5-2.1-5.5-8.3-.1-5.2 4.2-7.7 4.4-7.8-2.3-3.6-6.1-4-7.4-4.1m29.4-7.1c7.4 0 12.5 5.1 12.5 12.4 0 7.4-5.2 12.5-12.7 12.5h-8.1v12.9h-5.9V31.9h14.2zm-8.3 20h6.7c5.1 0 8-2.8 8-7.5 0-4.8-2.9-7.5-8-7.5h-6.8v15zM90.7 62c0-4.8 3.7-7.8 10.3-8.2l7.6-.4v-2.1c0-3.1-2.1-4.9-5.5-4.9-3.3 0-5.3 1.6-5.8 4h-5.4c.3-5 4.6-8.7 11.4-8.7 6.7 0 11 3.5 11 9.1v19h-5.4v-4.5h-.1c-1.6 3.1-5.1 5-8.7 5-5.6 0-9.4-3.4-9.4-8.3zm17.9-2.5v-2.2l-6.8.4c-3.4.2-5.3 1.7-5.3 4.1 0 2.4 2 4 5 4 4 0 7.1-2.7 7.1-6.3zM119.3 80v-4.6c.4.1 1.4.1 1.8.1 2.6 0 4-1.1 4.9-3.9 0-.1.5-1.7.5-1.7l-10-27.6h6.1l7 22.5h.1l7-22.5h6l-10.3 29.1c-2.4 6.7-5.1 8.8-10.8 8.8-.4-.1-1.8-.1-2.3-.2z'/%3E%3C/svg%3E");
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item.google-pay label:after{
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg height='50' width='50' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 2387.3 948' xml:space='preserve'%3E%3Cpath d='M1129.1 463.2V741h-88.2V54.8h233.8c56.4-1.2 110.9 20.2 151.4 59.4 41 36.9 64.1 89.7 63.2 144.8 1.2 55.5-21.9 108.7-63.2 145.7-40.9 39-91.4 58.5-151.4 58.4l-145.6.1zm0-323.9v239.6h147.8c32.8 1 64.4-11.9 87.2-35.5 46.3-45 47.4-119.1 2.3-165.4-.8-.8-1.5-1.6-2.3-2.3-22.5-24.1-54.3-37.3-87.2-36.4h-147.8zm563.4 116.9c65.2 0 116.6 17.4 154.3 52.2 37.7 34.8 56.5 82.6 56.5 143.2V741H1819v-65.2h-3.8c-36.5 53.7-85.1 80.5-145.7 80.5-51.7 0-95-15.3-129.8-46-33.8-28.5-53-70.7-52.2-115 0-48.6 18.4-87.2 55.1-115.9 36.7-28.7 85.7-43.1 147.1-43.1 52.3 0 95.5 9.6 129.3 28.7v-20.2c.2-30.2-13.2-58.8-36.4-78-23.3-21-53.7-32.5-85.1-32.1-49.2 0-88.2 20.8-116.9 62.3l-77.6-48.9c42.6-61.3 105.8-91.9 189.5-91.9zm-114.1 341.1c-.1 22.8 10.8 44.2 29.2 57.5 19.5 15.3 43.7 23.5 68.5 23 37.2-.1 72.9-14.9 99.2-41.2 29.2-27.5 43.8-59.7 43.8-96.8-27.5-21.9-65.8-32.9-115-32.9-35.8 0-65.7 8.6-89.6 25.9-24.1 17.6-36.1 38.9-36.1 64.5zm808.9-325.8L2093 948h-91l109.2-236.7-193.6-439.8h95.8l139.9 337.3h1.9l136.1-337.3h96z' style='fill:%235f6368'/%3E%3Cpath d='M772.8 403.2c0-26.9-2.2-53.7-6.8-80.2H394.2v151.8h212.9c-8.8 49-37.2 92.3-78.7 119.8v98.6h127.1c74.4-68.5 117.3-170 117.3-290z' style='fill:%234285f4'/%3E%3Cpath d='M394.2 788.5c106.4 0 196-34.9 261.3-95.2l-127.1-98.6c-35.4 24-80.9 37.7-134.2 37.7-102.8 0-190.1-69.3-221.3-162.7H42v101.6c66.9 133.2 203.2 217.2 352.2 217.2z' style='fill:%2334a853'/%3E%3Cpath d='M172.9 469.7c-16.5-48.9-16.5-102 0-150.9V217.2H42c-56 111.4-56 242.7 0 354.1l130.9-101.6z' style='fill:%23fbbc04'/%3E%3Cpath d='M394.2 156.1c56.2-.9 110.5 20.3 151.2 59.1L658 102.7C586.6 35.7 492.1-1.1 394.2 0 245.2 0 108.9 84.1 42 217.2l130.9 101.6c31.2-93.4 118.5-162.7 221.3-162.7z' style='fill:%23ea4335'/%3E%3C/svg%3E");
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item .payment-flags,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item label:after{
+  border:0;
+  border-bottom:0;
+  display:block;
+  left:1px;
+  max-height:48px;
+  max-width:48px;
+  outline:none;
+  position:absolute;
+  top:1px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .give-by-select .en__field--radio.en__field--give-by-select .en__field__item input:checked+label:after{
+  border-color:var(--give-by-select__button_background-color_checked);
+  border-bottom:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] #en__field_transaction_paycurrency{
+  font-size:14px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field--recurrfreq .en__field__item label{
+  font-size:1.33248em;
+  font-weight:900;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .highlight{
+  padding:.5rem 1rem;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .highlight:after,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .highlight:before,[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder) .show-on-mobile{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder) .hide-on-mobile,[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder).is-mobile .show-on-mobile{
+  display:block;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder).is-mobile .hide-on-mobile{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder).is-mobile .inline-upsell-box{
+  font-size:14px;
+  max-height:100%;
+  min-height:65px;
+  padding:5px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder).is-mobile .inline-upsell-box p{
+  line-height:1.3;
+  margin:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder).is-mobile .inline-upsell-box em,[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder).is-mobile .inline-upsell-box strong{
+  font-size:14px;
+  font-weight:400;
+  line-height:1.3;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder).is-mobile .inline-upsell-box.recurring-frequency-y-show{
+  line-height:17px;
+  padding:4px 8px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder).is-mobile .inline-upsell-box.recurring-frequency-y-show em,[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder).is-mobile .inline-upsell-box.recurring-frequency-y-show strong{
+  font-size:13px;
+  line-height:1;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder).is-mobile form.en__component>.en__component{
+  padding:35px 40px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not(#en__pagebuilder).is-mobile .radio-to-buttons_recurrfreq .en__field--recurrfreq{
+  margin:13px auto;
+  top:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] iframe[title^=recaptcha]{
+  left:-1px;
+  position:fixed;
+  top:-1px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__captcha{
+  margin-top:15px;
+  transform:scale(.895);
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field--creditCardHolderName{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .transaction-fee-opt-in{
+  margin-top:.5rem;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not([data-engrid-embedded]):not([data-engrid-subtheme=multistep])[data-engrid-js-loading=finished]:before{
+  background:linear-gradient(180deg, #fff 50%, #000 0);
+  content:"";
+  height:100vh;
+  position:fixed;
+  width:100vw;
+  z-index:-99;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not([data-engrid-embedded])[data-engrid-subtheme=multistep]{
+  --pagebuilder__background-color:#fff;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not([data-engrid-embedded])[data-engrid-subtheme=multistep] #engrid{
+  margin:0 auto;
+  max-width:270px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not([data-engrid-embedded])[data-engrid-subtheme=multistep] .en__captcha__placeholder{
+  background-size:100% !important;
+  width:270px !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .radio-to-buttons_donationAmt .en__field__item.en__field__item--other{
+  --input_padding:0.8rem 1rem 0.8rem 2rem;
+  flex-basis:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .radio-to-buttons_donationAmt .en__field__item.en__field__item--other:before{
+  top:1.1rem;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__component--formblock:has(.en__captcha){
+  margin:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__captcha{
+  margin:0;
+  max-width:270px;
+  padding:0;
+  transform-origin:left;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__submit button{
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .digital-wallets-wrapper{
+  margin-left:0;
+  margin-right:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] #en__digitalWallet,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__digitalWallet__button{
+  max-width:270px !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__digitalWallet__container{
+  padding-left:0 !important;
+  padding-right:0 !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .donation-nudge{
+  margin-top:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .donation-nudge p{
+  font-size:16px !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .donation-nudge img{
+  margin-right:20px;
+  max-width:40px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field__notice{
+  position:absolute;
+  right:17px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] [data-upsell-section=true] .en__component--column{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-buttons{
+  margin-bottom:4rem;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-buttons button{
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-buttons button svg{
+  display:inline-block;
+  height:auto;
+  margin-right:5px;
+  max-height:35px;
+  max-width:35px;
+  transition:transform .3s ease-in-out;
+  vertical-align:middle;
+  width:auto;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary{
+  background-color:var(--color_primary);
+  border:1px solid var(--color_primary);
+  color:var(--button_background-color);
+  padding:10px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary svg{
+  margin-left:-35px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary:hover{
+  background-color:var(--button_background-color);
+  border:1px solid var(--color_primary);
+  color:var(--color_primary);
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary:hover svg{
+  transform:scale(1.2);
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-reject-button{
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  line-height:1.2;
+  margin-bottom:0;
+  margin-top:0;
+  padding:0;
+  text-align:center;
+  -webkit-text-decoration:none;
+  text-decoration:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-reject-button:hover{
+  background-color:var(--button_background-color);
+  color:var(--button_color);
+  -webkit-text-decoration:underline;
+  text-decoration:underline;
 }
 @keyframes fadeIn{
   0%{

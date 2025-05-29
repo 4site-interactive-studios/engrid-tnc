@@ -1,8 +1,9 @@
 import {
   Options,
   App,
-  DonationFrequency,
   DonationAmount,
+  DonationFrequency,
+  EnForm,
 } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
 // import {
 //   Options,
@@ -12,6 +13,7 @@ import {
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
+import DonationLightboxForm from "./scripts/donation-lightbox-form";
 import { customScript } from "./scripts/main";
 import {
   trackFormSubmit,
@@ -128,7 +130,11 @@ const options: Options = {
     },
   },
   onLoad: () => {
+    (<any>window).DonationLightboxForm = DonationLightboxForm;
     customScript(App, DonationFrequency, DonationAmount);
+    if (App.getBodyData("subtheme") === "multistep") {
+      new DonationLightboxForm(DonationAmount, DonationFrequency, App);
+    }
     new BequestLightbox();
     new Tooltip();
     new IHMO();
