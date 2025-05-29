@@ -2,6 +2,7 @@
   --give-by-select__button_count: 1;
   --recurring-frequency__button_text-transform: uppercase;
   --give-monthly-donation-amount-appended-label: "/month";
+  --give-annual-donation-amount-appended-label: "/year";
   --input_padding: 0.8rem 1rem;
   --button_padding: 1rem 1.2rem;
   --fields_spacing-inline: 0.4rem;
@@ -32,7 +33,23 @@
   //       }
   //     }
   //   }
-
+  .en__field--auto-renew {
+    margin: 0;
+    .en__field__item {
+      width: 100%;
+      & > input:checked + label {
+        border: 0 !important;
+      }
+    }
+    label {
+      display: flex !important;
+      align-items: center !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: 0 !important;
+      font-size: 0.875rem;
+    }
+  }
   &#en__pagebuilder #engrid,
   &:not([data-engrid-embedded]) {
     max-width: 270px;
