@@ -38,7 +38,9 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
         floatingButton.className = "arrow";
         floatingButton.innerHTML = `<div class='en__submit'><a class='pseduo__en__submit_button' href='#firstElement'>${floatingButtonLabel}</a></div>`;
         const advRow = document.querySelector(".en__component--advrow");
-        advRow.append(floatingButton);
+        if (advRow) {
+          advRow.append(floatingButton);
+        }
         floatingButton
           .querySelector(".pseduo__en__submit_button")
           .addEventListener("click", function (e) {

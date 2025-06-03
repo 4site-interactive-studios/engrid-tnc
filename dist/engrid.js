@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 29, 2025 @ 18:19:04 ET
+ *  Date: Tuesday, June 3, 2025 @ 10:41:38 ET
  *  By: fernando
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.6
@@ -24375,7 +24375,9 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         floatingButton.className = "arrow";
         floatingButton.innerHTML = `<div class='en__submit'><a class='pseduo__en__submit_button' href='#firstElement'>${floatingButtonLabel}</a></div>`;
         const advRow = document.querySelector(".en__component--advrow");
-        advRow.append(floatingButton);
+        if (advRow) {
+          advRow.append(floatingButton);
+        }
         floatingButton.querySelector(".pseduo__en__submit_button").addEventListener("click", function (e) {
           e.preventDefault();
           document.querySelector("#firstElement").scrollIntoView({
