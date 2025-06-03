@@ -586,14 +586,17 @@
       bottom: 0;
       background-color: #4f606c;
       .engrid-modal__body {
+        p {
+          margin-bottom: 0;
+        }
         iframe {
-          height: 300px;
+          height: 330px;
           border: none;
           margin-bottom: 0 !important;
         }
       }
       .engrid-modal__container {
-        top: 20px;
+        top: 5px;
       }
     }
   }
