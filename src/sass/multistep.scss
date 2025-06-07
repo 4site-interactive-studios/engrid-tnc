@@ -1024,12 +1024,17 @@
   }
   .donation-nudge {
     margin-top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     p {
       font-size: 16px !important;
     }
     img {
-      max-width: 40px;
-      margin-right: 20px;
+      margin-right: 35px;
+      max-width: 35px;
+      margin-top: -5px;
+      margin-bottom: 10px;
     }
   }
   .en__field__notice {
@@ -1047,6 +1052,13 @@
     margin-bottom: 4rem;
     button {
       width: 100%;
+      transition: transform 0.3s ease-in-out;
+      &:hover {
+        transform: scale(1.05);
+        svg {
+          transform: scale(1.2);
+        }
+      }
       svg {
         margin-right: 5px;
         max-width: 35px;
@@ -1059,22 +1071,24 @@
       }
     }
   }
+  .upsell-button {
+    background-color: var(--button_background-color);
+    color: var(--color_primary);
+    border: 1px solid var(--color_primary);
+  }
   .upsell-primary {
     background-color: var(--color_primary);
     color: var(--button_background-color);
     border: 1px solid var(--color_primary);
-    padding: 10px;
+    // padding: 10px;
     svg {
       margin-left: -35px;
     }
-    &:hover {
-      background-color: var(--button_background-color);
-      color: var(--color_primary);
-      border: 1px solid var(--color_primary);
-      svg {
-        transform: scale(1.2);
-      }
-    }
+    // &:hover {
+    // background-color: var(--button_background-color);
+    // color: var(--color_primary);
+    // border: 1px solid var(--color_primary);
+    // }
   }
   .upsell-reject-button {
     margin-top: 0;

@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, June 3, 2025 @ 13:06:01 ET
+ *  Date: Friday, June 6, 2025 @ 15:12:50 ET
  *  By: fernando
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.6
@@ -11137,14 +11137,19 @@ body[data-engrid-debug]:before{
   padding-right:0 !important;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .donation-nudge{
+  align-items:center;
+  display:flex;
+  justify-content:center;
   margin-top:0;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .donation-nudge p{
   font-size:16px !important;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .donation-nudge img{
-  margin-right:20px;
-  max-width:40px;
+  margin-bottom:10px;
+  margin-right:35px;
+  margin-top:-5px;
+  max-width:35px;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .en__field__notice{
   position:absolute;
@@ -11159,7 +11164,14 @@ body[data-engrid-debug]:before{
   margin-bottom:4rem;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-buttons button{
+  transition:transform .3s ease-in-out;
   width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-buttons button:hover{
+  transform:scale(1.05);
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-buttons button:hover svg{
+  transform:scale(1.2);
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-buttons button svg{
   display:inline-block;
@@ -11171,22 +11183,18 @@ body[data-engrid-debug]:before{
   vertical-align:middle;
   width:auto;
 }
-[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary{
-  background-color:var(--color_primary);
-  border:1px solid var(--color_primary);
-  color:var(--button_background-color);
-  padding:10px;
-}
-[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary svg{
-  margin-left:-35px;
-}
-[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary:hover{
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-button{
   background-color:var(--button_background-color);
   border:1px solid var(--color_primary);
   color:var(--color_primary);
 }
-[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary:hover svg{
-  transform:scale(1.2);
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary{
+  background-color:var(--color_primary);
+  border:1px solid var(--color_primary);
+  color:var(--button_background-color);
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-primary svg{
+  margin-left:-35px;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] .upsell-reject-button{
   border:none;
