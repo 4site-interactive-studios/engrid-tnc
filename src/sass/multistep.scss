@@ -1106,4 +1106,12 @@
       text-decoration: underline;
     }
   }
+  &:not([data-engrid-gdcp="false"]) {
+    .en__field--phoneNumber2 .en__field__notice {
+      display: block;
+    }
+    .en__field--engrid\.gdcp-mobile_phone .en__field__element {
+      display: none;
+    }
+  }
 }
