@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, June 11, 2025 @ 22:00:05 ET
+ *  Date: Thursday, June 12, 2025 @ 23:54:35 ET
  *  By: fernando
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.6
@@ -11219,6 +11219,12 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep]:not([data-engrid-gdcp=false]) .en__field--engrid\.gdcp-mobile_phone .en__field__element{
   display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] .rememberme-wrapper{
+  padding-bottom:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=multistep] [data-last-section=true]:has(.en__captcha) .en__field--firstName,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] [data-last-section=true]:has(.en__captcha) .en__field--lastName{
+  flex-basis:50%;
 }
 @keyframes fadeIn{
   0%{

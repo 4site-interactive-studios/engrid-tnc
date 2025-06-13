@@ -1362,6 +1362,14 @@ export default class DonationLightboxForm {
     const amount = this.getDonationTotal();
     const upsellAmountMonthly = this.getUpsellAmount("monthly");
     const upsellAmountAnnual = this.getUpsellAmount("annual");
+
+    if (upsellAmountMonthly === 0 && upsellAmountAnnual === 0) {
+      // If both upsell amounts are 0, hide the upsell section
+      this.upsellSection.style.display = "none";
+      this.updateSectionCount();
+      return;
+    }
+
     const oldAmounts = this.upsellSection.querySelectorAll(".upsell_amount");
     const newAmountsMonthly = this.upsellSection.querySelectorAll(
       ".upsell_suggestion_monthly"
@@ -1426,7 +1434,7 @@ export default class DonationLightboxForm {
         }
       }
       this.updateSectionCount();
-    }, 1000);
+    }, 600);
     // Update visibility
   }
   hideAnnualFrequency() {

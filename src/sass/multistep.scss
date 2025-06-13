@@ -1114,4 +1114,14 @@
       display: none;
     }
   }
+  .rememberme-wrapper {
+    padding-bottom: 0;
+  }
+  // Adjusts the first and last name fields to be side by side if the last section has a captcha
+  [data-last-section="true"]:has(.en__captcha) {
+    .en__field--firstName,
+    .en__field--lastName {
+      flex-basis: 50%;
+    }
+  }
 }

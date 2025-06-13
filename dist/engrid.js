@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, June 11, 2025 @ 22:00:05 ET
+ *  Date: Thursday, June 12, 2025 @ 23:54:35 ET
  *  By: fernando
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.6
@@ -24003,6 +24003,12 @@ class DonationLightboxForm {
     const amount = this.getDonationTotal();
     const upsellAmountMonthly = this.getUpsellAmount("monthly");
     const upsellAmountAnnual = this.getUpsellAmount("annual");
+    if (upsellAmountMonthly === 0 && upsellAmountAnnual === 0) {
+      // If both upsell amounts are 0, hide the upsell section
+      this.upsellSection.style.display = "none";
+      this.updateSectionCount();
+      return;
+    }
     const oldAmounts = this.upsellSection.querySelectorAll(".upsell_amount");
     const newAmountsMonthly = this.upsellSection.querySelectorAll(".upsell_suggestion_monthly");
     const newAmountsAnnual = this.upsellSection.querySelectorAll(".upsell_suggestion_annual");
@@ -24056,7 +24062,7 @@ class DonationLightboxForm {
         }
       }
       this.updateSectionCount();
-    }, 1000);
+    }, 600);
     // Update visibility
   }
   hideAnnualFrequency() {
