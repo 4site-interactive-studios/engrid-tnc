@@ -656,10 +656,11 @@ export default class DonationLightboxForm {
             }
             return false;
           }
-          if (amount > 30000) {
+          const maxAmount = window.EngridOptions?.MaxAmount ?? 30000;
+          if (amount > maxAmount) {
             this.sendMessage(
               "error",
-              "Amount must be less than $30,000 - Contact us for assistance"
+              `Amount must be less than $${maxAmount.toLocaleString()} - Contact us for assistance`
             );
             if (amountBlock) {
               amountBlock.classList.add("has-error");

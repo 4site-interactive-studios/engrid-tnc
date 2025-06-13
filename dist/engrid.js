@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, June 12, 2025 @ 23:54:35 ET
+ *  Date: Friday, June 13, 2025 @ 11:08:56 ET
  *  By: fernando
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.6
@@ -23470,8 +23470,9 @@ class DonationLightboxForm {
             }
             return false;
           }
-          if (amount > 30000) {
-            this.sendMessage("error", "Amount must be less than $30,000 - Contact us for assistance");
+          const maxAmount = window.EngridOptions?.MaxAmount ?? 30000;
+          if (amount > maxAmount) {
+            this.sendMessage("error", `Amount must be less than $${maxAmount.toLocaleString()} - Contact us for assistance`);
             if (amountBlock) {
               amountBlock.classList.add("has-error");
             }
