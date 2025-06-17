@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, June 13, 2025 @ 11:08:56 ET
- *  By: fernando
+ *  Date: Tuesday, June 17, 2025 @ 07:08:22 ET
+ *  By: michael
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.6
  *
@@ -25603,12 +25603,22 @@ class IHMO {
       // if "use my gift where it's needed most" option is selected, do not change the source code"
       return;
     }
-    const sourceEnd = sourceCodeContainer.value.substring(sourceCodeContainer.value.length - 6);
-    if (giftType === "HONORARY") {
-      sourceCodeContainer.value = sourceCodeContainer.value.replace(sourceEnd, "TRIHXX");
-    } else if (giftType === "MEMORIAL") {
-      sourceCodeContainer.value = sourceCodeContainer.value.replace(sourceEnd, "TRIMXX");
+
+    // Determine the part of the source code to replace and the replacement value
+    const isUS = this.isUSState(sourceCodeContainer.value);
+    const endIndex = sourceCodeContainer.value.length;
+    let target, replacement;
+    if (giftType === "HONORARY" || giftType === "MEMORIAL") {
+      if (isUS) {
+        target = sourceCodeContainer.value.substring(endIndex - 6);
+        replacement = giftType === "HONORARY" ? "TRIHXX" : "TRIMXX";
+      } else {
+        target = sourceCodeContainer.value.substring(endIndex - 6, endIndex - 2);
+        replacement = giftType === "HONORARY" ? "TRIH" : "TRIM";
+      }
+      sourceCodeContainer.value = sourceCodeContainer.value.replace(target, replacement);
     } else {
+      // Reset to default if not honorary or memorial
       sourceCodeContainer.value = sourceCodeContainer.getAttribute("data-default-source-code") || "";
     }
     engrid_ENGrid.setBodyData("source-code", this.sourceCodeField.value);
@@ -25743,6 +25753,10 @@ class IHMO {
         option.setAttribute("data-default-source-code", option.value);
       }
     });
+  }
+  isUSState(source) {
+    const state = source.substring(1, 3);
+    return ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"].includes(state);
   }
 }
 ;// CONCATENATED MODULE: ./src/scripts/widget-progress-bar.ts

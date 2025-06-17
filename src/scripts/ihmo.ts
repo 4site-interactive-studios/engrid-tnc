@@ -356,21 +356,28 @@ export class IHMO {
       return;
     }
 
-    const sourceEnd = sourceCodeContainer.value.substring(
-      sourceCodeContainer.value.length - 6
-    );
+    // Determine the part of the source code to replace and the replacement value
+    const isUS = this.isUSState(sourceCodeContainer.value);
+    const endIndex = sourceCodeContainer.value.length;
+    let target, replacement;
 
-    if (giftType === "HONORARY") {
+    if (giftType === "HONORARY" || giftType === "MEMORIAL") {
+      if (isUS) {
+        target = sourceCodeContainer.value.substring(endIndex - 6);
+        replacement = giftType === "HONORARY" ? "TRIHXX" : "TRIMXX";
+      } else {
+        target = sourceCodeContainer.value.substring(
+          endIndex - 6,
+          endIndex - 2
+        );
+        replacement = giftType === "HONORARY" ? "TRIH" : "TRIM";
+      }
       sourceCodeContainer.value = sourceCodeContainer.value.replace(
-        sourceEnd,
-        "TRIHXX"
-      );
-    } else if (giftType === "MEMORIAL") {
-      sourceCodeContainer.value = sourceCodeContainer.value.replace(
-        sourceEnd,
-        "TRIMXX"
+        target,
+        replacement
       );
     } else {
+      // Reset to default if not honorary or memorial
       sourceCodeContainer.value =
         sourceCodeContainer.getAttribute("data-default-source-code") || "";
     }
@@ -566,5 +573,61 @@ export class IHMO {
         option.setAttribute("data-default-source-code", option.value);
       }
     });
+  }
+
+  private isUSState(source: string): boolean {
+    const state = source.substring(1, 3);
+    return [
+      "AL",
+      "AK",
+      "AZ",
+      "AR",
+      "CA",
+      "CO",
+      "CT",
+      "DE",
+      "FL",
+      "GA",
+      "HI",
+      "ID",
+      "IL",
+      "IN",
+      "IA",
+      "KS",
+      "KY",
+      "LA",
+      "ME",
+      "MD",
+      "MA",
+      "MI",
+      "MN",
+      "MS",
+      "MO",
+      "MT",
+      "NE",
+      "NV",
+      "NH",
+      "NJ",
+      "NM",
+      "NY",
+      "NC",
+      "ND",
+      "OH",
+      "OK",
+      "OR",
+      "PA",
+      "RI",
+      "SC",
+      "SD",
+      "TN",
+      "TX",
+      "UT",
+      "VT",
+      "VA",
+      "WA",
+      "WV",
+      "WI",
+      "WY",
+    ].includes(state);
   }
 }
