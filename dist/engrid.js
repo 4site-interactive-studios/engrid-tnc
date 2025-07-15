@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, June 17, 2025 @ 07:08:22 ET
+ *  Date: Tuesday, July 15, 2025 @ 07:12:03 ET
  *  By: michael
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.6
@@ -25857,7 +25857,7 @@ const gdcpFields = [{
   ],
   gdcpFieldName: "engrid.gdcp-mobile_phone",
   // Don't edit this field
-  gdcpFieldHtmlLabel: `<span>I’d like to receive phone and text updates from The Nature Conservancy and understand I can unsubscribe at any time. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Mobile Terms & Conditions</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Privacy Statement</a>.</span>`,
+  gdcpFieldHtmlLabel: `<span>By entering my mobile phone number and submitting this form, I agree to receive phone and text updates from The Nature Conservancy for the purposes of supporting and promoting its charitable initiatives at the mobile number I entered above. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Mobile Terms & Conditions</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Privacy Statement</a>.</span>`,
   gdcpFieldHtmlLabelEs: `<span>Me gustaría recibir notificaciones (en inglés) de The Nature Conservancy por teléfono o mensaje de texto y entiendo que podré cancelar mi suscripción en cualquier momento. <em>Pueden aplicarse tarifas de mensajes y datos, y la frecuencia de los mensajes puede variar. Envía STOP para cancelar o HELP para obtener ayuda.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Términos y Condiciones Móviles</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Declaración de Privacidad</a>.</span>`
 }, {
   channel: "home_phone",
