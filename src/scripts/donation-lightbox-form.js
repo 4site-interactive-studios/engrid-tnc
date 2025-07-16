@@ -646,10 +646,10 @@ export default class DonationLightboxForm {
           }
           return false;
         } else {
-          if (amount < 5) {
+          if (amount < 10) {
             this.sendMessage(
               "error",
-              "Amount must be at least $5 - Contact us for assistance"
+              "Amount must be at least $10 - Contact us for assistance"
             );
             if (amountBlock) {
               amountBlock.classList.add("has-error");
@@ -1306,9 +1306,20 @@ export default class DonationLightboxForm {
       ? window.EngagingNetworks.require._defined.enjs.getDonationTotal()
       : 0;
   }
+  getDonationFee() {
+    return this.checkNested(
+      window.EngagingNetworks,
+      "require",
+      "_defined",
+      "enjs",
+      "getDonationFee"
+    )
+      ? window.EngagingNetworks.require._defined.enjs.getDonationFee()
+      : 0;
+  }
   // Return the Suggested Upsell Amount
   getUpsellAmount(freq = "monthly") {
-    const amount = this.getDonationTotal();
+    const amount = this.getDonationTotal() - this.getDonationFee();
     let upsellAmount = 0;
     if (
       "EngridMultistepUpsell" in window &&
@@ -1360,7 +1371,7 @@ export default class DonationLightboxForm {
     if (this.upsellSection === null || this.upsellSection.dataset.upsold)
       return;
     // Update merge tags
-    const amount = this.getDonationTotal();
+    const amount = this.getDonationTotal() - this.getDonationFee();
     const upsellAmountMonthly = this.getUpsellAmount("monthly");
     const upsellAmountAnnual = this.getUpsellAmount("annual");
 
