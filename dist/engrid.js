@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, July 15, 2025 @ 07:29:25 ET
- *  By: michael
+ *  Date: Wednesday, July 16, 2025 @ 16:55:40 ET
+ *  By: fernando
  *  ENGrid styles: v0.22.4
- *  ENGrid scripts: v0.22.7
+ *  ENGrid scripts: v0.22.8
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -22835,7 +22835,7 @@ class FrequencyUpsell {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.22.7";
+const AppVersion = "0.22.8";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
@@ -23463,8 +23463,8 @@ class DonationLightboxForm {
           }
           return false;
         } else {
-          if (amount < 5) {
-            this.sendMessage("error", "Amount must be at least $5 - Contact us for assistance");
+          if (amount < 10) {
+            this.sendMessage("error", "Amount must be at least $10 - Contact us for assistance");
             if (amountBlock) {
               amountBlock.classList.add("has-error");
             }
@@ -23967,9 +23967,12 @@ class DonationLightboxForm {
   getDonationTotal() {
     return this.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "getDonationTotal") ? window.EngagingNetworks.require._defined.enjs.getDonationTotal() : 0;
   }
+  getDonationFee() {
+    return this.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "getDonationFee") ? window.EngagingNetworks.require._defined.enjs.getDonationFee() : 0;
+  }
   // Return the Suggested Upsell Amount
   getUpsellAmount(freq = "monthly") {
-    const amount = this.getDonationTotal();
+    const amount = this.getDonationTotal() - this.getDonationFee();
     let upsellAmount = 0;
     if ("EngridMultistepUpsell" in window && freq in window.EngridMultistepUpsell) {
       const amountRange = window.EngridMultistepUpsell[freq];
@@ -24001,7 +24004,7 @@ class DonationLightboxForm {
   refreshUpsellSection() {
     if (this.upsellSection === null || this.upsellSection.dataset.upsold) return;
     // Update merge tags
-    const amount = this.getDonationTotal();
+    const amount = this.getDonationTotal() - this.getDonationFee();
     const upsellAmountMonthly = this.getUpsellAmount("monthly");
     const upsellAmountAnnual = this.getUpsellAmount("annual");
     if (upsellAmountMonthly === 0 && upsellAmountAnnual === 0) {
