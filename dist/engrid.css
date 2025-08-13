@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 28, 2025 @ 07:40:20 ET
+ *  Date: Wednesday, August 13, 2025 @ 13:13:13 ET
  *  By: michael
- *  ENGrid styles: v0.22.4
- *  ENGrid scripts: v0.22.8
+ *  ENGrid styles: v0.22.11
+ *  ENGrid scripts: v0.22.13
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -4539,6 +4539,42 @@ figure.media-with-attribution figattribution.attribution-topleft{
   right:auto;
   text-align:left;
   top:auto;
+}
+
+body:not(#en__pagebuilder) .page-backgroundImage.attribution-topleft figure.media-with-attribution,body:not(#en__pagebuilder) .page-backgroundImage.attribution-topleft:before{
+  background-position:0 0;
+}
+
+body:not(#en__pagebuilder) .page-backgroundImage.attribution-topright figure.media-with-attribution,body:not(#en__pagebuilder) .page-backgroundImage.attribution-topright:before{
+  background-position:100% 0;
+}
+
+body:not(#en__pagebuilder) .page-backgroundImage.attribution-bottomright figure.media-with-attribution,body:not(#en__pagebuilder) .page-backgroundImage.attribution-bottomright:before{
+  background-position:100% 100%;
+}
+
+body:not(#en__pagebuilder) .page-backgroundImage.attribution-bottomleft figure.media-with-attribution,body:not(#en__pagebuilder) .page-backgroundImage.attribution-bottomleft:before{
+  background-position:0 100%;
+}
+
+body:not(#en__pagebuilder) .page-backgroundImage.attribution-top figure.media-with-attribution,body:not(#en__pagebuilder) .page-backgroundImage.attribution-top:before,body:not(#en__pagebuilder) .page-backgroundImage.attribution-topcenter figure.media-with-attribution,body:not(#en__pagebuilder) .page-backgroundImage.attribution-topcenter:before{
+  background-position:top;
+}
+
+body:not(#en__pagebuilder) .page-backgroundImage.attribution-bottom figure.media-with-attribution,body:not(#en__pagebuilder) .page-backgroundImage.attribution-bottom:before,body:not(#en__pagebuilder) .page-backgroundImage.attribution-bottomcenter figure.media-with-attribution,body:not(#en__pagebuilder) .page-backgroundImage.attribution-bottomcenter:before{
+  background-position:bottom;
+}
+
+body:not(#en__pagebuilder) .page-backgroundImage.attribution-left figure.media-with-attribution,body:not(#en__pagebuilder) .page-backgroundImage.attribution-left:before,body:not(#en__pagebuilder) .page-backgroundImage.attribution-leftcenter figure.media-with-attribution,body:not(#en__pagebuilder) .page-backgroundImage.attribution-leftcenter:before{
+  background-position:0;
+}
+
+body:not(#en__pagebuilder) .page-backgroundImage.attribution-right figure.media-with-attribution,body:not(#en__pagebuilder) .page-backgroundImage.attribution-right:before,body:not(#en__pagebuilder) .page-backgroundImage.attribution-rightcenter figure.media-with-attribution,body:not(#en__pagebuilder) .page-backgroundImage.attribution-rightcenter:before{
+  background-position:100%;
+}
+
+body:not(#en__pagebuilder) .page-backgroundImage.attribution-center figure.media-with-attribution,body:not(#en__pagebuilder) .page-backgroundImage.attribution-center:before{
+  background-position:50%;
 }
 
 img,video{
