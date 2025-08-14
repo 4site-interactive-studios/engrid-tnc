@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, August 13, 2025 @ 13:13:13 ET
- *  By: michael
+ *  Date: Thursday, August 14, 2025 @ 14:46:50 ET
+ *  By: fernando
  *  ENGrid styles: v0.22.11
- *  ENGrid scripts: v0.22.13
+ *  ENGrid scripts: v0.22.14
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11151,6 +11151,8 @@ class DonationAmount {
                 this.amount = engrid_ENGrid.cleanAmount(otherField.value);
             });
         }
+        // Load the current amount
+        this.load();
     }
     static getInstance(radios = "transaction.donationAmt", other = "transaction.donationAmt.other") {
         if (!DonationAmount.instance) {
@@ -19221,80 +19223,95 @@ class SwapAmounts {
         this.logger = new logger_EngridLogger("SwapAmounts", "purple", "white", "💰");
         this._amount = DonationAmount.getInstance();
         this._frequency = DonationFrequency.getInstance();
-        this.defaultChange = false;
-        this.swapped = false;
+        this.defaultChange = false; // Tracks if user changed away from default after swap
+        this.swapped = false; // Tracks if we've already executed at least one swap
         this.loadAmountsFromUrl();
         if (!this.shouldRun())
             return;
+        // Respond when frequency changes
         this._frequency.onFrequencyChange.subscribe(() => this.swapAmounts());
+        // Track if donor moves away from the swapped default amount
         this._amount.onAmountChange.subscribe(() => {
-            if (this._frequency.frequency in window.EngridAmounts === false)
+            const configs = window.EngridAmounts;
+            if (!configs)
                 return;
-            this.defaultChange = false;
+            const freq = this._frequency.frequency;
+            if (!(freq in configs))
+                return;
             if (!this.swapped)
-                return;
-            // Check if the amount is not default amount for the frequency
-            if (this._amount.amount !=
-                window.EngridAmounts[this._frequency.frequency].default) {
-                this.defaultChange = true;
-            }
+                return; // ignore early changes before initial swap
+            const currentConfig = configs[freq];
+            this.defaultChange = this._amount.amount !== currentConfig.default;
         });
     }
     loadAmountsFromUrl() {
         const urlParams = new URLSearchParams(window.location.search);
         const amounts = urlParams.get("engrid-amounts");
         if (amounts) {
-            this.defaultChange = true;
-            const amountArray = amounts.split(",").map((amt) => amt.trim());
-            const defaultAmount = parseFloat(engrid_ENGrid.getUrlParameter("transaction.donationAmt")) || parseFloat(amountArray[0]);
+            this.defaultChange = true; // if amounts come from URL, treat as user-set
+            const amountArray = amounts
+                .split(",")
+                .map((amt) => amt.trim())
+                .filter(Boolean);
+            if (!amountArray.length)
+                return;
+            const urlDefaultParam = engrid_ENGrid.getUrlParameter("transaction.donationAmt");
+            const parsedFirst = parseFloat(amountArray[0]);
+            const defaultAmount = (urlDefaultParam && parseFloat(urlDefaultParam)) ||
+                parsedFirst;
             const amountsObj = {};
-            for (let i = 0; i < amountArray.length; i++) {
-                amountsObj[amountArray[i].toString()] = isNaN(parseFloat(amountArray[i]))
-                    ? amountArray[i]
-                    : parseFloat(amountArray[i]);
-            }
+            amountArray.forEach((raw) => {
+                const numeric = parseFloat(raw);
+                amountsObj[raw] = isNaN(numeric) ? raw : numeric;
+            });
+            // Ensure Other choice always present at the end
             amountsObj["Other"] = "other";
+            const config = {
+                amounts: amountsObj,
+                default: defaultAmount,
+            };
             window.EngridAmounts = {
-                onetime: { amounts: amountsObj, default: defaultAmount },
-                monthly: { amounts: amountsObj, default: defaultAmount },
+                onetime: config,
+                monthly: config,
             };
         }
     }
     swapAmounts() {
-        if (this._frequency.frequency in window.EngridAmounts) {
-            window.EngagingNetworks.require._defined.enjs.swapList("donationAmt", this.loadEnAmounts(window.EngridAmounts[this._frequency.frequency]), {
-                ignoreCurrentValue: this.ignoreCurrentValue(),
-            });
-            this._amount.load();
-            this.logger.log("Amounts Swapped To", window.EngridAmounts[this._frequency.frequency], {
-                ignoreCurrentValue: this.ignoreCurrentValue(),
-            });
-            this.swapped = true;
-        }
+        const configs = window.EngridAmounts;
+        if (!configs)
+            return;
+        const freq = this._frequency.frequency;
+        const config = configs[freq];
+        if (!config)
+            return;
+        const ignoreCurrentValue = this.ignoreCurrentValue();
+        window.EngagingNetworks.require._defined.enjs.swapList("donationAmt", this.toEnAmountList(config), { ignoreCurrentValue });
+        this._amount.load();
+        this.logger.log("Amounts Swapped To", config, { ignoreCurrentValue });
+        this.swapped = true;
     }
-    loadEnAmounts(amountArray) {
-        let ret = [];
-        for (let amount in amountArray.amounts) {
-            ret.push({
-                selected: amountArray.amounts[amount] === amountArray.default,
-                label: amount,
-                value: amountArray.amounts[amount].toString(),
-            });
-        }
-        return ret;
+    /**
+     * Convert the internal config object into the structure Engaging Networks expects
+     */
+    toEnAmountList(config) {
+        return Object.entries(config.amounts).map(([label, value]) => ({
+            selected: value === config.default,
+            label,
+            value: value.toString(),
+        }));
     }
     shouldRun() {
-        return "EngridAmounts" in window;
+        return !!window.EngridAmounts;
     }
     ignoreCurrentValue() {
-        if (engrid_ENGrid.getUrlParameter("transaction.donationAmt") !== null) {
-            return this._amount.amount ===
-                parseFloat(engrid_ENGrid.getUrlParameter("transaction.donationAmt"))
-                ? false
-                : true;
+        const urlParam = engrid_ENGrid.getUrlParameter("transaction.donationAmt");
+        if (urlParam !== null) {
+            const urlAmount = parseFloat(urlParam);
+            return this._amount.amount !== urlAmount;
         }
-        return !(window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed() ||
-            this.defaultChange);
+        // If submission failed or donor manually changed away from default, respect current value
+        const submissionFailed = window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed();
+        return !(submissionFailed || this.defaultChange);
     }
 }
 
@@ -23047,7 +23064,7 @@ class FrequencyUpsell {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.22.13";
+const AppVersion = "0.22.14";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
