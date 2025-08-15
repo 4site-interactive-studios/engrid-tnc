@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, August 15, 2025 @ 00:22:12 ET
+ *  Date: Friday, August 15, 2025 @ 10:41:58 ET
  *  By: fernando
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.14
@@ -8341,6 +8341,9 @@ body[data-engrid-debug]:before{
   [data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .frequency-upsell-modal__secondary-content{
     min-height:200px;
   }
+}
+[data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left.monthly-upsell .frequency-upsell-modal__secondary-content{
+  background-image:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/TNC_PC2021.jpg?v=1651246161000);
 }
 [data-engrid-theme=tnc] .engrid--frequency-upsell-modal.modal--image-left .frequency-upsell-modal__content{
   padding:30px;
