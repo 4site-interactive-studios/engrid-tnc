@@ -6,6 +6,9 @@
     opacity: 1;
   }
 }
+&:not(&#en__pagebuilder) .en__component--imageblock:has(.no-premium-image) {
+  display: none !important;
+}
 .en__component--premiumgiftblock {
   animation: fadeIn 0.5s ease-in-out;
   &[disabled="disabled"],
