@@ -842,7 +842,6 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     window.pageJson.pageType === "premiumgift"
   ) {
     const country = App.getField("supporter.country");
-
     const selectPremiumFromSession = () => {
       const selectedPremiumId =
         window.selectedPremiumId ||
@@ -951,6 +950,22 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
           enablePremiumBlock();
         }
       });
+    }
+    // Look for a .no-premium-image image, if found set the --maximize_my_donation_image and delete the .no-premium-image image block (which is the closest .en__component--imageblock)
+    const noPremiumImage = document.querySelector(".no-premium-image");
+    if (noPremiumImage) {
+      const premiumImageContainer = document.querySelector(
+        ".en__component--premiumgiftblock, .premium-theme-3-image"
+      );
+      premiumImageContainer.style.setProperty(
+        "--maximize_my_donation_image",
+        `url(${noPremiumImage.src})`
+      );
+      premiumImageContainer.style.setProperty(
+        "--premium_image_theme_3",
+        `url(${noPremiumImage.src})`
+      );
+      noPremiumImage.closest(".en__component--imageblock")?.remove();
     }
   }
   // Limit premium availability to U.S. addresses only - END

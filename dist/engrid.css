@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, August 18, 2025 @ 23:59:20 ET
+ *  Date: Tuesday, August 19, 2025 @ 01:05:17 ET
  *  By: fernando
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.15
@@ -11272,6 +11272,9 @@ body[data-engrid-debug]:before{
   to{
     opacity:1;
   }
+}
+[data-engrid-theme=tnc]:not([data-engrid-theme=tnc]#en__pagebuilder) .en__component--imageblock:has(.no-premium-image){
+  display:none !important;
 }
 [data-engrid-theme=tnc] .en__component--premiumgiftblock{
   --maximize_my_donation_image:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Tabor-Park-optimized.jpg);
