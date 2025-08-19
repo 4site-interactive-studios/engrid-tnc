@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, August 14, 2025 @ 14:46:50 ET
+ *  Date: Monday, August 18, 2025 @ 23:59:20 ET
  *  By: fernando
  *  ENGrid styles: v0.22.11
- *  ENGrid scripts: v0.22.14
+ *  ENGrid scripts: v0.22.15
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -22952,6 +22952,7 @@ class FrequencyUpsellModal extends Modal {
  * See FrequencyUpsellOptions for more details.
  */
 
+
 class FrequencyUpsell {
     constructor() {
         this.logger = new logger_EngridLogger("FrequencyUpsell", "lightgray", "darkblue", "🏦");
@@ -22966,11 +22967,54 @@ class FrequencyUpsell {
             this.logger.log("FrequencyUpsell not running");
             return;
         }
-        this.options = Object.assign(Object.assign({}, FrequencyUpsellOptionsDefaults), window.EngridFrequencyUpsell);
+        this.options = this.selectOptions(window.EngridFrequencyUpsell);
         this.logger.log("FrequencyUpsell initialized", this.options);
         this.upsellModal = new FrequencyUpsellModal(this.options);
         this.createFrequencyField();
         this.addEventListeners();
+    }
+    /**
+     * Select the proper options (single config or A/B variant) and return a concrete FrequencyUpsellOptions object.
+     * If an A/B test config is provided (abTest: true, options: [...]) a random variant is chosen and stored
+     * in a 1-day cookie so subsequent visits get the same variant.
+     */
+    selectOptions(config) {
+        // Simple (non AB) case
+        if (!config.abTest) {
+            return Object.assign(Object.assign({}, FrequencyUpsellOptionsDefaults), config);
+        }
+        const abConfig = config;
+        const cookieName = abConfig.cookieName || "engrid_frequency_upsell_variant";
+        const existing = get(cookieName);
+        let index;
+        if (existing !== undefined) {
+            const parsed = parseInt(existing, 10);
+            if (!isNaN(parsed) && parsed >= 0 && parsed < abConfig.options.length) {
+                index = parsed;
+            }
+            else {
+                index = this.randomIndex(abConfig.options.length);
+            }
+        }
+        else {
+            index = this.randomIndex(abConfig.options.length);
+        }
+        // Persist for configured duration
+        const duration = abConfig.cookieDurationDays || 1;
+        set(cookieName, index.toString(), { expires: duration });
+        const chosen = abConfig.options[index];
+        // Push variant info to dataLayer if available
+        if (window.dataLayer) {
+            window.dataLayer.push({
+                event: "frequency_upsell_ab_variant",
+                frequencyUpsellVariantIndex: index,
+                frequencyUpsellVariantTitle: chosen.title,
+            });
+        }
+        return Object.assign(Object.assign({}, FrequencyUpsellOptionsDefaults), chosen);
+    }
+    randomIndex(length) {
+        return Math.floor(Math.random() * length);
     }
     /**
      * Check if the FrequencyUpsell should run:
@@ -23064,7 +23108,7 @@ class FrequencyUpsell {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.22.14";
+const AppVersion = "0.22.15";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
