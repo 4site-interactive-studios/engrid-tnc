@@ -101,6 +101,7 @@ const options: Options = {
   MaxAmount: 50000,
   MinAmountMessage: `Your donation must be between $${minimumAmount} and $50,000`,
   MaxAmountMessage: `Your donation must be between $${minimumAmount} and $50,000`,
+  UseAmountValidatorFromEN: true,
   PageLayouts: ["centercenter1col"],
   TranslateFields: false,
   VGS: {
