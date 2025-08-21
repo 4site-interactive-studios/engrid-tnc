@@ -343,6 +343,14 @@ export class IHMO {
   private setSourceCode(giftType: GiftType | boolean) {
     if (!this.sourceCodeField) return;
 
+    // If source code overriding is disabled, return early
+    if (
+      window.EngridDisableIhmoSourceCodeOverriding &&
+      window.EngridDisableIhmoSourceCodeOverriding === true
+    ) {
+      return;
+    }
+
     const sourceCodeContainer =
       this.sourceCodeField instanceof HTMLSelectElement
         ? this.sourceCodeField.options[this.sourceCodeField.selectedIndex]

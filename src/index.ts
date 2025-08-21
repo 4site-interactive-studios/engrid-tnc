@@ -46,6 +46,7 @@ declare global {
       plannedGiftProspect?: string;
       totalNumberOfGifts?: string;
     };
+    EngridDisableIhmoSourceCodeOverriding?: any;
   }
 
   const utag_data: {

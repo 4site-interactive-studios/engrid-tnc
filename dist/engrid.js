@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, August 19, 2025 @ 12:17:56 ET
+ *  Date: Thursday, August 21, 2025 @ 10:00:24 ET
  *  By: michael
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.16
@@ -25938,6 +25938,11 @@ class IHMO {
   }
   setSourceCode(giftType) {
     if (!this.sourceCodeField) return;
+
+    // If source code overriding is disabled, return early
+    if (window.EngridDisableIhmoSourceCodeOverriding && window.EngridDisableIhmoSourceCodeOverriding === true) {
+      return;
+    }
     const sourceCodeContainer = this.sourceCodeField instanceof HTMLSelectElement ? this.sourceCodeField.options[this.sourceCodeField.selectedIndex] : this.sourceCodeField;
     if (sourceCodeContainer.value === "AHOMAONLN21W0XXX01" && this.sourceCodeField instanceof HTMLSelectElement) {
       // if "use my gift where it's needed most" option is selected, do not change the source code"
