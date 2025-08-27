@@ -293,6 +293,22 @@
     }
   }
 }
+&#en__pagebuilder {
+  .premium-theme-2,
+  .premium-theme-3 {
+    .en__component--premiumgiftblock {
+      max-width: none;
+    }
+    .premium-theme-2-header,
+    .premium-theme-3-header {
+      max-width: none;
+    }
+  }
+  .en__pgHeader,
+  .en__pgList {
+    display: block !important;
+  }
+}
 
 // Theme 3
 .premium-theme-3 {
@@ -437,4 +453,7 @@
       display: none;
     }
   }
+}
+.premium-container:has(.engrid-premium-hidden) {
+  display: none !important;
 }

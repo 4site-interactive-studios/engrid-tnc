@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, August 27, 2025 @ 00:23:34 ET
+ *  Date: Wednesday, August 27, 2025 @ 00:47:07 ET
  *  By: fernando
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.17
@@ -11521,6 +11521,12 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc] .premium-theme-2:has(#engrid_premium_no:checked) .en__pgList,[data-engrid-theme=tnc] .premium-theme-2:has(.en__component--premiumgiftblock[disabled=disabled]) .premium-theme-2-header,[data-engrid-theme=tnc] .premium-theme-2:has(.en__component--premiumgiftblock[style*=none]) .premium-theme-2-header{
   display:none;
 }
+[data-engrid-theme=tnc]#en__pagebuilder .premium-theme-2 .en__component--premiumgiftblock,[data-engrid-theme=tnc]#en__pagebuilder .premium-theme-2 .premium-theme-2-header,[data-engrid-theme=tnc]#en__pagebuilder .premium-theme-2 .premium-theme-3-header,[data-engrid-theme=tnc]#en__pagebuilder .premium-theme-3 .en__component--premiumgiftblock,[data-engrid-theme=tnc]#en__pagebuilder .premium-theme-3 .premium-theme-2-header,[data-engrid-theme=tnc]#en__pagebuilder .premium-theme-3 .premium-theme-3-header{
+  max-width:none;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__pgHeader,[data-engrid-theme=tnc]#en__pagebuilder .en__pgList{
+  display:block !important;
+}
 [data-engrid-theme=tnc] .premium-theme-3{
   --premium_image_theme_3:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/Tabor-Park-optimized.jpg);
 }
@@ -11650,6 +11656,9 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc] .premium-theme-3:has(.en__component--premiumgiftblock[disabled=disabled]) .premium-theme-3-header,[data-engrid-theme=tnc] .premium-theme-3:has(.en__component--premiumgiftblock[style*=none]) .premium-theme-3-header{
   display:none;
+}
+[data-engrid-theme=tnc] .premium-container:has(.engrid-premium-hidden){
+  display:none !important;
 }
 [data-engrid-theme=tnc] .engrid--ihmo-wrapper{
   border:1px solid #cdcdcd;
