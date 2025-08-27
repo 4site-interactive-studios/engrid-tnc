@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, August 21, 2025 @ 10:00:24 ET
- *  By: michael
+ *  Date: Wednesday, August 27, 2025 @ 00:23:34 ET
+ *  By: fernando
  *  ENGrid styles: v0.22.11
- *  ENGrid scripts: v0.22.16
+ *  ENGrid scripts: v0.22.17
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -2867,7 +2867,8 @@ body:not(#en__pagebuilder) .click-to-expand:not(.expanded){
   overflow:hidden;
 }
 body:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-text-wrapper{
-  mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height)));
+  -webkit-mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height)));
+          mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height)));
   max-height:calc(var(--click-to-expand__copy-area_height) - var(--click-to-expand__cta-image_height) - 35px);
 }
 body:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-cta{
@@ -7853,7 +7854,8 @@ body[data-engrid-debug]:before{
   z-index:auto;
 }
 [data-engrid-theme=tnc]:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-text-wrapper{
-  mask-image:linear-gradient(to bottom, #000 15%, #fff0 calc(100% - var(--click-to-expand__cta-image_height)));
+  -webkit-mask-image:linear-gradient(to bottom, #000 15%, #fff0 calc(100% - var(--click-to-expand__cta-image_height)));
+          mask-image:linear-gradient(to bottom, #000 15%, #fff0 calc(100% - var(--click-to-expand__cta-image_height)));
 }
 [data-engrid-theme=tnc][data-engrid-modal=open]{
   overflow:hidden;
@@ -8581,7 +8583,8 @@ body[data-engrid-debug]:before{
     max-height:none;
   }
   [data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]):not(#en__pagebuilder) .click-to-expand-mobile:not(.expanded) .click-to-expand-text-wrapper{
-    mask-image:none;
+    -webkit-mask-image:none;
+            mask-image:none;
     max-height:none;
   }
   [data-engrid-theme=tnc]:not([data-engrid-layout=leftleft1col]):not(#en__pagebuilder) .click-to-expand-mobile:not(.expanded) .click-to-expand-cta{
