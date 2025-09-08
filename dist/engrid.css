@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, August 21, 2025 @ 10:00:24 ET
+ *  Date: Monday, September 8, 2025 @ 06:43:04 ET
  *  By: michael
- *  ENGrid styles: v0.22.11
- *  ENGrid scripts: v0.22.16
+ *  ENGrid styles: v0.22.18
+ *  ENGrid scripts: v0.22.18
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -5749,6 +5749,17 @@ body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-embedded-ec
 
 body:not(#en__pagebuilder) .checkbox-label{
   display:none;
+}
+
+.engrid-custom-checkbox-label{
+  box-sizing:border-box;
+  width:100%;
+}
+.engrid-custom-checkbox-label p:first-child{
+  margin-top:0;
+}
+.engrid-custom-checkbox-label p:last-child{
+  margin-bottom:0;
 }
 [data-engrid-theme]{
   --engrid__page_padding:0px;
