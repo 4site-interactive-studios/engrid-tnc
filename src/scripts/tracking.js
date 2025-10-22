@@ -96,7 +96,8 @@ export function trackFormSubmit(App, DonationAmount) {
     /** @type {HTMLInputElement} */
     const mobilePhoneOptIn =
       App.getField("supporter.questions.848527") ||
-      App.getField("supporter.questions.1952175");
+      App.getField("supporter.questions.1952175") ||
+      App.getField("supporter.questions.2268563");
     if (mobilePhoneOptIn && mobilePhoneOptIn.checked) {
       mobilePhoneData.optIn = "Y";
     }
@@ -149,8 +150,13 @@ function getSubmitEventName(App) {
     /** @type {HTMLInputElement} */
     const el = App.getField(field);
     return (
-      (el && el.checked && App.getFieldValue("supporter.phoneNumber2") !== "") ||
-        (el && el.checked && field.split('.')[2] === '891102' && App.getFieldValue("supporter.phoneNumber"))
+      (el &&
+        el.checked &&
+        App.getFieldValue("supporter.phoneNumber2") !== "") ||
+      (el &&
+        el.checked &&
+        field.split(".")[2] === "891102" &&
+        App.getFieldValue("supporter.phoneNumber"))
     );
   });
 

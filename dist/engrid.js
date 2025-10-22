@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, October 13, 2025 @ 11:45:24 ET
+ *  Date: Wednesday, October 22, 2025 @ 12:14:08 ET
  *  By: michael
  *  ENGrid styles: v0.22.18
  *  ENGrid scripts: v0.22.20
@@ -24782,7 +24782,7 @@ function trackFormSubmit(App, DonationAmount) {
     const mobilePhoneData = {};
     mobilePhoneData.phoneNumber = mobilePhoneNumber.value;
     /** @type {HTMLInputElement} */
-    const mobilePhoneOptIn = App.getField("supporter.questions.848527") || App.getField("supporter.questions.1952175");
+    const mobilePhoneOptIn = App.getField("supporter.questions.848527") || App.getField("supporter.questions.1952175") || App.getField("supporter.questions.2268563");
     if (mobilePhoneOptIn && mobilePhoneOptIn.checked) {
       mobilePhoneData.optIn = "Y";
     }
@@ -24822,7 +24822,7 @@ function getSubmitEventName(App) {
   const isOptedInToPhone = ["supporter.questions.848528", "supporter.questions.1952175", "supporter.questions.848527", "supporter.questions.891102"].some(field => {
     /** @type {HTMLInputElement} */
     const el = App.getField(field);
-    return el && el.checked && App.getFieldValue("supporter.phoneNumber2") !== "" || el && el.checked && field.split('.')[2] === '891102' && App.getFieldValue("supporter.phoneNumber");
+    return el && el.checked && App.getFieldValue("supporter.phoneNumber2") !== "" || el && el.checked && field.split(".")[2] === "891102" && App.getFieldValue("supporter.phoneNumber");
   });
   const isOptedInToEmail = ["supporter.questions.848518", "supporter.questions.848520", "supporter.questions.848521", "supporter.questions.848522", "supporter.questions.848523"].some(field => {
     /** @type {HTMLInputElement} */
@@ -26446,7 +26446,9 @@ const gdcpFields = [{
   // Mobile Text Opt In
   "supporter.questions.848528",
   // Mobile Call Opt In
-  "supporter.questions.1952175" // Interested in Mobile Text
+  "supporter.questions.1952175",
+  // Interested in Mobile Text
+  "supporter.questions.2268563" // GDCP Dummy Mobile Phone Opt-In
   ],
   gdcpFieldName: "engrid.gdcp-mobile_phone",
   // Don't edit this field
@@ -26989,7 +26991,8 @@ class RuleHandler {
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/config/pages.ts
 const pages = {
   double_opt_in_email_trigger: "https://preserve.nature.org/page/159613/data/1",
-  postal_mail_qcb: "https://preserve.nature.org/page/159615/data/1"
+  postal_mail_qcb: "https://preserve.nature.org/page/159615/data/1",
+  mobile_phone_qcbs: "https://preserve.nature.org/page/180037/data/1"
 };
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/gdcp-manager.ts
 
@@ -27015,6 +27018,7 @@ class GdcpManager {
     _defineProperty(this, "pages", pages);
     this.handleDoubleOptInEmail();
     this.handlePostalMailQcb();
+    this.handleMobilePhoneQcb();
     if (!this.shouldRun()) {
       engrid_ENGrid.setBodyData("gdcp", "false");
       this.logger.log("GDCP is not running on this page.");
@@ -27034,6 +27038,7 @@ class GdcpManager {
         } else {
           this.applyRulesForLocation(this.userLocation, false);
         }
+        this.createMobilePhoneSessionStorageListener();
         this.watchForLocationChange();
         this.setSingleOptInModeInitialState();
         this.clearSessionState();
@@ -27270,25 +27275,40 @@ class GdcpManager {
     const dataFieldPresent = document.querySelector(`[name="${gdcpField.dataFieldName}"]`);
     const optInFieldsNames = gdcpField.optInFieldNames.map(name => `[name="${name}"]`).join(", ");
     const optInFieldsPresent = document.querySelector(optInFieldsNames);
-    if (gdcpField.channel !== "postal_mail") {
+    if (gdcpField.channel !== "postal_mail" && gdcpField.channel !== "mobile_phone") {
       return !!dataFieldPresent && !!optInFieldsPresent;
     }
+    if (gdcpField.channel === "postal_mail") {
+      try {
+        const postalMailOptInFieldPresent = await this.isPresentOnEmbeddedForm(this.pages.postal_mail_qcb, `#en__field_supporter_questions_1942219`);
+        return !!dataFieldPresent && !!optInFieldsPresent && postalMailOptInFieldPresent;
+      } catch (e) {
+        this.logger.error("Error checking if opted into postal mail", e);
+        return false;
+      }
+    }
+
+    // mobile_phone
     try {
-      const postalMailOptInFieldPresent = await this.postalMailOptInFieldPresent();
-      return !!dataFieldPresent && !!optInFieldsPresent && postalMailOptInFieldPresent;
+      const mobilePhoneOptInFieldPresent = await this.isPresentOnEmbeddedForm(this.pages.mobile_phone_qcbs, `#en__field_supporter_questions_848527, #en__field_supporter_questions_848528`);
+      return !!dataFieldPresent && !!optInFieldsPresent && mobilePhoneOptInFieldPresent;
     } catch (e) {
-      this.logger.error("Error checking if opted into postal mail", e);
+      this.logger.error("Error checking if opted into mobile phone", e);
       return false;
     }
   }
-  async postalMailOptInFieldPresent() {
-    const iframe = this.createChainedIframeForm(this.pages.postal_mail_qcb);
+
+  /*
+   * Check if a given element is present on an embedded form (iframe)
+   */
+  async isPresentOnEmbeddedForm(pageUrl, selector) {
+    const iframe = this.createChainedIframeForm(pageUrl);
     await new Promise((resolve, reject) => {
       iframe.addEventListener("load", resolve);
       iframe.addEventListener("error", reject);
     });
     const iframeDocument = iframe.contentDocument || iframe.contentWindow?.document;
-    let elementInIframe = iframeDocument?.querySelector("#en__field_supporter_questions_1942219");
+    let elementInIframe = iframeDocument?.querySelector(selector);
     return !!elementInIframe;
   }
 
@@ -27503,6 +27523,58 @@ class GdcpManager {
         this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false, true);
         this.gdcpFieldManager.setTouched(gdcpField.gdcpFieldName);
       });
+    }
+  }
+  createMobilePhoneSessionStorageListener() {
+    const gdcpFieldName = this.gdcpFields.find(field => field.channel === "mobile_phone")?.gdcpFieldName;
+    const mobilePhoneGdcpField = engrid_ENGrid.getField(gdcpFieldName || "");
+    if (!mobilePhoneGdcpField) {
+      // GDCP isn't enabled for mobile phone on this page
+      return;
+    }
+    const fields = [mobilePhoneGdcpField, engrid_ENGrid.getField("supporter.phoneNumber2"), engrid_ENGrid.getField("supporter.country")].filter(Boolean).flat();
+
+    // Do an initial call to handle the current state (if pre-filled)
+    this.setMobilePhoneSessionItem();
+    fields.forEach(field => {
+      field?.addEventListener("change", this.setMobilePhoneSessionItem.bind(this));
+    });
+  }
+  setMobilePhoneSessionItem() {
+    const gdcpFieldName = this.gdcpFields.find(field => field.channel === "mobile_phone")?.gdcpFieldName;
+    const checked = this.gdcpFieldManager.getField(gdcpFieldName || "")?.checked;
+    if (engrid_ENGrid.getFieldValue("supporter.phoneNumber2") !== "" && engrid_ENGrid.getFieldValue("supporter.country") === "US") {
+      sessionStorage.setItem("gdcp-mobile-phone-create-qcb", JSON.stringify({
+        state: checked ? "Y" : "N",
+        page: window.location.pathname
+      }));
+      this.logger.log(`Mobile Phone channel will create QCB with status: ${checked ? "Y" : "N"}`);
+    } else {
+      sessionStorage.removeItem("gdcp-mobile-phone-create-qcb");
+      this.logger.log(`Mobile Phone channel missing required data, won't create a QCB`);
+    }
+  }
+
+  /**
+   * Send QCB for Mobile Phone if we have the session data to do that
+   */
+  handleMobilePhoneQcb() {
+    const sessionData = JSON.parse(sessionStorage.getItem("gdcp-mobile-phone-create-qcb") || "{}");
+    const shouldCreateQcb = sessionData.page && sessionData.page !== window.location.pathname && !this.submissionFailed;
+    if (shouldCreateQcb) {
+      let url = new URL(this.pages.mobile_phone_qcbs);
+      if (sessionData.state === "N") {
+        // Don't create Negative QCBs
+        return;
+        // url.searchParams.append("supporter.questions.848527", "N");
+        // url.searchParams.append("supporter.questions.848528", "N");
+      }
+      // Set timeout because EN does not work properly if multiple forms are submitted in quick succession
+      setTimeout(() => {
+        const iframe = this.createChainedIframeForm(url.toString(), true);
+        sessionStorage.removeItem("gdcp-mobile-phone-create-qcb");
+        this.logger.log(`Creating QCB for Mobile Phone using form: ${iframe.getAttribute("src")}`);
+      }, 3500);
     }
   }
 }
