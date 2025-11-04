@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, October 13, 2025 @ 11:45:24 ET
+ *  Date: Tuesday, November 4, 2025 @ 12:10:23 ET
  *  By: michael
  *  ENGrid styles: v0.22.18
  *  ENGrid scripts: v0.22.20
@@ -27914,6 +27914,140 @@ class GroupQuiz {
     return engrid_ENGrid.getBodyData("subpagetype") === "quiz" && document.querySelector(".en__component--advrow.group-quiz");
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/workday/workday-mappings.ts
+const workdayMappings = [{
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Merchandise (460000)"
+  },
+  new: {
+    revenueCategory: "UR:Merchandise Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Lodging (460500)"
+  },
+  new: {
+    revenueCategory: "UR:Hotel And Lodging (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Miscellaneous Fee Revenue (460700)"
+  },
+  new: {
+    revenueCategory: "UR:Miscellaneous Fee Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Use Permits & Non-Real Estate Leases (461000)"
+  },
+  new: {
+    revenueCategory: "UR:Use Permits and Non-Real Estate Leases Over Time (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Trip Fees (462100)"
+  },
+  new: {
+    revenueCategory: "UR:Fee-Field Trip (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Special Event Revenue (462400)"
+  },
+  new: {
+    revenueCategory: "UR:Special Event Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "Unrestricted",
+    applicationOther: ""
+  },
+  new: {
+    revenueCategory: "UR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}, {
+  old: {
+    revenueCategory: "Temporarily Restricted",
+    applicationOther: ""
+  },
+  new: {
+    revenueCategory: "TR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}];
+;// CONCATENATED MODULE: ./src/scripts/workday/workday.ts
+
+/*
+ * This module maps old values of the Revenue Category and Application Other fields
+ * into new values for the Workday system.
+ */
+
+
+
+class Workday {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("Workday", "white", "blue", "💼"));
+    _defineProperty(this, "mappings", workdayMappings);
+    _defineProperty(this, "oldToNewMap", new Map(this.mappings.map(pair => [this.getMapKey(pair.old), pair.new])));
+    _defineProperty(this, "revenueCategoryField", engrid_ENGrid.getField("transaction.othamt4"));
+    _defineProperty(this, "applicationOtherField", engrid_ENGrid.getField("transaction.othamt1"));
+    if (!this.shouldRun()) {
+      return;
+    }
+    this.logger.log("Running Workday field mapping");
+    this.setNewFieldValues();
+  }
+
+  /*
+   * Run when conditions are met:
+   *  - Both Revenue Category and Application Other fields are present
+   */
+  shouldRun() {
+    return !!this.revenueCategoryField && !!this.applicationOtherField;
+  }
+
+  /**
+   * Get the unique composite key for a WorkdayPair
+   */
+  getMapKey(pair) {
+    return `${pair.revenueCategory?.toLowerCase()}||${pair.applicationOther?.toLowerCase()}`;
+  }
+
+  /**
+   * Set new field values based on the mapping
+   */
+  setNewFieldValues() {
+    if (!this.revenueCategoryField || !this.applicationOtherField) {
+      return;
+    }
+    const key = this.getMapKey({
+      revenueCategory: this.revenueCategoryField.value,
+      applicationOther: this.applicationOtherField.value
+    });
+    this.logger.log(`Looking for new mapping for Revenue Category: "${this.revenueCategoryField.value}", Application Other: "${this.applicationOtherField.value}", key: "${key}"`);
+    const newValues = this.oldToNewMap.get(key);
+    if (!newValues) {
+      this.logger.log(`No updated mapping found. Not updating fields.`);
+      return;
+    }
+    this.revenueCategoryField.value = newValues.revenueCategory;
+    this.applicationOtherField.value = newValues.applicationOther;
+    this.logger.log(`Mapped to new values - Revenue Category: "${this.revenueCategoryField.value}", Application Other: "${this.applicationOtherField.value}"`);
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -27922,6 +28056,7 @@ class GroupQuiz {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -28011,6 +28146,7 @@ const options = {
     new WidgetProgressBar();
     new AddDAFBanner();
     new BankAccountAgreementField();
+    new Workday();
   },
   onSubmit: () => trackFormSubmit(App, DonationAmount),
   onResize: () => console.log("Starter Theme Window Resized"),

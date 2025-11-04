@@ -31,6 +31,7 @@ import { AddDAFBanner } from "./scripts/add-daf-banner";
 import { Quiz } from "./scripts/quiz";
 import { BankAccountAgreementField } from "./scripts/bank-account-agreement-field";
 import { GroupQuiz } from "./scripts/group-quiz";
+import { Workday } from "./scripts/workday/workday";
 
 declare global {
   interface Window {
@@ -149,6 +150,7 @@ const options: Options = {
     new WidgetProgressBar();
     new AddDAFBanner();
     new BankAccountAgreementField();
+    new Workday();
   },
   onSubmit: () => trackFormSubmit(App, DonationAmount),
   onResize: () => console.log("Starter Theme Window Resized"),
