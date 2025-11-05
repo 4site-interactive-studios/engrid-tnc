@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 4, 2025 @ 12:10:23 ET
+ *  Date: Wednesday, November 5, 2025 @ 08:29:11 ET
  *  By: michael
  *  ENGrid styles: v0.22.18
  *  ENGrid scripts: v0.22.20
@@ -28001,7 +28001,6 @@ class Workday {
   constructor() {
     _defineProperty(this, "logger", new logger_EngridLogger("Workday", "white", "blue", "💼"));
     _defineProperty(this, "mappings", workdayMappings);
-    _defineProperty(this, "oldToNewMap", new Map(this.mappings.map(pair => [this.getMapKey(pair.old), pair.new])));
     _defineProperty(this, "revenueCategoryField", engrid_ENGrid.getField("transaction.othamt4"));
     _defineProperty(this, "applicationOtherField", engrid_ENGrid.getField("transaction.othamt1"));
     if (!this.shouldRun()) {
@@ -28020,10 +28019,10 @@ class Workday {
   }
 
   /**
-   * Get the unique composite key for a WorkdayPair
+   * Get new values based on the old pair (or false)
    */
-  getMapKey(pair) {
-    return `${pair.revenueCategory?.toLowerCase()}||${pair.applicationOther?.toLowerCase()}`;
+  getNewValues(pair) {
+    return this.mappings.find(m => m.old.revenueCategory.toLowerCase() === pair.revenueCategory.toLowerCase() && m.old.applicationOther.toLowerCase() === pair.applicationOther.toLowerCase())?.new || false;
   }
 
   /**
@@ -28033,19 +28032,34 @@ class Workday {
     if (!this.revenueCategoryField || !this.applicationOtherField) {
       return;
     }
-    const key = this.getMapKey({
+    this.logger.log(`Looking for new mapping for Revenue Category: "${this.revenueCategoryField.value}", Application Other: "${this.applicationOtherField.value}"`);
+    const newValues = this.getNewValues({
       revenueCategory: this.revenueCategoryField.value,
       applicationOther: this.applicationOtherField.value
     });
-    this.logger.log(`Looking for new mapping for Revenue Category: "${this.revenueCategoryField.value}", Application Other: "${this.applicationOtherField.value}", key: "${key}"`);
-    const newValues = this.oldToNewMap.get(key);
     if (!newValues) {
       this.logger.log(`No updated mapping found. Not updating fields.`);
       return;
     }
-    this.revenueCategoryField.value = newValues.revenueCategory;
-    this.applicationOtherField.value = newValues.applicationOther;
-    this.logger.log(`Mapped to new values - Revenue Category: "${this.revenueCategoryField.value}", Application Other: "${this.applicationOtherField.value}"`);
+    this.logger.log(`Mapping to new values - Revenue Category: "${newValues.revenueCategory}", Application Other: "${newValues.applicationOther}"`);
+    this.setFieldValue(this.revenueCategoryField, newValues.revenueCategory);
+    this.setFieldValue(this.applicationOtherField, newValues.applicationOther);
+  }
+
+  /**
+   * Set field value, adding option if needed (for select fields)
+   */
+  setFieldValue(field, value) {
+    if (field instanceof HTMLSelectElement) {
+      let option = [...field.options].find(opt => opt.value === value);
+      if (!option) {
+        option = new Option(value, value);
+        field.add(option);
+      }
+      field.value = value;
+      return;
+    }
+    field.value = value;
   }
 }
 ;// CONCATENATED MODULE: ./src/index.ts

@@ -14,9 +14,6 @@ export class Workday {
     "💼"
   );
   private mappings: WorkdayMapping[] = workdayMappings;
-  private oldToNewMap: Map<string, WorkdayPair> = new Map(
-    this.mappings.map((pair) => [this.getMapKey(pair.old), pair.new])
-  );
   private revenueCategoryField: HTMLInputElement | null = ENGrid.getField(
     "transaction.othamt4"
   ) as HTMLInputElement;
@@ -41,10 +38,18 @@ export class Workday {
   }
 
   /**
-   * Get the unique composite key for a WorkdayPair
+   * Get new values based on the old pair (or false)
    */
-  private getMapKey(pair: WorkdayPair): string {
-    return `${pair.revenueCategory?.toLowerCase()}||${pair.applicationOther?.toLowerCase()}`;
+  private getNewValues(pair: WorkdayPair): WorkdayPair | false {
+    return (
+      this.mappings.find(
+        (m) =>
+          m.old.revenueCategory.toLowerCase() ===
+            pair.revenueCategory.toLowerCase() &&
+          m.old.applicationOther.toLowerCase() ===
+            pair.applicationOther.toLowerCase()
+      )?.new || false
+    );
   }
 
   /**
@@ -55,27 +60,44 @@ export class Workday {
       return;
     }
 
-    const key = this.getMapKey({
+    this.logger.log(
+      `Looking for new mapping for Revenue Category: "${this.revenueCategoryField.value}", Application Other: "${this.applicationOtherField.value}"`
+    );
+
+    const newValues = this.getNewValues({
       revenueCategory: this.revenueCategoryField.value,
       applicationOther: this.applicationOtherField.value,
     });
-
-    this.logger.log(
-      `Looking for new mapping for Revenue Category: "${this.revenueCategoryField.value}", Application Other: "${this.applicationOtherField.value}", key: "${key}"`
-    );
-
-    const newValues = this.oldToNewMap.get(key);
 
     if (!newValues) {
       this.logger.log(`No updated mapping found. Not updating fields.`);
       return;
     }
 
-    this.revenueCategoryField.value = newValues.revenueCategory;
-    this.applicationOtherField.value = newValues.applicationOther;
-
     this.logger.log(
-      `Mapped to new values - Revenue Category: "${this.revenueCategoryField.value}", Application Other: "${this.applicationOtherField.value}"`
+      `Mapping to new values - Revenue Category: "${newValues.revenueCategory}", Application Other: "${newValues.applicationOther}"`
     );
+
+    this.setFieldValue(this.revenueCategoryField, newValues.revenueCategory);
+    this.setFieldValue(this.applicationOtherField, newValues.applicationOther);
+  }
+
+  /**
+   * Set field value, adding option if needed (for select fields)
+   */
+  private setFieldValue(field: HTMLInputElement, value: string): void {
+    if (field instanceof HTMLSelectElement) {
+      let option = [...field.options].find((opt) => opt.value === value);
+
+      if (!option) {
+        option = new Option(value, value);
+        field.add(option);
+      }
+
+      field.value = value;
+      return;
+    }
+
+    field.value = value;
   }
 }
