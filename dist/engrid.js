@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, November 6, 2025 @ 12:32:27 ET
+ *  Date: Monday, November 24, 2025 @ 12:41:19 ET
  *  By: michael
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -28246,6 +28246,7 @@ class GroupQuiz {
 
 
 
+
 const minimumAmount = window?.donationSettings?.minimumDonationAmount ?? 5;
 
 //Allow banner image with attribution using image block
@@ -28321,10 +28322,27 @@ const options = {
     new WidgetProgressBar();
     new AddDAFBanner();
     new BankAccountAgreementField();
+
+    // Restore donation amount from session storage if submission failed
+    const donationValue = sessionStorage.getItem("donationValue");
+    const submissionFailed = engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "checkSubmissionFailed") && window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed();
+    if (donationValue && submissionFailed) {
+      setTimeout(() => {
+        const _amt = DonationAmount.getInstance();
+        _amt.setAmount(parseFloat(donationValue));
+        console.log("Restored donation amount from session storage:", donationValue);
+      }, 1000);
+    }
+    sessionStorage.removeItem("donationValue");
   },
   onSubmit: () => trackFormSubmit(App, DonationAmount),
   onResize: () => console.log("Starter Theme Window Resized"),
-  onError: () => trackFormErrors()
+  onError: () => trackFormErrors(),
+  onValidate: () => {
+    // Save donation amount to session storage in case of submission error
+    const _amt = DonationAmount.getInstance();
+    sessionStorage.setItem("donationValue", _amt.amount.toString());
+  }
 };
 new App(options);
 })();
