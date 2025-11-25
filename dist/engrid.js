@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, November 24, 2025 @ 12:41:19 ET
+ *  Date: Tuesday, November 25, 2025 @ 08:05:17 ET
  *  By: michael
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -26026,7 +26026,7 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   // Add placeholder to the Mobile Phone Field
   let enFieldMobilePhone = document.querySelector("input#en__field_supporter_phoneNumber2");
   if (enFieldMobilePhone) {
-    enFieldMobilePhone.placeholder = "Mobile / Phone (Optional)";
+    enFieldMobilePhone.placeholder = enFieldMobilePhone.closest(".en__field")?.classList.contains("en__mandatory") ? "Mobile / Phone" : "Mobile / Phone (Optional)";
   }
   const observerConfig = {
     attributes: true,
