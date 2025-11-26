@@ -1017,7 +1017,11 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     "input#en__field_supporter_phoneNumber2"
   );
   if (enFieldMobilePhone) {
-    enFieldMobilePhone.placeholder = "Mobile / Phone (Optional)";
+    enFieldMobilePhone.placeholder = enFieldMobilePhone
+      .closest(".en__field")
+      ?.classList.contains("en__mandatory")
+      ? "Mobile / Phone"
+      : "Mobile / Phone (Optional)";
   }
   const observerConfig = {
     attributes: true,
