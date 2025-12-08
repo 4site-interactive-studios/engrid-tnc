@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, December 8, 2025 @ 06:52:37 ET
+ *  Date: Monday, December 8, 2025 @ 08:46:15 ET
  *  By: michael
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -5036,7 +5036,7 @@ const DispatcherWrapper_1 = __webpack_require__(8661);
 Object.defineProperty(exports, "DispatcherWrapper", ({ enumerable: true, get: function () { return DispatcherWrapper_1.DispatcherWrapper; } }));
 const EventListBase_1 = __webpack_require__(5636);
 Object.defineProperty(exports, "EventListBase", ({ enumerable: true, get: function () { return EventListBase_1.EventListBase; } }));
-const EventManagement_1 = __webpack_require__(3766);
+const EventManagement_1 = __webpack_require__(1385);
 Object.defineProperty(exports, "EventManagement", ({ enumerable: true, get: function () { return EventManagement_1.EventManagement; } }));
 const HandlingBase_1 = __webpack_require__(5722);
 Object.defineProperty(exports, "HandlingBase", ({ enumerable: true, get: function () { return HandlingBase_1.HandlingBase; } }));
@@ -5052,7 +5052,7 @@ Object.defineProperty(exports, "SubscriptionChangeEventDispatcher", ({ enumerabl
 
 /***/ }),
 
-/***/ 3766:
+/***/ 1385:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -28296,6 +28296,154 @@ class GroupQuiz {
     return engrid_ENGrid.getBodyData("subpagetype") === "quiz" && document.querySelector(".en__component--advrow.group-quiz");
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/workday/workday-mappings.ts
+const workdayMappings = [{
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Merchandise (460000)"
+  },
+  new: {
+    revenueCategory: "UR:Merchandise Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Lodging (460500)"
+  },
+  new: {
+    revenueCategory: "UR:Hotel And Lodging (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Miscellaneous Fee Revenue (460700)"
+  },
+  new: {
+    revenueCategory: "UR:Miscellaneous Fee Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Use Permits & Non-Real Estate Leases (461000)"
+  },
+  new: {
+    revenueCategory: "UR:Use Permits and Non-Real Estate Leases Over Time (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Trip Fees (462100)"
+  },
+  new: {
+    revenueCategory: "UR:Fee-Field Trip (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Special Event Revenue (462400)"
+  },
+  new: {
+    revenueCategory: "UR:Special Event Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "Unrestricted",
+    applicationOther: ""
+  },
+  new: {
+    revenueCategory: "UR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}, {
+  old: {
+    revenueCategory: "Temporarily Restricted",
+    applicationOther: ""
+  },
+  new: {
+    revenueCategory: "TR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}];
+;// CONCATENATED MODULE: ./src/scripts/workday/workday.ts
+
+/*
+ * This module maps old values of the Revenue Category and Application Other fields
+ * into new values for the Workday system.
+ */
+
+
+
+class Workday {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("Workday", "white", "blue", "💼"));
+    _defineProperty(this, "mappings", workdayMappings);
+    _defineProperty(this, "revenueCategoryField", engrid_ENGrid.getField("transaction.othamt4"));
+    _defineProperty(this, "applicationOtherField", engrid_ENGrid.getField("transaction.othamt1"));
+    if (!this.shouldRun()) {
+      return;
+    }
+    this.logger.log("Running Workday field mapping");
+    this.setNewFieldValues();
+  }
+
+  /*
+   * Run when conditions are met:
+   *  - Both Revenue Category and Application Other fields are present
+   */
+  shouldRun() {
+    return !!this.revenueCategoryField && !!this.applicationOtherField;
+  }
+
+  /**
+   * Get new values based on the old pair (or false)
+   */
+  getNewValues(pair) {
+    return this.mappings.find(m => m.old.revenueCategory.toLowerCase() === pair.revenueCategory.toLowerCase() && m.old.applicationOther.toLowerCase() === pair.applicationOther.toLowerCase())?.new || false;
+  }
+
+  /**
+   * Set new field values based on the mapping
+   */
+  setNewFieldValues() {
+    if (!this.revenueCategoryField || !this.applicationOtherField) {
+      return;
+    }
+    this.logger.log(`Looking for new mapping for Revenue Category: "${this.revenueCategoryField.value}", Application Other: "${this.applicationOtherField.value}"`);
+    const newValues = this.getNewValues({
+      revenueCategory: this.revenueCategoryField.value,
+      applicationOther: this.applicationOtherField.value
+    });
+    if (!newValues) {
+      this.logger.log(`No updated mapping found. Not updating fields.`);
+      return;
+    }
+    this.logger.log(`Mapping to new values - Revenue Category: "${newValues.revenueCategory}", Application Other: "${newValues.applicationOther}"`);
+    this.setFieldValue(this.revenueCategoryField, newValues.revenueCategory);
+    this.setFieldValue(this.applicationOtherField, newValues.applicationOther);
+  }
+
+  /**
+   * Set field value, adding option if needed (for select fields)
+   */
+  setFieldValue(field, value) {
+    if (field instanceof HTMLSelectElement) {
+      let option = [...field.options].find(opt => opt.value === value);
+      if (!option) {
+        option = new Option(value, value);
+        field.add(option);
+      }
+      field.value = value;
+      return;
+    }
+    field.value = value;
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -28304,6 +28452,7 @@ class GroupQuiz {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -28394,6 +28543,7 @@ const options = {
     new WidgetProgressBar();
     new AddDAFBanner();
     new BankAccountAgreementField();
+    new Workday();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");
