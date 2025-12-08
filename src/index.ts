@@ -31,6 +31,7 @@ import { AddDAFBanner } from "./scripts/add-daf-banner";
 import { Quiz } from "./scripts/quiz";
 import { BankAccountAgreementField } from "./scripts/bank-account-agreement-field";
 import { GroupQuiz } from "./scripts/group-quiz";
+import { ENGrid } from "@4site/engrid-scripts";
 import { Workday } from "./scripts/workday/workday";
 
 declare global {
@@ -151,9 +152,37 @@ const options: Options = {
     new AddDAFBanner();
     new BankAccountAgreementField();
     new Workday();
+
+    // Restore donation amount from session storage if submission failed
+    const donationValue = sessionStorage.getItem("donationValue");
+    const submissionFailed =
+      ENGrid.checkNested(
+        window.EngagingNetworks,
+        "require",
+        "_defined",
+        "enjs",
+        "checkSubmissionFailed"
+      ) &&
+      window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed();
+    if (donationValue && submissionFailed) {
+      setTimeout(() => {
+        const _amt = DonationAmount.getInstance();
+        _amt.setAmount(parseFloat(donationValue));
+        console.log(
+          "Restored donation amount from session storage:",
+          donationValue
+        );
+      }, 1000);
+    }
+    sessionStorage.removeItem("donationValue");
   },
   onSubmit: () => trackFormSubmit(App, DonationAmount),
   onResize: () => console.log("Starter Theme Window Resized"),
   onError: () => trackFormErrors(),
+  onValidate: () => {
+    // Save donation amount to session storage in case of submission error
+    const _amt = DonationAmount.getInstance();
+    sessionStorage.setItem("donationValue", _amt.amount.toString());
+  },
 };
 new App(options);

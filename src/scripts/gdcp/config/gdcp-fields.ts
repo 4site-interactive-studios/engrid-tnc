@@ -22,6 +22,7 @@ export const gdcpFields: GdcpField[] = [
       "supporter.questions.848527", // Mobile Text Opt In
       "supporter.questions.848528", // Mobile Call Opt In
       "supporter.questions.1952175", // Interested in Mobile Text
+      "supporter.questions.2268563", // GDCP Dummy Mobile Phone Opt-In
     ],
     gdcpFieldName: "engrid.gdcp-mobile_phone", // Don't edit this field
     gdcpFieldHtmlLabel: `<span>By entering my mobile phone number and submitting this form, I agree to receive phone and text updates from The Nature Conservancy for the purposes of supporting and promoting its charitable initiatives at the mobile number I entered above. <em>Message & data rates may apply and message frequency varies. Text STOP to opt out or HELP for help.</em> <br> <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/mobile-terms-and-conditions/" target="_blank">Mobile Terms & Conditions</a> | <a href="https://www.nature.org/en-us/about-us/who-we-are/accountability/privacy-policy/" target="_blank">Privacy Statement</a>.</span>`,

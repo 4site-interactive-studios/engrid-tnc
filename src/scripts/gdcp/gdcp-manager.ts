@@ -47,6 +47,7 @@ export class GdcpManager {
   constructor() {
     this.handleDoubleOptInEmail();
     this.handlePostalMailQcb();
+    this.handleMobilePhoneQcb();
     if (!this.shouldRun()) {
       ENGrid.setBodyData("gdcp", "false");
       this.logger.log("GDCP is not running on this page.");
@@ -70,6 +71,7 @@ export class GdcpManager {
         } else {
           this.applyRulesForLocation(this.userLocation, false);
         }
+        this.createMobilePhoneSessionStorageListener();
         this.watchForLocationChange();
         this.setSingleOptInModeInitialState();
         this.clearSessionState();
@@ -384,26 +386,55 @@ export class GdcpManager {
       .join(", ");
     const optInFieldsPresent = document.querySelector(optInFieldsNames);
 
-    if (gdcpField.channel !== "postal_mail") {
+    if (
+      gdcpField.channel !== "postal_mail" &&
+      gdcpField.channel !== "mobile_phone"
+    ) {
       return !!dataFieldPresent && !!optInFieldsPresent;
     }
 
+    if (gdcpField.channel === "postal_mail") {
+      try {
+        const postalMailOptInFieldPresent = await this.isPresentOnEmbeddedForm(
+          this.pages.postal_mail_qcb,
+          `#en__field_supporter_questions_1942219`
+        );
+        return (
+          !!dataFieldPresent &&
+          !!optInFieldsPresent &&
+          postalMailOptInFieldPresent
+        );
+      } catch (e) {
+        this.logger.error("Error checking if opted into postal mail", e);
+        return false;
+      }
+    }
+
+    // mobile_phone
     try {
-      const postalMailOptInFieldPresent =
-        await this.postalMailOptInFieldPresent();
+      const mobilePhoneOptInFieldPresent = await this.isPresentOnEmbeddedForm(
+        this.pages.mobile_phone_qcbs,
+        `#en__field_supporter_questions_848527, #en__field_supporter_questions_848528`
+      );
       return (
         !!dataFieldPresent &&
         !!optInFieldsPresent &&
-        postalMailOptInFieldPresent
+        mobilePhoneOptInFieldPresent
       );
     } catch (e) {
-      this.logger.error("Error checking if opted into postal mail", e);
+      this.logger.error("Error checking if opted into mobile phone", e);
       return false;
     }
   }
 
-  private async postalMailOptInFieldPresent(): Promise<boolean> {
-    const iframe = this.createChainedIframeForm(this.pages.postal_mail_qcb);
+  /*
+   * Check if a given element is present on an embedded form (iframe)
+   */
+  private async isPresentOnEmbeddedForm(
+    pageUrl: string,
+    selector: string
+  ): Promise<boolean> {
+    const iframe = this.createChainedIframeForm(pageUrl);
 
     await new Promise((resolve, reject) => {
       iframe.addEventListener("load", resolve);
@@ -412,9 +443,7 @@ export class GdcpManager {
 
     const iframeDocument =
       iframe.contentDocument || iframe.contentWindow?.document;
-    let elementInIframe = iframeDocument?.querySelector(
-      "#en__field_supporter_questions_1942219"
-    );
+    let elementInIframe = iframeDocument?.querySelector(selector);
 
     return !!elementInIframe;
   }
@@ -691,6 +720,103 @@ export class GdcpManager {
         this.gdcpFieldManager.setChecked(gdcpField.gdcpFieldName, false, true);
         this.gdcpFieldManager.setTouched(gdcpField.gdcpFieldName);
       });
+    }
+  }
+
+  private createMobilePhoneSessionStorageListener() {
+    const gdcpFieldName = this.gdcpFields.find(
+      (field) => field.channel === "mobile_phone"
+    )?.gdcpFieldName;
+
+    const mobilePhoneGdcpField = ENGrid.getField(gdcpFieldName || "");
+
+    if (!mobilePhoneGdcpField) {
+      // GDCP isn't enabled for mobile phone on this page
+      return;
+    }
+
+    const fields = [
+      mobilePhoneGdcpField,
+      ENGrid.getField("supporter.phoneNumber2"),
+      ENGrid.getField("supporter.country"),
+    ]
+      .filter(Boolean)
+      .flat() as HTMLInputElement[];
+
+    // Do an initial call to handle the current state (if pre-filled)
+    this.setMobilePhoneSessionItem();
+    fields.forEach((field) => {
+      field?.addEventListener(
+        "change",
+        this.setMobilePhoneSessionItem.bind(this)
+      );
+    });
+  }
+
+  private setMobilePhoneSessionItem() {
+    const gdcpFieldName = this.gdcpFields.find(
+      (field) => field.channel === "mobile_phone"
+    )?.gdcpFieldName;
+
+    const checked = this.gdcpFieldManager.getField(
+      gdcpFieldName || ""
+    )?.checked;
+
+    if (
+      ENGrid.getFieldValue("supporter.phoneNumber2") !== "" &&
+      ENGrid.getFieldValue("supporter.country") === "US"
+    ) {
+      sessionStorage.setItem(
+        "gdcp-mobile-phone-create-qcb",
+        JSON.stringify({
+          state: checked ? "Y" : "N",
+          page: window.location.pathname,
+        })
+      );
+      this.logger.log(
+        `Mobile Phone channel will create QCB with status: ${
+          checked ? "Y" : "N"
+        }`
+      );
+    } else {
+      sessionStorage.removeItem("gdcp-mobile-phone-create-qcb");
+      this.logger.log(
+        `Mobile Phone channel missing required data, won't create a QCB`
+      );
+    }
+  }
+
+  /**
+   * Send QCB for Mobile Phone if we have the session data to do that
+   */
+  private handleMobilePhoneQcb() {
+    const sessionData = JSON.parse(
+      sessionStorage.getItem("gdcp-mobile-phone-create-qcb") || "{}"
+    );
+
+    const shouldCreateQcb =
+      sessionData.page &&
+      sessionData.page !== window.location.pathname &&
+      !this.submissionFailed;
+
+    if (shouldCreateQcb) {
+      let url = new URL(this.pages.mobile_phone_qcbs);
+      if (sessionData.state === "N") {
+        // Don't create Negative QCBs
+        return;
+        // url.searchParams.append("supporter.questions.848527", "N");
+        // url.searchParams.append("supporter.questions.848528", "N");
+      }
+      // Set timeout because EN does not work properly if multiple forms are submitted in quick succession
+      setTimeout(() => {
+        const iframe = this.createChainedIframeForm(url.toString(), true);
+        sessionStorage.removeItem("gdcp-mobile-phone-create-qcb");
+        this.logger.log(
+          `Creating QCB for Mobile Phone using form: ${iframe.getAttribute(
+            "src"
+          )}`
+        );
+      }, 3500);
     }
   }
 }
