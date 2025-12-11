@@ -7,6 +7,13 @@
   .body-banner {
     display: grid !important;
   }
+  .donation-nudge {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .en__field__item--other {
+    flex-basis: 100% !important;
+  }
   .en__field--auto-renew {
     .en__field__item,
     .en__field__element {
