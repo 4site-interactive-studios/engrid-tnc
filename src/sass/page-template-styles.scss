@@ -3659,6 +3659,10 @@
     @import "./multistep";
   }
 
+  &[data-engrid-subtheme="onecolumnlightbox"] {
+    @import "./onecolumnlightbox";
+  }
+
   //Premiums
   @import "./components/premiums";
 

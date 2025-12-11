@@ -1,0 +1,42 @@
+& {
+  --engrid__body-title_background-color: #1b75bc;
+  --engrid__body-top_background-color: #1b75bc;
+  #engrid {
+    max-width: 630px !important;
+  }
+  .body-banner {
+    display: grid !important;
+  }
+  .en__field--auto-renew {
+    .en__field__item,
+    .en__field__element {
+      width: 100%;
+    }
+  }
+  .body-main .en__submit button {
+    width: 100%;
+  }
+  #onetrust-consent-sdk {
+    display: none !important;
+  }
+  .main-page-footer {
+    padding-bottom: 0 !important;
+  }
+  .en__field .en__field__element.en__field__element--radio {
+    margin-right: 0 !important;
+  }
+  .body-bottom-content .contact {
+    justify-content: center !important;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    div:first-of-type {
+      margin-right: 0;
+    }
+  }
+  .pre-footer,
+  .pre-footer h2 {
+    text-align: center !important;
+  }
+}
