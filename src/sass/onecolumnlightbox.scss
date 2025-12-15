@@ -1,7 +1,7 @@
 & {
   --engrid__body-title_background-color: #1b75bc !important;
   --engrid__body-top_background-color: #1b75bc !important;
-  #engrid {
+  &[data-engrid-embedded] #engrid {
     max-width: 630px !important;
     margin-left: 15px;
   }

@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, December 15, 2025 @ 16:04:48 ET
+ *  Date: Monday, December 15, 2025 @ 16:14:01 ET
  *  By: cawe
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -11225,7 +11225,7 @@ body[data-engrid-debug]:before{
   --engrid__body-title_background-color:#1b75bc !important;
   --engrid__body-top_background-color:#1b75bc !important;
 }
-[data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox] #engrid{
+[data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox][data-engrid-embedded] #engrid{
   margin-left:15px;
   max-width:630px !important;
 }
