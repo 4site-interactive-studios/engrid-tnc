@@ -50,11 +50,11 @@
   .pre-footer h2 {
     text-align: center !important;
   }
-  .en__upsellModal {
+  #en__upsellModal {
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
-  .en__upsellModal::-webkit-scrollbar {
+  #en__upsellModal::-webkit-scrollbar {
     display: none;
   }
 }
