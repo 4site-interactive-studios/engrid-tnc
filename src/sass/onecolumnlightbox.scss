@@ -3,6 +3,7 @@
   --engrid__body-top_background-color: #1b75bc !important;
   #engrid {
     max-width: 630px !important;
+    margin-left: 15px;
   }
   .body-banner {
     display: grid !important;
@@ -48,5 +49,12 @@
   .pre-footer,
   .pre-footer h2 {
     text-align: center !important;
+  }
+  .en__upsellModal {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .en__upsellModal::-webkit-scrollbar {
+    display: none;
   }
 }

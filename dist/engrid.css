@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, December 11, 2025 @ 20:00:58 ET
+ *  Date: Monday, December 15, 2025 @ 15:51:13 ET
  *  By: cawe
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -11226,6 +11226,7 @@ body[data-engrid-debug]:before{
   --engrid__body-top_background-color:#1b75bc !important;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox] #engrid{
+  margin-left:15px;
   max-width:630px !important;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox] .body-banner{
@@ -11265,6 +11266,13 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox] .pre-footer,[data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox] .pre-footer h2{
   text-align:center !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox] .en__upsellModal{
+  -ms-overflow-style:none;
+  scrollbar-width:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox] .en__upsellModal::-webkit-scrollbar{
+  display:none;
 }
 @keyframes fadeIn{
   0%{
