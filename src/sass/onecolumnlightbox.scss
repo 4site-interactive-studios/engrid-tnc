@@ -1,9 +1,23 @@
 & {
-  --engrid__body-title_background-color: #1b75bc !important;
-  --engrid__body-top_background-color: #1b75bc !important;
   &[data-engrid-embedded] #engrid {
     max-width: 630px !important;
     margin-left: 15px;
+  }
+  .body-banner {
+    grid-column: 1 / -1;
+    grid-row: body-banner-start;
+    height: 300px;
+  }
+  .body-title {
+    grid-column: 1 / -1;
+  }
+  .body-top {
+    grid-column: 1 / -1;
+  }
+  .body-title h1,
+  .body-top p {
+    color: #1b75bc !important;
+    text-align: center;
   }
   .body-banner {
     display: grid !important;

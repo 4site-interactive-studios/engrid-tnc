@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, December 15, 2025 @ 16:14:01 ET
+ *  Date: Tuesday, December 30, 2025 @ 15:08:37 ET
  *  By: cawe
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -11221,13 +11221,21 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] [data-last-section=true]:has(.en__captcha) .en__field--firstName,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] [data-last-section=true]:has(.en__captcha) .en__field--lastName{
   flex-basis:50%;
 }
-[data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox]{
-  --engrid__body-title_background-color:#1b75bc !important;
-  --engrid__body-top_background-color:#1b75bc !important;
-}
 [data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox][data-engrid-embedded] #engrid{
   margin-left:15px;
   max-width:630px !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox] .body-banner{
+  grid-column:1 /  -1;
+  grid-row:body-banner-start;
+  height:300px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox] .body-title,[data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox] .body-top{
+  grid-column:1 /  -1;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox] .body-title h1,[data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox] .body-top p{
+  color:#1b75bc !important;
+  text-align:center;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=onecolumnlightbox] .body-banner{
   display:grid !important;
