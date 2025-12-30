@@ -51,14 +51,18 @@
   .en__field .en__field__element.en__field__element--radio {
     margin-right: 0 !important;
   }
-  .body-bottom-content .contact {
-    justify-content: center !important;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    gap: 10px;
-    div:first-of-type {
-      margin-right: 0;
+  .body-bottom-content {
+    .contact-us {
+      flex-direction: row;
+    }
+    .contact {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      gap: 10px;
+      div:first-of-type {
+        margin-right: 0;
+      }
     }
   }
   .pre-footer,
