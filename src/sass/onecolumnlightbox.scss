@@ -4,7 +4,7 @@
     margin-left: 15px;
     margin-right: 15px;
   }
-  &[data-engrid-thank-you] .body-banner {
+  &[data-engrid-thank-you="true"] .body-banner {
     height: auto !important;
   }
   .body-banner {
