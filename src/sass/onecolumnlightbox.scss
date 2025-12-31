@@ -4,6 +4,9 @@
     margin-left: 15px;
     margin-right: 15px;
   }
+  &[data-engrid-thank-you] .body-banner {
+    display: auto !important;
+  }
   .body-banner {
     grid-column: 1 / -1;
     grid-row: body-banner-start;
