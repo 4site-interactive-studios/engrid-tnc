@@ -135,7 +135,10 @@ const options: Options = {
   onLoad: () => {
     (<any>window).DonationLightboxForm = DonationLightboxForm;
     customScript(App, DonationFrequency, DonationAmount);
-    if (App.getBodyData("subtheme") === "multistep") {
+    if (
+      App.getBodyData("subtheme") === "multistep" ||
+      App.getBodyData("subtheme") === "onecolumnlightbox"
+    ) {
       new DonationLightboxForm(DonationAmount, DonationFrequency, App);
     }
     new BequestLightbox();
