@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, December 31, 2025 @ 18:20:54 ET
+ *  Date: Wednesday, December 31, 2025 @ 19:00:45 ET
  *  By: cawe
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -23830,7 +23830,7 @@ if (isSafari) {
 smoothscroll_default().polyfill();
 class DonationLightboxForm {
   constructor(DonationAmount, DonationFrequency, App) {
-    if (!this.isIframe() || document.querySelector("body").dataset.engridSubtheme !== "multistep") return;
+    if (!this.isIframe() || document.querySelector("body").dataset.engridSubtheme !== "multistep" && document.querySelector("body").dataset.engridSubtheme !== "onecolumnlightbox") return;
     this.amount = DonationAmount;
     this.frequency = DonationFrequency;
     this.app = App;
@@ -23932,6 +23932,13 @@ class DonationLightboxForm {
     if (!this.sections.length) {
       // No section or no Donation Page was found
       this.sendMessage("error", "No sections found");
+      return false;
+    }
+    if (this.sections.length === 1) {
+      document.querySelector(".en__submit button")?.addEventListener("click", e => {
+        e.preventDefault();
+        this.submitLogic();
+      });
       return false;
     }
     console.log(this.sections);
@@ -24099,6 +24106,46 @@ class DonationLightboxForm {
   isIframe() {
     return window.self !== window.top;
   }
+  submitLogic() {
+    if (this.isDonation) {
+      console.log("DonationLightboxForm: submitLogic - Donation");
+      // Send Basic User Data to Parent
+      this.sendMessage("donationinfo", JSON.stringify({
+        name: document.querySelector("#en__field_supporter_firstName").value,
+        amount: this.getDonationTotal(),
+        frequency: this.frequency.getInstance().frequency
+      }));
+      // Only shows cortain if payment is not paypal
+      const paymentType = document.querySelector("#en__field_transaction_paymenttype").value;
+      if (paymentType.toLowerCase() != "paypal") {
+        this.sendMessage("status", "loading");
+      } else {
+        // If Paypal, submit the form on a new tab
+        const thisClass = this;
+        document.addEventListener("visibilitychange", function () {
+          if (document.visibilityState === "visible") {
+            thisClass.sendMessage("status", "submitted");
+          } else {
+            thisClass.sendMessage("status", "loading");
+          }
+        });
+        document.querySelector("form.en__component").target = "_blank";
+      }
+      if (this.checkNested(window.EngagingNetworks, "require", "_defined", "enDefaults", "validation", "_getSubmitPromise")) {
+        console.log("DonationLightboxForm: Using EN Validation Promise");
+        window.EngagingNetworks.require._defined.enDefaults.validation._getSubmitPromise().then(function () {
+          document.querySelector("form.en__component").submit();
+        });
+      } else {
+        console.log("DonationLightboxForm: Using standard submit");
+        document.querySelector("form.en__component").requestSubmit();
+      }
+    } else {
+      console.log("DonationLightboxForm: submitLogic - Non Donation");
+      this.sendMessage("status", "loading");
+      document.querySelector("form.en__component").requestSubmit();
+    }
+  }
   // Build Section Navigation
   buildSectionNavigation() {
     console.log("DonationLightboxForm: buildSectionNavigation");
@@ -24192,40 +24239,7 @@ class DonationLightboxForm {
         e.preventDefault();
         // Validate the entire form again
         if (this.validateForm(false, this.isDonation)) {
-          if (this.isDonation) {
-            // Send Basic User Data to Parent
-            this.sendMessage("donationinfo", JSON.stringify({
-              name: document.querySelector("#en__field_supporter_firstName").value,
-              amount: this.getDonationTotal(),
-              frequency: this.frequency.getInstance().frequency
-            }));
-            // Only shows cortain if payment is not paypal
-            const paymentType = document.querySelector("#en__field_transaction_paymenttype").value;
-            if (paymentType.toLowerCase() != "paypal") {
-              this.sendMessage("status", "loading");
-            } else {
-              // If Paypal, submit the form on a new tab
-              const thisClass = this;
-              document.addEventListener("visibilitychange", function () {
-                if (document.visibilityState === "visible") {
-                  thisClass.sendMessage("status", "submitted");
-                } else {
-                  thisClass.sendMessage("status", "loading");
-                }
-              });
-              document.querySelector("form.en__component").target = "_blank";
-            }
-            if (this.checkNested(window.EngagingNetworks, "require", "_defined", "enDefaults", "validation", "_getSubmitPromise")) {
-              window.EngagingNetworks.require._defined.enDefaults.validation._getSubmitPromise().then(function () {
-                document.querySelector("form.en__component").submit();
-              });
-            } else {
-              document.querySelector("form.en__component").requestSubmit();
-            }
-          } else {
-            this.sendMessage("status", "loading");
-            document.querySelector("form.en__component").requestSubmit();
-          }
+          this.submitLogic();
         }
       });
       section.querySelector(".en__component").append(sectionNavigation);
@@ -28379,7 +28393,7 @@ const options = {
   onLoad: () => {
     window.DonationLightboxForm = DonationLightboxForm;
     customScript(App, DonationFrequency, DonationAmount);
-    if (App.getBodyData("subtheme") === "multistep") {
+    if (App.getBodyData("subtheme") === "multistep" || App.getBodyData("subtheme") === "onecolumnlightbox") {
       new DonationLightboxForm(DonationAmount, DonationFrequency, App);
     }
     new BequestLightbox();
