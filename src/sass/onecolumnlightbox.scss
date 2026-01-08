@@ -18,9 +18,12 @@
   .body-top {
     grid-column: 1 / -1;
   }
-  .body-title h1,
+  .body-title h1 {
+    color: #007931 !important;
+    text-align: center;
+  }
   .body-top p {
-    color: #1b75bc !important;
+    color: var(--default_color) !important;
     text-align: center;
   }
   .body-banner {
