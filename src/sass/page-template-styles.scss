@@ -762,7 +762,7 @@
   .give-by-select {
     margin-bottom: 15px;
 
-    .en__field--give-by-select >.en__field__element .en__field__item {
+    .en__field--give-by-select > .en__field__element .en__field__item {
       @media screen and (min-width: 767px) {
         flex: 1;
         padding: 0;
@@ -1129,7 +1129,7 @@
     --give-by-select__button_count: 1;
     --give-by-select__button_font-size: 18px;
     --give-by-select__button_padding: 0px 10px;
-    --give-by-select__button_background-color_hover: #CCE4D6;
+    --give-by-select__button_background-color_hover: #cce4d6;
     --give-by-select__button_border-color_hover: var(--color-gray);
     --give-by-select__button_color_hover: var(--color-green);
     // Input

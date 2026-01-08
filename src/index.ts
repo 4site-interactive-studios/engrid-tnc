@@ -32,6 +32,7 @@ import { Quiz } from "./scripts/quiz";
 import { BankAccountAgreementField } from "./scripts/bank-account-agreement-field";
 import { GroupQuiz } from "./scripts/group-quiz";
 import { ENGrid } from "@4site/engrid-scripts";
+import MultistepForm from "./scripts/multistep-form";
 
 declare global {
   interface Window {
@@ -150,6 +151,7 @@ const options: Options = {
     new WidgetProgressBar();
     new AddDAFBanner();
     new BankAccountAgreementField();
+    new MultistepForm();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");
