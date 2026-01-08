@@ -144,7 +144,10 @@ export default class DonationLightboxForm {
       this.sendMessage("error", "No sections found");
       return false;
     }
-    if (this.sections.length === 1) {
+    if (
+      document.querySelector("body").dataset.engridSubtheme !==
+      "onecolumnlightbox"
+    ) {
       document
         .querySelector(".en__submit button")
         ?.addEventListener("click", (e) => {
@@ -387,7 +390,20 @@ export default class DonationLightboxForm {
         "#en__field_transaction_paymenttype"
       ).value;
       if (paymentType.toLowerCase() != "paypal") {
-        this.sendMessage("status", "loading");
+        if (
+          document.querySelector("body").dataset.engridSubtheme !==
+          "onecolumnlightbox"
+        ) {
+          const intervalId = setInterval(() => {
+            const upsellModal = document.querySelector("#en__upsellModal");
+            if (upsellModal) {
+              this.sendMessage("status", "loading");
+              clearInterval(intervalId);
+            }
+          }, 500);
+        } else {
+          this.sendMessage("status", "loading");
+        }
       } else {
         // If Paypal, submit the form on a new tab
         const thisClass = this;

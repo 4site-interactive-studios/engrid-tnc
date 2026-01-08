@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, December 31, 2025 @ 19:00:45 ET
+ *  Date: Wednesday, January 7, 2026 @ 19:43:07 ET
  *  By: cawe
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -23934,7 +23934,7 @@ class DonationLightboxForm {
       this.sendMessage("error", "No sections found");
       return false;
     }
-    if (this.sections.length === 1) {
+    if (document.querySelector("body").dataset.engridSubtheme !== "onecolumnlightbox") {
       document.querySelector(".en__submit button")?.addEventListener("click", e => {
         e.preventDefault();
         this.submitLogic();
@@ -24118,7 +24118,17 @@ class DonationLightboxForm {
       // Only shows cortain if payment is not paypal
       const paymentType = document.querySelector("#en__field_transaction_paymenttype").value;
       if (paymentType.toLowerCase() != "paypal") {
-        this.sendMessage("status", "loading");
+        if (document.querySelector("body").dataset.engridSubtheme !== "onecolumnlightbox") {
+          const intervalId = setInterval(() => {
+            const upsellModal = document.querySelector("#en__upsellModal");
+            if (upsellModal) {
+              this.sendMessage("status", "loading");
+              clearInterval(intervalId);
+            }
+          }, 500);
+        } else {
+          this.sendMessage("status", "loading");
+        }
       } else {
         // If Paypal, submit the form on a new tab
         const thisClass = this;
