@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 7, 2026 @ 19:51:53 ET
+ *  Date: Wednesday, January 7, 2026 @ 21:06:05 ET
  *  By: cawe
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -24121,7 +24121,7 @@ class DonationLightboxForm {
         if (document.querySelector("body").dataset.engridSubtheme === "onecolumnlightbox") {
           const intervalId = setInterval(() => {
             const upsellModal = document.querySelector("#en__upsellModal");
-            if (upsellModal) {
+            if (!upsellModal) {
               this.sendMessage("status", "loading");
               clearInterval(intervalId);
             }

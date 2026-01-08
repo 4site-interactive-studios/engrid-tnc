@@ -396,7 +396,7 @@ export default class DonationLightboxForm {
         ) {
           const intervalId = setInterval(() => {
             const upsellModal = document.querySelector("#en__upsellModal");
-            if (upsellModal) {
+            if (!upsellModal) {
               this.sendMessage("status", "loading");
               clearInterval(intervalId);
             }
