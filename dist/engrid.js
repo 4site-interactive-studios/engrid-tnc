@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 7, 2026 @ 21:06:05 ET
+ *  Date: Wednesday, January 7, 2026 @ 21:23:04 ET
  *  By: cawe
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -24119,13 +24119,39 @@ class DonationLightboxForm {
       const paymentType = document.querySelector("#en__field_transaction_paymenttype").value;
       if (paymentType.toLowerCase() != "paypal") {
         if (document.querySelector("body").dataset.engridSubtheme === "onecolumnlightbox") {
-          const intervalId = setInterval(() => {
+          const waitForUpsellModal = () => {
             const upsellModal = document.querySelector("#en__upsellModal");
-            if (!upsellModal) {
-              this.sendMessage("status", "loading");
-              clearInterval(intervalId);
+            if (upsellModal) {
+              return Promise.resolve(upsellModal);
             }
-          }, 500);
+            return new Promise(resolve => {
+              const observer = new MutationObserver(mutations => {
+                for (const mutation of mutations) {
+                  for (const node of mutation.addedNodes) {
+                    if (!(node instanceof HTMLElement)) continue;
+                    const modal = node.id === "en__upsellModal" ? node : node.querySelector?.("#en__upsellModal");
+                    if (modal) {
+                      observer.disconnect();
+                      resolve(modal);
+                      return;
+                    }
+                  }
+                }
+              });
+              observer.observe(document.body, {
+                childList: true,
+                subtree: true
+              });
+            });
+          };
+          waitForUpsellModal().then(modal => {
+            document.querySelector("#en__upsellModal__yes button")?.addEventListener("click", () => {
+              this.sendMessage("status", "loading");
+            });
+            document.querySelector("#en__upsellModal__no button")?.addEventListener("click", () => {
+              this.sendMessage("status", "loading");
+            });
+          });
         } else {
           this.sendMessage("status", "loading");
         }
