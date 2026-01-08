@@ -82,13 +82,11 @@
   #en__upsellModal::-webkit-scrollbar {
     display: none;
   }
-  @media screen and (min-width: 600px) {
-    .donation-nudge {
-      max-width: none;
-      margin-top: 26px;
-      img {
-        margin-top: -20px;
-      }
+  .donation-nudge {
+    max-width: none;
+    margin-top: 26px;
+    img {
+      margin-top: -20px;
     }
   }
 }
