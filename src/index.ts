@@ -137,7 +137,7 @@ const options: Options = {
     customScript(App, DonationFrequency, DonationAmount);
     if (
       App.getBodyData("subtheme") === "multistep" ||
-      App.getBodyData("subtheme") === "onecolumnlightbox"
+      App.getBodyData("subtheme") === "one-step-lightbox"
     ) {
       new DonationLightboxForm(DonationAmount, DonationFrequency, App);
     }

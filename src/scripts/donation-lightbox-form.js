@@ -11,7 +11,7 @@ export default class DonationLightboxForm {
       !this.isIframe() ||
       (document.querySelector("body").dataset.engridSubtheme !== "multistep" &&
         document.querySelector("body").dataset.engridSubtheme !==
-          "onecolumnlightbox")
+          "one-step-lightbox")
     )
       return;
     this.amount = DonationAmount;
@@ -146,7 +146,7 @@ export default class DonationLightboxForm {
     }
     if (
       document.querySelector("body").dataset.engridSubtheme ===
-      "onecolumnlightbox"
+      "one-step-lightbox"
     ) {
       document
         .querySelector(".en__submit button")
@@ -392,7 +392,7 @@ export default class DonationLightboxForm {
       if (paymentType.toLowerCase() != "paypal") {
         if (
           document.querySelector("body").dataset.engridSubtheme ===
-          "onecolumnlightbox"
+          "one-step-lightbox"
         ) {
           const waitForUpsellModal = () => {
             const upsellModal = document.querySelector("#en__upsellModal");

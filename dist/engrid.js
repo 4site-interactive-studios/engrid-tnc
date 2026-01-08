@@ -23830,7 +23830,7 @@ if (isSafari) {
 smoothscroll_default().polyfill();
 class DonationLightboxForm {
   constructor(DonationAmount, DonationFrequency, App) {
-    if (!this.isIframe() || document.querySelector("body").dataset.engridSubtheme !== "multistep" && document.querySelector("body").dataset.engridSubtheme !== "onecolumnlightbox") return;
+    if (!this.isIframe() || document.querySelector("body").dataset.engridSubtheme !== "multistep" && document.querySelector("body").dataset.engridSubtheme !== "one-step-lightbox") return;
     this.amount = DonationAmount;
     this.frequency = DonationFrequency;
     this.app = App;
@@ -23934,7 +23934,7 @@ class DonationLightboxForm {
       this.sendMessage("error", "No sections found");
       return false;
     }
-    if (document.querySelector("body").dataset.engridSubtheme === "onecolumnlightbox") {
+    if (document.querySelector("body").dataset.engridSubtheme === "one-step-lightbox") {
       document.querySelector(".en__submit button")?.addEventListener("click", e => {
         e.preventDefault();
         this.submitLogic();
@@ -24118,7 +24118,7 @@ class DonationLightboxForm {
       // Only shows cortain if payment is not paypal
       const paymentType = document.querySelector("#en__field_transaction_paymenttype").value;
       if (paymentType.toLowerCase() != "paypal") {
-        if (document.querySelector("body").dataset.engridSubtheme === "onecolumnlightbox") {
+        if (document.querySelector("body").dataset.engridSubtheme === "one-step-lightbox") {
           const waitForUpsellModal = () => {
             const upsellModal = document.querySelector("#en__upsellModal");
             if (upsellModal) {
@@ -28429,7 +28429,7 @@ const options = {
   onLoad: () => {
     window.DonationLightboxForm = DonationLightboxForm;
     customScript(App, DonationFrequency, DonationAmount);
-    if (App.getBodyData("subtheme") === "multistep" || App.getBodyData("subtheme") === "onecolumnlightbox") {
+    if (App.getBodyData("subtheme") === "multistep" || App.getBodyData("subtheme") === "one-step-lightbox") {
       new DonationLightboxForm(DonationAmount, DonationFrequency, App);
     }
     new BequestLightbox();
