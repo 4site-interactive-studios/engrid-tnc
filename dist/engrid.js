@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 7, 2026 @ 19:43:07 ET
+ *  Date: Wednesday, January 7, 2026 @ 19:51:53 ET
  *  By: cawe
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -23934,7 +23934,7 @@ class DonationLightboxForm {
       this.sendMessage("error", "No sections found");
       return false;
     }
-    if (document.querySelector("body").dataset.engridSubtheme !== "onecolumnlightbox") {
+    if (document.querySelector("body").dataset.engridSubtheme === "onecolumnlightbox") {
       document.querySelector(".en__submit button")?.addEventListener("click", e => {
         e.preventDefault();
         this.submitLogic();
@@ -24118,7 +24118,7 @@ class DonationLightboxForm {
       // Only shows cortain if payment is not paypal
       const paymentType = document.querySelector("#en__field_transaction_paymenttype").value;
       if (paymentType.toLowerCase() != "paypal") {
-        if (document.querySelector("body").dataset.engridSubtheme !== "onecolumnlightbox") {
+        if (document.querySelector("body").dataset.engridSubtheme === "onecolumnlightbox") {
           const intervalId = setInterval(() => {
             const upsellModal = document.querySelector("#en__upsellModal");
             if (upsellModal) {

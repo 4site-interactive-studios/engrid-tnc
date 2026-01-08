@@ -145,7 +145,7 @@ export default class DonationLightboxForm {
       return false;
     }
     if (
-      document.querySelector("body").dataset.engridSubtheme !==
+      document.querySelector("body").dataset.engridSubtheme ===
       "onecolumnlightbox"
     ) {
       document
@@ -391,7 +391,7 @@ export default class DonationLightboxForm {
       ).value;
       if (paymentType.toLowerCase() != "paypal") {
         if (
-          document.querySelector("body").dataset.engridSubtheme !==
+          document.querySelector("body").dataset.engridSubtheme ===
           "onecolumnlightbox"
         ) {
           const intervalId = setInterval(() => {
