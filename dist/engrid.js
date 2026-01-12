@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, December 8, 2025 @ 08:46:15 ET
+ *  Date: Monday, January 12, 2026 @ 07:46:54 ET
  *  By: michael
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -28308,7 +28308,25 @@ const workdayMappings = [{
   }
 }, {
   old: {
+    revenueCategory: "",
+    applicationOther: "Merchandise (460000)"
+  },
+  new: {
+    revenueCategory: "UR:Merchandise Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
     revenueCategory: "null",
+    applicationOther: "Lodging (460500)"
+  },
+  new: {
+    revenueCategory: "UR:Hotel And Lodging (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
     applicationOther: "Lodging (460500)"
   },
   new: {
@@ -28326,7 +28344,25 @@ const workdayMappings = [{
   }
 }, {
   old: {
+    revenueCategory: "",
+    applicationOther: "Miscellaneous Fee Revenue (460700)"
+  },
+  new: {
+    revenueCategory: "UR:Miscellaneous Fee Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
     revenueCategory: "null",
+    applicationOther: "Use Permits & Non-Real Estate Leases (461000)"
+  },
+  new: {
+    revenueCategory: "UR:Use Permits and Non-Real Estate Leases Over Time (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
     applicationOther: "Use Permits & Non-Real Estate Leases (461000)"
   },
   new: {
@@ -28344,7 +28380,25 @@ const workdayMappings = [{
   }
 }, {
   old: {
+    revenueCategory: "",
+    applicationOther: "Trip Fees (462100)"
+  },
+  new: {
+    revenueCategory: "UR:Fee-Field Trip (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
     revenueCategory: "null",
+    applicationOther: "Special Event Revenue (462400)"
+  },
+  new: {
+    revenueCategory: "UR:Special Event Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
     applicationOther: "Special Event Revenue (462400)"
   },
   new: {
@@ -28362,8 +28416,26 @@ const workdayMappings = [{
   }
 }, {
   old: {
+    revenueCategory: "Unrestricted",
+    applicationOther: "null"
+  },
+  new: {
+    revenueCategory: "UR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}, {
+  old: {
     revenueCategory: "Temporarily Restricted",
     applicationOther: ""
+  },
+  new: {
+    revenueCategory: "TR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}, {
+  old: {
+    revenueCategory: "Temporarily Restricted",
+    applicationOther: "null"
   },
   new: {
     revenueCategory: "TR:Donor Support (400000)",
@@ -28389,15 +28461,16 @@ class Workday {
       return;
     }
     this.logger.log("Running Workday field mapping");
+    this.createRevenueCategoryField();
     this.setNewFieldValues();
   }
 
   /*
    * Run when conditions are met:
-   *  - Both Revenue Category and Application Other fields are present
+   *  - Application Other fields is present on the page
    */
   shouldRun() {
-    return !!this.revenueCategoryField && !!this.applicationOtherField;
+    return !!this.applicationOtherField;
   }
 
   /**
@@ -28442,6 +28515,16 @@ class Workday {
       return;
     }
     field.value = value;
+  }
+
+  /**
+   * Create the revenue category field if it does not exist on the page
+   * @private
+   */
+  createRevenueCategoryField() {
+    if (!!this.revenueCategoryField) return;
+    this.logger.log("Revenue Category field not found on page - creating it.");
+    this.revenueCategoryField = engrid_ENGrid.createHiddenInput("transaction.othamt4");
   }
 }
 ;// CONCATENATED MODULE: ./src/index.ts

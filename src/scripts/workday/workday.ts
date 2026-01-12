@@ -26,15 +26,16 @@ export class Workday {
       return;
     }
     this.logger.log("Running Workday field mapping");
+    this.createRevenueCategoryField();
     this.setNewFieldValues();
   }
 
   /*
    * Run when conditions are met:
-   *  - Both Revenue Category and Application Other fields are present
+   *  - Application Other fields is present on the page
    */
   private shouldRun(): boolean {
-    return !!this.revenueCategoryField && !!this.applicationOtherField;
+    return !!this.applicationOtherField;
   }
 
   /**
@@ -99,5 +100,15 @@ export class Workday {
     }
 
     field.value = value;
+  }
+
+  /**
+   * Create the revenue category field if it does not exist on the page
+   * @private
+   */
+  private createRevenueCategoryField() {
+    if (!!this.revenueCategoryField) return;
+    this.logger.log("Revenue Category field not found on page - creating it.");
+    this.revenueCategoryField = ENGrid.createHiddenInput("transaction.othamt4");
   }
 }
