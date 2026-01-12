@@ -1009,7 +1009,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     'input[name="transaction.bankname"]'
   );
   if (bankNameField) {
-    bankNameField.setAttribute("placeholder", "Account Holder Name");
+    bankNameField.setAttribute("placeholder", "Bank Name");
   }
 
   // Add placeholder to the Mobile Phone Field
