@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, January 13, 2026 @ 08:49:57 ET
+ *  Date: Tuesday, January 13, 2026 @ 09:38:43 ET
  *  By: michael
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -26056,6 +26056,25 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     const observer = new MutationObserver(() => updatePlaceholder(field));
     observer.observe(field, observerConfig);
   });
+
+  //Allow override of pre-selected NSG amount
+  if (urlParams.has("transaction.donationAmt") && window.EngagingNetworks.suggestedGift && window.EngagingNetworks.suggestedGift.single && window.EngagingNetworks.suggestedGift.recurring) {
+    const startTime = Date.now();
+
+    // Use an interval to test if EN's NSG script has run yet. When it has run, the field "transaction.donationAmt.sgid" will be on the page.
+    const interval = setInterval(() => {
+      const hiddenInput = document.querySelector('input[name="transaction.donationAmt.sgid"]');
+      if (hiddenInput) {
+        setTimeout(() => amt.setAmount(urlParams.get("transaction.donationAmt")), 1000);
+        clearInterval(interval);
+      }
+
+      // Stop if 5 seconds have passed
+      if (Date.now() - startTime > 5000) {
+        clearInterval(interval);
+      }
+    }, 50);
+  }
 };
 ;// CONCATENATED MODULE: ./src/scripts/bequest-lightbox.ts
 
