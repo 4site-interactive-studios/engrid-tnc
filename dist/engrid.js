@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, January 12, 2026 @ 07:46:54 ET
+ *  Date: Tuesday, January 13, 2026 @ 08:49:57 ET
  *  By: michael
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -26020,7 +26020,7 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   }
   const bankNameField = document.querySelector('input[name="transaction.bankname"]');
   if (bankNameField) {
-    bankNameField.setAttribute("placeholder", "Account Holder Name");
+    bankNameField.setAttribute("placeholder", "Bank Name");
   }
 
   // Add placeholder to the Mobile Phone Field
