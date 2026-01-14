@@ -1,5 +1,158 @@
 [data-engrid-theme="tnc"][data-engrid-multistep] {
-  --color-gray: #f2f4f7;
+  --engrid__body-title_background-color: #1b75bc;
+  --engrid__body-top_background-color: #1b75bc;
+  --engrid__body-title_padding: 96px 40px 0;
+  --engrid__body-top_padding: 0 40px;
+  --engrid__body-banner_padding: 0;
+  --engrid__body-main_padding: 96px 69px 0 51.5px;
+  --submit__button_background-color: var(--color-orange);
+  --submit__button_border-color: var(--color-orange);
+
+  .en__field--recurrfreq.en__field
+    .en__field__element.en__field__element--radio
+    .en__field__item:not(:first-of-type):not(:last-of-type) {
+    padding: calc(var(--fields_spacing-block) * 0.5)
+      var(--fields_spacing-inline) var(--fields_spacing-block);
+    padding-left: 0;
+  }
+
+  .radio-to-buttons_donationAmt .en__field__item.en__field__item--other {
+    flex-basis: 100%;
+    --input_padding: 0.8rem 1rem 0.8rem 2rem;
+    &:before {
+      top: 1.2rem;
+    }
+  }
+
+  .donation-nudge {
+    max-width: none;
+    justify-content: center;
+    // margin-top: 0;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+    // p {
+    //   font-size: 16px !important;
+    // }
+    img {
+      max-width: 35px;
+      margin-top: -10px;
+      margin-left: 15px;
+      margin-bottom: 3px;
+    }
+  }
+
+  form > .en__component--advrow {
+    .body-title,
+    .body-title h1,
+    .body-top {
+      color: #fff;
+    }
+
+    @media screen and (min-width: 992px) {
+      .body-banner,
+      .body-title,
+      .body-top {
+        grid-column-start: pc;
+      }
+
+      grid-template-columns:
+        [pc-start lpc-start] 0
+        [lpc-end cc-start lcc-start] 0
+        [lcc-end bc-start lbc-start] minmax(296px, 550px)
+        [lbc-end rbc-start] minmax(496px, 750px)
+        [rbc-end bc-end rcc-start] 0
+        [rcc-end cc-end rpc-start] 0
+        [rpc-end pc-end];
+    }
+
+    @media (max-width: 1200px) and (min-width: 992px) {
+      grid-template-columns:
+        [pc-start lpc-start] 0
+        [lpc-end cc-start lcc-start] 0
+        [lcc-end bc-start lbc-start] 380px
+        [lbc-end rbc-start] 565px
+        [rbc-end bc-end rcc-start] 0
+        [rcc-end cc-end rpc-start] 0
+        [rpc-end pc-end];
+    }
+  }
+
+  // [data-multistep-step="1"] .multistep-stepper {
+  //   top: -26px;
+  //   position: relative;
+  // }
+
+  .multistep-stepper {
+    margin-bottom: 20px;
+  }
+
+  .multistep-stepper__step {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 24px 0;
+    border-bottom: 2px solid transparent;
+  }
+
+  .multistep-stepper__number {
+    border: 1px solid var(--default_color);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 6px;
+  }
+
+  .multistep-stepper__step--active {
+    background-color: #ffffff;
+    border-color: var(--color-green);
+    color: var(--color-green);
+    .multistep-stepper__number {
+      border-color: var(--color-green);
+      background-color: var(--color-green);
+      color: #ffffff;
+    }
+  }
+
+  @for $i from 1 through 6 {
+    &:not([data-engrid-multistep-active-step="#{$i}"]):not([data-engrid-multistep-expand="true"]) {
+      [data-multistep-step="#{$i}"] {
+        display: none !important;
+      }
+    }
+  }
+
+  .multistep-button-container {
+    display: flex;
+    flex-basis: 60px;
+    margin-bottom: 30px;
+
+    button:not(.btn-back) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        top: -1px;
+        transition: left 0.3s;
+        position: relative;
+        left: 16px;
+      }
+
+      &:hover svg {
+        left: 21px;
+      }
+    }
+  }
+
+  ///////////////////////////////
+
   --body-side-padding: 29px;
   --engrid__body_padding: 0 var(--body-side-padding);
   --engrid__content-footerSpacer_background-color: #ffffff;
@@ -11,9 +164,9 @@
   --en-vgs-width: 244px;
   --en-vgs-borderWidth: 2px;
   --en-vgs-borderStyle: solid;
-  --en-vgs-borderColor: rgb(245, 245, 245);
+  // --en-vgs-borderColor: rgb(245, 245, 245);
   --en-vgs-borderRadius: 0px;
-  --en-vgs-backgroundColor: rgb(245, 245, 245);
+  // --en-vgs-backgroundColor: rgb(245, 245, 245);
 
   .en__component--copyblock:not(.move-before-transaction-donationamt) {
     h2.section-header {
@@ -41,10 +194,6 @@
 
   &[data-engrid-layout="leftleft1col"] {
     --engrid__content-footer_background-color: var(--color-gray);
-
-    .body-main {
-      padding-top: 0;
-    }
 
     .content-header {
       margin-bottom: 0;
@@ -218,86 +367,11 @@
     }
   }
 
-  .body-main {
-    padding-top: 0;
-  }
-
   @media screen and (min-width: 601px) {
     &:not([data-engrid-subtheme]):not(#en__pagebuilder):not([data-engrid-debug])
       .radio-to-buttons_recurrfreq.radio-to-buttons_recurrfreq_to-tabs
       .en__field--recurrfreq {
       margin-top: 0;
-    }
-  }
-
-  // [data-multistep-step="1"] .multistep-stepper {
-  //   top: -26px;
-  //   position: relative;
-  // }
-
-  .multistep-stepper__step {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #667085;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 10px 0 6px;
-    background-color: rgba(228, 228, 228, 0.36);
-    border-bottom: 4px solid transparent;
-  }
-
-  .multistep-stepper__number {
-    border: 1px solid #667085;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 6px;
-  }
-
-  .multistep-stepper__step--active {
-    background-color: #ffffff;
-    border-color: #000000;
-    color: #000000;
-    .multistep-stepper__number {
-      border-color: #000000;
-      background-color: #000000;
-      color: #ffffff;
-    }
-  }
-
-  @for $i from 1 through 6 {
-    &:not([data-engrid-multistep-active-step="#{$i}"]):not([data-engrid-multistep-expand="true"]) {
-      [data-multistep-step="#{$i}"] {
-        display: none !important;
-      }
-    }
-  }
-
-  .multistep-button-container {
-    display: flex;
-    flex-basis: 60px;
-    margin-bottom: 30px;
-
-    button:not(.btn-back) {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      svg {
-        top: -1px;
-        transition: left 0.3s;
-        position: relative;
-        left: 16px;
-      }
-
-      &:hover svg {
-        left: 21px;
-      }
     }
   }
 
