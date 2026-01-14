@@ -5,6 +5,7 @@
   --engrid__body-top_padding: 0 40px;
   --engrid__body-banner_padding: 0;
   --engrid__body-main_padding: 96px 69px 0 51.5px;
+  --engrid__content-footer_padding: 0;
   --submit__button_background-color: var(--color-orange);
   --submit__button_border-color: var(--color-orange);
 
@@ -59,23 +60,106 @@
       grid-template-columns:
         [pc-start lpc-start] 0
         [lpc-end cc-start lcc-start] 0
-        [lcc-end bc-start lbc-start] minmax(296px, 550px)
-        [lbc-end rbc-start] minmax(496px, 750px)
+        [lcc-end bc-start lbc-start] 42%
+        [lbc-end rbc-start] 58%
         [rbc-end bc-end rcc-start] 0
         [rcc-end cc-end rpc-start] 0
-        [rpc-end pc-end];
+        [rpc-end pc-end] 0;
+    }
+  }
+
+  .body-main {
+    border: none;
+    padding-bottom: 144px;
+
+    .form-heading {
+      margin-top: 1.5rem;
     }
 
-    @media (max-width: 1200px) and (min-width: 992px) {
-      grid-template-columns:
-        [pc-start lpc-start] 0
-        [lpc-end cc-start lcc-start] 0
-        [lcc-end bc-start lbc-start] 380px
-        [lbc-end rbc-start] 565px
-        [rbc-end bc-end rcc-start] 0
-        [rcc-end cc-end rpc-start] 0
-        [rpc-end pc-end];
+    .body-bottom-content {
+      border: none;
+
+      h2 {
+        font-family: var(--serif-fonts);
+        color: var(--color-green);
+      }
+
+      .contact-us {
+        flex-direction: row;
+      }
+
+      .contact {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+
+        div:first-of-type {
+          margin-right: 0;
+        }
+      }
     }
+
+    .pre-footer-items {
+      gap: 12px;
+
+      .pre-footer-item-header {
+        font-size: 32px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+    }
+
+    .ihmo-content {
+      flex-direction: column;
+    }
+
+    .en__field--auto-renew {
+      & > div {
+        width: 100%;
+
+        & > div {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .main-page-footer {
+    margin: 0;
+    padding-bottom: 48px;
+    max-width: none;
+
+    div {
+      margin: 0 40px;
+      width: auto;
+    }
+  }
+
+  .give-by-select {
+    margin-left: 0;
+    margin-right: 0;
+
+    .en__field--give-by-select {
+      &.en__field--radio input[type="radio"] + label {
+        border-left-style: solid;
+        border-left-width: var(--give-by-select__button_border-width);
+        border-left-color: var(--give-by-select__button_border-color);
+      }
+      & > .en__field__element .en__field__item {
+        --give-by-select__button_count: 1;
+        --give-by-select__flex-grow: initial;
+        flex-basis: calc(100% / var(--give-by-select__button_count));
+        flex-grow: var(--give-by-select__flex-grow);
+        padding: calc(var(--fields_spacing-block) * 0.5) 0;
+      }
+    }
+  }
+
+  .premium-theme-3-header {
+    margin-bottom: 55px;
   }
 
   // [data-multistep-step="1"] .multistep-stepper {
@@ -378,23 +462,23 @@
   .btn-back {
     flex-basis: 60px;
     margin-top: 2rem;
-    opacity: 0.8;
     margin-right: 20px;
-    background-color: var(--submit__button_background-color);
     border-color: var(--submit__button_border-color);
-    color: var(--submit__button_color);
+    color: var(--color-orange);
     font-size: var(--submit__button_font-size);
     padding-bottom: var(--submit__button_padding-bottom);
     padding-top: var(--submit__button_padding-top);
     text-transform: var(--submit__button_text-transform);
-    transition: opacity 0.2s;
+    transition: background-color border-color color 0.2s;
     height: 65px;
     justify-content: center;
     align-items: center;
     display: flex;
 
     &:hover {
-      opacity: 0.6;
+      background-color: #1a1a1a;
+      border-color: #1a1a1a;
+      color: var(--color-white);
     }
   }
 
@@ -433,13 +517,7 @@
   }
 
   .en__submit button {
-    .live-variable-frequency:after {
-      content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='14' viewBox='0 0 15 14' fill='none'%3E%3Cpath d='M8.187 13.313C7.807 13.693 7.192 13.693 6.813 13.313C6.433 12.933 6.433 12.317 6.813 11.938L10.5 8.24998H1.6C0.992 8.24998 0.5 7.75698 0.5 7.14998C0.5 6.54198 0.992 6.04998 1.6 6.04998H10.8L6.813 2.06198C6.433 1.68198 6.433 1.06698 6.813 0.686978C7.193 0.306978 7.808 0.306978 8.187 0.686978L14.5 6.99998L8.187 13.313Z' fill='white'/%3E%3C/svg%3E%3C");
-      position: relative;
-      top: -1px;
-      left: 16px;
-      transition: left 0.3s;
-    }
+    width: 100%;
 
     &:hover .live-variable-frequency:after {
       left: 21px;

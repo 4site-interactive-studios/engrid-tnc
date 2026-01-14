@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 14, 2026 @ 22:22:42 ET
+ *  Date: Wednesday, January 14, 2026 @ 17:36:37 ET
  *  By: cawe
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -12084,6 +12084,7 @@ body[data-engrid-debug]:before{
   --engrid__body-top_padding:0 40px;
   --engrid__body-banner_padding:0;
   --engrid__body-main_padding:96px 69px 0 51.5px;
+  --engrid__content-footer_padding:0;
   --submit__button_background-color:var(--color-orange);
   --submit__button_border-color:var(--color-orange);
   --body-side-padding:29px;
@@ -12122,16 +12123,78 @@ body[data-engrid-debug]:before{
 }
 @media screen and (min-width:992px){
   [data-engrid-theme=tnc][data-engrid-multistep] form>.en__component--advrow{
-    grid-template-columns:[pc-start lpc-start] 0 [lpc-end cc-start lcc-start] 0 [lcc-end bc-start lbc-start] minmax(296px, 550px) [lbc-end rbc-start] minmax(496px, 750px) [rbc-end bc-end rcc-start] 0 [rcc-end cc-end rpc-start] 0 [rpc-end pc-end];
+    grid-template-columns:[pc-start lpc-start] 0 [lpc-end cc-start lcc-start] 0 [lcc-end bc-start lbc-start] 42% [lbc-end rbc-start] 58% [rbc-end bc-end rcc-start] 0 [rcc-end cc-end rpc-start] 0 [rpc-end pc-end] 0;
   }
   [data-engrid-theme=tnc][data-engrid-multistep] form>.en__component--advrow .body-banner,[data-engrid-theme=tnc][data-engrid-multistep] form>.en__component--advrow .body-title,[data-engrid-theme=tnc][data-engrid-multistep] form>.en__component--advrow .body-top{
     grid-column-start:pc;
   }
 }
-@media (max-width:1200px) and (min-width:992px){
-  [data-engrid-theme=tnc][data-engrid-multistep] form>.en__component--advrow{
-    grid-template-columns:[pc-start lpc-start] 0 [lpc-end cc-start lcc-start] 0 [lcc-end bc-start lbc-start] 380px [lbc-end rbc-start] 565px [rbc-end bc-end rcc-start] 0 [rcc-end cc-end rpc-start] 0 [rpc-end pc-end];
-  }
+[data-engrid-theme=tnc][data-engrid-multistep] .body-main{
+  border:none;
+  padding-bottom:144px;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .body-main .form-heading{
+  margin-top:1.5rem;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .body-main .body-bottom-content{
+  border:none;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .body-main .body-bottom-content h2{
+  color:var(--color-green);
+  font-family:var(--serif-fonts);
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .body-main .body-bottom-content .contact-us{
+  flex-direction:row;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .body-main .body-bottom-content .contact{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  text-align:center;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .body-main .body-bottom-content .contact div:first-of-type{
+  margin-right:0;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .body-main .pre-footer-items{
+  gap:12px;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .body-main .pre-footer-items .pre-footer-item-header{
+  font-size:32px;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .body-main .pre-footer-items p{
+  font-size:14px;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .body-main .ihmo-content{
+  flex-direction:column;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .body-main .en__field--auto-renew>div,[data-engrid-theme=tnc][data-engrid-multistep] .body-main .en__field--auto-renew>div>div{
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .main-page-footer{
+  margin:0;
+  max-width:none;
+  padding-bottom:48px;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .main-page-footer div{
+  margin:0 40px;
+  width:auto;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .give-by-select{
+  margin-left:0;
+  margin-right:0;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .give-by-select .en__field--give-by-select.en__field--radio input[type=radio]+label{
+  border-left:var(--give-by-select__button_border-width) solid var(--give-by-select__button_border-color);
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .give-by-select .en__field--give-by-select>.en__field__element .en__field__item{
+  --give-by-select__button_count:1;
+  --give-by-select__flex-grow:initial;
+  flex-basis:calc(100%/var(--give-by-select__button_count));
+  flex-grow:var(--give-by-select__flex-grow);
+  padding:calc(var(--fields_spacing-block)*.5) 0;
+}
+[data-engrid-theme=tnc][data-engrid-multistep] .premium-theme-3-header{
+  margin-bottom:55px;
 }
 [data-engrid-theme=tnc][data-engrid-multistep] .multistep-stepper{
   margin-bottom:20px;
@@ -12337,9 +12400,8 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-multistep] .btn-back{
   align-items:center;
-  background-color:var(--submit__button_background-color);
   border-color:var(--submit__button_border-color);
-  color:var(--submit__button_color);
+  color:var(--color-orange);
   display:flex;
   flex-basis:60px;
   font-size:var(--submit__button_font-size);
@@ -12347,14 +12409,15 @@ body[data-engrid-debug]:before{
   justify-content:center;
   margin-right:20px;
   margin-top:2rem;
-  opacity:.8;
   padding-bottom:var(--submit__button_padding-bottom);
   padding-top:var(--submit__button_padding-top);
   text-transform:var(--submit__button_text-transform);
-  transition:opacity .2s;
+  transition:background-color border-color color .2s;
 }
 [data-engrid-theme=tnc][data-engrid-multistep] .btn-back:hover{
-  opacity:.6;
+  background-color:#1a1a1a;
+  border-color:#1a1a1a;
+  color:var(--color-white);
 }
 [data-engrid-theme=tnc][data-engrid-multistep] .multistep-submit{
   grid-column-gap:20px;
@@ -12384,12 +12447,8 @@ body[data-engrid-debug]:before{
   margin-bottom:0;
   margin-top:0;
 }
-[data-engrid-theme=tnc][data-engrid-multistep] .en__submit button .live-variable-frequency:after{
-  content:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='14' fill='none'%3E%3Cpath d='M8.187 13.313a.972.972 0 1 1-1.374-1.375L10.5 8.25H1.6a1.1 1.1 0 0 1 0-2.2h9.2L6.813 2.062A.972.972 0 1 1 8.187.687L14.5 7l-6.313 6.313Z' fill='%23fff'/%3E%3C/svg%3E");
-  left:16px;
-  position:relative;
-  top:-1px;
-  transition:left .3s;
+[data-engrid-theme=tnc][data-engrid-multistep] .en__submit button{
+  width:100%;
 }
 [data-engrid-theme=tnc][data-engrid-multistep] .en__submit button:hover .live-variable-frequency:after{
   left:21px;
