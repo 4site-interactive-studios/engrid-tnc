@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 14, 2026 @ 20:47:34 ET
+ *  Date: Wednesday, January 14, 2026 @ 21:58:29 ET
  *  By: cawe
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -26428,6 +26428,13 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     // Observe placeholder and aria-required changes
     const observer = new MutationObserver(() => updatePlaceholder(field));
     observer.observe(field, observerConfig);
+  });
+  document.querySelectorAll("h2.alt-ways-give-accordion, h2.by-the-num-accordion").forEach(title => {
+    title.addEventListener("click", () => {
+      const items = title.nextElementSibling;
+      if (!items || !items.classList.contains("pre-footer-items") && !items.classList.contains("contact-us")) return;
+      items.classList.toggle("hide");
+    });
   });
 };
 ;// CONCATENATED MODULE: ./src/scripts/bequest-lightbox.ts

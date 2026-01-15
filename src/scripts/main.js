@@ -1059,4 +1059,20 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     const observer = new MutationObserver(() => updatePlaceholder(field));
     observer.observe(field, observerConfig);
   });
+
+  document
+    .querySelectorAll("h2.alt-ways-give-accordion, h2.by-the-num-accordion")
+    .forEach((title) => {
+      title.addEventListener("click", () => {
+        const items = title.nextElementSibling;
+        if (
+          !items ||
+          (!items.classList.contains("pre-footer-items") &&
+            !items.classList.contains("contact-us"))
+        )
+          return;
+
+        items.classList.toggle("hide");
+      });
+    });
 };
