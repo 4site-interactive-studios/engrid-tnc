@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 14, 2026 @ 21:58:29 ET
+ *  Date: Thursday, January 15, 2026 @ 00:26:06 ET
  *  By: cawe
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -12127,9 +12127,6 @@ body[data-engrid-debug]:before{
   margin-left:15px;
   margin-top:-10px;
   max-width:35px;
-}
-[data-engrid-theme=tnc][data-engrid-multistep] .body-banner,[data-engrid-theme=tnc][data-engrid-multistep] .body-main,[data-engrid-theme=tnc][data-engrid-multistep] .body-title,[data-engrid-theme=tnc][data-engrid-multistep] .body-top{
-  min-width:100%;
 }
 [data-engrid-theme=tnc][data-engrid-multistep] form>.en__component--advrow .body-title,[data-engrid-theme=tnc][data-engrid-multistep] form>.en__component--advrow .body-title h1,[data-engrid-theme=tnc][data-engrid-multistep] form>.en__component--advrow .body-top,[data-engrid-theme=tnc][data-engrid-multistep] form>.en__component--advrow .body-top h1{
   color:#fff;
