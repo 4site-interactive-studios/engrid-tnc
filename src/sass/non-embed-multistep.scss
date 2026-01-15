@@ -1,13 +1,19 @@
 [data-engrid-theme="tnc"][data-engrid-multistep] {
   --engrid__body-title_background-color: #1b75bc;
   --engrid__body-top_background-color: #1b75bc;
-  --engrid__body-title_padding: 96px 40px 0;
-  --engrid__body-top_padding: 0 40px;
+  --engrid__body-title_padding: 48px 20px 8px;
+  --engrid__body-top_padding: 24px 20px 40px;
   --engrid__body-banner_padding: 0;
-  --engrid__body-main_padding: 96px 69px 0 51.5px;
+  --engrid__body-main_padding: 0 20px 48px;
   --engrid__content-footer_padding: 0;
   --submit__button_background-color: var(--color-orange);
   --submit__button_border-color: var(--color-orange);
+
+  @media screen and (min-width: 992px) {
+    --engrid__body-title_padding: 96px 40px 0;
+    --engrid__body-top_padding: 0 40px;
+    --engrid__body-main_padding: 96px 69px 0 51.5px;
+  }
 
   .en__field--recurrfreq.en__field
     .en__field__element.en__field__element--radio
@@ -43,10 +49,18 @@
     }
   }
 
+  .body-title,
+  .body-banner,
+  .body-top,
+  .body-main {
+    min-width: 100%;
+  }
+
   form > .en__component--advrow {
     .body-title,
     .body-title h1,
-    .body-top {
+    .body-top,
+    .body-top h1 {
       color: #fff;
     }
 
@@ -70,7 +84,7 @@
 
   .body-main {
     border: none;
-    padding-bottom: 144px;
+    padding-bottom: 3px;
 
     .form-heading {
       margin-top: 1.5rem;
@@ -93,6 +107,7 @@
         flex-direction: column;
         text-align: center;
         gap: 10px;
+        padding: 30px 0;
 
         div:first-of-type {
           margin-right: 0;
@@ -100,8 +115,22 @@
       }
     }
 
+    .pre-footer h2 {
+      font-family: var(--default_font-family);
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
     .pre-footer-items {
       gap: 12px;
+      flex-wrap: wrap;
+      flex-direction: row;
+
+      & > div {
+        margin-bottom: 0;
+        flex-basis: calc(50% - 6px);
+      }
 
       .pre-footer-item-header {
         font-size: 32px;
@@ -109,6 +138,8 @@
 
       p {
         font-size: 14px;
+        line-height: 20px;
+        margin-top: 8px;
       }
     }
 
@@ -129,11 +160,12 @@
 
   .main-page-footer {
     margin: 0;
-    padding-bottom: 48px;
+    padding: 48px 0;
     max-width: none;
 
     div {
-      margin: 0 40px;
+      margin: 0;
+      padding-left: 20px;
       width: auto;
     }
   }
@@ -231,6 +263,96 @@
 
       &:hover svg {
         left: 21px;
+      }
+    }
+  }
+
+  .body-title h1 {
+    display: none;
+  }
+
+  &:not([data-engrid-last-page]):not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand="true"]) {
+    .body-title,
+    .body-banner,
+    .body-top {
+      display: none;
+    }
+  }
+
+  .radio-to-buttons_donationAmt {
+    --donation-amount__button_count: 2;
+  }
+
+  @media screen and (max-width: 600px) {
+    .body-main {
+      .body-bottom-content {
+        .contact-us {
+          flex-direction: column;
+          max-width: 80%;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .contact {
+          flex-direction: row;
+          gap: 24px;
+          text-align: left;
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: 992px) {
+    .body-title h1 {
+      display: block;
+    }
+
+    .body-top h1 {
+      display: none;
+    }
+
+    .body-main {
+      padding-bottom: 144px;
+    }
+
+    .main-page-footer {
+      padding-top: 32px;
+
+      div {
+        margin: 0 40px;
+        padding: 0 14px;
+      }
+    }
+
+    &:not([data-engrid-last-page]):not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand="true"]) {
+      .body-banner,
+      .body-title,
+      .body-top {
+        display: grid;
+      }
+    }
+
+    .radio-to-buttons_donationAmt {
+      --donation-amount__button_count: 3;
+    }
+    .body-main {
+      .body-bottom-content {
+        .contact {
+          padding-top: 0;
+          padding-bottom: 0;
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: 1280px) {
+    .body-main {
+      .pre-footer-items {
+        flex-wrap: nowrap;
+
+        & > div {
+          margin-bottom: 15px;
+        }
       }
     }
   }
@@ -528,16 +650,6 @@
     .body-title {
       background: #ffffff;
       padding: 26px 29px 20px 29px;
-    }
-  }
-
-  @media screen and (max-width: 1023px) {
-    &:not([data-engrid-last-page]):not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand="true"]) {
-      .body-title,
-      .body-banner,
-      .body-top {
-        display: none !important;
-      }
     }
   }
 
