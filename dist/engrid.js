@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 15, 2026 @ 00:26:06 ET
- *  By: cawe
+ *  Date: Monday, January 19, 2026 @ 12:48:45 ET
+ *  By: michael
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
  *
@@ -28881,13 +28881,73 @@ class MultistepForm {
     return stepsBetween.every(step => this.validateStep(step));
   }
   validateStep(step) {
-    if (this.validators.length === 0) return true;
+    ///////////////////////////////////////////////////////
+    // Check validation using Engaging Networks Validators
+    ///////////////////////////////////////////////////////
     const validators = this.validators.filter(validator => {
       return document.querySelector(`.en__field--${validator.field}`)?.closest(".en__component--formblock")?.getAttribute("data-multistep-step") === step;
     });
     const validationResults = validators.map(validator => {
       validator.hideMessage();
       return !validator.isVisible() || validator.test();
+    });
+
+    ///////////////////////////////////////////////////////
+    // Check validation based on ENgrid i-required classes for conditionally required fields
+    ///////////////////////////////////////////////////////
+    const requiredIfVisibleElements = document.querySelectorAll(`
+      .en__component--formblock[data-multistep-step="${step}"].i-required .en__field,
+      .en__component--formblock[data-multistep-step="${step}"].i1-required .en__field:nth-of-type(1),
+      .en__component--formblock[data-multistep-step="${step}"].i2-required .en__field:nth-of-type(2),
+      .en__component--formblock[data-multistep-step="${step}"].i3-required .en__field:nth-of-type(3),
+      .en__component--formblock[data-multistep-step="${step}"].i4-required .en__field:nth-of-type(4),
+      .en__component--formblock[data-multistep-step="${step}"].i5-required .en__field:nth-of-type(5),
+      .en__component--formblock[data-multistep-step="${step}"].i6-required .en__field:nth-of-type(6),
+      .en__component--formblock[data-multistep-step="${step}"].i7-required .en__field:nth-of-type(7),
+      .en__component--formblock[data-multistep-step="${step}"].i8-required .en__field:nth-of-type(8),
+      .en__component--formblock[data-multistep-step="${step}"].i9-required .en__field:nth-of-type(9),
+      .en__component--formblock[data-multistep-step="${step}"].i10-required .en__field:nth-of-type(10),
+      .en__component--formblock[data-multistep-step="${step}"].i11-required .en__field:nth-of-type(11)
+      `);
+    Array.from(requiredIfVisibleElements).reverse().forEach(field => {
+      engrid_ENGrid.removeError(field);
+      if (!engrid_ENGrid.isVisible(field)) return;
+      this.logger.log(`${field.getAttribute("class")} is visible`);
+      const fieldElement = field.querySelector("input:not([type=hidden]) , select, textarea");
+      if (fieldElement && fieldElement.closest("[data-unhidden]") === null && !engrid_ENGrid.getFieldValue(fieldElement.getAttribute("name"))) {
+        const fieldLabel = field.querySelector(".en__field__label");
+        if (fieldLabel) {
+          this.logger.log(`${fieldLabel.innerText} is required`);
+          engrid_ENGrid.setError(field, `${fieldLabel.innerText} is required`);
+        } else {
+          this.logger.log(`${fieldElement.getAttribute("name")} is required`);
+          engrid_ENGrid.setError(field, `This field is required`);
+        }
+        fieldElement.focus();
+        validationResults.push(false);
+      } else {
+        validationResults.push(true);
+      }
+    });
+
+    ///////////////////////////////////////////////////////
+    // Check validation based on VGS valid classes
+    ///////////////////////////////////////////////////////
+    // Find if any VGS fields are on the active step
+    const vgsFieldsInStep = [...document.querySelectorAll(".en__field--vgs")].filter(el => el.closest(".en__component--formblock")?.getAttribute("data-multistep-step") === step);
+
+    // Check if VGS fields are valid based on the presence of the class "vgs-collect-container__valid"
+    // Set and remove error label/status of fields
+    vgsFieldsInStep.forEach(vgsField => {
+      engrid_ENGrid.removeError(vgsField);
+      const vgsInput = vgsField.querySelector(".en__field__input--vgs");
+      if (!engrid_ENGrid.isVisible(vgsField) || !vgsInput) return;
+      if (vgsInput.classList.contains("vgs-collect-container__valid")) {
+        validationResults.push(true);
+        return;
+      }
+      validationResults.push(false);
+      engrid_ENGrid.setError(vgsField, "This field is invalid");
     });
     return validationResults.every(result => result);
   }

@@ -232,7 +232,10 @@
   @for $i from 1 through 6 {
     &:not([data-engrid-multistep-active-step="#{$i}"]):not([data-engrid-multistep-expand="true"]) {
       [data-multistep-step="#{$i}"] {
-        display: none !important;
+        //display: none !important;
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
       }
     }
   }
