@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, January 19, 2026 @ 12:48:45 ET
+ *  Date: Monday, January 19, 2026 @ 13:08:52 ET
  *  By: michael
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -12256,9 +12256,12 @@ body[data-engrid-debug]:before{
   color:#fff;
 }
 [data-engrid-theme=tnc][data-engrid-multistep]:not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand=true]) [data-multistep-step="1"],[data-engrid-theme=tnc][data-engrid-multistep]:not([data-engrid-multistep-active-step="2"]):not([data-engrid-multistep-expand=true]) [data-multistep-step="2"],[data-engrid-theme=tnc][data-engrid-multistep]:not([data-engrid-multistep-active-step="3"]):not([data-engrid-multistep-expand=true]) [data-multistep-step="3"],[data-engrid-theme=tnc][data-engrid-multistep]:not([data-engrid-multistep-active-step="4"]):not([data-engrid-multistep-expand=true]) [data-multistep-step="4"],[data-engrid-theme=tnc][data-engrid-multistep]:not([data-engrid-multistep-active-step="5"]):not([data-engrid-multistep-expand=true]) [data-multistep-step="5"],[data-engrid-theme=tnc][data-engrid-multistep]:not([data-engrid-multistep-active-step="6"]):not([data-engrid-multistep-expand=true]) [data-multistep-step="6"]{
-  opacity:0;
-  pointer-events:none;
-  position:absolute;
+  left:0 !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+  position:absolute !important;
+  top:0 !important;
+  visibility:hidden !important;
 }
 [data-engrid-theme=tnc][data-engrid-multistep] .multistep-button-container{
   display:flex;
