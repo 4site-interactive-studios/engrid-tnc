@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, January 20, 2026 @ 11:47:54 ET
+ *  Date: Tuesday, January 20, 2026 @ 12:12:18 ET
  *  By: michael
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -26393,7 +26393,7 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   }
   const bankNameField = document.querySelector('input[name="transaction.bankname"]');
   if (bankNameField) {
-    bankNameField.setAttribute("placeholder", "Account Holder Name");
+    bankNameField.setAttribute("placeholder", "Bank Name");
   }
 
   // Add placeholder to the Mobile Phone Field
@@ -28676,6 +28676,237 @@ class GroupQuiz {
     return engrid_ENGrid.getBodyData("subpagetype") === "quiz" && document.querySelector(".en__component--advrow.group-quiz");
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/workday/workday-mappings.ts
+const workdayMappings = [{
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Merchandise (460000)"
+  },
+  new: {
+    revenueCategory: "UR:Merchandise Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
+    applicationOther: "Merchandise (460000)"
+  },
+  new: {
+    revenueCategory: "UR:Merchandise Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Lodging (460500)"
+  },
+  new: {
+    revenueCategory: "UR:Hotel And Lodging (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
+    applicationOther: "Lodging (460500)"
+  },
+  new: {
+    revenueCategory: "UR:Hotel And Lodging (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Miscellaneous Fee Revenue (460700)"
+  },
+  new: {
+    revenueCategory: "UR:Miscellaneous Fee Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
+    applicationOther: "Miscellaneous Fee Revenue (460700)"
+  },
+  new: {
+    revenueCategory: "UR:Miscellaneous Fee Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Use Permits & Non-Real Estate Leases (461000)"
+  },
+  new: {
+    revenueCategory: "UR:Use Permits and Non-Real Estate Leases Over Time (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
+    applicationOther: "Use Permits & Non-Real Estate Leases (461000)"
+  },
+  new: {
+    revenueCategory: "UR:Use Permits and Non-Real Estate Leases Over Time (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Trip Fees (462100)"
+  },
+  new: {
+    revenueCategory: "UR:Fee-Field Trip (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
+    applicationOther: "Trip Fees (462100)"
+  },
+  new: {
+    revenueCategory: "UR:Fee-Field Trip (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Special Event Revenue (462400)"
+  },
+  new: {
+    revenueCategory: "UR:Special Event Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
+    applicationOther: "Special Event Revenue (462400)"
+  },
+  new: {
+    revenueCategory: "UR:Special Event Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "Unrestricted",
+    applicationOther: ""
+  },
+  new: {
+    revenueCategory: "UR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}, {
+  old: {
+    revenueCategory: "Unrestricted",
+    applicationOther: "null"
+  },
+  new: {
+    revenueCategory: "UR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}, {
+  old: {
+    revenueCategory: "Temporarily Restricted",
+    applicationOther: ""
+  },
+  new: {
+    revenueCategory: "TR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}, {
+  old: {
+    revenueCategory: "Temporarily Restricted",
+    applicationOther: "null"
+  },
+  new: {
+    revenueCategory: "TR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}];
+;// CONCATENATED MODULE: ./src/scripts/workday/workday.ts
+
+/*
+ * This module maps old values of the Revenue Category and Application Other fields
+ * into new values for the Workday system.
+ */
+
+
+
+class Workday {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("Workday", "white", "blue", "💼"));
+    _defineProperty(this, "mappings", workdayMappings);
+    _defineProperty(this, "revenueCategoryField", engrid_ENGrid.getField("transaction.othamt4"));
+    _defineProperty(this, "applicationOtherField", engrid_ENGrid.getField("transaction.othamt1"));
+    if (!this.shouldRun()) {
+      return;
+    }
+    this.logger.log("Running Workday field mapping");
+    this.createRevenueCategoryField();
+    this.setNewFieldValues();
+  }
+
+  /*
+   * Run when conditions are met:
+   *  - Application Other fields is present on the page
+   */
+  shouldRun() {
+    return !!this.applicationOtherField;
+  }
+
+  /**
+   * Get new values based on the old pair (or false)
+   */
+  getNewValues(pair) {
+    return this.mappings.find(m => m.old.revenueCategory.toLowerCase() === pair.revenueCategory.toLowerCase() && m.old.applicationOther.toLowerCase() === pair.applicationOther.toLowerCase())?.new || false;
+  }
+
+  /**
+   * Set new field values based on the mapping
+   */
+  setNewFieldValues() {
+    if (!this.revenueCategoryField || !this.applicationOtherField) {
+      return;
+    }
+    this.logger.log(`Looking for new mapping for Revenue Category: "${this.revenueCategoryField.value}", Application Other: "${this.applicationOtherField.value}"`);
+    const newValues = this.getNewValues({
+      revenueCategory: this.revenueCategoryField.value,
+      applicationOther: this.applicationOtherField.value
+    });
+    if (!newValues) {
+      this.logger.log(`No updated mapping found. Not updating fields.`);
+      return;
+    }
+    this.logger.log(`Mapping to new values - Revenue Category: "${newValues.revenueCategory}", Application Other: "${newValues.applicationOther}"`);
+    this.setFieldValue(this.revenueCategoryField, newValues.revenueCategory);
+    this.setFieldValue(this.applicationOtherField, newValues.applicationOther);
+  }
+
+  /**
+   * Set field value, adding option if needed (for select fields)
+   */
+  setFieldValue(field, value) {
+    if (field instanceof HTMLSelectElement) {
+      let option = [...field.options].find(opt => opt.value === value);
+      if (!option) {
+        option = new Option(value, value);
+        field.add(option);
+      }
+      field.value = value;
+      return;
+    }
+    field.value = value;
+  }
+
+  /**
+   * Create the revenue category field if it does not exist on the page
+   * @private
+   */
+  createRevenueCategoryField() {
+    if (!!this.revenueCategoryField) return;
+    this.logger.log("Revenue Category field not found on page - creating it.");
+    this.revenueCategoryField = engrid_ENGrid.createHiddenInput("transaction.othamt4");
+  }
+}
 // EXTERNAL MODULE: ./src/scripts/confetti.js
 var confetti = __webpack_require__(2995);
 ;// CONCATENATED MODULE: ./src/scripts/multistep-form.ts
@@ -29034,6 +29265,7 @@ class MultistepForm {
 
 
 
+
 const minimumAmount = window?.donationSettings?.minimumDonationAmount ?? 5;
 
 //Allow banner image with attribution using image block
@@ -29109,6 +29341,7 @@ const options = {
     new WidgetProgressBar();
     new AddDAFBanner();
     new BankAccountAgreementField();
+    new Workday();
     new MultistepForm();
 
     // Restore donation amount from session storage if submission failed
