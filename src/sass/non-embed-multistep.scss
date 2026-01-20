@@ -352,7 +352,8 @@
     &:not([data-engrid-last-page]):not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand="true"]) {
       .body-banner,
       .body-title,
-      .body-top {
+      .body-top,
+      .body-header {
         display: grid;
       }
     }

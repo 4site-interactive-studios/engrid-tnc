@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, January 20, 2026 @ 12:12:18 ET
+ *  Date: Tuesday, January 20, 2026 @ 12:21:56 ET
  *  By: michael
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -8429,8 +8429,21 @@ body[data-engrid-debug]:before{
   position:relative;
   z-index:10;
 }
-[data-engrid-theme=tnc] h2.alt-ways-give-accordion,[data-engrid-theme=tnc] h2.by-the-num-accordion{
+[data-engrid-theme=tnc] h2.alt-ways-give-accordion{
   cursor:pointer;
+}
+@media screen and (max-width:600px){
+  [data-engrid-theme=tnc] h2.alt-ways-give-accordion{
+    font-size:24px;
+  }
+}
+[data-engrid-theme=tnc] h2.by-the-num-accordion{
+  cursor:pointer;
+}
+@media screen and (max-width:600px){
+  [data-engrid-theme=tnc] h2.by-the-num-accordion{
+    font-size:30px !important;
+  }
 }
 [data-engrid-theme=tnc][data-engrid-layout=leftleft1col]{
   --click-to-expand__copy-area_height:200px;
@@ -12340,7 +12353,7 @@ body[data-engrid-debug]:before{
     margin:0 40px;
     padding:0 14px;
   }
-  [data-engrid-theme=tnc][data-engrid-multistep]:not([data-engrid-last-page]):not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand=true]) .body-banner,[data-engrid-theme=tnc][data-engrid-multistep]:not([data-engrid-last-page]):not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand=true]) .body-title,[data-engrid-theme=tnc][data-engrid-multistep]:not([data-engrid-last-page]):not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand=true]) .body-top{
+  [data-engrid-theme=tnc][data-engrid-multistep]:not([data-engrid-last-page]):not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand=true]) .body-banner,[data-engrid-theme=tnc][data-engrid-multistep]:not([data-engrid-last-page]):not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand=true]) .body-header,[data-engrid-theme=tnc][data-engrid-multistep]:not([data-engrid-last-page]):not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand=true]) .body-title,[data-engrid-theme=tnc][data-engrid-multistep]:not([data-engrid-last-page]):not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand=true]) .body-top{
     display:grid;
   }
   [data-engrid-theme=tnc][data-engrid-multistep] .radio-to-buttons_donationAmt{
