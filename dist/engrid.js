@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, January 19, 2026 @ 13:08:52 ET
+ *  Date: Tuesday, January 20, 2026 @ 08:13:22 ET
  *  By: michael
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -28885,7 +28885,7 @@ class MultistepForm {
     // Check validation using Engaging Networks Validators
     ///////////////////////////////////////////////////////
     const validators = this.validators.filter(validator => {
-      return document.querySelector(`.en__field--${validator.field}`)?.closest(".en__component--formblock")?.getAttribute("data-multistep-step") === step;
+      return document.querySelector(`.en__field--${validator.field}`)?.closest(`[data-multistep-step="${step}"]`) !== null;
     });
     const validationResults = validators.map(validator => {
       validator.hideMessage();
@@ -28996,10 +28996,17 @@ class MultistepForm {
       }));
     }, 250);
   }
+
+  /*
+   * When there is a server side error, active the step with VGS fields on it.
+   */
   handleServerSideError() {
     if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "checkSubmissionFailed") && window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed()) {
       this.logger.log("Server side error detected");
-      this.activateStep("3", true);
+      const vgsStep = document.querySelector(".en__field--vgs")?.closest("[data-multistep-step]")?.getAttribute("data-multistep-step");
+      this.activateStep(vgsStep || "3", true);
+      this.scrollTo(0);
+      this.logger.log("Scrolling to top due to server side error");
     }
   }
 }

@@ -318,8 +318,7 @@ export default class MultistepForm {
       return (
         document
           .querySelector(`.en__field--${validator.field}`)
-          ?.closest(".en__component--formblock")
-          ?.getAttribute("data-multistep-step") === step
+          ?.closest(`[data-multistep-step="${step}"]`) !== null
       );
     });
 
@@ -460,6 +459,9 @@ export default class MultistepForm {
     }, 250);
   }
 
+  /*
+   * When there is a server side error, active the step with VGS fields on it.
+   */
   private handleServerSideError() {
     if (
       ENGrid.checkNested(
@@ -472,7 +474,16 @@ export default class MultistepForm {
       window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed()
     ) {
       this.logger.log("Server side error detected");
-      this.activateStep("3", true);
+
+      const vgsStep = document
+        .querySelector(".en__field--vgs")
+        ?.closest("[data-multistep-step]")
+        ?.getAttribute("data-multistep-step");
+
+      this.activateStep(vgsStep || "3", true);
+
+      this.scrollTo(0);
+      this.logger.log("Scrolling to top due to server side error");
     }
   }
 }
