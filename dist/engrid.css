@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, January 20, 2026 @ 08:13:22 ET
+ *  Date: Tuesday, January 20, 2026 @ 10:41:57 ET
  *  By: michael
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -12107,6 +12107,9 @@ body[data-engrid-debug]:before{
     --engrid__body-main_padding:96px 69px 0 51.5px;
   }
 }
+[data-engrid-theme=tnc][data-engrid-multistep]#en__pagebuilder .body-header{
+  display:grid;
+}
 [data-engrid-theme=tnc][data-engrid-multistep] .en__field--recurrfreq.en__field .en__field__element.en__field__element--radio .en__field__item:not(:first-of-type):not(:last-of-type){
   padding:calc(var(--fields_spacing-block)*.5) var(--fields_spacing-inline) var(--fields_spacing-block);
   padding-left:0;
@@ -12188,9 +12191,6 @@ body[data-engrid-debug]:before{
   font-size:14px;
   line-height:20px;
   margin-top:8px;
-}
-[data-engrid-theme=tnc][data-engrid-multistep] .body-main .ihmo-content{
-  flex-direction:column;
 }
 [data-engrid-theme=tnc][data-engrid-multistep] .body-main .en__field--auto-renew>div,[data-engrid-theme=tnc][data-engrid-multistep] .body-main .en__field--auto-renew>div>div{
   width:100%;
@@ -12302,12 +12302,6 @@ body[data-engrid-debug]:before{
   }
 }
 @media screen and (min-width:992px){
-  [data-engrid-theme=tnc][data-engrid-multistep] .body-title h1{
-    display:block;
-  }
-  [data-engrid-theme=tnc][data-engrid-multistep] .body-top h1{
-    display:none;
-  }
   [data-engrid-theme=tnc][data-engrid-multistep] .body-main{
     padding-bottom:144px;
   }

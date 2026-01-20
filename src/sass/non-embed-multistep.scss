@@ -15,6 +15,12 @@
     --engrid__body-main_padding: 96px 69px 0 51.5px;
   }
 
+  &#en__pagebuilder {
+    .body-header {
+      display: grid;
+    }
+  }
+
   .en__field--recurrfreq.en__field
     .en__field__element.en__field__element--radio
     .en__field__item:not(:first-of-type):not(:last-of-type) {
@@ -134,10 +140,6 @@
         line-height: 20px;
         margin-top: 8px;
       }
-    }
-
-    .ihmo-content {
-      flex-direction: column;
     }
 
     .en__field--auto-renew {
@@ -302,14 +304,6 @@
   }
 
   @media screen and (min-width: 992px) {
-    .body-title h1 {
-      display: block;
-    }
-
-    .body-top h1 {
-      display: none;
-    }
-
     .body-main {
       padding-bottom: 144px;
     }
