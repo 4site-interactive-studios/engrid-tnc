@@ -333,6 +333,14 @@
         }
       }
     }
+
+    &[data-engrid-last-page] {
+      .body-title,
+      .body-banner,
+      .body-top {
+        display: none;
+      }
+    }
   }
 
   @media screen and (min-width: 992px) {
