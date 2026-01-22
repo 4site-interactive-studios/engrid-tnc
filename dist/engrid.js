@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, January 20, 2026 @ 12:48:17 ET
+ *  Date: Thursday, January 22, 2026 @ 08:18:49 ET
  *  By: michael
  *  ENGrid styles: v0.23.4
  *  ENGrid scripts: v0.23.7
@@ -25925,12 +25925,17 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     if (direction === "down") {
       if (autoRenewContainer) {
         autoRenewContainer.insertAdjacentElement("afterend", premiumContainerContent);
+        const multistepStep = autoRenewContainer.getAttribute("data-multistep-step");
+        if (multistepStep) {
+          premiumContainerContent.setAttribute("data-multistep-step", multistepStep);
+        }
       }
     } else {
       const premiumContainer = document.querySelector(".premium-container");
       // If the premium container is not found, or the premium container already contains the premium container content, return
       if (!premiumContainer || premiumContainer.querySelector(".en__component--premiumgiftblock")) return;
       premiumContainer.appendChild(premiumContainerContent);
+      premiumContainerContent.removeAttribute("data-multistep-step");
     }
   }
 

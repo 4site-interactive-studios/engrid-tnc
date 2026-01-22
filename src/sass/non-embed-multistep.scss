@@ -1,8 +1,6 @@
 [data-engrid-theme="tnc"][data-engrid-multistep] {
   --engrid__body-title_background-color: #1b75bc;
   --engrid__body-top_background-color: #1b75bc;
-  --engrid__body-header_background-color: #1b75bc;
-  --engrid__body-header_padding: 48px 20px 8px;
   --engrid__body-title_padding: 24px 20px 0px;
   --engrid__body-top_padding: 0px 20px 40px;
   --engrid__body-banner_padding: 0;
@@ -11,11 +9,14 @@
   --submit__button_background-color: var(--color-orange);
   --submit__button_border-color: var(--color-orange);
 
+  .content-header {
+    margin-bottom: 0;
+  }
+
   @media screen and (min-width: 992px) {
-    --engrid__body-header_padding: 96px 40px 0;
-    --engrid__body-title_padding: 0px 40px;
+    --engrid__body-title_padding: 76px 40px 10px;
     --engrid__body-top_padding: 0 40px;
-    --engrid__body-main_padding: 96px 69px 0 51.5px;
+    --engrid__body-main_padding: 76px 70px 0 70px;
 
     &[data-engrid-layout="centercenter2col"] form>.en__component--advrow .body-main {
       grid-row: body-headerOutside-end / body-main-end;
@@ -49,11 +50,6 @@
     .body-banner {
       grid-row: body-title;
     }
-  }
-
-  .body-header {
-    display: grid;
-    grid-column: lbc;
   }
 
   .en__field--recurrfreq.en__field
@@ -119,6 +115,10 @@
   .body-main {
     border: none;
     padding-bottom: 3px;
+    max-width: 700px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
 
     .form-heading {
       margin-top: 1.5rem;
@@ -271,11 +271,18 @@
       // We have to hide sections like this instead of display: none or the form may fail to submit.
       [data-multistep-step="#{$i}"] {
         position: absolute !important;
-        top: 0 !important;
-        left: 0 !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+        top: -999px !important;
+        left: -999px !important;
         pointer-events: none !important;
+        opacity: 0 !important;
       }
     }
   }
@@ -306,8 +313,7 @@
   &:not([data-engrid-last-page]):not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand="true"]) {
     .body-title,
     .body-banner,
-    .body-top,
-    .body-header {
+    .body-top {
       display: none;
     }
   }
@@ -360,8 +366,7 @@
     &:not([data-engrid-last-page]):not([data-engrid-multistep-active-step="1"]):not([data-engrid-multistep-expand="true"]) {
       .body-banner,
       .body-title,
-      .body-top,
-      .body-header {
+      .body-top {
         display: grid;
       }
     }
@@ -441,11 +446,6 @@
 
     .content-footer {
       margin-top: 0;
-    }
-
-    .body-headerOutside {
-      display: grid !important;
-      background: white;
     }
 
     .page-backgroundImage {

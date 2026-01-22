@@ -260,6 +260,15 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
           "afterend",
           premiumContainerContent
         );
+        const multistepStep = autoRenewContainer.getAttribute(
+          "data-multistep-step"
+        );
+        if (multistepStep) {
+          premiumContainerContent.setAttribute(
+            "data-multistep-step",
+            multistepStep
+          );
+        }
       }
     } else {
       const premiumContainer = document.querySelector(".premium-container");
@@ -270,6 +279,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       )
         return;
       premiumContainer.appendChild(premiumContainerContent);
+      premiumContainerContent.removeAttribute("data-multistep-step");
     }
   }
 
