@@ -260,6 +260,15 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
           "afterend",
           premiumContainerContent
         );
+        const multistepStep = autoRenewContainer.getAttribute(
+          "data-multistep-step"
+        );
+        if (multistepStep) {
+          premiumContainerContent.setAttribute(
+            "data-multistep-step",
+            multistepStep
+          );
+        }
       }
     } else {
       const premiumContainer = document.querySelector(".premium-container");
@@ -270,6 +279,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       )
         return;
       premiumContainer.appendChild(premiumContainerContent);
+      premiumContainerContent.removeAttribute("data-multistep-step");
     }
   }
 
@@ -1107,4 +1117,20 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
   ) {
     setPreselectedAmountFromUrl();
   }
+
+  document
+    .querySelectorAll("h2.alt-ways-give-accordion, h2.by-the-num-accordion")
+    .forEach((title) => {
+      title.addEventListener("click", () => {
+        const items = title.nextElementSibling;
+        if (
+          !items ||
+          (!items.classList.contains("pre-footer-items") &&
+            !items.classList.contains("contact-us"))
+        )
+          return;
+
+        items.classList.toggle("hide");
+      });
+    });
 };
