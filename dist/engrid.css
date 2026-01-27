@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 22, 2026 @ 08:18:49 ET
+ *  Date: Tuesday, January 27, 2026 @ 09:03:33 ET
  *  By: michael
  *  ENGrid styles: v0.23.4
  *  ENGrid scripts: v0.23.7
@@ -12226,7 +12226,7 @@ body[data-engrid-debug]:before{
   margin-bottom:0;
 }
 [data-engrid-theme=tnc][data-engrid-multistep] .body-main .pre-footer-items .pre-footer-item-header{
-  font-size:32px;
+  font-size:28px;
 }
 [data-engrid-theme=tnc][data-engrid-multistep] .body-main .pre-footer-items p{
   font-size:14px;
