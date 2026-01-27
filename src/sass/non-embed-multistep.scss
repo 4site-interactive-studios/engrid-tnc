@@ -322,6 +322,18 @@
     --donation-amount__button_count: 2;
   }
 
+  &[data-engrid-last-page] {
+    .body-title,
+    .body-banner,
+    .body-top {
+      display: none;
+    }
+
+    .body-main {
+      grid-column: pc;
+    }
+  }
+
   @media screen and (max-width: 600px) {
     .body-main {
       .body-bottom-content {
@@ -337,14 +349,6 @@
           gap: 24px;
           text-align: left;
         }
-      }
-    }
-
-    &[data-engrid-last-page] {
-      .body-title,
-      .body-banner,
-      .body-top {
-        display: none;
       }
     }
   }
