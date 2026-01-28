@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 28, 2026 @ 17:20:29 ET
+ *  Date: Wednesday, January 28, 2026 @ 17:22:23 ET
  *  By: fernando
  *  ENGrid styles: v0.23.0
  *  ENGrid scripts: v0.23.2
@@ -1498,6 +1498,379 @@ __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_p
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_promise_simple_events_1.PromiseSimpleEventList; } });
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_promise_simple_events_1.NonUniformPromiseSimpleEventList; } });
 
+
+/***/ }),
+
+/***/ 2995:
+/***/ (() => {
+
+!function (window, module) {
+  // source content
+  (function main(global, module, isWorker, workerSize) {
+    function noop() {}
+
+    // create a promise if it exists, otherwise, just
+    // call the function directly
+    function promise(func) {
+      var ModulePromise = module.exports.Promise;
+      var Prom = ModulePromise !== void 0 ? ModulePromise : global.Promise;
+      if (typeof Prom === "function") {
+        return new Prom(func);
+      }
+      func(noop, noop);
+      return null;
+    }
+    var raf = function () {
+      var TIME = Math.floor(1000 / 60);
+      var frame, cancel;
+      var frames = {};
+      var lastFrameTime = 0;
+      if (typeof requestAnimationFrame === "function" && typeof cancelAnimationFrame === "function") {
+        frame = function (cb) {
+          var id = Math.random();
+          frames[id] = requestAnimationFrame(function onFrame(time) {
+            if (lastFrameTime === time || lastFrameTime + TIME - 1 < time) {
+              lastFrameTime = time;
+              delete frames[id];
+              cb();
+            } else {
+              frames[id] = requestAnimationFrame(onFrame);
+            }
+          });
+          return id;
+        };
+        cancel = function (id) {
+          if (frames[id]) {
+            cancelAnimationFrame(frames[id]);
+          }
+        };
+      } else {
+        frame = function (cb) {
+          return setTimeout(cb, TIME);
+        };
+        cancel = function (timer) {
+          return clearTimeout(timer);
+        };
+      }
+      return {
+        frame: frame,
+        cancel: cancel
+      };
+    }();
+    var defaults = {
+      particleCount: 50,
+      angle: 90,
+      spread: 45,
+      startVelocity: 45,
+      decay: 0.9,
+      gravity: 1,
+      drift: 0,
+      ticks: 200,
+      x: 0.5,
+      y: 0.5,
+      shapes: ["square", "circle"],
+      zIndex: 100,
+      colors: ["#26ccff", "#a25afd", "#ff5e7e", "#88ff5a", "#fcff42", "#ffa62d", "#ff36ff"],
+      // probably should be true, but back-compat
+      disableForReducedMotion: false,
+      scalar: 1
+    };
+    function convert(val, transform) {
+      return transform ? transform(val) : val;
+    }
+    function isOk(val) {
+      return !(val === null || val === undefined);
+    }
+    function prop(options, name, transform) {
+      return convert(options && isOk(options[name]) ? options[name] : defaults[name], transform);
+    }
+    function onlyPositiveInt(number) {
+      return number < 0 ? 0 : Math.floor(number);
+    }
+    function randomInt(min, max) {
+      // [min, max)
+      return Math.floor(Math.random() * (max - min)) + min;
+    }
+    function toDecimal(str) {
+      return parseInt(str, 16);
+    }
+    function colorsToRgb(colors) {
+      return colors.map(hexToRgb);
+    }
+    function hexToRgb(str) {
+      var val = String(str).replace(/[^0-9a-f]/gi, "");
+      if (val.length < 6) {
+        val = val[0] + val[0] + val[1] + val[1] + val[2] + val[2];
+      }
+      return {
+        r: toDecimal(val.substring(0, 2)),
+        g: toDecimal(val.substring(2, 4)),
+        b: toDecimal(val.substring(4, 6))
+      };
+    }
+    function getOrigin(options) {
+      var origin = prop(options, "origin", Object);
+      origin.x = prop(origin, "x", Number);
+      origin.y = prop(origin, "y", Number);
+      return origin;
+    }
+    function setCanvasWindowSize(canvas) {
+      canvas.width = document.documentElement.clientWidth;
+      canvas.height = document.documentElement.clientHeight;
+    }
+    function setCanvasRectSize(canvas) {
+      var rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    function getCanvas(zIndex) {
+      var canvas = document.createElement("canvas");
+      canvas.style.position = "fixed";
+      canvas.style.top = "0px";
+      canvas.style.left = "0px";
+      canvas.style.pointerEvents = "none";
+      canvas.style.zIndex = zIndex;
+      return canvas;
+    }
+    function ellipse(context, x, y, radiusX, radiusY, rotation, startAngle, endAngle, antiClockwise) {
+      context.save();
+      context.translate(x, y);
+      context.rotate(rotation);
+      context.scale(radiusX, radiusY);
+      context.arc(0, 0, 1, startAngle, endAngle, antiClockwise);
+      context.restore();
+    }
+    function randomPhysics(opts) {
+      var radAngle = opts.angle * (Math.PI / 180);
+      var radSpread = opts.spread * (Math.PI / 180);
+      return {
+        x: opts.x,
+        y: opts.y,
+        wobble: Math.random() * 10,
+        velocity: opts.startVelocity * 0.5 + Math.random() * opts.startVelocity,
+        angle2D: -radAngle + (0.5 * radSpread - Math.random() * radSpread),
+        tiltAngle: Math.random() * Math.PI,
+        color: opts.color,
+        shape: opts.shape,
+        tick: 0,
+        totalTicks: opts.ticks,
+        decay: opts.decay,
+        drift: opts.drift,
+        random: Math.random() + 5,
+        tiltSin: 0,
+        tiltCos: 0,
+        wobbleX: 0,
+        wobbleY: 0,
+        gravity: opts.gravity * 3,
+        ovalScalar: 0.6,
+        scalar: opts.scalar
+      };
+    }
+    function updateFetti(context, fetti) {
+      fetti.x += Math.cos(fetti.angle2D) * fetti.velocity + fetti.drift;
+      fetti.y += Math.sin(fetti.angle2D) * fetti.velocity + fetti.gravity;
+      fetti.wobble += 0.1;
+      fetti.velocity *= fetti.decay;
+      fetti.tiltAngle += 0.1;
+      fetti.tiltSin = Math.sin(fetti.tiltAngle);
+      fetti.tiltCos = Math.cos(fetti.tiltAngle);
+      fetti.random = Math.random() + 5;
+      fetti.wobbleX = fetti.x + 10 * fetti.scalar * Math.cos(fetti.wobble);
+      fetti.wobbleY = fetti.y + 10 * fetti.scalar * Math.sin(fetti.wobble);
+      var progress = fetti.tick++ / fetti.totalTicks;
+      var x1 = fetti.x + fetti.random * fetti.tiltCos;
+      var y1 = fetti.y + fetti.random * fetti.tiltSin;
+      var x2 = fetti.wobbleX + fetti.random * fetti.tiltCos;
+      var y2 = fetti.wobbleY + fetti.random * fetti.tiltSin;
+      context.fillStyle = "rgba(" + fetti.color.r + ", " + fetti.color.g + ", " + fetti.color.b + ", " + (1 - progress) + ")";
+      context.beginPath();
+      if (fetti.shape === "circle") {
+        context.ellipse ? context.ellipse(fetti.x, fetti.y, Math.abs(x2 - x1) * fetti.ovalScalar, Math.abs(y2 - y1) * fetti.ovalScalar, Math.PI / 10 * fetti.wobble, 0, 2 * Math.PI) : ellipse(context, fetti.x, fetti.y, Math.abs(x2 - x1) * fetti.ovalScalar, Math.abs(y2 - y1) * fetti.ovalScalar, Math.PI / 10 * fetti.wobble, 0, 2 * Math.PI);
+      } else {
+        context.moveTo(Math.floor(fetti.x), Math.floor(fetti.y));
+        context.lineTo(Math.floor(fetti.wobbleX), Math.floor(y1));
+        context.lineTo(Math.floor(x2), Math.floor(y2));
+        context.lineTo(Math.floor(x1), Math.floor(fetti.wobbleY));
+      }
+      context.closePath();
+      context.fill();
+      return fetti.tick < fetti.totalTicks;
+    }
+    function animate(canvas, fettis, resizer, size, done) {
+      var animatingFettis = fettis.slice();
+      var context = canvas.getContext("2d");
+      var animationFrame;
+      var destroy;
+      var prom = promise(function (resolve) {
+        function onDone() {
+          animationFrame = destroy = null;
+          context.clearRect(0, 0, size.width, size.height);
+          done();
+          resolve();
+        }
+        function update() {
+          if (isWorker && !(size.width === workerSize.width && size.height === workerSize.height)) {
+            size.width = canvas.width = workerSize.width;
+            size.height = canvas.height = workerSize.height;
+          }
+          if (!size.width && !size.height) {
+            resizer(canvas);
+            size.width = canvas.width;
+            size.height = canvas.height;
+          }
+          context.clearRect(0, 0, size.width, size.height);
+          animatingFettis = animatingFettis.filter(function (fetti) {
+            return updateFetti(context, fetti);
+          });
+          if (animatingFettis.length) {
+            animationFrame = raf.frame(update);
+          } else {
+            onDone();
+          }
+        }
+        animationFrame = raf.frame(update);
+        destroy = onDone;
+      });
+      return {
+        addFettis: function (fettis) {
+          animatingFettis = animatingFettis.concat(fettis);
+          return prom;
+        },
+        canvas: canvas,
+        promise: prom,
+        reset: function () {
+          if (animationFrame) {
+            raf.cancel(animationFrame);
+          }
+          if (destroy) {
+            destroy();
+          }
+        }
+      };
+    }
+    function confettiCannon(canvas, globalOpts) {
+      var isLibCanvas = !canvas;
+      var allowResize = !!prop(globalOpts || {}, "resize");
+      var globalDisableForReducedMotion = prop(globalOpts, "disableForReducedMotion", Boolean);
+      var worker = null;
+      var resizer = isLibCanvas ? setCanvasWindowSize : setCanvasRectSize;
+      var initialized = canvas && worker ? !!canvas.__confetti_initialized : false;
+      var preferLessMotion = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion)").matches;
+      var animationObj;
+      function fireLocal(options, size, done) {
+        var particleCount = prop(options, "particleCount", onlyPositiveInt);
+        var angle = prop(options, "angle", Number);
+        var spread = prop(options, "spread", Number);
+        var startVelocity = prop(options, "startVelocity", Number);
+        var decay = prop(options, "decay", Number);
+        var gravity = prop(options, "gravity", Number);
+        var drift = prop(options, "drift", Number);
+        var colors = prop(options, "colors", colorsToRgb);
+        var ticks = prop(options, "ticks", Number);
+        var shapes = prop(options, "shapes");
+        var scalar = prop(options, "scalar");
+        var origin = getOrigin(options);
+        var temp = particleCount;
+        var fettis = [];
+        var startX = canvas.width * origin.x;
+        var startY = canvas.height * origin.y;
+        while (temp--) {
+          fettis.push(randomPhysics({
+            x: startX,
+            y: startY,
+            angle: angle,
+            spread: spread,
+            startVelocity: startVelocity,
+            color: colors[temp % colors.length],
+            shape: shapes[randomInt(0, shapes.length)],
+            ticks: ticks,
+            decay: decay,
+            gravity: gravity,
+            drift: drift,
+            scalar: scalar
+          }));
+        }
+
+        // if we have a previous canvas already animating,
+        // add to it
+        if (animationObj) {
+          return animationObj.addFettis(fettis);
+        }
+        animationObj = animate(canvas, fettis, resizer, size, done);
+        return animationObj.promise;
+      }
+      function fire(options) {
+        var disableForReducedMotion = globalDisableForReducedMotion || prop(options, "disableForReducedMotion", Boolean);
+        var zIndex = prop(options, "zIndex", Number);
+        if (disableForReducedMotion && preferLessMotion) {
+          return promise(function (resolve) {
+            resolve();
+          });
+        }
+        if (isLibCanvas && animationObj) {
+          // use existing canvas from in-progress animation
+          canvas = animationObj.canvas;
+        } else if (isLibCanvas && !canvas) {
+          // create and initialize a new canvas
+          canvas = getCanvas(zIndex);
+          document.body.appendChild(canvas);
+        }
+        if (allowResize && !initialized) {
+          // initialize the size of a user-supplied canvas
+          resizer(canvas);
+        }
+        var size = {
+          width: canvas.width,
+          height: canvas.height
+        };
+        initialized = true;
+        function onResize() {
+          // don't actually query the size here, since this
+          // can execute frequently and rapidly
+          size.width = size.height = null;
+        }
+        function done() {
+          animationObj = null;
+          if (allowResize) {
+            global.removeEventListener("resize", onResize);
+          }
+          if (isLibCanvas && canvas) {
+            document.body.removeChild(canvas);
+            canvas = null;
+            initialized = false;
+          }
+        }
+        if (allowResize) {
+          global.addEventListener("resize", onResize, false);
+        }
+        return fireLocal(options, size, done);
+      }
+      fire.reset = function () {
+        if (animationObj) {
+          animationObj.reset();
+        }
+      };
+      return fire;
+    }
+    module.exports = confettiCannon(null, {
+      useWorker: true,
+      resize: true
+    });
+    module.exports.create = confettiCannon;
+  })(function () {
+    if (typeof window !== "undefined") {
+      return window;
+    }
+    if (typeof self !== "undefined") {
+      return self;
+    }
+    return this || {};
+  }(), module, false);
+
+  // end source content
+
+  window.confetti = module.exports;
+}(window, {});
 
 /***/ }),
 
@@ -5036,7 +5409,7 @@ const DispatcherWrapper_1 = __webpack_require__(8661);
 Object.defineProperty(exports, "DispatcherWrapper", ({ enumerable: true, get: function () { return DispatcherWrapper_1.DispatcherWrapper; } }));
 const EventListBase_1 = __webpack_require__(5636);
 Object.defineProperty(exports, "EventListBase", ({ enumerable: true, get: function () { return EventListBase_1.EventListBase; } }));
-const EventManagement_1 = __webpack_require__(3766);
+const EventManagement_1 = __webpack_require__(1385);
 Object.defineProperty(exports, "EventManagement", ({ enumerable: true, get: function () { return EventManagement_1.EventManagement; } }));
 const HandlingBase_1 = __webpack_require__(5722);
 Object.defineProperty(exports, "HandlingBase", ({ enumerable: true, get: function () { return HandlingBase_1.HandlingBase; } }));
@@ -5052,7 +5425,7 @@ Object.defineProperty(exports, "SubscriptionChangeEventDispatcher", ({ enumerabl
 
 /***/ }),
 
-/***/ 3766:
+/***/ 1385:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -25481,12 +25854,17 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     if (direction === "down") {
       if (autoRenewContainer) {
         autoRenewContainer.insertAdjacentElement("afterend", premiumContainerContent);
+        const multistepStep = autoRenewContainer.getAttribute("data-multistep-step");
+        if (multistepStep) {
+          premiumContainerContent.setAttribute("data-multistep-step", multistepStep);
+        }
       }
     } else {
       const premiumContainer = document.querySelector(".premium-container");
       // If the premium container is not found, or the premium container already contains the premium container content, return
       if (!premiumContainer || premiumContainer.querySelector(".en__component--premiumgiftblock")) return;
       premiumContainer.appendChild(premiumContainerContent);
+      premiumContainerContent.removeAttribute("data-multistep-step");
     }
   }
 
@@ -26070,7 +26448,7 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   }
   const bankNameField = document.querySelector('input[name="transaction.bankname"]');
   if (bankNameField) {
-    bankNameField.setAttribute("placeholder", "Account Holder Name");
+    bankNameField.setAttribute("placeholder", "Bank Name");
   }
 
   // Add placeholder to the Mobile Phone Field
@@ -26105,6 +26483,46 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     // Observe placeholder and aria-required changes
     const observer = new MutationObserver(() => updatePlaceholder(field));
     observer.observe(field, observerConfig);
+  });
+
+  //Allow override of pre-selected NSG amount
+  function setPreselectedAmountFromUrl() {
+    const hiddenInput = document.querySelector('input[name="transaction.donationAmt.sgid"]');
+
+    // If the hidden input is already present, the EN NSG script has already run, set the amount immediately
+    if (hiddenInput) {
+      setTimeout(() => amt.setAmount(urlParams.get("transaction.donationAmt")), 1000);
+      return;
+    }
+
+    // Otherwise, we will use a mutation observer to wait for the hidden input to be added to the DOM
+    const observer = new MutationObserver((mutationsList, observer) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+          const hiddenInput = document.querySelector('input[name="transaction.donationAmt.sgid"]');
+          if (hiddenInput) {
+            setTimeout(() => amt.setAmount(urlParams.get("transaction.donationAmt")), 1000);
+            observer.disconnect();
+          }
+        }
+      }
+    });
+    const pageForm = document.querySelector("form.en__component--page");
+    if (!pageForm) return;
+    observer.observe(pageForm, {
+      childList: true,
+      subtree: true
+    });
+  }
+  if (urlParams.has("transaction.donationAmt") && window.EngagingNetworks.suggestedGift && window.EngagingNetworks.suggestedGift.single && window.EngagingNetworks.suggestedGift.recurring) {
+    setPreselectedAmountFromUrl();
+  }
+  document.querySelectorAll("h2.alt-ways-give-accordion, h2.by-the-num-accordion").forEach(title => {
+    title.addEventListener("click", () => {
+      const items = title.nextElementSibling;
+      if (!items || !items.classList.contains("pre-footer-items") && !items.classList.contains("contact-us")) return;
+      items.classList.toggle("hide");
+    });
   });
 };
 ;// CONCATENATED MODULE: ./src/scripts/bequest-lightbox.ts
@@ -28346,6 +28764,571 @@ class GroupQuiz {
     return engrid_ENGrid.getBodyData("subpagetype") === "quiz" && document.querySelector(".en__component--advrow.group-quiz");
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/workday/workday-mappings.ts
+const workdayMappings = [{
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Merchandise (460000)"
+  },
+  new: {
+    revenueCategory: "UR:Merchandise Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
+    applicationOther: "Merchandise (460000)"
+  },
+  new: {
+    revenueCategory: "UR:Merchandise Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Lodging (460500)"
+  },
+  new: {
+    revenueCategory: "UR:Hotel And Lodging (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
+    applicationOther: "Lodging (460500)"
+  },
+  new: {
+    revenueCategory: "UR:Hotel And Lodging (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Miscellaneous Fee Revenue (460700)"
+  },
+  new: {
+    revenueCategory: "UR:Miscellaneous Fee Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
+    applicationOther: "Miscellaneous Fee Revenue (460700)"
+  },
+  new: {
+    revenueCategory: "UR:Miscellaneous Fee Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Use Permits & Non-Real Estate Leases (461000)"
+  },
+  new: {
+    revenueCategory: "UR:Use Permits and Non-Real Estate Leases Over Time (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
+    applicationOther: "Use Permits & Non-Real Estate Leases (461000)"
+  },
+  new: {
+    revenueCategory: "UR:Use Permits and Non-Real Estate Leases Over Time (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Trip Fees (462100)"
+  },
+  new: {
+    revenueCategory: "UR:Fee-Field Trip (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
+    applicationOther: "Trip Fees (462100)"
+  },
+  new: {
+    revenueCategory: "UR:Fee-Field Trip (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "null",
+    applicationOther: "Special Event Revenue (462400)"
+  },
+  new: {
+    revenueCategory: "UR:Special Event Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "",
+    applicationOther: "Special Event Revenue (462400)"
+  },
+  new: {
+    revenueCategory: "UR:Special Event Revenue (460000)",
+    applicationOther: "Non-gift"
+  }
+}, {
+  old: {
+    revenueCategory: "Unrestricted",
+    applicationOther: ""
+  },
+  new: {
+    revenueCategory: "UR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}, {
+  old: {
+    revenueCategory: "Unrestricted",
+    applicationOther: "null"
+  },
+  new: {
+    revenueCategory: "UR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}, {
+  old: {
+    revenueCategory: "Temporarily Restricted",
+    applicationOther: ""
+  },
+  new: {
+    revenueCategory: "TR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}, {
+  old: {
+    revenueCategory: "Temporarily Restricted",
+    applicationOther: "null"
+  },
+  new: {
+    revenueCategory: "TR:Donor Support (400000)",
+    applicationOther: ""
+  }
+}];
+;// CONCATENATED MODULE: ./src/scripts/workday/workday.ts
+
+/*
+ * This module maps old values of the Revenue Category and Application Other fields
+ * into new values for the Workday system.
+ */
+
+
+
+class Workday {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("Workday", "white", "blue", "💼"));
+    _defineProperty(this, "mappings", workdayMappings);
+    _defineProperty(this, "revenueCategoryField", engrid_ENGrid.getField("transaction.othamt4"));
+    _defineProperty(this, "applicationOtherField", engrid_ENGrid.getField("transaction.othamt1"));
+    if (!this.shouldRun()) {
+      return;
+    }
+    this.logger.log("Running Workday field mapping");
+    this.createRevenueCategoryField();
+    this.setNewFieldValues();
+  }
+
+  /*
+   * Run when conditions are met:
+   *  - Application Other fields is present on the page
+   */
+  shouldRun() {
+    return !!this.applicationOtherField;
+  }
+
+  /**
+   * Get new values based on the old pair (or false)
+   */
+  getNewValues(pair) {
+    return this.mappings.find(m => m.old.revenueCategory.toLowerCase() === pair.revenueCategory.toLowerCase() && m.old.applicationOther.toLowerCase() === pair.applicationOther.toLowerCase())?.new || false;
+  }
+
+  /**
+   * Set new field values based on the mapping
+   */
+  setNewFieldValues() {
+    if (!this.revenueCategoryField || !this.applicationOtherField) {
+      return;
+    }
+    this.logger.log(`Looking for new mapping for Revenue Category: "${this.revenueCategoryField.value}", Application Other: "${this.applicationOtherField.value}"`);
+    const newValues = this.getNewValues({
+      revenueCategory: this.revenueCategoryField.value,
+      applicationOther: this.applicationOtherField.value
+    });
+    if (!newValues) {
+      this.logger.log(`No updated mapping found. Not updating fields.`);
+      return;
+    }
+    this.logger.log(`Mapping to new values - Revenue Category: "${newValues.revenueCategory}", Application Other: "${newValues.applicationOther}"`);
+    this.setFieldValue(this.revenueCategoryField, newValues.revenueCategory);
+    this.setFieldValue(this.applicationOtherField, newValues.applicationOther);
+  }
+
+  /**
+   * Set field value, adding option if needed (for select fields)
+   */
+  setFieldValue(field, value) {
+    if (field instanceof HTMLSelectElement) {
+      let option = [...field.options].find(opt => opt.value === value);
+      if (!option) {
+        option = new Option(value, value);
+        field.add(option);
+      }
+      field.value = value;
+      return;
+    }
+    field.value = value;
+  }
+
+  /**
+   * Create the revenue category field if it does not exist on the page
+   * @private
+   */
+  createRevenueCategoryField() {
+    if (!!this.revenueCategoryField) return;
+    this.logger.log("Revenue Category field not found on page - creating it.");
+    this.revenueCategoryField = engrid_ENGrid.createHiddenInput("transaction.othamt4");
+  }
+}
+// EXTERNAL MODULE: ./src/scripts/confetti.js
+var confetti = __webpack_require__(2995);
+;// CONCATENATED MODULE: ./src/scripts/multistep-form.ts
+
+
+
+class MultistepForm {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("MultistepForm", "white", "blue"));
+    _defineProperty(this, "validators", []);
+    _defineProperty(this, "contentShouldExpand", false);
+    if (this.shouldRun()) {
+      this.logger.log("MultistepForm running");
+      if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enValidation", "validation", "validators")) {
+        this.validators = window.EngagingNetworks.require._defined.enValidation.validation.validators;
+      }
+      this.run();
+      this.handleServerSideError();
+    }
+
+    // Thank you page confetti
+    if (engrid_ENGrid.getPageType() === "DONATION" && engrid_ENGrid.getBodyData("multistep") === "" && engrid_ENGrid.getGiftProcess()) {
+      this.startConfetti();
+    }
+  }
+  shouldRun() {
+    return engrid_ENGrid.getPageType() === "DONATION" && engrid_ENGrid.getBodyData("multistep") === "" && engrid_ENGrid.getPageNumber() === 1;
+  }
+  run() {
+    if (window.EngridMultistepExpandVariant) {
+      this.contentShouldExpand = true;
+      engrid_ENGrid.setBodyData("multistep-expand", "true");
+    }
+    engrid_ENGrid.setBodyData("multistep-active-step", "1");
+    this.addStepDataAttributes();
+    this.addBackButtonToFinalStep();
+    this.addEventListeners();
+  }
+  addStepDataAttributes() {
+    if (engrid_ENGrid.getBodyData("layout") !== "centercenter2col") {
+      document.querySelector(".body-title")?.setAttribute("data-multistep-step", "1");
+      document.querySelector(".body-top")?.setAttribute("data-multistep-step", "1");
+      document.querySelector(".body-bottom")?.setAttribute("data-multistep-step", "3");
+    }
+    const stepperCodeBlocks = [...document.querySelectorAll(".multistep-stepper")].map(el => el.closest(".en__component--codeblock"));
+    stepperCodeBlocks.forEach((step, index) => {
+      step.setAttribute("data-multistep-step", `${index + 1}`);
+      // if this is the first step, we start from the first element in ".body-main"
+      // (since the first stepper could be outside of ".body-main")
+      const start = index === 0 ? document.querySelector(".body-main")?.firstChild : step;
+      const nextStep = stepperCodeBlocks[index + 1];
+      const elements = this.getElementsBetween(start, nextStep);
+      elements.forEach(element => {
+        element.setAttribute("data-multistep-step", `${index + 1}`);
+      });
+    });
+  }
+  getElementsBetween(step, nextStep) {
+    const elements = [];
+    let currentElement = step.nextElementSibling;
+    while (currentElement && currentElement !== nextStep) {
+      elements.push(currentElement);
+      currentElement = currentElement.nextElementSibling;
+    }
+    return elements;
+  }
+  addEventListeners() {
+    //Elements for changing step
+    const buttons = document.querySelectorAll("[data-multistep-change-step]");
+    buttons.forEach(button => {
+      button.addEventListener("click", e => {
+        this.activateStep(button.dataset.multistepChangeStep ?? "");
+      });
+    });
+  }
+  inIframe() {
+    try {
+      return window.self !== window.top;
+    } catch (e) {
+      return true;
+    }
+  }
+  scrollTo(where = 0) {
+    if (this.inIframe()) {
+      setTimeout(() => {
+        window.parent.postMessage({
+          scrollTo: where
+        }, "*");
+      }, 200);
+      this.logger.log("IS in an iFrame, scrolling to top");
+    } else {
+      window.scrollTo(0, where);
+      this.logger.log("NOT in an iFrame, scrolling to top");
+    }
+  }
+  activateStep(targetStep, bypassValidation = false) {
+    if (!targetStep) return;
+    const activeStep = engrid_ENGrid.getBodyData("multistep-active-step") ?? "1";
+
+    //If no validation or we're going backwards, activate the step
+    if (bypassValidation || targetStep < activeStep) {
+      this.logger.log(`Bypassing validation or going backwards. Activating step ${targetStep}`);
+      engrid_ENGrid.setBodyData("multistep-active-step", targetStep);
+      this.scrollViewport();
+      return;
+    }
+
+    // If we're going forwards, validate the steps between the current and target step
+    // if validation fields, find first error on the page, activate that step and scroll to it
+    if (!this.validateStepsBetweenCurrentAndTargetStep(activeStep, targetStep)) {
+      const field = document.querySelector(".en__field--validationFailed");
+      const invalidStep = field?.closest(".en__component--formblock")?.getAttribute("data-multistep-step") ?? "1";
+      engrid_ENGrid.setBodyData("multistep-active-step", invalidStep);
+      if (field) {
+        const scrollToError = field ? field.getBoundingClientRect().top : 0;
+
+        // Parent pages listens for this message and scrolls to the correct position
+        if (this.inIframe()) {
+          this.scrollTo(scrollToError);
+          this.logger.log(`iFrame Event 'scrollTo' - Position of top of first error ${scrollTo} px`); // check the message is being sent correctly
+        } else {
+          field.scrollIntoView({
+            behavior: "smooth"
+          });
+        }
+      }
+      this.logger.log(`Found error on step ${invalidStep}. Going to that step.`);
+      return;
+    }
+
+    // If validation passes, activate the step
+    this.logger.log(`Validation passed. Activating step ${targetStep}`);
+    engrid_ENGrid.setBodyData("multistep-active-step", targetStep);
+    if (this.inIframe()) {
+      this.scrollTo();
+      return;
+    }
+    this.scrollViewport();
+  }
+  scrollViewport() {
+    // If the multistep form is in a content expand variant, scroll to top of the active step
+    if (this.contentShouldExpand) {
+      const scrollToEl = [...document.querySelectorAll("[data-multistep-step]")].find(el => {
+        return el.getAttribute("data-multistep-step") === engrid_ENGrid.getBodyData("multistep-active-step");
+      });
+      if (!scrollToEl) return;
+      window.scrollTo({
+        top: scrollToEl.getBoundingClientRect().top + window.pageYOffset,
+        behavior: "smooth"
+      });
+      return;
+    }
+
+    /*
+      If a .section-header is present and outside the viewport, we should scroll to the section header
+      If a .section-header is present and in the viewport, then we should not scroll
+      If no .section-header is present we should scroll to the top of the page
+     */
+    const sectionHeaders = document.querySelectorAll(".section-header");
+    const currentSectionHeader = [...sectionHeaders].find(el => {
+      const headerStep = el.closest("[data-multistep-step]")?.getAttribute("data-multistep-step");
+      return headerStep === engrid_ENGrid.getBodyData("multistep-active-step");
+    });
+    const steppers = document.querySelectorAll(".multistep-stepper");
+    const currentStepper = [...steppers].find(el => {
+      const step = el.closest("[data-multistep-step]")?.getAttribute("data-multistep-step");
+      return step === engrid_ENGrid.getBodyData("multistep-active-step");
+    });
+    if (!currentSectionHeader || currentSectionHeader.offsetHeight === 0) {
+      if (currentStepper && currentStepper.offsetHeight > 0) {
+        this.logger.log(`No section header found. Scrolling to stepper.`);
+        //HERE
+        this.scrollTo(currentStepper.getBoundingClientRect().top + window.pageYOffset);
+        return;
+      }
+      this.logger.log(`No section header or stepper found. Scrolling to top of page.`);
+      this.scrollTo();
+      return;
+    }
+    if (engrid_ENGrid.isInViewport(currentSectionHeader)) {
+      if (this.inIframe()) {
+        this.scrollTo();
+        return;
+      }
+      this.logger.log(`Section header is in viewport. Not scrolling.`);
+      return;
+    }
+    const offset = parseInt(getComputedStyle(currentSectionHeader).marginTop);
+    this.logger.log(`Scrolling to section header. ${offset} offset.`);
+    this.scrollTo(currentSectionHeader.getBoundingClientRect().top + window.pageYOffset - offset);
+  }
+  addBackButtonToFinalStep() {
+    const submitButtonContainer = document.querySelector(".multistep-submit .en__submit");
+    if (!submitButtonContainer) return;
+    submitButtonContainer.insertAdjacentHTML("beforebegin", `<button class="btn-back" data-multistep-change-step="2" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16">
+          <path fill="currentColor" d="M7.214.786c.434-.434 1.138-.434 1.572 0 .433.434.433 1.137 0 1.571L4.57 6.572h10.172c.694 0 1.257.563 1.257 1.257s-.563 1.257-1.257 1.257H4.229l4.557 4.557c.433.434.433 1.137 0 1.571-.434.434-1.138.434-1.572 0L0 8 7.214.786z"></path>
+         </svg>
+       </button>`);
+  }
+  validateStepsBetweenCurrentAndTargetStep(currentStep, targetStep) {
+    const stepsBetween = this.getStepsBetween(currentStep, targetStep);
+    return stepsBetween.every(step => this.validateStep(step));
+  }
+  validateStep(step) {
+    ///////////////////////////////////////////////////////
+    // Check validation using Engaging Networks Validators
+    ///////////////////////////////////////////////////////
+    const validators = this.validators.filter(validator => {
+      return document.querySelector(`.en__field--${validator.field}`)?.closest(`[data-multistep-step="${step}"]`) !== null;
+    });
+    const validationResults = validators.map(validator => {
+      validator.hideMessage();
+      return !validator.isVisible() || validator.test();
+    });
+
+    ///////////////////////////////////////////////////////
+    // Check validation based on ENgrid i-required classes for conditionally required fields
+    ///////////////////////////////////////////////////////
+    const requiredIfVisibleElements = document.querySelectorAll(`
+      .en__component--formblock[data-multistep-step="${step}"].i-required .en__field,
+      .en__component--formblock[data-multistep-step="${step}"].i1-required .en__field:nth-of-type(1),
+      .en__component--formblock[data-multistep-step="${step}"].i2-required .en__field:nth-of-type(2),
+      .en__component--formblock[data-multistep-step="${step}"].i3-required .en__field:nth-of-type(3),
+      .en__component--formblock[data-multistep-step="${step}"].i4-required .en__field:nth-of-type(4),
+      .en__component--formblock[data-multistep-step="${step}"].i5-required .en__field:nth-of-type(5),
+      .en__component--formblock[data-multistep-step="${step}"].i6-required .en__field:nth-of-type(6),
+      .en__component--formblock[data-multistep-step="${step}"].i7-required .en__field:nth-of-type(7),
+      .en__component--formblock[data-multistep-step="${step}"].i8-required .en__field:nth-of-type(8),
+      .en__component--formblock[data-multistep-step="${step}"].i9-required .en__field:nth-of-type(9),
+      .en__component--formblock[data-multistep-step="${step}"].i10-required .en__field:nth-of-type(10),
+      .en__component--formblock[data-multistep-step="${step}"].i11-required .en__field:nth-of-type(11)
+      `);
+    Array.from(requiredIfVisibleElements).reverse().forEach(field => {
+      engrid_ENGrid.removeError(field);
+      if (!engrid_ENGrid.isVisible(field)) return;
+      this.logger.log(`${field.getAttribute("class")} is visible`);
+      const fieldElement = field.querySelector("input:not([type=hidden]) , select, textarea");
+      if (fieldElement && fieldElement.closest("[data-unhidden]") === null && !engrid_ENGrid.getFieldValue(fieldElement.getAttribute("name"))) {
+        const fieldLabel = field.querySelector(".en__field__label");
+        if (fieldLabel) {
+          this.logger.log(`${fieldLabel.innerText} is required`);
+          engrid_ENGrid.setError(field, `${fieldLabel.innerText} is required`);
+        } else {
+          this.logger.log(`${fieldElement.getAttribute("name")} is required`);
+          engrid_ENGrid.setError(field, `This field is required`);
+        }
+        fieldElement.focus();
+        validationResults.push(false);
+      } else {
+        validationResults.push(true);
+      }
+    });
+
+    ///////////////////////////////////////////////////////
+    // Check validation based on VGS valid classes
+    ///////////////////////////////////////////////////////
+    // Find if any VGS fields are on the active step
+    const vgsFieldsInStep = [...document.querySelectorAll(".en__field--vgs")].filter(el => el.closest(".en__component--formblock")?.getAttribute("data-multistep-step") === step);
+
+    // Check if VGS fields are valid based on the presence of the class "vgs-collect-container__valid"
+    // Set and remove error label/status of fields
+    vgsFieldsInStep.forEach(vgsField => {
+      engrid_ENGrid.removeError(vgsField);
+      const vgsInput = vgsField.querySelector(".en__field__input--vgs");
+      if (!engrid_ENGrid.isVisible(vgsField) || !vgsInput) return;
+      if (vgsInput.classList.contains("vgs-collect-container__valid")) {
+        validationResults.push(true);
+        return;
+      }
+      validationResults.push(false);
+      engrid_ENGrid.setError(vgsField, "This field is invalid");
+    });
+    return validationResults.every(result => result);
+  }
+  getStepsBetween(currentStep, targetStep) {
+    const start = parseInt(currentStep);
+    const end = parseInt(targetStep);
+    let stepsBetween = [];
+    for (let i = start; i < end; i++) {
+      stepsBetween.push(i.toString());
+    }
+    return stepsBetween;
+  }
+  startConfetti() {
+    const duration = 3 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = {
+      startVelocity: 30,
+      spread: 360,
+      ticks: 60,
+      zIndex: 100000,
+      useWorker: false
+    };
+    const randomInRange = (min, max) => {
+      return Math.random() * (max - min) + min;
+    };
+    const interval = setInterval(function () {
+      const timeLeft = animationEnd - Date.now();
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+      const particleCount = 50 * (timeLeft / duration);
+      // since particles fall down, start a bit higher than random
+      window.confetti(Object.assign({}, defaults, {
+        particleCount,
+        origin: {
+          x: randomInRange(0.1, 0.3),
+          y: Math.random() - 0.2
+        }
+      }));
+      window.confetti(Object.assign({}, defaults, {
+        particleCount,
+        origin: {
+          x: randomInRange(0.7, 0.9),
+          y: Math.random() - 0.2
+        }
+      }));
+    }, 250);
+  }
+
+  /*
+   * When there is a server side error, active the step with VGS fields on it.
+   */
+  handleServerSideError() {
+    if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "checkSubmissionFailed") && window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed()) {
+      this.logger.log("Server side error detected");
+      const vgsStep = document.querySelector(".en__field--vgs")?.closest("[data-multistep-step]")?.getAttribute("data-multistep-step");
+      this.activateStep(vgsStep || "3", true);
+      this.scrollTo(0);
+      this.logger.log("Scrolling to top due to server side error");
+    }
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -28354,6 +29337,8 @@ class GroupQuiz {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
+
 
 
 
@@ -28444,6 +29429,8 @@ const options = {
     new WidgetProgressBar();
     new AddDAFBanner();
     new BankAccountAgreementField();
+    new Workday();
+    new MultistepForm();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");

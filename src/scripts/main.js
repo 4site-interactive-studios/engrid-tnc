@@ -260,6 +260,15 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
           "afterend",
           premiumContainerContent
         );
+        const multistepStep = autoRenewContainer.getAttribute(
+          "data-multistep-step"
+        );
+        if (multistepStep) {
+          premiumContainerContent.setAttribute(
+            "data-multistep-step",
+            multistepStep
+          );
+        }
       }
     } else {
       const premiumContainer = document.querySelector(".premium-container");
@@ -270,6 +279,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       )
         return;
       premiumContainer.appendChild(premiumContainerContent);
+      premiumContainerContent.removeAttribute("data-multistep-step");
     }
   }
 
@@ -1009,7 +1019,7 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     'input[name="transaction.bankname"]'
   );
   if (bankNameField) {
-    bankNameField.setAttribute("placeholder", "Account Holder Name");
+    bankNameField.setAttribute("placeholder", "Bank Name");
   }
 
   // Add placeholder to the Mobile Phone Field
@@ -1059,4 +1069,68 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     const observer = new MutationObserver(() => updatePlaceholder(field));
     observer.observe(field, observerConfig);
   });
+
+  //Allow override of pre-selected NSG amount
+  function setPreselectedAmountFromUrl() {
+    const hiddenInput = document.querySelector(
+      'input[name="transaction.donationAmt.sgid"]'
+    );
+
+    // If the hidden input is already present, the EN NSG script has already run, set the amount immediately
+    if (hiddenInput) {
+      setTimeout(
+        () => amt.setAmount(urlParams.get("transaction.donationAmt")),
+        1000
+      );
+
+      return;
+    }
+
+    // Otherwise, we will use a mutation observer to wait for the hidden input to be added to the DOM
+    const observer = new MutationObserver((mutationsList, observer) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+          const hiddenInput = document.querySelector(
+            'input[name="transaction.donationAmt.sgid"]'
+          );
+          if (hiddenInput) {
+            setTimeout(
+              () => amt.setAmount(urlParams.get("transaction.donationAmt")),
+              1000
+            );
+            observer.disconnect();
+          }
+        }
+      }
+    });
+
+    const pageForm = document.querySelector("form.en__component--page");
+    if (!pageForm) return;
+    observer.observe(pageForm, { childList: true, subtree: true });
+  }
+
+  if (
+    urlParams.has("transaction.donationAmt") &&
+    window.EngagingNetworks.suggestedGift &&
+    window.EngagingNetworks.suggestedGift.single &&
+    window.EngagingNetworks.suggestedGift.recurring
+  ) {
+    setPreselectedAmountFromUrl();
+  }
+
+  document
+    .querySelectorAll("h2.alt-ways-give-accordion, h2.by-the-num-accordion")
+    .forEach((title) => {
+      title.addEventListener("click", () => {
+        const items = title.nextElementSibling;
+        if (
+          !items ||
+          (!items.classList.contains("pre-footer-items") &&
+            !items.classList.contains("contact-us"))
+        )
+          return;
+
+        items.classList.toggle("hide");
+      });
+    });
 };
