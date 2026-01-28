@@ -7,6 +7,9 @@
   &[data-engrid-thank-you="true"] .body-banner {
     height: auto !important;
   }
+  .form-heading {
+    margin-top: 0;
+  }
   .body-banner {
     grid-column: 1 / -1;
     grid-row: body-banner-start;
