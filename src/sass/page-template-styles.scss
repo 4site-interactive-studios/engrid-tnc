@@ -3870,6 +3870,38 @@
       border-top: 1px solid #949494;
     }
 
+    .premium-theme-3 {
+      .premium-container-content {
+        margin-top: 20px;
+      }
+
+      .premium-theme-3-header {
+        --h2_color: #272727;
+        margin-top: 0;
+
+        .premium-theme-3-items > h2 {
+          font-family: var(--serif-fonts);
+        }
+
+        #premium-theme-3-container .premium-theme-3-image {
+          background-size: cover;
+        }
+      }
+    }
+
+    .en__component--codeblock + .premium-container-content {
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+
+    #en__digitalWallet {
+      flex-basis: 100%;
+    }
+
+    #en__digitalWallet__stripeButtons__container {
+      width: 100%;
+    }
+
     &[data-engrid-thank-you="true"] {
       --h2_font-weight: bold;
       --h3_font-weight: bold;
