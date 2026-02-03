@@ -3686,9 +3686,17 @@
     --engrid__body-bottom_padding: 0 35px 30px;
     --engrid__body-title_padding: 0 35px;
     --engrid__body-top_padding: 0 35px;
+    --engrid__body-banner_padding: 0 0 25px;
     --engrid__content-footer_padding: 0 35px;
     --engrid__content-header_padding: 30px 35px 0;
     --donation-amount__button_count: 3;
+
+    &#en__pagebuilder {
+      .body-header,
+      .content-preFooter {
+        display: none;
+      }
+    }
 
     .content-header,
     .content-footer {
@@ -3705,7 +3713,7 @@
       padding-left: 0;
     }
 
-    :not(#en__pagebuilder) {
+    &:not(#en__pagebuilder) {
       .click-to-expand:not(.expanded) {
         .click-to-expand-cta:before {
           content: "Read More";
@@ -3860,6 +3868,15 @@
 
     .content-footer {
       border-top: 1px solid #949494;
+    }
+
+    &[data-engrid-thank-you="true"] {
+      --h2_font-weight: bold;
+      --h3_font-weight: bold;
+
+      .content-header {
+        border: none;
+      }
     }
 
     @media screen and (max-width: 1024px) {
