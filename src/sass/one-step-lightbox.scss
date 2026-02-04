@@ -1,0 +1,95 @@
+& {
+  &[data-engrid-embedded] #engrid {
+    max-width: 630px !important;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+  &[data-engrid-thank-you="true"] .body-banner {
+    height: auto !important;
+  }
+  .form-heading {
+    margin-top: 0;
+  }
+  .body-banner {
+    grid-column: 1 / -1;
+    grid-row: body-banner-start;
+    height: 300px;
+  }
+  .body-title {
+    grid-column: 1 / -1;
+  }
+  .body-top {
+    grid-column: 1 / -1;
+  }
+  .body-title h1 {
+    color: #007931 !important;
+    text-align: center;
+  }
+  .body-top p {
+    color: var(--default_color) !important;
+    text-align: center;
+  }
+  .body-banner {
+    display: grid !important;
+  }
+  .donation-nudge {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .en__upsellModal__background {
+    display: none;
+  }
+  .en__field__item--other {
+    flex-basis: 100% !important;
+  }
+  .en__field--auto-renew {
+    .en__field__item,
+    .en__field__element {
+      width: 100%;
+    }
+  }
+  .body-main .en__submit button {
+    width: 100%;
+  }
+  #onetrust-consent-sdk {
+    display: none !important;
+  }
+  .main-page-footer {
+    padding-bottom: 0 !important;
+  }
+  .en__field .en__field__element.en__field__element--radio {
+    margin-right: 0 !important;
+  }
+  .body-bottom-content {
+    .contact-us {
+      flex-direction: row;
+    }
+    .contact {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      gap: 10px;
+      div:first-of-type {
+        margin-right: 0;
+      }
+    }
+  }
+  .pre-footer,
+  .pre-footer h2 {
+    text-align: center !important;
+  }
+  #en__upsellModal {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  #en__upsellModal::-webkit-scrollbar {
+    display: none;
+  }
+  .donation-nudge {
+    max-width: none;
+    margin-top: 26px;
+    img {
+      margin-top: -20px;
+    }
+  }
+}
