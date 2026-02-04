@@ -602,6 +602,37 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     window.addEventListener("blur", dataListener);
   }
 
+  // Set the donation amount in sessionStorage when DAF (Chariot) button is clicked
+  const chariotButton = document.getElementById("chariot-button");
+  if (chariotButton) {
+    chariotButton.addEventListener("click", () => {
+      setDonationDataSessionStorage(App, DonationAmount);
+    });
+  } else {
+    const chariotObserver = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+          mutation.addedNodes.forEach((node) => {
+            if (
+              node.nodeType === Node.ELEMENT_NODE &&
+              node.id &&
+              node.id === "chariot-button"
+            ) {
+              node.addEventListener("click", () => {
+                setDonationDataSessionStorage(App, DonationAmount);
+              });
+              chariotObserver.disconnect();
+            }
+          });
+        }
+      }
+    });
+    chariotObserver.observe(document.querySelector(".en__component--page"), {
+      childList: true,
+      subtree: true,
+    });
+  }
+
   // Accordion functionality
   const accordion = document.querySelectorAll(".accordion-header");
   accordion.forEach((button) => {

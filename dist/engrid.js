@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, January 27, 2026 @ 11:21:50 ET
+ *  Date: Wednesday, February 4, 2026 @ 10:39:34 ET
  *  By: michael
  *  ENGrid styles: v0.23.4
  *  ENGrid scripts: v0.23.7
@@ -26190,6 +26190,33 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
       }
     };
     window.addEventListener("blur", dataListener);
+  }
+
+  // Set the donation amount in sessionStorage when DAF (Chariot) button is clicked
+  const chariotButton = document.getElementById("chariot-button");
+  if (chariotButton) {
+    chariotButton.addEventListener("click", () => {
+      setDonationDataSessionStorage(App, DonationAmount);
+    });
+  } else {
+    const chariotObserver = new MutationObserver(mutationsList => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE && node.id && node.id === "chariot-button") {
+              node.addEventListener("click", () => {
+                setDonationDataSessionStorage(App, DonationAmount);
+              });
+              chariotObserver.disconnect();
+            }
+          });
+        }
+      }
+    });
+    chariotObserver.observe(document.querySelector(".en__component--page"), {
+      childList: true,
+      subtree: true
+    });
   }
 
   // Accordion functionality
