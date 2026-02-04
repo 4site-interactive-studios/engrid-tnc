@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 28, 2026 @ 17:25:51 ET
- *  By: fernando
+ *  Date: Wednesday, February 4, 2026 @ 11:04:22 ET
+ *  By: michael
  *  ENGrid styles: v0.23.4
- *  ENGrid scripts: v0.23.10
+ *  ENGrid scripts: v0.23.11
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -22670,6 +22670,7 @@ class WelcomeBack {
             region: engrid_ENGrid.getFieldValue("supporter.region"),
             postcode: engrid_ENGrid.getFieldValue("supporter.postcode"),
             country: engrid_ENGrid.getFieldValue("supporter.country"),
+            mobilePhone: engrid_ENGrid.getFieldValue("supporter.phoneNumber2"),
         };
         this.addWelcomeBack();
         this.addPersonalDetailsSummary();
@@ -22724,6 +22725,9 @@ class WelcomeBack {
         ${this.supporterDetails["firstName"]} ${this.supporterDetails["lastName"]}
         <br>
         ${this.supporterDetails["emailAddress"]}
+        ${this.supporterDetails["mobilePhone"]
+            ? `<br>${this.supporterDetails["mobilePhone"]}`
+            : ""}
      </p>
     `);
         if (this.supporterDetails["address1"] &&
@@ -24217,7 +24221,7 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.23.10";
+const AppVersion = "0.23.11";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
@@ -24327,7 +24331,7 @@ if (isSafari) {
 smoothscroll_default().polyfill();
 class DonationLightboxForm {
   constructor(DonationAmount, DonationFrequency, App) {
-    if (!this.isIframe() || document.querySelector("body").dataset.engridSubtheme !== "multistep" && document.querySelector("body").dataset.engridSubtheme !== "one-step-lightbox") return;
+    if (!this.isIframe() || document.querySelector("body").dataset.engridSubtheme !== "multistep") return;
     this.amount = DonationAmount;
     this.frequency = DonationFrequency;
     this.app = App;
@@ -24429,13 +24433,6 @@ class DonationLightboxForm {
     if (!this.sections.length) {
       // No section or no Donation Page was found
       this.sendMessage("error", "No sections found");
-      return false;
-    }
-    if (document.querySelector("body").dataset.engridSubtheme === "one-step-lightbox") {
-      document.querySelector(".en__submit button")?.addEventListener("click", e => {
-        e.preventDefault();
-        this.submitLogic();
-      });
       return false;
     }
     console.log(this.sections);
@@ -24603,82 +24600,6 @@ class DonationLightboxForm {
   isIframe() {
     return window.self !== window.top;
   }
-  submitLogic() {
-    if (this.isDonation) {
-      console.log("DonationLightboxForm: submitLogic - Donation");
-      // Send Basic User Data to Parent
-      this.sendMessage("donationinfo", JSON.stringify({
-        name: document.querySelector("#en__field_supporter_firstName").value,
-        amount: this.getDonationTotal(),
-        frequency: this.frequency.getInstance().frequency
-      }));
-      // Only shows cortain if payment is not paypal
-      const paymentType = document.querySelector("#en__field_transaction_paymenttype").value;
-      if (paymentType.toLowerCase() != "paypal") {
-        if (document.querySelector("body").dataset.engridSubtheme === "one-step-lightbox") {
-          const waitForUpsellModal = () => {
-            const upsellModal = document.querySelector("#en__upsellModal");
-            if (upsellModal) {
-              return Promise.resolve(upsellModal);
-            }
-            return new Promise(resolve => {
-              const observer = new MutationObserver(mutations => {
-                for (const mutation of mutations) {
-                  for (const node of mutation.addedNodes) {
-                    if (!(node instanceof HTMLElement)) continue;
-                    const modal = node.id === "en__upsellModal" ? node : node.querySelector?.("#en__upsellModal");
-                    if (modal) {
-                      observer.disconnect();
-                      resolve(modal);
-                      return;
-                    }
-                  }
-                }
-              });
-              observer.observe(document.body, {
-                childList: true,
-                subtree: true
-              });
-            });
-          };
-          waitForUpsellModal().then(modal => {
-            document.querySelector("#en__upsellModal__yes button")?.addEventListener("click", () => {
-              this.sendMessage("status", "loading");
-            });
-            document.querySelector("#en__upsellModal__no button")?.addEventListener("click", () => {
-              this.sendMessage("status", "loading");
-            });
-          });
-        } else {
-          this.sendMessage("status", "loading");
-        }
-      } else {
-        // If Paypal, submit the form on a new tab
-        const thisClass = this;
-        document.addEventListener("visibilitychange", function () {
-          if (document.visibilityState === "visible") {
-            thisClass.sendMessage("status", "submitted");
-          } else {
-            thisClass.sendMessage("status", "loading");
-          }
-        });
-        document.querySelector("form.en__component").target = "_blank";
-      }
-      if (this.checkNested(window.EngagingNetworks, "require", "_defined", "enDefaults", "validation", "_getSubmitPromise")) {
-        console.log("DonationLightboxForm: Using EN Validation Promise");
-        window.EngagingNetworks.require._defined.enDefaults.validation._getSubmitPromise().then(function () {
-          document.querySelector("form.en__component").submit();
-        });
-      } else {
-        console.log("DonationLightboxForm: Using standard submit");
-        document.querySelector("form.en__component").requestSubmit();
-      }
-    } else {
-      console.log("DonationLightboxForm: submitLogic - Non Donation");
-      this.sendMessage("status", "loading");
-      document.querySelector("form.en__component").requestSubmit();
-    }
-  }
   // Build Section Navigation
   buildSectionNavigation() {
     console.log("DonationLightboxForm: buildSectionNavigation");
@@ -24772,7 +24693,40 @@ class DonationLightboxForm {
         e.preventDefault();
         // Validate the entire form again
         if (this.validateForm(false, this.isDonation)) {
-          this.submitLogic();
+          if (this.isDonation) {
+            // Send Basic User Data to Parent
+            this.sendMessage("donationinfo", JSON.stringify({
+              name: document.querySelector("#en__field_supporter_firstName").value,
+              amount: this.getDonationTotal(),
+              frequency: this.frequency.getInstance().frequency
+            }));
+            // Only shows cortain if payment is not paypal
+            const paymentType = document.querySelector("#en__field_transaction_paymenttype").value;
+            if (paymentType.toLowerCase() != "paypal") {
+              this.sendMessage("status", "loading");
+            } else {
+              // If Paypal, submit the form on a new tab
+              const thisClass = this;
+              document.addEventListener("visibilitychange", function () {
+                if (document.visibilityState === "visible") {
+                  thisClass.sendMessage("status", "submitted");
+                } else {
+                  thisClass.sendMessage("status", "loading");
+                }
+              });
+              document.querySelector("form.en__component").target = "_blank";
+            }
+            if (this.checkNested(window.EngagingNetworks, "require", "_defined", "enDefaults", "validation", "_getSubmitPromise")) {
+              window.EngagingNetworks.require._defined.enDefaults.validation._getSubmitPromise().then(function () {
+                document.querySelector("form.en__component").submit();
+              });
+            } else {
+              document.querySelector("form.en__component").requestSubmit();
+            }
+          } else {
+            this.sendMessage("status", "loading");
+            document.querySelector("form.en__component").requestSubmit();
+          }
         }
       });
       section.querySelector(".en__component").append(sectionNavigation);
@@ -26243,6 +26197,33 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
       }
     };
     window.addEventListener("blur", dataListener);
+  }
+
+  // Set the donation amount in sessionStorage when DAF (Chariot) button is clicked
+  const chariotButton = document.getElementById("chariot-button");
+  if (chariotButton) {
+    chariotButton.addEventListener("click", () => {
+      setDonationDataSessionStorage(App, DonationAmount);
+    });
+  } else {
+    const chariotObserver = new MutationObserver(mutationsList => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === Node.ELEMENT_NODE && node.id && node.id === "chariot-button") {
+              node.addEventListener("click", () => {
+                setDonationDataSessionStorage(App, DonationAmount);
+              });
+              chariotObserver.disconnect();
+            }
+          });
+        }
+      }
+    });
+    chariotObserver.observe(document.querySelector(".en__component--page"), {
+      childList: true,
+      subtree: true
+    });
   }
 
   // Accordion functionality
@@ -29538,7 +29519,7 @@ const options = {
   onLoad: () => {
     window.DonationLightboxForm = DonationLightboxForm;
     customScript(App, DonationFrequency, DonationAmount);
-    if (App.getBodyData("subtheme") === "multistep" || App.getBodyData("subtheme") === "one-step-lightbox") {
+    if (App.getBodyData("subtheme") === "multistep") {
       new DonationLightboxForm(DonationAmount, DonationFrequency, App);
     }
     new BequestLightbox();
