@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, February 3, 2026 @ 11:43:31 ET
+ *  Date: Thursday, February 5, 2026 @ 07:49:38 ET
  *  By: michael
  *  ENGrid styles: v0.23.4
- *  ENGrid scripts: v0.23.7
+ *  ENGrid scripts: v0.23.11
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11468,6 +11468,87 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep] [data-last-section=true]:has(.en__captcha) .en__field--firstName,[data-engrid-theme=tnc][data-engrid-subtheme=multistep] [data-last-section=true]:has(.en__captcha) .en__field--lastName{
   flex-basis:50%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox][data-engrid-embedded] #engrid{
+  margin-left:15px;
+  margin-right:15px;
+  max-width:630px !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox][data-engrid-thank-you=true] .body-banner{
+  height:auto !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .form-heading{
+  margin-top:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .body-banner{
+  grid-column:1 /  -1;
+  grid-row:body-banner-start;
+  height:300px;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .body-title,[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .body-top{
+  grid-column:1 /  -1;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .body-title h1{
+  color:#007931 !important;
+  text-align:center;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .body-top p{
+  color:var(--default_color) !important;
+  text-align:center;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .body-banner{
+  display:grid !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .donation-nudge{
+  margin-left:auto;
+  margin-right:auto;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .en__upsellModal__background{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .en__field__item--other{
+  flex-basis:100% !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .body-main .en__submit button,[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .en__field--auto-renew .en__field__element,[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .en__field--auto-renew .en__field__item{
+  width:100%;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] #onetrust-consent-sdk{
+  display:none !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .main-page-footer{
+  padding-bottom:0 !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .en__field .en__field__element.en__field__element--radio{
+  margin-right:0 !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .body-bottom-content .contact-us{
+  flex-direction:row;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .body-bottom-content .contact{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  text-align:center;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .body-bottom-content .contact div:first-of-type{
+  margin-right:0;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .pre-footer,[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .pre-footer h2{
+  text-align:center !important;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] #en__upsellModal{
+  -ms-overflow-style:none;
+  scrollbar-width:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] #en__upsellModal::-webkit-scrollbar{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .donation-nudge{
+  margin-top:26px;
+  max-width:none;
+}
+[data-engrid-theme=tnc][data-engrid-subtheme=one-step-lightbox] .donation-nudge img{
+  margin-top:-20px;
 }
 @keyframes fadeIn{
   0%{
