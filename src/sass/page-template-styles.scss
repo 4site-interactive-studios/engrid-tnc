@@ -3698,6 +3698,11 @@
       }
     }
 
+    .en__errorList {
+      width: $leftleft1col_body-column_max-width;
+      max-width: 100%;
+    }
+
     .content-header,
     .content-footer {
       grid-column: bc;
