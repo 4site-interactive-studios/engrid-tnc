@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, February 5, 2026 @ 07:51:11 ET
+ *  Date: Thursday, February 12, 2026 @ 12:19:57 ET
  *  By: michael
  *  ENGrid styles: v0.23.4
  *  ENGrid scripts: v0.23.11
@@ -26679,6 +26679,17 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
       items.classList.toggle("hide");
     });
   });
+  function toggleClickToExpand() {
+    const clickToExpandElements = document.querySelectorAll(".click-to-expand-tnc-toggle");
+    clickToExpandElements.forEach(el => {
+      el.insertAdjacentHTML("afterend", '<div class="click-to-expand-close">Read Less</div>');
+      const closeButton = el.parentElement.querySelector(".click-to-expand-close");
+      closeButton.addEventListener("click", () => {
+        el.classList.remove("expanded");
+      });
+    });
+  }
+  toggleClickToExpand();
 };
 ;// CONCATENATED MODULE: ./src/scripts/bequest-lightbox.ts
 

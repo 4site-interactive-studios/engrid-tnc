@@ -3736,6 +3736,24 @@
       .click-to-expand {
         margin-bottom: 20px;
       }
+
+      .click-to-expand + .click-to-expand-close {
+        display: none;
+      }
+
+      .click-to-expand.expanded + .click-to-expand-close {
+        display: block;
+        cursor: pointer;
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11.414' height='7.121'%3E%3Cpath d='M0.707 6.414 L5.707 1.414 L10.707 6.414' fill='none' stroke='%23007931' stroke-miterlimit='10' stroke-width='2'/%3E%3C/svg%3E");
+        background-position: 75px center;
+        background-repeat: no-repeat;
+        color: var(--color-green);
+        content: "Read Less";
+        font-family: var(--sans-serif-fonts);
+        font-size: 16px;
+        font-weight: 700;
+        padding-right: 15px;
+      }
     }
 
     .by-the-numbers-grid {

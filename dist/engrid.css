@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, February 5, 2026 @ 07:51:11 ET
+ *  Date: Thursday, February 12, 2026 @ 12:19:57 ET
  *  By: michael
  *  ENGrid styles: v0.23.4
  *  ENGrid scripts: v0.23.11
@@ -10596,6 +10596,22 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-layout=leftleft1col]:not([data-engrid-subtheme=gated-content]):not(#en__pagebuilder) .click-to-expand{
   margin-bottom:20px;
+}
+[data-engrid-theme=tnc][data-engrid-layout=leftleft1col]:not([data-engrid-subtheme=gated-content]):not(#en__pagebuilder) .click-to-expand+.click-to-expand-close{
+  display:none;
+}
+[data-engrid-theme=tnc][data-engrid-layout=leftleft1col]:not([data-engrid-subtheme=gated-content]):not(#en__pagebuilder) .click-to-expand.expanded+.click-to-expand-close{
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11.414' height='7.121'%3E%3Cpath d='m.707 6.414 5-5 5 5' fill='none' stroke='%23007931' stroke-miterlimit='10' stroke-width='2'/%3E%3C/svg%3E");
+  background-position:75px;
+  background-repeat:no-repeat;
+  color:var(--color-green);
+  content:"Read Less";
+  cursor:pointer;
+  display:block;
+  font-family:var(--sans-serif-fonts);
+  font-size:16px;
+  font-weight:700;
+  padding-right:15px;
 }
 [data-engrid-theme=tnc][data-engrid-layout=leftleft1col]:not([data-engrid-subtheme=gated-content]) .by-the-numbers-grid{
   display:flex;
