@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, February 12, 2026 @ 12:19:57 ET
+ *  Date: Tuesday, February 24, 2026 @ 07:51:46 ET
  *  By: michael
  *  ENGrid styles: v0.23.4
  *  ENGrid scripts: v0.23.11
@@ -25702,26 +25702,28 @@ function getSubmitEventName(App) {
   return "frm_emt_submit";
 }
 function trackFormErrors() {
-  let invalidFields = "";
-  let errors = "";
+  setTimeout(() => {
+    let invalidFields = "";
+    let errors = "";
 
-  // Gather invalid fields and error messages
-  document.querySelectorAll(".en__field--validationFailed").forEach(el => {
-    if (el.querySelector(".en__field__error")) {
-      invalidFields += `${el.querySelector(".en__field__input").getAttribute("name")}|`;
-      errors += `${el.querySelector(".en__field__error").textContent}|`;
-    }
-  });
-
-  // Fire tracking if errors were found
-  if (invalidFields !== "") {
-    trackEvent("form_error", {
-      form_field_error_field: invalidFields.slice(0, -1),
-      form_field_error_value: errors.slice(0, -1),
-      form_name: utag_data.page_name.slice(0, -2),
-      form_type: pageJson.pageType
+    // Gather invalid fields and error messages
+    document.querySelectorAll(".en__field--validationFailed").forEach(el => {
+      if (el.querySelector(".en__field__error")) {
+        invalidFields += `${el.querySelector(".en__field__input").getAttribute("name")}|`;
+        errors += `${el.querySelector(".en__field__error").textContent}|`;
+      }
     });
-  }
+
+    // Fire tracking if errors were found
+    if (invalidFields !== "") {
+      trackEvent("form_error", {
+        form_field_error_field: invalidFields.slice(0, -1),
+        form_field_error_value: errors.slice(0, -1),
+        form_name: utag_data.page_name.slice(0, -2),
+        form_type: pageJson.pageType
+      });
+    }
+  }, 500);
 }
 function trackProcessingErrors(App) {
   const errorList = document.querySelector(".en__errorList");

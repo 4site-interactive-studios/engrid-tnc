@@ -185,28 +185,30 @@ function getSubmitEventName(App) {
 }
 
 export function trackFormErrors() {
-  let invalidFields = "";
-  let errors = "";
+  setTimeout(() => {
+    let invalidFields = "";
+    let errors = "";
 
-  // Gather invalid fields and error messages
-  document.querySelectorAll(".en__field--validationFailed").forEach((el) => {
-    if (el.querySelector(".en__field__error")) {
-      invalidFields += `${el
-        .querySelector(".en__field__input")
-        .getAttribute("name")}|`;
-      errors += `${el.querySelector(".en__field__error").textContent}|`;
-    }
-  });
-
-  // Fire tracking if errors were found
-  if (invalidFields !== "") {
-    trackEvent("form_error", {
-      form_field_error_field: invalidFields.slice(0, -1),
-      form_field_error_value: errors.slice(0, -1),
-      form_name: utag_data.page_name.slice(0, -2),
-      form_type: pageJson.pageType,
+    // Gather invalid fields and error messages
+    document.querySelectorAll(".en__field--validationFailed").forEach((el) => {
+      if (el.querySelector(".en__field__error")) {
+        invalidFields += `${el
+          .querySelector(".en__field__input")
+          .getAttribute("name")}|`;
+        errors += `${el.querySelector(".en__field__error").textContent}|`;
+      }
     });
-  }
+
+    // Fire tracking if errors were found
+    if (invalidFields !== "") {
+      trackEvent("form_error", {
+        form_field_error_field: invalidFields.slice(0, -1),
+        form_field_error_value: errors.slice(0, -1),
+        form_name: utag_data.page_name.slice(0, -2),
+        form_type: pageJson.pageType,
+      });
+    }
+  }, 500);
 }
 
 export function trackProcessingErrors(App) {
