@@ -93,10 +93,11 @@
       .page-backgroundImage {
         grid-column: rpc/pc;
 
-        &:before {
-          left: $one_col_body-column_max-width;
+        &:before,
+        figure.media-with-attribution {
+          left: $leftleft1col_body-column_max-width;
           right: 0;
-          width: calc(100% - $one_col_body-column_max-width);
+          width: calc(100% - $leftleft1col_body-column_max-width);
           background-position: center !important;
         }
       }
@@ -110,7 +111,8 @@
       .page-backgroundImage {
         grid-column: pc/lpc;
 
-        &:before {
+        &:before,
+        figure.media-with-attribution {
           left: 0;
           right: $one_col_body-column_max-width;
           width: calc(100% - $one_col_body-column_max-width);
@@ -782,7 +784,7 @@
 
     .en__field__item:not(:first-child) > .en__field__label--item {
       @media screen and (min-width: 767px) {
-        border-left: none;
+        border-left-width: 0;
       }
     }
 
@@ -862,6 +864,12 @@
     }
   }
 
+  input[type="checkbox"] + label:before,
+  input[type="radio"] + label:before {
+    margin-right: max(var(--fields_spacing-inline), 0.5rem);
+  }
+
+
   ///////////////////////////////////////////////////
   /*
   // End of global styles
@@ -869,8 +877,10 @@
   */
   ///////////////////////////////////////////////////
 
-  // leftleft1col specific styles - old gated content page layout
-  &[data-engrid-layout="leftleft1col"] {
+  // "gated content" page styles.
+  // This layout and subtheme was from before the main ENgrid migration and is kept separate to avoid conflicts.
+  // SUBTHEME: gated content
+  &[data-engrid-layout="leftleft1col"][data-engrid-subtheme="gated-content"] {
     --click-to-expand__copy-area_height: 200px;
 
     @media screen and (max-width: 805px) {
@@ -1089,14 +1099,9 @@
     }
   }
 
-  input[type="checkbox"] + label:before,
-  input[type="radio"] + label:before {
-    margin-right: max(var(--fields_spacing-inline), 0.5rem);
-  }
-
-  // Global styles for ENgrid migration - everything except the old gated content page layout
-  // Specifically excludes the old gated content page layout to prevent conflicts
-  &:not([data-engrid-layout="leftleft1col"]) {
+  // Global styles for ENgrid migration - everything except the old "gated content" page subtheme
+  // Specifically excludes the old "gated content" page layout and subtheme to prevent conflicts
+  &:not([data-engrid-subtheme="gated-content"]) {
     --color-green: #007931;
     --color-white: #ffffff;
     --color-gray: #949494;
@@ -1962,7 +1967,7 @@
     }
   }
 
-  // Specific centercentcer1col styles
+  // LAYOUT: centercenter1col
   &[data-engrid-layout="centercenter1col"] {
     &#en__pagebuilder {
       .body-header,
@@ -2855,7 +2860,7 @@
     }
   }
 
-  // Specific centercenter2col layout styles
+  // LAYOUT: centercenter2col
   &[data-engrid-layout="centercenter2col"] {
     --pagebuilder__background-color: var(--engrid__page_background-color);
     --submit__button_background-color: var(--color-green);
@@ -3064,6 +3069,7 @@
     }
   }
 
+  // SUBTHEME: multipage-survey
   &[data-engrid-layout="rightright1col"][data-engrid-subtheme="multipage-survey"] {
     --engrid__body-main_background-color: #f8f8f8;
     --engrid__body-main_padding: 20px 18%;
@@ -3590,7 +3596,7 @@
     }
   }
 
-  // SUBTHEME: simple-1col
+  // SUBTHEME: boxed-content
   &[data-engrid-subtheme="boxed-content"] {
     @media screen and (min-width: 760px) {
       .body-main > .en__component {
@@ -3669,6 +3675,331 @@
     }
   }
 
+  // LAYOUT: leftleft1col
+  // Specifically exclude these styles applying to the "gated content" subtheme to avoid conflicts
+  &[data-engrid-layout="leftleft1col"]:not([data-engrid-subtheme="gated-content"]) {
+    --engrid__body-title_background-color: var(--color-white);
+    --engrid__body-top_background-color: var(--color-white);
+    --h1_color: var(--color-green);
+    --h1_font-family: var(--default_font-family);
+    --engrid__body_padding: 0 35px;
+    --engrid__body-bottom_padding: 0 35px 30px;
+    --engrid__body-title_padding: 0 35px;
+    --engrid__body-top_padding: 0 35px;
+    --engrid__body-banner_padding: 0 0 25px;
+    --engrid__content-footer_padding: 0 35px;
+    --engrid__content-header_padding: 30px 35px 0;
+    --donation-amount__button_count: 3;
+
+    &#en__pagebuilder {
+      .body-header,
+      .content-preFooter {
+        display: none;
+      }
+    }
+
+    .en__errorList {
+      width: $leftleft1col_body-column_max-width;
+      max-width: 100%;
+    }
+
+    .content-header,
+    .content-footer {
+      grid-column: bc;
+    }
+
+    .body-main {
+      padding-bottom: 20px;
+    }
+
+    .header-nav .nav-right a {
+      border-left: none;
+      margin-left: 0;
+      padding-left: 0;
+    }
+
+    &:not(#en__pagebuilder) {
+      .click-to-expand:not(.expanded) {
+        .click-to-expand-cta:before {
+          content: "Read More";
+        }
+
+        .click-to-expand-text-wrapper {
+          min-height: 120px;
+        }
+
+        .by-the-numbers-block {
+          display: none;
+        }
+      }
+
+      .click-to-expand {
+        margin-bottom: 20px;
+      }
+
+      .click-to-expand + .click-to-expand-close {
+        display: none;
+      }
+
+      .click-to-expand.expanded + .click-to-expand-close {
+        display: block;
+        cursor: pointer;
+        background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11.414' height='7.121'%3E%3Cpath d='M0.707 6.414 L5.707 1.414 L10.707 6.414' fill='none' stroke='%23007931' stroke-miterlimit='10' stroke-width='2'/%3E%3C/svg%3E");
+        background-position: 75px center;
+        background-repeat: no-repeat;
+        color: var(--color-green);
+        content: "Read Less";
+        font-family: var(--sans-serif-fonts);
+        font-size: 16px;
+        font-weight: 700;
+        padding-right: 15px;
+      }
+    }
+
+    .by-the-numbers-grid {
+      display: flex;
+      flex-direction: column;
+
+      .by-the-numbers-item {
+        display: flex;
+        align-items: center;
+      }
+
+      .by-the-numbers-header {
+        display: flex;
+        width: 220px;
+        align-items: center;
+        font-size: 48px;
+        font-family: var(--serif-fonts);
+
+        img {
+          margin: 0 10px 0 0;
+        }
+      }
+
+      .by-the-numbers-body {
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 30px;
+        flex: 1;
+      }
+    }
+
+    .form-heading {
+      margin-top: 35px;
+    }
+
+    .donation-nudge {
+      justify-content: center;
+      max-width: none;
+      align-items: center;
+      margin-top: 5px;
+
+      p:first-of-type {
+        margin-right: 0;
+      }
+
+      img {
+        max-width: 45px;
+        position: relative;
+        top: -6px;
+      }
+    }
+
+    &[data-engrid-transaction-recurring="y"][data-engrid-ihmo="true"] {
+      .en__field--recurrfreq .en__field__element--radio .en__field__item:last-child:after {
+        position: relative;
+        top: 3px;
+        left: -80%;
+        width: 160%;
+        display: inline-block;
+      }
+    }
+
+    .radio-to-buttons_donationAmt .en__field__item.en__field__item--other {
+      margin-top: 0;
+      flex-basis: 100%;
+    }
+
+    .engrid--ihmo-wrapper {
+      padding: 16px 16px 4px;
+    }
+
+    .en__field--give-by-select > .en__field__element .en__field__item {
+      @media screen and (min-width: 767px) {
+        flex-basis: 100%;
+        padding: calc(var(--fields_spacing-block) * .5) var(--fields_spacing-inline) var(--fields_spacing-block);
+      }
+    }
+
+    .en__field__item:not(:first-child) > .en__field__label--item {
+      @media screen and (min-width: 767px) {
+        border-left-width: 1px;
+      }
+    }
+
+    .en__field--auto-renew {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .en__submit button {
+      width: 100%
+    }
+
+    .body-bottom-content {
+      border: none;
+
+      h2 {
+        font-family: var(--serif-fonts);
+        color: var(--color-green);
+        font-size: 20px;
+      }
+
+      h2.accreditations-title {
+        font-family: var(--default_font-family);
+        color: var(--color_black);
+        font-weight: bold;
+        font-size: 28px;
+      }
+
+      .contact-us {
+        flex-direction: row;
+      }
+
+      .contact {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 0 10px;
+
+        div:first-of-type {
+          margin-right: 0;
+        }
+      }
+    }
+
+    .main-page-footer {
+      border-top: none;
+      padding: 40px 0;
+
+      div {
+        width: 100%;
+      }
+    }
+
+    .content-footer {
+      border-top: 1px solid #949494;
+    }
+
+    .premium-theme-3 {
+      .premium-container-content {
+        margin-top: 20px;
+      }
+
+      .premium-theme-3-header {
+        --h2_color: #272727;
+        margin-top: 0;
+
+        .premium-theme-3-items > h2 {
+          font-family: var(--serif-fonts);
+        }
+
+        #premium-theme-3-container .premium-theme-3-image {
+          background-size: cover;
+        }
+      }
+    }
+
+    .en__component--codeblock + .premium-container-content {
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+
+    #en__digitalWallet {
+      flex-basis: 100%;
+    }
+
+    #en__digitalWallet__stripeButtons__container {
+      width: 100%;
+    }
+
+    &[data-engrid-thank-you="true"] {
+      --h2_font-weight: bold;
+      --h3_font-weight: bold;
+
+      .content-header {
+        border: none;
+      }
+    }
+
+    @media screen and (max-width: 1024px) {
+      .page-backgroundImage {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 992px) {
+      .body-main {
+        max-width: 100%;
+      }
+
+      .body-bottom-content {
+        border: none;
+
+        .contact-us {
+          flex-direction: column;
+        }
+
+        .contact {
+          flex-direction: row;
+          padding: 25px 15px;
+          align-items: flex-start;
+        }
+
+        .accreditations {
+          padding-left: 0;
+          padding-right: 0;
+        }
+
+        h2.accreditations-title {
+          font-size: 24px;
+        }
+      }
+
+      .main-page-footer > div {
+        padding: 0;
+      }
+    }
+
+    @media screen and (max-width: 599px) {
+      --engrid__body_padding: 0 15px;
+      --engrid__body-bottom_padding: 0 15px 30px;
+      --engrid__body-title_padding: 0 15px;
+      --engrid__body-top_padding: 0 15px;
+      --engrid__content-footer_padding: 0 15px;
+      --engrid__content-header_padding: 30px 15px 0;
+      --donation-amount__button_count: 2;
+      --h1_font-size: 40px;
+
+      .header-nav .nav-left {
+        width: 190px;
+      }
+
+      .by-the-numbers-block {
+        --h2_font-size: 40px;
+      }
+
+      .by-the-numbers-grid .by-the-numbers-item {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  // SUBTHEME: Multistep
   &[data-engrid-subtheme="multistep"] {
     @import "./multistep";
   }
@@ -3679,7 +4010,6 @@
 
   //Premiums
   @import "./components/premiums";
-
   @import "ihmo.scss";
   @import "ecard.scss";
   @import "./supporter-hub.scss";

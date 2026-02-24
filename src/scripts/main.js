@@ -1164,4 +1164,26 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
         items.classList.toggle("hide");
       });
     });
+
+  function toggleClickToExpand() {
+    const clickToExpandElements = document.querySelectorAll(
+      ".click-to-expand-tnc-toggle"
+    );
+
+    clickToExpandElements.forEach((el) => {
+      el.insertAdjacentHTML(
+        "afterend",
+        '<div class="click-to-expand-close">Read Less</div>'
+      );
+
+      const closeButton = el.parentElement.querySelector(
+        ".click-to-expand-close"
+      );
+      closeButton.addEventListener("click", () => {
+        el.classList.remove("expanded");
+      });
+    });
+  }
+
+  toggleClickToExpand();
 };
