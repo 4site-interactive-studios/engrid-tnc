@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 4, 2026 @ 10:04:54 ET
+ *  Date: Wednesday, March 4, 2026 @ 10:32:30 ET
  *  By: michael
  *  ENGrid styles: v0.24.0
  *  ENGrid scripts: v0.24.3
@@ -26811,6 +26811,16 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     });
   }
   toggleClickToExpand();
+  function addEcardAltTags() {
+    const ecardImages = [...document.querySelectorAll(".en__ecarditems__thumb img")];
+    const altTexts = [...document.querySelectorAll(".engrid-ecard-alt-tags p")];
+    ecardImages.forEach((img, index) => {
+      if (altTexts[index]) {
+        img.setAttribute("alt", altTexts[index].textContent);
+      }
+    });
+  }
+  addEcardAltTags();
 };
 ;// CONCATENATED MODULE: ./src/scripts/bequest-lightbox.ts
 

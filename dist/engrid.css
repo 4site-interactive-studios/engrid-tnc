@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 4, 2026 @ 10:04:54 ET
+ *  Date: Wednesday, March 4, 2026 @ 10:32:30 ET
  *  By: michael
  *  ENGrid styles: v0.24.0
  *  ENGrid scripts: v0.24.3
@@ -12151,6 +12151,9 @@ body[data-engrid-debug]:before{
   margin:3.5rem 0 1.25rem;
   padding-bottom:1rem;
   text-transform:uppercase;
+}
+[data-engrid-theme=tnc] .engrid-ecard-alt-tags{
+  display:none !important;
 }
 [data-engrid-theme=tnc]#en__pagebuilder:has(.en__component--hublogin) .body-header,[data-engrid-theme=tnc]#en__pagebuilder:has(.en__component--hublogin) .page-backgroundImage{
   display:block !important;

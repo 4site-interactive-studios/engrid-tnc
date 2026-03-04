@@ -1186,4 +1186,18 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
   }
 
   toggleClickToExpand();
+
+  function addEcardAltTags() {
+    const ecardImages = [
+      ...document.querySelectorAll(".en__ecarditems__thumb img"),
+    ];
+    const altTexts = [...document.querySelectorAll(".engrid-ecard-alt-tags p")];
+    ecardImages.forEach((img, index) => {
+      if (altTexts[index]) {
+        img.setAttribute("alt", altTexts[index].textContent);
+      }
+    });
+  }
+
+  addEcardAltTags();
 };
