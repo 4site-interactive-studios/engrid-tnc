@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, March 2, 2026 @ 10:04:40 ET
+ *  Date: Wednesday, March 4, 2026 @ 10:04:54 ET
  *  By: michael
  *  ENGrid styles: v0.24.0
- *  ENGrid scripts: v0.24.2
+ *  ENGrid scripts: v0.24.3
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -22844,7 +22844,7 @@ class WelcomeBack {
         ${this.supporterDetails["firstName"]} ${this.supporterDetails["lastName"]}
         <br>
         ${this.supporterDetails["emailAddress"]}
-        ${this.supporterDetails["mobilePhone"]
+        ${this.supporterDetails["mobilePhone"] && options.showPhoneNumber
             ? `<br>${this.supporterDetails["mobilePhone"]}`
             : ""}
      </p>
@@ -24340,7 +24340,7 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.24.2";
+const AppVersion = "0.24.3";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
