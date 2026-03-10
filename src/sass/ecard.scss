@@ -175,7 +175,9 @@
   text-transform: uppercase;
 }
 
-.engrid-ecard-alt-tags {
-  display: none!important;
+&:not(#en__pagebuilder) {
+  .engrid-ecard-alt-tags {
+    display: none!important;
+  }
 }
 
