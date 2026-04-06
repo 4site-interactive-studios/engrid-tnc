@@ -381,6 +381,11 @@ export class GdcpManager {
     const dataFieldPresent = document.querySelector(
       `[name="${gdcpField.dataFieldName}"]`
     );
+
+    if (!dataFieldPresent) {
+      return false;
+    }
+
     const optInFieldsNames = gdcpField.optInFieldNames
       .map((name: string) => `[name="${name}"]`)
       .join(", ");

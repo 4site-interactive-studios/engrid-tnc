@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, March 24, 2026 @ 11:09:51 ET
+ *  Date: Monday, April 6, 2026 @ 12:21:11 ET
  *  By: michael
  *  ENGrid styles: v0.24.0
  *  ENGrid scripts: v0.24.5
@@ -28755,6 +28755,9 @@ class GdcpManager {
    */
   async enFieldsForGdcpFieldOnPage(gdcpField) {
     const dataFieldPresent = document.querySelector(`[name="${gdcpField.dataFieldName}"]`);
+    if (!dataFieldPresent) {
+      return false;
+    }
     const optInFieldsNames = gdcpField.optInFieldNames.map(name => `[name="${name}"]`).join(", ");
     const optInFieldsPresent = document.querySelector(optInFieldsNames);
     if (gdcpField.channel !== "postal_mail" && gdcpField.channel !== "mobile_phone") {
