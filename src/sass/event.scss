@@ -1,0 +1,489 @@
+&[data-engrid-page-type="event"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"] {
+  --p_font-size: 22px;
+  --p_line-height: 40px;
+
+  --h3_font-size: 16px;
+  --h3_line-height: 19px;
+  --h3_font-weight: 600;
+
+  .body-top {
+    border: none;
+    margin-bottom: 0;
+  }
+
+  .body-main,
+  .body-bottom {
+    max-width: 900px;
+    width: 100%;
+
+    @media screen and (max-width: 992px) {
+      width: calc(100% - 28px);
+    }
+  }
+
+  .basic-h3-header {
+    color: black;
+    border: none;
+    margin-bottom: .9375rem;
+    padding-bottom: 0;
+  }
+
+  .engrid__eventdetails__overlay {
+    background-color: #fff;
+    border-bottom: .3125rem solid #007931;
+    box-shadow: 0 2px 30px 0 rgba(0, 0, 0, .2);
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2.833rem;
+    margin-top: -10rem;
+
+    position: relative;
+    --p_font-family: var(--sans-serif-fonts);
+    --p_font-size: 20px;
+    --p_font-weight: 400;
+    --p_line-height: 34px;
+    width: 100%;
+    padding: 1.875rem 2.5rem .75rem;
+
+    @media screen and (min-width: 768px) {
+      padding: 1.875rem 2.5rem .75rem;
+      max-width: 750px;
+    }
+
+    @media screen and (min-width: 994px) {
+      max-width: 850px;
+    }
+
+  }
+
+  .engrid__eventdetails__title {
+    font-size: 30px;
+    line-height: 36px;
+    margin-top: 0px;
+    margin-bottom: 8px;
+    font-family: var(--serif-fonts);
+  }
+
+  .engrid__eventdetails__description {
+    font-weight: 400;
+    margin: 0 0 16px 0;
+  }
+
+  .engrid__eventdetails__date {
+    font-size: 18px;
+    line-height: 27px;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+  }
+
+  .engrid__eventdetails__location-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-top: 16px;
+    margin-top: 40px;
+
+    @media screen and (min-width: 768px) {
+      margin-left: -14px;
+      margin-right: -14px;
+    }
+
+    &::before {
+      @media screen and (min-width: 768px) {
+        margin-left: auto;
+        margin-right: auto;
+        right: auto;
+        transform: translateX(-50%);
+        width: calc(100% + 3.25rem);
+      }
+
+      background-color: #cdcdcd;
+      content: "";
+      height: 1px;
+      position: absolute;
+      top: 0;
+      left: 50%;
+    }
+
+    .engrid__eventdetails__location {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+
+      a {
+        text-decoration: none;
+        color: inherit;
+        font-style: normal;
+      }
+
+      &::before {
+        content: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="13.339" height="16.5"><g fill="none" stroke="%231a1a1a" stroke-miterlimit="10" stroke-width="1.5"><path d="M8.894 6.844a2.311 2.311 0 01-2.277 2.344A2.311 2.311 0 014.34 6.844 2.311 2.311 0 016.617 4.5a2.311 2.311 0 012.277 2.344z"/><path d="M2.945 11.477a13.189 13.189 0 01-1.507-2.211A5.55 5.55 0 01.85 7.782a.3.3 0 01-.014-.062 5.92 5.92 0 1111.667 0c0 .019 0 .043-.01.063a10.708 10.708 0 01-1.823 3.304l-3.944 4.6a.183.183 0 01-.279 0z"/></g></svg>');
+        line-height: 1;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  .engrid__ticketBlockHeaders {
+    display: grid;
+    grid-template-columns: 1fr 20% 10rem;
+    gap: 28px;
+    border-bottom: 1px solid #cdcdcd;
+    padding-bottom: 1rem;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 26px;
+    text-transform: uppercase;
+  }
+
+  .en__ticket__field--cost {
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+
+    .en__ticket__price {
+      line-height: 1.6666;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+  }
+
+  .en__ticket {
+    padding-bottom: 0;
+  }
+
+  .en__ticket__field.en__ticket__field--quantity {
+    padding-bottom: 0;
+  }
+
+  .en__ticket__field:last-child {
+    padding-right: 0;
+  }
+
+  @media (min-width: 768px) {
+    .en__ticket__field {
+      padding-bottom: 2rem;
+      padding-top: 2rem;
+    }
+
+    .en__ticket {
+      grid-template-columns: 1fr 20% 10rem;
+      gap: 28px;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+
+    .en__ticket__field--info,
+    .en__ticket__field--cost {
+      border: 0;
+      vertical-align: middle;
+      width: 50%;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .en__ticket__field {
+      display: inline-block;
+      padding: 0;
+      padding-left: 0px;
+    }
+  }
+
+  .input-group> :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+    margin-left: -1px;
+  }
+
+  .en__ticket__name {
+    font-size: 1.125rem;
+    line-height: 1.4444;
+  }
+
+  .en__ticket__desc {
+    font-size: 1rem;
+  }
+
+  .en__ticket__field--quantity {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .en__ticket__quantity {
+    border: 0;
+    font-size: .875rem;
+    font-weight: 700;
+    line-height: 1.1428;
+    width: 3em;
+    vertical-align: middle;
+    padding: 0;
+  }
+
+  .en__ticket__selector {
+    margin-top: -0.75rem;
+    border: 1px solid #979797;
+    flex-wrap: nowrap;
+  }
+
+  .en__ticket__minus,
+  .en__ticket__plus {
+    align-items: center;
+    background-image: none;
+    background-size: .625rem;
+    border: 0;
+    display: inline-flex;
+    height: 3.25rem;
+    justify-content: center;
+    margin: 0;
+    position: relative;
+    width: 2.667rem;
+  }
+
+  .en__ticket__minus::after,
+  .en__ticket__plus::after {
+    color: #007931;
+    font-weight: 700;
+  }
+
+  .en__ticket__minus::after {
+    content: "-";
+  }
+
+  .en__ticket__plus::after {
+    content: "+";
+  }
+
+  .event-ticket-summary {
+    --p_font-size: 1.25rem;
+    font-size: 1.25rem;
+    line-height: 1.66;
+    text-align: right;
+    margin-top: 40px;
+
+    @media screen and (max-width: 767.99px) {
+      font-size: 1rem;
+      --p_font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .total-line {
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    p {
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .event-buttons {
+
+    .en__submit {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .btn-outline-primary {
+        --submit__button_background-color: transparent;
+        --submit__button_border-color: var(--color-green);
+        --submit__button_color: var(--color-green);
+        --submit__button_background-color_hover: var(--color-green);
+        --submit__button_hover_border-color: var(--color-green);
+        --submit__button_hover_color: #fff;
+
+        @media screen and (max-width: 767.99px) {
+          margin-top: 0;
+          width: initial;
+        }
+      }
+    }
+  }
+
+  // If both event-additional and event-promo are present, display them side by side on desktop
+  .event-extras {
+    display: flex;
+    flex-direction: column;
+
+    &:not(.no-promos) {
+      @media screen and (min-width: 768px) {
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+
+        .event-additional,
+        .event-promo {
+          flex: 1;
+          margin-top: 0;
+        }
+      }
+    }
+
+    &.no-promos {
+      .event-promo {
+        display: none;
+      }
+    }
+
+    .event-additional,
+    .event-promo {
+      margin-top: 1rem;
+
+      h3 {
+        border-bottom: 0;
+        color: #1a1a1a;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 1.375;
+        margin-bottom: .6875rem;
+        padding-bottom: 0;
+        text-transform: none;
+      }
+
+      p {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.375;
+      }
+
+      .en__additional__input,
+      .en__code__input {
+        display: block;
+        flex: none;
+        width: 100%;
+        text-align: left;
+        padding: 16px 20px;
+      }
+    }
+  }
+
+  // PAGE 2 - CHECKOUT PAGE SPECIFIC STYLES
+  .en__component--eventtickets {
+    margin-bottom: 64px;
+    font-size: 1.125rem;
+    line-height: 1.66;
+
+    @media screen and (max-width: 767.99px) {
+      font-size: 1rem;
+      --p_font-size: 1rem;
+      line-height: 1.5;
+    }
+
+  }
+
+  .en__orderSummary__headers {
+    line-height: 1.4444;
+    padding-bottom: 1.25rem;
+    padding-top: 0;
+    text-transform: uppercase;
+
+    * {
+      border-bottom: 1px solid #cdcdcd;
+      padding-bottom: 1.25rem;
+    }
+  }
+
+  .en__orderSummary__item> :nth-child(2),
+  .en__orderSummary__headers> :nth-child(2),
+  .en__orderSummary__total> :nth-child(2),
+  .en__orderSummary__additional> :nth-child(2) {
+    display: none;
+  }
+
+  &[data-engrid-event-has-promo="false"] {
+
+    .en__orderSummary__item> :nth-child(3),
+    .en__orderSummary__headers> :nth-child(3),
+    .en__orderSummary__total> :nth-child(3),
+    .en__orderSummary__additional> :nth-child(3) {
+      display: none;
+    }
+  }
+
+  .en__orderSummary> :not(:last-child) .en__orderSummary__data {
+    border-bottom: 1px solid #cdcdcd;
+  }
+
+  .en__orderSummary__data--type {
+    font-weight: 700;
+  }
+
+  .en__orderSummary__data {
+    padding-bottom: .75rem;
+    padding-top: 1rem;
+  }
+
+  .en__registrants__registrant {
+    width: 100%;
+  }
+
+  .en__field--registrant label {
+    text-transform: capitalize;
+  }
+
+  .en__orderSummary__data--cost,
+  .en__orderSummary__data--totalAmount,
+  .en__orderSummary__header--cost {
+    text-align: right;
+  }
+
+  // PAGE 3 - THANK YOU PAGE SPECIFIC STYLES
+  .event-confirmation-details {
+    margin-top: 24px;
+  }
+
+  .event-confirmation-table {
+    border: 1px solid #cdcdcd;
+    border-top: .3125rem solid #007931;
+    margin-top: 1.85rem;
+    line-height: 1.6666;
+    caption-side: bottom;
+    border-collapse: collapse;
+    font-size: 1.125rem;
+    line-height: 1.66;
+
+    td a {
+      text-decoration: none;
+      color: inherit;
+      font-style: normal;
+    }
+
+    td:first-child {
+      font-weight: 600;
+    }
+
+    @media (min-width: 768px) {
+      td {
+        border: 1px solid #cdcdcd;
+        padding: 1.9333% 2%;
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      font-size: 1rem;
+      --p_font-size: 1rem;
+      line-height: 1.5;
+
+      tr {
+        display: block;
+        padding: 1rem 1.25rem;
+      }
+
+      tr:not(:last-child) {
+        border-bottom: 1px solid #cdcdcd;
+      }
+
+      td {
+        border: none;
+        display: block;
+      }
+    }
+
+  }
+
+
+}

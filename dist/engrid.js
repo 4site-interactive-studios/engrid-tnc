@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, April 6, 2026 @ 12:21:11 ET
- *  By: michael
- *  ENGrid styles: v0.24.0
- *  ENGrid scripts: v0.24.5
+ *  Date: Thursday, May 7, 2026 @ 12:07:57 ET
+ *  By: nick
+ *  ENGrid styles: v0.25.0
+ *  ENGrid scripts: v0.25.1
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11446,6 +11446,7 @@ var dist = __webpack_require__(3199);
 class en_form_EnForm {
     constructor() {
         this.logger = new logger_EngridLogger("EnForm");
+        this._onIntentSubmit = new dist/* SignalDispatcher */.UD();
         this._onSubmit = new dist/* SignalDispatcher */.UD();
         this._onValidate = new dist/* SignalDispatcher */.UD();
         this._onError = new dist/* SignalDispatcher */.UD();
@@ -11459,6 +11460,10 @@ class en_form_EnForm {
             en_form_EnForm.instance = new en_form_EnForm();
         }
         return en_form_EnForm.instance;
+    }
+    dispatchIntentSubmit() {
+        this._onIntentSubmit.dispatch();
+        this.logger.log("dispatchIntentSubmit");
     }
     dispatchSubmit() {
         this._onSubmit.dispatch();
@@ -11483,14 +11488,41 @@ class en_form_EnForm {
             this.logger.log("submitForm");
         }
     }
+    /**
+     * onIntentSubmit is dispatched when a submit button is clicked,
+     * or a digital wallet submission is initiated,
+     * but before server-side validation or the actual submit event.
+     * This allows you to run code at the moment the user intends to submit,
+     * such as triggering data formatting, analytics events, or other pre-submit actions.
+     * Actions that rely on fully processed form data or validation results should use the onSubmit event instead.
+     * Note: onSubmit will also dispatch onIntentSubmit, so do not repeat actions in both events.
+     */
+    get onIntentSubmit() {
+        return this._onIntentSubmit.asEvent();
+    }
+    /**
+     * onSubmit is dispatched when the form is submitted, after validation has passed.
+     * This is the main event to listen to for form submissions, as it indicates that the user has successfully submitted the form and all validation checks have been passed.
+     * This event uses window.enOnSubmit, which is called by Engaging Networks' JavaScript when the form is submitted.
+     * At the time of writing, enOnSubmit does not trigger when a user submits via a digital wallet, use onIntentSubmit to listen for those submission attempts.
+     * Note: onSubmit will also dispatch onIntentSubmit, so do not repeat actions in both events.
+     */
     get onSubmit() {
         return this._onSubmit.asEvent();
     }
-    get onError() {
-        return this._onError.asEvent();
-    }
+    /**
+     * onValidate is dispatched using window.enOnValidate, which is called by Engaging Networks' JavaScript
+     * when the form is being validated, before submission. This only occurs after ENgrid's client-side validation has passed, but before server-side validation.
+     */
     get onValidate() {
         return this._onValidate.asEvent();
+    }
+    /**
+     * onError is dispatched using window.enOnError, which is called by Engaging Networks' JavaScript when a server-side validation error occurs on form submission.
+     * This allows you to listen for validation errors and respond accordingly, such as displaying custom error messages or triggering analytics events.
+     */
+    get onError() {
+        return this._onError.asEvent();
     }
 }
 
@@ -12586,6 +12618,7 @@ class App extends engrid_ENGrid {
             }
         });
         // Client onSubmit and onError functions
+        this._form.onIntentSubmit.subscribe(() => this.onIntentSubmit());
         this._form.onSubmit.subscribe(() => this.onSubmit());
         this._form.onError.subscribe(() => this.onError());
         this._form.onValidate.subscribe(() => this.onValidate());
@@ -12603,6 +12636,7 @@ class App extends engrid_ENGrid {
         window.enOnSubmit = () => {
             this._form.submit = true;
             this._form.submitPromise = false;
+            this._form.dispatchIntentSubmit();
             this._form.dispatchSubmit();
             engrid_ENGrid.watchForError(engrid_ENGrid.enableSubmit);
             if (!this._form.submit)
@@ -12821,6 +12855,12 @@ class App extends engrid_ENGrid {
         if (this.options.onValidate) {
             this.logger.log("Client onValidate Triggered");
             this.options.onValidate();
+        }
+    }
+    onIntentSubmit() {
+        if (this.options.onIntentSubmit) {
+            this.logger.log("Client onIntentSubmit Triggered");
+            this.options.onIntentSubmit();
         }
     }
     onSubmit() {
@@ -21121,8 +21161,12 @@ class CustomPremium {
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/digital-wallets.js
 
+
+
 class DigitalWallets {
     constructor() {
+        this.logger = new logger_EngridLogger("DigitalWallets", "#fff", "#333", "👛");
+        this._form = en_form_EnForm.getInstance();
         //digital wallets not enabled.
         if (!document.getElementById("en__digitalWallet")) {
             engrid_ENGrid.setBodyData("payment-type-option-stripedigitalwallet", "false");
@@ -21131,6 +21175,7 @@ class DigitalWallets {
             engrid_ENGrid.setBodyData("payment-type-option-paypal-one-touch", "false");
             engrid_ENGrid.setBodyData("payment-type-option-venmo", "false");
             engrid_ENGrid.setBodyData("payment-type-option-daf", "false");
+            this.logger.log("No digital wallet container found, skipping digital wallet setup.");
             return;
         }
         // Add giveBySelect classes to the separate wallet containers
@@ -21208,6 +21253,7 @@ class DigitalWallets {
         }
     }
     addStripeDigitalWallets() {
+        this.logger.log("Stripe Digital Wallets detected");
         this.addOptionToPaymentTypeField("stripedigitalwallet", "GooglePay / ApplePay");
         // ENGrid.setBodyData(
         //   "payment-type-option-apple-pay",
@@ -21221,15 +21267,26 @@ class DigitalWallets {
         engrid_ENGrid.setBodyData("payment-type-option-apple-pay", "true");
         engrid_ENGrid.setBodyData("payment-type-option-google-pay", "true");
         engrid_ENGrid.setBodyData("payment-type-option-stripedigitalwallet", "true");
+        this.addStripeDigitalWalletListener()
+            ? this.logger.log("Stripe Digital Wallet listener added successfully")
+            : this.logger.log("Failed to add Stripe Digital Wallet listener");
     }
     addPaypalTouchDigitalWallets() {
+        this.logger.log("Paypal Touch Digital Wallets detected");
         this.addOptionToPaymentTypeField("paypaltouch", "Paypal / Venmo");
         engrid_ENGrid.setBodyData("payment-type-option-paypal-one-touch", "true");
         engrid_ENGrid.setBodyData("payment-type-option-venmo", "true");
+        this.addPaypalOneTouchListener()
+            ? this.logger.log("Paypal Touch listener added successfully")
+            : this.logger.log("Failed to add Paypal Touch listener");
     }
     addDAF() {
+        this.logger.log("DAF Digital Wallet detected");
         this.addOptionToPaymentTypeField("daf", "Donor Advised Fund");
         engrid_ENGrid.setBodyData("payment-type-option-daf", "true");
+        this.addDAFListener()
+            ? this.logger.log("DAF listener added successfully")
+            : this.logger.log("Failed to add DAF listener");
     }
     addOptionToPaymentTypeField(value, label) {
         const paymentTypeField = document.querySelector('[name="transaction.paymenttype"]');
@@ -21266,13 +21323,37 @@ class DigitalWallets {
                     else if (walletType === "daf") {
                         this.addDAF();
                     }
-                    //Disconnect observer to prevent multiple additions
+                    //Disconnect observer and break loop to prevent multiple additions
                     observer.disconnect();
+                    break;
                 }
             }
         };
         const observer = new MutationObserver(callback);
         observer.observe(node, { childList: true, subtree: true });
+    }
+    addPaypalOneTouchListener() {
+        var _a, _b, _c, _d, _e;
+        const paypalTouch = (_d = (_c = (_b = (_a = window.EngagingNetworks) === null || _a === void 0 ? void 0 : _a.require) === null || _b === void 0 ? void 0 : _b._defined) === null || _c === void 0 ? void 0 : _c.enPaypalTouch) === null || _d === void 0 ? void 0 : _d.paypalTouch;
+        if (!((_e = paypalTouch === null || paypalTouch === void 0 ? void 0 : paypalTouch.library) === null || _e === void 0 ? void 0 : _e.Buttons)) {
+            this.logger.log("Paypal Touch library not found, cannot add listener");
+            return false;
+        }
+        const buttons = paypalTouch.library.Buttons.bind(paypalTouch.library);
+        paypalTouch.library.Buttons = (o) => buttons(Object.assign(Object.assign({}, o), { onClick: (d, a) => (this._form.dispatchIntentSubmit(),
+                o.onClick && o.onClick(d, a)) }));
+        paypalTouch.unloadButton && paypalTouch.unloadButton();
+        paypalTouch.loadButton && paypalTouch.loadButton();
+        return true;
+    }
+    addStripeDigitalWalletListener() {
+        var _a, _b, _c, _d, _e, _f;
+        return !!((_f = (_e = (_d = (_c = (_b = (_a = window.EngagingNetworks) === null || _a === void 0 ? void 0 : _a.require) === null || _b === void 0 ? void 0 : _b._defined) === null || _c === void 0 ? void 0 : _c.enStripeButtons) === null || _d === void 0 ? void 0 : _d.stripeButtons) === null || _e === void 0 ? void 0 : _e.paymentRequest) === null || _f === void 0 ? void 0 : _f.on("paymentmethod", this._form.dispatchIntentSubmit.bind(this._form)));
+    }
+    addDAFListener() {
+        const chariotButton = document.getElementById("chariot-button");
+        chariotButton === null || chariotButton === void 0 ? void 0 : chariotButton.addEventListener("click", this._form.dispatchIntentSubmit.bind(this._form));
+        return !!chariotButton;
     }
 }
 
@@ -21864,6 +21945,7 @@ class SupporterHub {
             return;
         this.logger.log("Enabled");
         this.watch();
+        this.preventDuplicateSubmits();
     }
     shoudRun() {
         return ("pageJson" in window &&
@@ -21927,6 +22009,21 @@ class SupporterHub {
                 });
             }
         }, 300);
+    }
+    // The supporter hub does not properly handle or prevent duplicate submits, so we add a listener to prevent this.
+    preventDuplicateSubmits() {
+        document.addEventListener("click", (e) => {
+            const btn = e.target.closest(".en__submit button");
+            if (!btn)
+                return;
+            if (btn.dataset.busy) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                return;
+            }
+            btn.dataset.busy = "true";
+            setTimeout(() => delete btn.dataset.busy, 10000);
+        }, true);
     }
 }
 
@@ -24745,7 +24842,7 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.24.5";
+const AppVersion = "0.25.1";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
@@ -30036,6 +30133,432 @@ class MultistepForm {
     }
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/event-pages.ts
+
+
+class EventPages {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("Event Pages", "white", "#D62F5B", "📅"));
+    _defineProperty(this, "dataLayer", window.dataLayer || []);
+    if (this.shouldRun()) {
+      this.init();
+    }
+  }
+  init() {
+    this.logger.log("EventPages initialized");
+    switch (engrid_ENGrid.getPageNumber()) {
+      case 1:
+        this.logger.log("On event details page");
+        engrid_ENGrid.setBodyData("event-page", "details");
+        const eventDetailTable = document.querySelector("table#event-summary");
+        if (!eventDetailTable) {
+          this.logger.warn("Could not find event details table.");
+          return;
+        }
+        const eventDetails = this.parseEventDetails(eventDetailTable);
+        localStorage.setItem("eventDetails", JSON.stringify(eventDetails));
+        this.createEventBlock(eventDetailTable, eventDetails);
+        this.removeEnAdditionalLine();
+        this.createAdditionalDonationBlock();
+        this.createPromoCodeBlock();
+        this.addTotalAmountListener();
+        break;
+      case 2:
+        this.logger.log("On event checkout page");
+        this.updateRegistrantsFieldsets();
+        this.dataLayer.push({
+          event: "EN_EVENT_CHECKOUT_PAGE_VIEW",
+          eventDetails: this.getEventDetails(),
+          billingInfo: this.getBillingInfo()
+        });
+        break;
+      default:
+        if (engrid_ENGrid.isThankYouPage()) {
+          this.logger.log("On thank you page");
+          this.displayEventSummaryOnThankYouPage();
+          this.dataLayer.push({
+            event: "EN_EVENT_THANK_YOU_PAGE_VIEW",
+            eventDetails: this.getEventDetails(),
+            billingInfo: this.getBillingInfo()
+          });
+        } else {
+          this.logger.warn("Unknown event page number: " + engrid_ENGrid.getPageNumber());
+        }
+    }
+    this.updateOrderSummaryTable();
+    this.formatAllAmounts();
+  }
+  shouldRun() {
+    return engrid_ENGrid.getPageType() === "EVENT";
+  }
+  getEventDetails() {
+    const data = localStorage.getItem("eventDetails");
+    return data ? JSON.parse(data) : null;
+  }
+  getBillingInfo() {
+    const data = localStorage.getItem("billingInfo");
+    return data ? JSON.parse(data) : null;
+  }
+  parseEventDetails(eventDetailTable) {
+    const eventDetails = {};
+    eventDetailTable.querySelectorAll("tr").forEach(row => {
+      const header = row.querySelector("input")?.value?.trim();
+      const value = row.querySelector("td")?.textContent?.trim().replace(/[\n\t]+/g, " ");
+      if (header && value) {
+        this.logger.log(`Parsed event detail - ${header}: ${value}`);
+        eventDetails[header.toLowerCase().replace(/\s+/g, "_")] = value;
+      }
+    });
+    return eventDetails;
+  }
+  createEventBlock(eventDetailTable, eventDetails) {
+    const eventSummary = document.createElement("event-summary");
+    const overlay = document.createElement("div");
+    overlay.className = "engrid__eventdetails__overlay";
+    const title = document.createElement("h2");
+    title.className = "engrid__eventdetails__title";
+    title.textContent = eventDetails.event_name || "Event Name Not Available";
+    overlay.appendChild(title);
+    const description = document.createElement("p");
+    description.className = "engrid__eventdetails__description";
+    description.textContent = eventDetails.description || "Event Description Not Available.";
+    overlay.appendChild(description);
+    const date = document.createElement("time");
+    date.className = "engrid__eventdetails__date";
+    date.textContent = eventDetails.start_date && eventDetails.end_date ? `${eventDetails.start_date} - ${eventDetails.end_date}` : "Event Date Not Available";
+    overlay.appendChild(date);
+    const locationWrapper = document.createElement("div");
+    locationWrapper.className = "engrid__eventdetails__location-wrapper";
+    const location = document.createElement("address");
+    location.className = "engrid__eventdetails__location";
+    if (eventDetails.location) {
+      const locationLink = document.createElement("a");
+      locationLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventDetails.location)}`;
+      locationLink.target = "_blank";
+      locationLink.textContent = eventDetails.location;
+      location.appendChild(locationLink);
+    } else {
+      location.textContent = "Event Location Not Available";
+    }
+    locationWrapper.appendChild(location);
+    const time = document.createElement("time");
+    time.className = "engrid__eventdetails__time";
+    time.textContent = eventDetails.time || "";
+    locationWrapper.appendChild(time);
+    overlay.appendChild(locationWrapper);
+    eventSummary.appendChild(overlay);
+    eventDetailTable.parentElement?.insertBefore(eventSummary, eventDetailTable);
+  }
+  removeEnAdditionalLine() {
+    const additionalLine = document.querySelector(".en__additional");
+    if (additionalLine) {
+      additionalLine.remove();
+      this.logger.log("Removed default additional donation line.");
+    } else {
+      this.logger.warn("Could not find default additional donation line to remove.");
+    }
+  }
+  createAdditionalDonationBlock() {
+    const insertLocation = document.querySelector(".event-additional");
+    if (insertLocation) {
+      const additionalDonationBlock = document.createElement("input");
+      additionalDonationBlock.type = "text";
+      additionalDonationBlock.inputMode = "decimal";
+      additionalDonationBlock.className = "en__additional__input";
+      additionalDonationBlock.name = "event.additionalAmount";
+      additionalDonationBlock.setAttribute("aria-label", "Add a Donation (optional)");
+      additionalDonationBlock.addEventListener("blur", () => {
+        const value = additionalDonationBlock.value.replace(/[^0-9.]/g, "");
+        if (value) {
+          additionalDonationBlock.value = parseFloat(value).toFixed(2);
+        } else {
+          additionalDonationBlock.value = "";
+        }
+      });
+      insertLocation.appendChild(additionalDonationBlock);
+    } else {
+      this.logger.warn("Could not find location to insert additional donation block.");
+    }
+  }
+  createPromoCodeBlock() {
+    const insertLocation = document.querySelector(".event-promo");
+    if (insertLocation && insertLocation.children.length > 0) {
+      const additionalCodeBlock = document.createElement("input");
+      additionalCodeBlock.type = "text";
+      additionalCodeBlock.inputMode = "text";
+      additionalCodeBlock.className = "en__code__input";
+      additionalCodeBlock.name = "event.discount";
+      additionalCodeBlock.maxLength = 35;
+      additionalCodeBlock.setAttribute("aria-label", "Add a Promo Code");
+      insertLocation.children[0].insertAdjacentElement("afterend", additionalCodeBlock);
+    } else {
+      this.logger.warn("Could not find location to insert additional promo code block.");
+    }
+  }
+  updateOrderSummaryTable() {
+    const orderSummary = document.querySelector(".en__orderSummary");
+    if (!orderSummary) {
+      this.logger.warn("Could not find order summary table to update.");
+      return;
+    }
+    const promoElements = orderSummary.querySelectorAll(".en__orderSummary__data--promo");
+    let hasPromo = false;
+    promoElements.forEach(promo => {
+      const code = promo.textContent?.trim() || "";
+      if (code !== "" && code !== "0") {
+        this.logger.log(`Promo code detected: ${code}`);
+        hasPromo = true;
+        this.addPromoRow(code);
+      }
+    });
+    engrid_ENGrid.setBodyData("event-has-promo", hasPromo ? "true" : "false");
+    orderSummary.querySelectorAll(".en__orderSummary__headers div").forEach(header => {
+      header.textContent = header.textContent?.replace(":", "").trim() || "";
+    });
+    orderSummary.querySelectorAll(".en__orderSummary__item").forEach(item => {
+      const quantityElement = item.querySelector(".en__orderSummary__data--quantity");
+      const typeElement = item.querySelector(".en__orderSummary__data--type");
+      if (quantityElement && typeElement) {
+        const quantityText = quantityElement.textContent?.trim() || "";
+        const typeText = typeElement.textContent?.trim() || "";
+        typeElement.textContent = `${quantityText}x ${typeText}`;
+      }
+    });
+    const additional = orderSummary.querySelector(".en__orderSummary__additional");
+    if (additional) {
+      const costElement = additional.querySelector(".en__orderSummary__data--cost");
+      if (costElement) {
+        const costText = costElement.textContent?.trim().replace(/[^0-9.]/g, "") || "";
+        if (costText === "0" || costText === "0.00" || costText === "") {
+          additional.remove();
+          this.logger.log("Removed additional donation line item with 0 cost.");
+        }
+      }
+    }
+  }
+  updateRegistrantsFieldsets() {
+    document.querySelectorAll(".en__registrants__registrantDetails").forEach(element => {
+      element.classList.add("i1-50", "i2-50");
+      element.querySelectorAll(".en__field").forEach(field => {
+        field.classList.add("i-required", "en__mandatory");
+        const input = field.querySelector("input, textarea");
+        if (input) {
+          input.required = true;
+          const label = field.querySelector("label");
+          const labelText = label ? label.textContent?.trim() : "";
+          const capitalizedLabel = labelText ? labelText.replace(/\b\w/g, char => char.toUpperCase()) : "";
+          input.placeholder = capitalizedLabel + "*";
+        }
+      });
+    });
+  }
+  addPromoRow(code) {
+    const billingInfo = this.getBillingInfo();
+    const currentTotal = document.querySelector(".en__orderSummary__data--totalAmount")?.textContent?.trim().replace(/[^0-9.]/g, "") || "";
+    if (billingInfo && currentTotal) {
+      const promoRow = document.createElement("div");
+      promoRow.className = "en__orderSummary__item en__orderSummary__promo";
+      promoRow.innerHTML = `
+        <div class="en__orderSummary__data en__orderSummary__data--type">Applied Promo Code</div>
+        <div class="en__orderSummary__data en__orderSummary__data--item"></div>
+        <div class="en__orderSummary__data en__orderSummary__data--promo">${code}</div>
+        <div class="en__orderSummary__data en__orderSummary__data--cost">${parseFloat(currentTotal) - billingInfo.totalAmount}</div>
+      `;
+      const totalAmountRow = document.querySelector(".en__orderSummary__total");
+      if (totalAmountRow) {
+        totalAmountRow.insertAdjacentElement("beforebegin", promoRow);
+      } else {
+        this.logger.warn("Could not find total amount row to insert promo code discount row before.");
+        return;
+      }
+      document.querySelectorAll(".en__orderSummary__item:not(.en__orderSummary__promo)").forEach(item => {
+        const typeElement = item.querySelector(".en__orderSummary__data--type");
+        const costElement = item.querySelector(".en__orderSummary__data--cost");
+        const codeElement = item.querySelector(".en__orderSummary__data--promo");
+        if (codeElement) {
+          codeElement.textContent = "";
+        }
+        if (typeElement && costElement) {
+          const lineItem = billingInfo.lineItems.find(lineItem => typeElement.textContent?.includes(lineItem.name));
+          const originalPrice = lineItem ? lineItem.price * lineItem.quantity : parseFloat(costElement.textContent?.replace(/[^0-9.]/g, "") || "0");
+          costElement.textContent = `${originalPrice} ${lineItem?.currency || billingInfo.currency || "USD"}`;
+        }
+      });
+    } else {
+      this.logger.warn("Billing info not found in localStorage. Cannot display promo code discount row, instead the line item will show the discount baked in.");
+    }
+  }
+  addTotalAmountListener() {
+    const additionalInput = document.querySelector(".en__additional__input");
+    if (additionalInput) {
+      additionalInput.addEventListener("change", () => {
+        this.updateTotalAmount();
+      });
+    }
+    document.querySelectorAll(".en__ticket__minus, .en__ticket__plus").forEach(el => {
+      el.addEventListener("click", () => {
+        setTimeout(() => {
+          this.updateTotalAmount();
+        }, 100);
+      });
+    });
+    const resetButton = document.querySelector('button[type="reset"]');
+    if (resetButton) {
+      resetButton.addEventListener("click", () => {
+        setTimeout(() => {
+          this.updateTotalAmount();
+        }, 100);
+      });
+    }
+    this.updateTotalAmount();
+  }
+  displayEventSummaryOnThankYouPage() {
+    const eventSummaryData = localStorage.getItem("eventDetails");
+    if (eventSummaryData) {
+      const eventDetails = JSON.parse(eventSummaryData);
+      const insertLocation = document.querySelector(".event-summary-placeholder");
+      if (insertLocation) {
+        const eventSummaryBlock = document.createElement("event-summary");
+        const confirmationDetails = document.createElement("div");
+        confirmationDetails.className = "event-confirmation-details";
+        const title = document.createElement("h2");
+        title.className = "engrid__eventdetails__title";
+        title.textContent = eventDetails.event_name || "";
+        confirmationDetails.appendChild(title);
+        if (eventDetails.description) {
+          const description = document.createElement("p");
+          description.className = "engrid__eventdetails__description";
+          description.textContent = eventDetails.description;
+          confirmationDetails.appendChild(description);
+        }
+        const tbody = document.createElement("tbody");
+        const dateValue = eventDetails.start_date && eventDetails.end_date ? `${eventDetails.start_date}-${eventDetails.end_date}` : eventDetails.start_date || "";
+        if (dateValue) {
+          const dateRow = document.createElement("tr");
+          const dateLabelCell = document.createElement("td");
+          dateLabelCell.textContent = "Date";
+          const dateValueCell = document.createElement("td");
+          dateValueCell.textContent = dateValue;
+          dateRow.appendChild(dateLabelCell);
+          dateRow.appendChild(dateValueCell);
+          tbody.appendChild(dateRow);
+        }
+        if (eventDetails.location) {
+          const locationRow = document.createElement("tr");
+          const locationLabelCell = document.createElement("td");
+          locationLabelCell.textContent = "Location";
+          const locationValueCell = document.createElement("td");
+          const locationLink = document.createElement("a");
+          locationLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventDetails.location)}`;
+          locationLink.target = "_blank";
+          locationLink.textContent = eventDetails.location;
+          locationValueCell.appendChild(locationLink);
+          locationRow.appendChild(locationLabelCell);
+          locationRow.appendChild(locationValueCell);
+          tbody.appendChild(locationRow);
+        }
+        if (eventDetails.time) {
+          const timeRow = document.createElement("tr");
+          const timeLabelCell = document.createElement("td");
+          timeLabelCell.textContent = "Time";
+          const timeValueCell = document.createElement("td");
+          timeValueCell.textContent = eventDetails.time;
+          timeRow.appendChild(timeLabelCell);
+          timeRow.appendChild(timeValueCell);
+          tbody.appendChild(timeRow);
+        }
+        if (tbody.children.length > 0) {
+          const table = document.createElement("table");
+          table.classList.add("event-confirmation-table");
+          table.setAttribute("border", "1");
+          table.setAttribute("cellpadding", "1");
+          table.setAttribute("cellspacing", "1");
+          table.style.width = "100%";
+          table.appendChild(tbody);
+          confirmationDetails.appendChild(table);
+        }
+        eventSummaryBlock.appendChild(confirmationDetails);
+        insertLocation.insertAdjacentElement("afterend", eventSummaryBlock);
+      } else {
+        this.logger.warn("Could not find insert location element to insert event summary block after.");
+      }
+    } else {
+      this.logger.warn("No event summary data found in localStorage to display on thank you page.");
+    }
+  }
+  formatAllAmounts() {
+    document.querySelectorAll(".en__ticket__price").forEach(el => {
+      const amount = el.textContent?.trim() || "";
+      const currencyCode = el.parentElement?.querySelector(".en__ticket__currency")?.textContent?.trim() || "";
+      const parsed = parseFloat(amount.replace(/[^0-9.\-]/g, ""));
+      if (!isNaN(parsed)) {
+        el.textContent = new Intl.NumberFormat(navigator.language, {
+          style: "currency",
+          currency: currencyCode || "USD"
+        }).format(parsed);
+      }
+    });
+    document.querySelectorAll(".en__orderSummary__data--cost").forEach(el => {
+      const item = el.textContent?.trim().split(" ") || "";
+      const amount = item[0] || "";
+      let currencyCode = "";
+      if (item.length === 2) {
+        currencyCode = item[1];
+      }
+      const parsed = parseFloat(amount.replace(/[^0-9.\-]/g, ""));
+      if (!isNaN(parsed)) {
+        el.textContent = new Intl.NumberFormat(navigator.language, {
+          style: "currency",
+          currency: currencyCode || "USD"
+        }).format(parsed);
+      }
+    });
+  }
+  updateTotalAmount() {
+    const additionalInput = document.querySelector(".en__additional__input");
+    let totalAmount = 0;
+    let currencySymbol = "";
+    const lineItems = [];
+    document.querySelectorAll(".en__ticket__quantity").forEach(el => {
+      const quantity = Number(el.value);
+      const row = el.parentElement?.parentElement?.parentElement;
+      if (row) {
+        const price = Number(row.querySelector(".en__ticket__price")?.textContent?.replace(/[^0-9.]/g, "")) || 0;
+        const currency = row.querySelector(".en__ticket__currency")?.textContent?.trim() || "USD";
+        lineItems.push({
+          name: row.querySelector(".en__ticket__type")?.textContent?.trim() || "Ticket",
+          quantity,
+          price,
+          currency
+        });
+        currencySymbol = currency;
+        totalAmount += price * quantity;
+      }
+    });
+    if (additionalInput) {
+      const additionalAmount = !isNaN(Number(additionalInput.value)) ? Number(additionalInput.value) : 0;
+      totalAmount += additionalAmount;
+      lineItems.push({
+        name: "Additional Donation",
+        quantity: 1,
+        price: additionalAmount,
+        currency: currencySymbol || "USD"
+      });
+    }
+    this.logger.log(`Calculated total amount: ${totalAmount} ${currencySymbol}`);
+    document.querySelectorAll(".live-giving-amount").forEach(el => {
+      el.textContent = new Intl.NumberFormat(navigator.language, {
+        style: "currency",
+        currency: currencySymbol || "USD"
+      }).format(totalAmount);
+    });
+    localStorage.setItem("billingInfo", JSON.stringify({
+      totalAmount,
+      currency: currencySymbol || "USD",
+      lineItems
+    }));
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -30044,6 +30567,7 @@ class MultistepForm {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -30138,6 +30662,7 @@ const options = {
     new BankAccountAgreementField();
     new Workday();
     new MultistepForm();
+    new EventPages();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");

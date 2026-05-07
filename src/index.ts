@@ -34,6 +34,7 @@ import { GroupQuiz } from "./scripts/group-quiz";
 import { ENGrid } from "@4site/engrid-scripts";
 import { Workday } from "./scripts/workday/workday";
 import MultistepForm from "./scripts/multistep-form";
+import { EventPages } from "./scripts/event-pages";
 
 declare global {
   interface Window {
@@ -157,6 +158,7 @@ const options: Options = {
     new BankAccountAgreementField();
     new Workday();
     new MultistepForm();
+    new EventPages();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");
