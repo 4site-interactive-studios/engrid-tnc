@@ -3999,6 +3999,34 @@
     }
   }
 
+    // Sandbox warning banner
+  .sandbox-warning {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffcc00dd;
+    color: #000;
+    text-align: center;
+    padding: 10px 0;
+    z-index: 9999;
+
+    &__dismiss {
+      margin-left: 16px;
+      cursor: pointer;
+      padding: 2px 10px;
+      border: none;
+      color: black;
+      border-radius: 3px;
+      background-color: transparent;
+      font-weight: bold;
+      margin: 0;
+    }
+  }
+
   // SUBTHEME: Multistep
   &[data-engrid-subtheme="multistep"] {
     @import "./multistep";

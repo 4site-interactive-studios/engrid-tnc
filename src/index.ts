@@ -35,6 +35,7 @@ import { ENGrid } from "@4site/engrid-scripts";
 import { Workday } from "./scripts/workday/workday";
 import MultistepForm from "./scripts/multistep-form";
 import { EventPages } from "./scripts/event-pages";
+import { SandboxWarning } from "./scripts/sandbox-warning";
 
 declare global {
   interface Window {
@@ -159,6 +160,7 @@ const options: Options = {
     new Workday();
     new MultistepForm();
     new EventPages();
+    new SandboxWarning();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");
