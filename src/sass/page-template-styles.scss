@@ -537,6 +537,20 @@
     }
   }
 
+  .btn-block {
+    display: block;
+    width: 100%;
+  }
+  
+  .btn-dark {
+    --button_background-color: #1a1a1a;
+    --button_color: #ffffff;
+    --button_background-color_hover: #3c3c3c;
+    --button_color_hover: #ffffff;
+    --button_background-color_disabled: #1a1a1a;
+    --button_background-color_checked: #313131;
+  }
+
   .daf-banner {
     background-color: #f6f5f3;
     padding: 0.5em 1.5rem;

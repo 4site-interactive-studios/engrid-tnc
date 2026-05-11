@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 7, 2026 @ 13:55:08 ET
+ *  Date: Monday, May 11, 2026 @ 10:38:22 ET
  *  By: nick
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.1
@@ -30560,7 +30560,6 @@ class EventPages {
   }
 }
 ;// CONCATENATED MODULE: ./src/scripts/sandbox-warning.ts
-
 class SandboxWarning {
   constructor() {
     if (this.shouldRun()) {
@@ -30568,33 +30567,38 @@ class SandboxWarning {
     }
   }
   shouldRun() {
-    return window.EngagingNetworks.vault.environment === 'sandbox' && !this.isDismissed();
-  }
-  isDismissed() {
-    return document.cookie.split(';').some(c => c.trim().startsWith(`${SandboxWarning.COOKIE_NAME}=`));
-  }
-  dismiss() {
-    const expires = new Date(Date.now() + 8 * 60 * 60 * 1000).toUTCString();
-    document.cookie = `${SandboxWarning.COOKIE_NAME}=1; expires=${expires}; path=/; SameSite=Strict`;
+    return window.EngagingNetworks.vault.environment === 'sandbox';
   }
   displayWarning() {
     const warning = document.createElement('div');
     warning.className = 'sandbox-warning';
     const message = document.createElement('span');
     message.textContent = 'This page is in the SANDBOX environment. Please switch gateways for live transactions.';
-    const dismissBtn = document.createElement('button');
-    dismissBtn.className = 'sandbox-warning__dismiss';
-    dismissBtn.textContent = 'Dismiss';
-    dismissBtn.addEventListener('click', () => {
-      this.dismiss();
-      warning.remove();
-    });
     warning.appendChild(message);
-    warning.appendChild(dismissBtn);
     document.body.appendChild(warning);
   }
 }
-_defineProperty(SandboxWarning, "COOKIE_NAME", 'sandbox_warning_dismissed');
+;// CONCATENATED MODULE: ./src/scripts/generate-email.ts
+
+
+class GenerateEmail {
+  constructor() {
+    _defineProperty(this, "generateEmailButton", void 0);
+    this.generateEmailButton = document.querySelector('#generateEmail');
+    if (this.generateEmailButton && engrid_ENGrid.getField('supporter.emailAddress')) {
+      this.addListener();
+    }
+  }
+  addListener() {
+    this.generateEmailButton.addEventListener('click', () => this.generateEmail());
+  }
+  generateEmail() {
+    const theDate = new Date();
+    const milliseconds = theDate.getTime();
+    const anonAddress = `${milliseconds}.first.last@fakeemail.com`;
+    engrid_ENGrid.setFieldValue('supporter.emailAddress', anonAddress);
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -30603,6 +30607,7 @@ _defineProperty(SandboxWarning, "COOKIE_NAME", 'sandbox_warning_dismissed');
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -30701,6 +30706,7 @@ const options = {
     new MultistepForm();
     new EventPages();
     new SandboxWarning();
+    new GenerateEmail();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");

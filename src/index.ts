@@ -36,6 +36,7 @@ import { Workday } from "./scripts/workday/workday";
 import MultistepForm from "./scripts/multistep-form";
 import { EventPages } from "./scripts/event-pages";
 import { SandboxWarning } from "./scripts/sandbox-warning";
+import { GenerateEmail } from "./scripts/generate-email";
 
 declare global {
   interface Window {
@@ -161,6 +162,7 @@ const options: Options = {
     new MultistepForm();
     new EventPages();
     new SandboxWarning();
+    new GenerateEmail();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");

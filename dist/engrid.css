@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 7, 2026 @ 13:55:08 ET
+ *  Date: Monday, May 11, 2026 @ 10:38:22 ET
  *  By: nick
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.1
@@ -8166,6 +8166,18 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc] .btn-primary:hover,[data-engrid-theme=tnc] .button-green:hover{
   background-color:#000;
 }
+[data-engrid-theme=tnc] .btn-block{
+  display:block;
+  width:100%;
+}
+[data-engrid-theme=tnc] .btn-dark{
+  --button_background-color:#1a1a1a;
+  --button_color:#fff;
+  --button_background-color_hover:#3c3c3c;
+  --button_color_hover:#fff;
+  --button_background-color_disabled:#1a1a1a;
+  --button_background-color_checked:#313131;
+}
 [data-engrid-theme=tnc] .daf-banner{
   border:2px solid var(--color-green);
   margin:20px auto -20px;
@@ -10276,7 +10288,9 @@ body[data-engrid-debug]:before{
   --submit__button_background-color:var(--color-green);
   --submit__button_border-color:var(--color-green);
   --engrid__body-top_background-color:var(--engrid__body_background-color);
-  --engrid__body-banner_background-color:var(--engrid__body_background-color);
+  --engrid__body-banner_background-color:var(
+    --engrid__body_background-color
+  );
   --fields_spacing-block:0.85rem;
   --h1_font-family:var(--serif-fonts);
 }
@@ -10799,6 +10813,30 @@ body[data-engrid-debug]:before{
     flex-direction:column;
     margin-bottom:10px;
   }
+}
+[data-engrid-theme=tnc] .sandbox-warning{
+  align-items:center;
+  background-color:rgba(255,204,0,.867);
+  color:#000;
+  display:flex;
+  justify-content:center;
+  left:0;
+  padding:10px 0;
+  position:fixed;
+  text-align:center;
+  top:0;
+  width:100%;
+  z-index:9999;
+}
+[data-engrid-theme=tnc] .sandbox-warning__dismiss{
+  background-color:initial;
+  border:none;
+  border-radius:3px;
+  color:#000;
+  cursor:pointer;
+  font-weight:700;
+  margin:0;
+  padding:2px 10px;
 }
 [data-engrid-theme=tnc][data-engrid-subtheme=multistep]{
   --give-by-select__button_count:1;
@@ -12812,30 +12850,6 @@ body[data-engrid-debug]:before{
     border:none;
     display:block;
   }
-}
-[data-engrid-theme=tnc] .sandbox-warning{
-  align-items:center;
-  background-color:rgba(255,204,0,.867);
-  color:#000;
-  display:flex;
-  justify-content:center;
-  left:0;
-  padding:10px 0;
-  position:fixed;
-  text-align:center;
-  top:0;
-  width:100%;
-  z-index:9999;
-}
-[data-engrid-theme=tnc] .sandbox-warning__dismiss{
-  background-color:initial;
-  border:none;
-  border-radius:3px;
-  color:#000;
-  cursor:pointer;
-  font-weight:700;
-  margin:0;
-  padding:2px 10px;
 }
 
 [data-engrid-theme=tnc][data-engrid-multistep]{
