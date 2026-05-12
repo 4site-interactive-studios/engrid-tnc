@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, April 6, 2026 @ 12:21:11 ET
+ *  Date: Tuesday, May 12, 2026 @ 11:53:26 ET
  *  By: michael
- *  ENGrid styles: v0.24.0
- *  ENGrid scripts: v0.24.5
+ *  ENGrid styles: v0.25.0
+ *  ENGrid scripts: v0.25.1
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11446,6 +11446,7 @@ var dist = __webpack_require__(3199);
 class en_form_EnForm {
     constructor() {
         this.logger = new logger_EngridLogger("EnForm");
+        this._onIntentSubmit = new dist/* SignalDispatcher */.UD();
         this._onSubmit = new dist/* SignalDispatcher */.UD();
         this._onValidate = new dist/* SignalDispatcher */.UD();
         this._onError = new dist/* SignalDispatcher */.UD();
@@ -11459,6 +11460,10 @@ class en_form_EnForm {
             en_form_EnForm.instance = new en_form_EnForm();
         }
         return en_form_EnForm.instance;
+    }
+    dispatchIntentSubmit() {
+        this._onIntentSubmit.dispatch();
+        this.logger.log("dispatchIntentSubmit");
     }
     dispatchSubmit() {
         this._onSubmit.dispatch();
@@ -11483,14 +11488,41 @@ class en_form_EnForm {
             this.logger.log("submitForm");
         }
     }
+    /**
+     * onIntentSubmit is dispatched when a submit button is clicked,
+     * or a digital wallet submission is initiated,
+     * but before server-side validation or the actual submit event.
+     * This allows you to run code at the moment the user intends to submit,
+     * such as triggering data formatting, analytics events, or other pre-submit actions.
+     * Actions that rely on fully processed form data or validation results should use the onSubmit event instead.
+     * Note: onSubmit will also dispatch onIntentSubmit, so do not repeat actions in both events.
+     */
+    get onIntentSubmit() {
+        return this._onIntentSubmit.asEvent();
+    }
+    /**
+     * onSubmit is dispatched when the form is submitted, after validation has passed.
+     * This is the main event to listen to for form submissions, as it indicates that the user has successfully submitted the form and all validation checks have been passed.
+     * This event uses window.enOnSubmit, which is called by Engaging Networks' JavaScript when the form is submitted.
+     * At the time of writing, enOnSubmit does not trigger when a user submits via a digital wallet, use onIntentSubmit to listen for those submission attempts.
+     * Note: onSubmit will also dispatch onIntentSubmit, so do not repeat actions in both events.
+     */
     get onSubmit() {
         return this._onSubmit.asEvent();
     }
-    get onError() {
-        return this._onError.asEvent();
-    }
+    /**
+     * onValidate is dispatched using window.enOnValidate, which is called by Engaging Networks' JavaScript
+     * when the form is being validated, before submission. This only occurs after ENgrid's client-side validation has passed, but before server-side validation.
+     */
     get onValidate() {
         return this._onValidate.asEvent();
+    }
+    /**
+     * onError is dispatched using window.enOnError, which is called by Engaging Networks' JavaScript when a server-side validation error occurs on form submission.
+     * This allows you to listen for validation errors and respond accordingly, such as displaying custom error messages or triggering analytics events.
+     */
+    get onError() {
+        return this._onError.asEvent();
     }
 }
 
@@ -12586,6 +12618,7 @@ class App extends engrid_ENGrid {
             }
         });
         // Client onSubmit and onError functions
+        this._form.onIntentSubmit.subscribe(() => this.onIntentSubmit());
         this._form.onSubmit.subscribe(() => this.onSubmit());
         this._form.onError.subscribe(() => this.onError());
         this._form.onValidate.subscribe(() => this.onValidate());
@@ -12603,6 +12636,7 @@ class App extends engrid_ENGrid {
         window.enOnSubmit = () => {
             this._form.submit = true;
             this._form.submitPromise = false;
+            this._form.dispatchIntentSubmit();
             this._form.dispatchSubmit();
             engrid_ENGrid.watchForError(engrid_ENGrid.enableSubmit);
             if (!this._form.submit)
@@ -12821,6 +12855,12 @@ class App extends engrid_ENGrid {
         if (this.options.onValidate) {
             this.logger.log("Client onValidate Triggered");
             this.options.onValidate();
+        }
+    }
+    onIntentSubmit() {
+        if (this.options.onIntentSubmit) {
+            this.logger.log("Client onIntentSubmit Triggered");
+            this.options.onIntentSubmit();
         }
     }
     onSubmit() {
@@ -21121,8 +21161,12 @@ class CustomPremium {
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/digital-wallets.js
 
+
+
 class DigitalWallets {
     constructor() {
+        this.logger = new logger_EngridLogger("DigitalWallets", "#fff", "#333", "👛");
+        this._form = en_form_EnForm.getInstance();
         //digital wallets not enabled.
         if (!document.getElementById("en__digitalWallet")) {
             engrid_ENGrid.setBodyData("payment-type-option-stripedigitalwallet", "false");
@@ -21131,6 +21175,7 @@ class DigitalWallets {
             engrid_ENGrid.setBodyData("payment-type-option-paypal-one-touch", "false");
             engrid_ENGrid.setBodyData("payment-type-option-venmo", "false");
             engrid_ENGrid.setBodyData("payment-type-option-daf", "false");
+            this.logger.log("No digital wallet container found, skipping digital wallet setup.");
             return;
         }
         // Add giveBySelect classes to the separate wallet containers
@@ -21208,6 +21253,7 @@ class DigitalWallets {
         }
     }
     addStripeDigitalWallets() {
+        this.logger.log("Stripe Digital Wallets detected");
         this.addOptionToPaymentTypeField("stripedigitalwallet", "GooglePay / ApplePay");
         // ENGrid.setBodyData(
         //   "payment-type-option-apple-pay",
@@ -21221,15 +21267,26 @@ class DigitalWallets {
         engrid_ENGrid.setBodyData("payment-type-option-apple-pay", "true");
         engrid_ENGrid.setBodyData("payment-type-option-google-pay", "true");
         engrid_ENGrid.setBodyData("payment-type-option-stripedigitalwallet", "true");
+        this.addStripeDigitalWalletListener()
+            ? this.logger.log("Stripe Digital Wallet listener added successfully")
+            : this.logger.log("Failed to add Stripe Digital Wallet listener");
     }
     addPaypalTouchDigitalWallets() {
+        this.logger.log("Paypal Touch Digital Wallets detected");
         this.addOptionToPaymentTypeField("paypaltouch", "Paypal / Venmo");
         engrid_ENGrid.setBodyData("payment-type-option-paypal-one-touch", "true");
         engrid_ENGrid.setBodyData("payment-type-option-venmo", "true");
+        this.addPaypalOneTouchListener()
+            ? this.logger.log("Paypal Touch listener added successfully")
+            : this.logger.log("Failed to add Paypal Touch listener");
     }
     addDAF() {
+        this.logger.log("DAF Digital Wallet detected");
         this.addOptionToPaymentTypeField("daf", "Donor Advised Fund");
         engrid_ENGrid.setBodyData("payment-type-option-daf", "true");
+        this.addDAFListener()
+            ? this.logger.log("DAF listener added successfully")
+            : this.logger.log("Failed to add DAF listener");
     }
     addOptionToPaymentTypeField(value, label) {
         const paymentTypeField = document.querySelector('[name="transaction.paymenttype"]');
@@ -21266,13 +21323,37 @@ class DigitalWallets {
                     else if (walletType === "daf") {
                         this.addDAF();
                     }
-                    //Disconnect observer to prevent multiple additions
+                    //Disconnect observer and break loop to prevent multiple additions
                     observer.disconnect();
+                    break;
                 }
             }
         };
         const observer = new MutationObserver(callback);
         observer.observe(node, { childList: true, subtree: true });
+    }
+    addPaypalOneTouchListener() {
+        var _a, _b, _c, _d, _e;
+        const paypalTouch = (_d = (_c = (_b = (_a = window.EngagingNetworks) === null || _a === void 0 ? void 0 : _a.require) === null || _b === void 0 ? void 0 : _b._defined) === null || _c === void 0 ? void 0 : _c.enPaypalTouch) === null || _d === void 0 ? void 0 : _d.paypalTouch;
+        if (!((_e = paypalTouch === null || paypalTouch === void 0 ? void 0 : paypalTouch.library) === null || _e === void 0 ? void 0 : _e.Buttons)) {
+            this.logger.log("Paypal Touch library not found, cannot add listener");
+            return false;
+        }
+        const buttons = paypalTouch.library.Buttons.bind(paypalTouch.library);
+        paypalTouch.library.Buttons = (o) => buttons(Object.assign(Object.assign({}, o), { onClick: (d, a) => (this._form.dispatchIntentSubmit(),
+                o.onClick && o.onClick(d, a)) }));
+        paypalTouch.unloadButton && paypalTouch.unloadButton();
+        paypalTouch.loadButton && paypalTouch.loadButton();
+        return true;
+    }
+    addStripeDigitalWalletListener() {
+        var _a, _b, _c, _d, _e, _f;
+        return !!((_f = (_e = (_d = (_c = (_b = (_a = window.EngagingNetworks) === null || _a === void 0 ? void 0 : _a.require) === null || _b === void 0 ? void 0 : _b._defined) === null || _c === void 0 ? void 0 : _c.enStripeButtons) === null || _d === void 0 ? void 0 : _d.stripeButtons) === null || _e === void 0 ? void 0 : _e.paymentRequest) === null || _f === void 0 ? void 0 : _f.on("paymentmethod", this._form.dispatchIntentSubmit.bind(this._form)));
+    }
+    addDAFListener() {
+        const chariotButton = document.getElementById("chariot-button");
+        chariotButton === null || chariotButton === void 0 ? void 0 : chariotButton.addEventListener("click", this._form.dispatchIntentSubmit.bind(this._form));
+        return !!chariotButton;
     }
 }
 
@@ -21864,6 +21945,7 @@ class SupporterHub {
             return;
         this.logger.log("Enabled");
         this.watch();
+        this.preventDuplicateSubmits();
     }
     shoudRun() {
         return ("pageJson" in window &&
@@ -21927,6 +22009,21 @@ class SupporterHub {
                 });
             }
         }, 300);
+    }
+    // The supporter hub does not properly handle or prevent duplicate submits, so we add a listener to prevent this.
+    preventDuplicateSubmits() {
+        document.addEventListener("click", (e) => {
+            const btn = e.target.closest(".en__submit button");
+            if (!btn)
+                return;
+            if (btn.dataset.busy) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                return;
+            }
+            btn.dataset.busy = "true";
+            setTimeout(() => delete btn.dataset.busy, 10000);
+        }, true);
     }
 }
 
@@ -24745,7 +24842,7 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.24.5";
+const AppVersion = "0.25.1";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
