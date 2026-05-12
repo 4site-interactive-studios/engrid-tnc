@@ -57,7 +57,7 @@ export class EventPages {
           return;
         }
         const eventDetails = this.parseEventDetails(eventDetailTable);
-        localStorage.setItem("eventDetails", JSON.stringify(eventDetails));
+        localStorage.setItem("eventDetails." + ENGrid.getPageID(), JSON.stringify(eventDetails));
         this.updateTicketRows();
         this.createEventBlock(eventDetailTable, eventDetails);
         this.removeEnAdditionalLine();
@@ -110,12 +110,12 @@ export class EventPages {
   }
 
   private getEventDetails(): Partial<EventDetails> | null {
-    const data = localStorage.getItem("eventDetails");
+    const data = localStorage.getItem("eventDetails." + ENGrid.getPageID());
     return data ? JSON.parse(data) as Partial<EventDetails> : null;
   }
 
   private getBillingInfo(): BillingInfo | null {
-    const data = localStorage.getItem("billingInfo");
+    const data = localStorage.getItem("billingInfo." + ENGrid.getPageID());
     return data ? JSON.parse(data) as BillingInfo : null;
   }
 
@@ -413,7 +413,7 @@ export class EventPages {
   }
 
   private displayEventSummaryOnThankYouPage() {
-    const eventSummaryData = localStorage.getItem("eventDetails");
+    const eventSummaryData = localStorage.getItem("eventDetails." + ENGrid.getPageID());
     if (eventSummaryData) {
       const eventDetails: Partial<EventDetails> = JSON.parse(eventSummaryData);
       const insertLocation = document.querySelector(".event-summary-placeholder");
@@ -561,7 +561,7 @@ export class EventPages {
       el.textContent = new Intl.NumberFormat(navigator.language, { style: "currency", currency: currencySymbol || "USD" }).format(totalAmount);
     });
 
-    localStorage.setItem("billingInfo", JSON.stringify({
+    localStorage.setItem("billingInfo." + ENGrid.getPageID(), JSON.stringify({
       totalAmount,
       currency: currencySymbol || "USD",
       lineItems,

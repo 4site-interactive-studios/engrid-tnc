@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 12, 2026 @ 17:10:24 ET
+ *  Date: Tuesday, May 12, 2026 @ 17:12:32 ET
  *  By: nick
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.1
@@ -50956,7 +50956,7 @@ class EventPages {
           return;
         }
         const eventDetails = this.parseEventDetails(eventDetailTable);
-        localStorage.setItem("eventDetails", JSON.stringify(eventDetails));
+        localStorage.setItem("eventDetails." + dist_engrid_ENGrid.getPageID(), JSON.stringify(eventDetails));
         this.updateTicketRows();
         this.createEventBlock(eventDetailTable, eventDetails);
         this.removeEnAdditionalLine();
@@ -51007,11 +51007,11 @@ class EventPages {
     return dist_engrid_ENGrid.getPageType() === "EVENT";
   }
   getEventDetails() {
-    const data = localStorage.getItem("eventDetails");
+    const data = localStorage.getItem("eventDetails." + dist_engrid_ENGrid.getPageID());
     return data ? JSON.parse(data) : null;
   }
   getBillingInfo() {
-    const data = localStorage.getItem("billingInfo");
+    const data = localStorage.getItem("billingInfo." + dist_engrid_ENGrid.getPageID());
     return data ? JSON.parse(data) : null;
   }
   parseEventDetails(eventDetailTable) {
@@ -51279,7 +51279,7 @@ class EventPages {
     this.updateTotalAmount();
   }
   displayEventSummaryOnThankYouPage() {
-    const eventSummaryData = localStorage.getItem("eventDetails");
+    const eventSummaryData = localStorage.getItem("eventDetails." + dist_engrid_ENGrid.getPageID());
     if (eventSummaryData) {
       const eventDetails = JSON.parse(eventSummaryData);
       const insertLocation = document.querySelector(".event-summary-placeholder");
@@ -51418,7 +51418,7 @@ class EventPages {
         currency: currencySymbol || "USD"
       }).format(totalAmount);
     });
-    localStorage.setItem("billingInfo", JSON.stringify({
+    localStorage.setItem("billingInfo." + dist_engrid_ENGrid.getPageID(), JSON.stringify({
       totalAmount,
       currency: currencySymbol || "USD",
       lineItems
