@@ -33,24 +33,32 @@ export class EventPages {
   private dataLayer = (window as any).dataLayer || [];
 
   constructor() {
+    const eventDetailTable = document.querySelector("table#event-summary") as HTMLTableElement | null;
     if (this.shouldRun()) {
-      this.init();
+      this.init(eventDetailTable);
+    } else if (eventDetailTable) {
+      // There is at least an event details table on the page, but we're not on an event page. 
+      // This likely means that we're on a waitlist page, which also uses the event block.
+      ENGrid.setBodyData("event-page", "waitlist");
+      this.logger.log("On event waitlist page, initializing event block with available event details.");
+      const eventDetails = this.parseEventDetails(eventDetailTable);
+      this.createEventBlock(eventDetailTable, eventDetails);
     }
   }
 
-  private init() {
+  private init(eventDetailTable: HTMLTableElement | null) {
     this.logger.log("EventPages initialized");
     switch (ENGrid.getPageNumber()) {
       case 1:
         this.logger.log("On event details page");
         ENGrid.setBodyData("event-page", "details");
-        const eventDetailTable = document.querySelector("table#event-summary") as HTMLTableElement | null;
         if (!eventDetailTable) {
           this.logger.warn("Could not find event details table.");
           return;
         }
         const eventDetails = this.parseEventDetails(eventDetailTable);
         localStorage.setItem("eventDetails", JSON.stringify(eventDetails));
+        this.updateTicketRows();
         this.createEventBlock(eventDetailTable, eventDetails);
         this.removeEnAdditionalLine();
         this.createAdditionalDonationBlock();
@@ -59,23 +67,37 @@ export class EventPages {
         break;
       case 2:
         this.logger.log("On event checkout page");
+        ENGrid.setBodyData("event-page", "checkout");
+        const billingInfo = this.getBillingInfo();
         this.updateRegistrantsFieldsets();
+        if (billingInfo && billingInfo.totalAmount === 0) {
+          ENGrid.setBodyData("free-event", "true");
+          this.handleFreeEvent();
+        }
         this.dataLayer.push({
           event: "EN_EVENT_CHECKOUT_PAGE_VIEW",
+          pageId: ENGrid.getPageID(),
           eventDetails: this.getEventDetails(),
-          billingInfo: this.getBillingInfo(),
+          billingInfo
         });
         break;
       default:
         if (ENGrid.isThankYouPage()) {
           this.logger.log("On thank you page");
+          ENGrid.setBodyData("event-page", "thank-you");
           this.displayEventSummaryOnThankYouPage();
+          const billingInfo = this.getBillingInfo();
+          if (billingInfo && billingInfo.totalAmount === 0) {
+            ENGrid.setBodyData("free-event", "true");
+          }
           this.dataLayer.push({
             event: "EN_EVENT_THANK_YOU_PAGE_VIEW",
+            pageId: ENGrid.getPageID(),
             eventDetails: this.getEventDetails(),
-            billingInfo: this.getBillingInfo(),
+            billingInfo,
           });
         } else {
+          ENGrid.setBodyData("event-page", "unknown");
           this.logger.warn("Unknown event page number: " + ENGrid.getPageNumber());
         }
     }
@@ -108,6 +130,29 @@ export class EventPages {
       }
     });
     return eventDetails;
+  }
+
+  private updateTicketRows() {
+    const urlParamsCode = new URLSearchParams(window.location.search).get("code");
+    this.logger.log(`URL promo code parameter: ${urlParamsCode ?? '<none>'}`);
+    document.querySelectorAll('.en__ticket').forEach((ticket) => {
+      const ticketNameElement = ticket.querySelector('.en__ticket__name');
+      // Handle Hidden Tickets
+      const ticketNameRaw = ticketNameElement?.textContent?.trim() || "Unknown Ticket";
+      const ticketName = ticketNameRaw.split('/');
+      if (ticketName.length > 1) {
+        ticketNameElement!.textContent = ticketName[0].trim();
+        if (!urlParamsCode || urlParamsCode !== ticketName[1].trim()) {
+          this.logger.log(`Hiding ticket "${ticketName[0].trim()}" because it requires promo code "${ticketName[1].trim()}" which is not present in the URL parameters.`);
+          ticket.classList.add("hide");
+        }
+      }
+      // Relocate quantity remaining
+      const quantityRemainingElement = ticket.querySelector('.en__ticket__remaining');
+      if (quantityRemainingElement) {
+        quantityRemainingElement.parentElement?.insertAdjacentElement("afterend", quantityRemainingElement);
+      }
+    });
   }
 
   private createEventBlock(eventDetailTable: HTMLTableElement, eventDetails: Partial<EventDetails>) {
@@ -237,7 +282,8 @@ export class EventPages {
       const typeElement = item.querySelector(".en__orderSummary__data--type");
       if (quantityElement && typeElement) {
         const quantityText = quantityElement.textContent?.trim() || "";
-        const typeText = typeElement.textContent?.trim() || "";
+        let typeText = typeElement.textContent?.trim() || "";
+        typeText = typeText.split('/')[0].trim();
         typeElement.textContent = `${quantityText}x ${typeText}`;
       }
     });
@@ -269,6 +315,30 @@ export class EventPages {
           input.placeholder = capitalizedLabel + "*";
         }
       });
+    });
+  }
+
+  private handleFreeEvent() {
+    // Check if the total is 0, and if so hide the payment section and change the submit button text to "Submit"
+    // Also, if any headers contain "Billing" change that to "Your"
+    const submitButton = document.querySelector(".en__submit button") as HTMLButtonElement | null;
+    if (submitButton) {
+      submitButton.textContent = "Submit";
+      // Engaging Networks will keep changing submit back to "Submit Payment"
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === "childList" && submitButton.textContent?.trim() !== "Submit") {
+            submitButton.textContent = "Submit";
+            observer.disconnect();
+          }
+        });
+      });
+      observer.observe(submitButton, { childList: true });
+    }
+    document.querySelectorAll(".en__orderSummary__headers div").forEach((header) => {
+      if (header.textContent?.trim().toLowerCase().includes("billing")) {
+        header.textContent = header.textContent.replace(/billing/i, "Your");
+      }
     });
   }
 

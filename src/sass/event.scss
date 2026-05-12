@@ -1,4 +1,8 @@
-&[data-engrid-page-type="event"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"] {
+&[data-engrid-event-page="waitlist"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"],
+&[data-engrid-event-page="details"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"],
+&[data-engrid-event-page="checkout"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"],
+&[data-engrid-event-page="thank-you"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"],
+&[data-engrid-event-page="unknown"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"] {
   --p_font-size: 22px;
   --p_line-height: 40px;
 
@@ -11,13 +15,17 @@
     margin-bottom: 0;
   }
 
-  .body-main,
-  .body-bottom {
-    max-width: 900px;
-    width: 100%;
+  // Specifically exclude waitlist page from these styles
+  &[data-engrid-page-type="event"] {
 
-    @media screen and (max-width: 992px) {
-      width: calc(100% - 28px);
+    .body-main,
+    .body-bottom {
+      max-width: 900px;
+      width: 100%;
+
+      @media screen and (max-width: 992px) {
+        width: calc(100% - 28px);
+      }
     }
   }
 
@@ -280,6 +288,25 @@
     }
   }
 
+  .en__ticket__soldout {
+    background-color: rgba(0, 0, 0, 0);
+    color: #1a1a1a;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .waitlist-link {
+    text-transform: none;
+    text-decoration: underline;
+    display: block;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.1875;
+  }
+
   .event-buttons {
 
     .en__submit {
@@ -485,5 +512,15 @@
 
   }
 
+  &[data-engrid-free-event="true"] {
+    .hideif-free {
+      display: none;
+    }
+  }
 
+  :not([data-engrid-free-event="true"]) {
+    .hideif-paid {
+      display: none;
+    }
+  }
 }

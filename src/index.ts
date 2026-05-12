@@ -1,16 +1,16 @@
-import {
-  Options,
-  App,
-  DonationAmount,
-  DonationFrequency,
-  EnForm,
-} from "@4site/engrid-scripts"; // Uses ENGrid via NPM
 // import {
 //   Options,
 //   App,
-//   DonationFrequency,
 //   DonationAmount,
-// } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+//   DonationFrequency,
+//   EnForm,
+// } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
+import {
+  Options,
+  App,
+  DonationFrequency,
+  DonationAmount,
+} from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
 import DonationLightboxForm from "./scripts/donation-lightbox-form";
