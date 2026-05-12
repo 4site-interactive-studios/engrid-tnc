@@ -338,7 +338,7 @@ export class EventPages {
       });
       observer.observe(submitButton, { childList: true });
     }
-    document.querySelectorAll(".en__orderSummary__headers div").forEach((header) => {
+    document.querySelectorAll("h3").forEach((header) => {
       if (header.textContent?.trim().toLowerCase().includes("billing")) {
         header.textContent = header.textContent.replace(/billing/i, "Your");
       }

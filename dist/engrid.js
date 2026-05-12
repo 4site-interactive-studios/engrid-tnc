@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 12, 2026 @ 17:12:32 ET
+ *  Date: Tuesday, May 12, 2026 @ 17:14:12 ET
  *  By: nick
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.1
@@ -51212,7 +51212,7 @@ class EventPages {
         childList: true
       });
     }
-    document.querySelectorAll(".en__orderSummary__headers div").forEach(header => {
+    document.querySelectorAll("h3").forEach(header => {
       if (header.textContent?.trim().toLowerCase().includes("billing")) {
         header.textContent = header.textContent.replace(/billing/i, "Your");
       }
