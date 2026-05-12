@@ -302,6 +302,9 @@ export class EventPages {
   }
 
   private updateRegistrantsFieldsets() {
+    document.querySelectorAll(".en__registrants__ticketHead").forEach((header => {
+      header.textContent = header.textContent?.replace(/\/.*(?= ticket \d+$)/, '') || "";
+    }));
     document.querySelectorAll(".en__registrants__registrantDetails").forEach((element) => {
       element.classList.add("i1-50", "i2-50");
       element.querySelectorAll(".en__field").forEach((field) => {
