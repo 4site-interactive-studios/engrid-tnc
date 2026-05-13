@@ -70,12 +70,12 @@ export class BequestLightbox {
    *     You page, no supporter email available, no pending QCB
    *     sessions).
    *
-   * A safety-net timeout opens the lightbox after 90s if the
+   * A safety-net timeout opens the lightbox after 15s if the
    * promise never resolves (e.g., GdcpManager wasn't instantiated
    * for some reason).
    */
   private openWhenSafe(): void {
-    const safetyNetMs = 90000;
+    const safetyNetMs = 15000;
     let opened = false;
     const openOnce = (reason: string) => {
       if (opened) return;

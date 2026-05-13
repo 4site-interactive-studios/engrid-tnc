@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, May 13, 2026 @ 12:36:11 ET
+ *  Date: Wednesday, May 13, 2026 @ 12:59:42 ET
  *  By: fernando
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.2
@@ -51130,12 +51130,12 @@ class BequestLightbox {
    *     You page, no supporter email available, no pending QCB
    *     sessions).
    *
-   * A safety-net timeout opens the lightbox after 90s if the
+   * A safety-net timeout opens the lightbox after 15s if the
    * promise never resolves (e.g., GdcpManager wasn't instantiated
    * for some reason).
    */
   openWhenSafe() {
-    const safetyNetMs = 90000;
+    const safetyNetMs = 15000;
     let opened = false;
     const openOnce = reason => {
       if (opened) return;
