@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, May 13, 2026 @ 11:02:21 ET
+ *  Date: Wednesday, May 13, 2026 @ 15:08:27 ET
  *  By: nick
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.1
@@ -51056,6 +51056,18 @@ class EventPages {
       const quantityRemainingElement = ticket.querySelector('.en__ticket__remaining');
       if (quantityRemainingElement) {
         quantityRemainingElement.parentElement?.insertAdjacentElement("afterend", quantityRemainingElement);
+      }
+      // Handle EN native waitlist
+      const waitlistElement = ticket.querySelector('.en__ticket__waitlist__join');
+      if (waitlistElement) {
+        const button = waitlistElement.querySelector('.en__ticket__waitlistSoldOutMessage');
+        if (button) {
+          button.textContent = "Sign up for waitlist";
+        }
+        const soldOutText = document.createElement("div");
+        soldOutText.className = "en__ticket__soldout";
+        soldOutText.textContent = "Sold Out";
+        waitlistElement.insertAdjacentElement("afterbegin", soldOutText);
       }
     });
   }

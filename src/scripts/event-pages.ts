@@ -164,6 +164,18 @@ export class EventPages {
       if (quantityRemainingElement) {
         quantityRemainingElement.parentElement?.insertAdjacentElement("afterend", quantityRemainingElement);
       }
+      // Handle EN native waitlist
+      const waitlistElement = ticket.querySelector('.en__ticket__waitlist__join');
+      if (waitlistElement) {
+        const button = waitlistElement.querySelector('.en__ticket__waitlistSoldOutMessage') as HTMLButtonElement | null;
+        if (button) {
+          button.textContent = "Sign up for waitlist";
+        }
+        const soldOutText = document.createElement("div");
+        soldOutText.className = "en__ticket__soldout";
+        soldOutText.textContent = "Sold Out";
+        waitlistElement.insertAdjacentElement("afterbegin", soldOutText);
+      }
     });
   }
 
