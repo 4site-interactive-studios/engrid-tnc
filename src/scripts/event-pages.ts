@@ -58,6 +58,7 @@ export class EventPages {
         }
         const eventDetails = this.parseEventDetails(eventDetailTable);
         localStorage.setItem("eventDetails." + ENGrid.getPageID(), JSON.stringify(eventDetails));
+        this.showWaitlistConfirm();
         this.updateTicketRows();
         this.createEventBlock(eventDetailTable, eventDetails);
         this.removeEnAdditionalLine();
@@ -87,6 +88,7 @@ export class EventPages {
           ENGrid.setBodyData("event-page", "thank-you");
           this.displayEventSummaryOnThankYouPage();
           const billingInfo = this.getBillingInfo();
+          this.logger.log("Billing info on thank you page:", billingInfo);
           if (billingInfo && billingInfo.totalAmount === 0) {
             ENGrid.setBodyData("free-event", "true");
           }
@@ -130,6 +132,16 @@ export class EventPages {
       }
     });
     return eventDetails;
+  }
+
+  private showWaitlistConfirm() {
+    // If url params contains "chain"
+    const urlParams = new URLSearchParams(window.location.search);
+    const waitlistConfirm = document.querySelector(".waitlist-confirmation");
+    if (urlParams.has("chain") && waitlistConfirm) {
+      this.logger.log("URL contains 'chain' parameter, showing waitlist confirmation message.");
+      waitlistConfirm.classList.remove("hide");
+    }
   }
 
   private updateTicketRows() {

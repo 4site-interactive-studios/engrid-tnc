@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 12, 2026 @ 17:14:12 ET
+ *  Date: Wednesday, May 13, 2026 @ 11:02:21 ET
  *  By: nick
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.1
@@ -50957,6 +50957,7 @@ class EventPages {
         }
         const eventDetails = this.parseEventDetails(eventDetailTable);
         localStorage.setItem("eventDetails." + dist_engrid_ENGrid.getPageID(), JSON.stringify(eventDetails));
+        this.showWaitlistConfirm();
         this.updateTicketRows();
         this.createEventBlock(eventDetailTable, eventDetails);
         this.removeEnAdditionalLine();
@@ -50986,6 +50987,7 @@ class EventPages {
           dist_engrid_ENGrid.setBodyData("event-page", "thank-you");
           this.displayEventSummaryOnThankYouPage();
           const billingInfo = this.getBillingInfo();
+          this.logger.log("Billing info on thank you page:", billingInfo);
           if (billingInfo && billingInfo.totalAmount === 0) {
             dist_engrid_ENGrid.setBodyData("free-event", "true");
           }
@@ -51025,6 +51027,15 @@ class EventPages {
       }
     });
     return eventDetails;
+  }
+  showWaitlistConfirm() {
+    // If url params contains "chain"
+    const urlParams = new URLSearchParams(window.location.search);
+    const waitlistConfirm = document.querySelector(".waitlist-confirmation");
+    if (urlParams.has("chain") && waitlistConfirm) {
+      this.logger.log("URL contains 'chain' parameter, showing waitlist confirmation message.");
+      waitlistConfirm.classList.remove("hide");
+    }
   }
   updateTicketRows() {
     const urlParamsCode = new URLSearchParams(window.location.search).get("code");

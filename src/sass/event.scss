@@ -13,6 +13,7 @@
   .body-top {
     border: none;
     margin-bottom: 0;
+    padding-bottom: 0px !important;
   }
 
   // Specifically exclude waitlist page from these styles
@@ -185,20 +186,44 @@
   }
 
   @media (max-width: 767.98px) {
-
-    .en__ticket__field--info,
-    .en__ticket__field--cost {
-      border: 0;
-      vertical-align: middle;
-      width: 50%;
+    .engrid__ticketBlockHeaders {
+      display: none;
     }
+
+    .en__ticket {
+      display: grid;
+      grid-template-columns: 1fr 20%;
+      grid-template-areas: "en__ticket__field--info en__ticket__field--cost" "en__ticket__field--quantity en__ticket__field--quantity";
+    }
+
+    .en__ticket__field--cost {
+      text-align: center;
+      width: 100%;
+    }
+
+    .en__ticket__field--quantity {
+      text-align: right;
+      width: 100%;
+      padding-right: 6px;
+      margin-top: -12px;
+      margin-bottom: 18px;
+    }
+
   }
 
-  @media (max-width: 767.98px) {
-    .en__ticket__field {
-      display: inline-block;
-      padding: 0;
-      padding-left: 0px;
+  @media screen and (max-width: 600px) {
+
+    .en__ticket__name,
+    .en__ticket__desc {
+      text-align: left;
+    }
+
+    .en__ticket__selector {
+      margin-right: unset;
+    }
+
+    .en__ticket__field--quantity {
+      margin-top: 0px;
     }
   }
 
@@ -305,6 +330,18 @@
     font-weight: 700;
     font-size: 1rem;
     line-height: 1.1875;
+  }
+
+  .waitlist-confirmation {
+    padding: 6px 32px;
+    border: 2px solid #007931;
+    background-color: #e6f2ea;
+    --p_font-size: 1.125rem;
+    font-size: 1.125rem;
+    --p_line-height: 1.4444;
+    line-height: 1.4444;
+    text-decoration: none;
+    margin-bottom: 32px;
   }
 
   .event-buttons {
@@ -516,11 +553,25 @@
     .hideif-free {
       display: none;
     }
+
+    .hideif-paid {
+      display: block;
+    }
   }
 
-  :not([data-engrid-free-event="true"]) {
+  &:not([data-engrid-free-event="true"]) {
+    .hideif-free {
+      display: block;
+    }
+
     .hideif-paid {
       display: none;
     }
+  }
+}
+
+&[data-engrid-event-page="thank-you"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"] {
+  .en__orderSummary {
+    margin-top: 16px;
   }
 }
