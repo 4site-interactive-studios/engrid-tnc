@@ -642,13 +642,21 @@ export class GdcpManager {
    */
   private async queueGdcpFollowUps(): Promise<void> {
     try {
-      // QCB follow-up work is only ever applicable on a Thank You
-      // page — the supporter's identity and opt-in choices have to
-      // exist before we can record them, and both are established by
-      // an earlier form submission. Skipping on entry pages avoids a
-      // spurious "supporter email not found" error log on every
-      // donation form load.
-      if (!ENGrid.isThankYouPage()) return;
+      // QCB follow-up work is signalled by sessionStorage entries
+      // written by an earlier form submission (donation, advocacy,
+      // etc.). If none of those entries are present (or all of them
+      // were written on the current page), there's nothing to do —
+      // skip silently. This avoids a spurious "supporter email not
+      // found" error log on every entry page that has no pending
+      // QCB session data.
+      //
+      // We intentionally do NOT gate this on isThankYouPage(). Some
+      // client flows chain pages across page types (e.g. an
+      // advocacy Thank You page that redirects via `?chain` into a
+      // donation form page 1), and on those chained pages the
+      // earlier-page sessionData is still pending and EN pre-fills
+      // the supporter email field, so the chain can run there.
+      if (!this.hasPendingQcbWork()) return;
 
       // EN's QCB forms need the supporter's email to match the
       // record to a supporter — the job `?chain` used to do
@@ -687,18 +695,61 @@ export class GdcpManager {
   }
 
   /**
-   * Resolve the supporter's email address from EN's enjs data layer
-   * via the asynchronous `getPageData` API.
+   * Returns true when any of the three QCB sessionStorage entries
+   * indicates pending work on the current page (i.e. the entry was
+   * written on a previous page in the flow and hasn't been consumed
+   * yet, and the prior submission didn't fail). Used as a cheap
+   * early bail-out in `queueGdcpFollowUps` before any email
+   * resolution work is done.
+   */
+  private hasPendingQcbWork(): boolean {
+    const keys = [
+      "gdcp-email-double-opt-in",
+      "gdcp-postal-mail-create-qcb",
+      "gdcp-mobile-phone-create-qcb",
+    ];
+    for (const key of keys) {
+      let data: { page?: string };
+      try {
+        data = JSON.parse(sessionStorage.getItem(key) || "{}");
+      } catch {
+        continue;
+      }
+      if (
+        data.page &&
+        data.page !== window.location.pathname &&
+        !this.submissionFailed
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Resolve the supporter's email address, trying sources in this
+   * order:
    *
-   * Why the async API and not the synchronous `getSupporterData`:
-   * `getSupporterData`'s underlying XHR is set with `async: false`,
-   * which modern browsers (Chrome, Firefox) routinely block or abort
-   * silently in cross-origin / iframe contexts. When that happens
-   * EN caches an empty result, and every subsequent call returns
-   * the empty cache. `getPageData` is the well-behaved callback-based
-   * alternative on the same data source — it caches the response
-   * into `enjs._pageDataResponse` and replays it for subsequent
-   * callers, so it's both reliable and idempotent.
+   *   1. `ENGrid.getFieldValue("supporter.emailAddress")` — synchronous
+   *      read of the supporter email form field. On chained pages
+   *      (e.g. advocacy Thank You → donation page 1 via `?chain`)
+   *      EN pre-fills supporter fields on the next page, so the
+   *      email is right there with no XHR required. This is the
+   *      hot path for the chained-page scenario.
+   *
+   *   2. EN's async `enjs.getPageData` API — callback-based, reads
+   *      the supporter from EN's in-page data layer (the `/pagedata`
+   *      response). Used on pages where the email isn't echoed onto
+   *      a form field (typical TY page after a standalone donation).
+   *      Chosen over the synchronous `enjs.getSupporterData` because
+   *      that one's underlying XHR is set with `async: false`, which
+   *      modern browsers (Chrome, Firefox) routinely block or abort
+   *      silently in cross-origin / iframe contexts. When that
+   *      happens EN caches an empty result and every later call
+   *      returns the empty cache. `getPageData` is the well-behaved
+   *      callback-based alternative on the same data source — it
+   *      caches into `enjs._pageDataResponse` and replays for
+   *      subsequent callers, so it's reliable and idempotent.
    *
    * The validation regex is intentionally lenient — EN already
    * validated the email on submission, so we're just guarding
@@ -727,6 +778,14 @@ export class GdcpManager {
         finish(null);
       }, maxWaitMs);
 
+      // Source 1: supporter email field on the current page (synchronous).
+      const fromField = ENGrid.getFieldValue("supporter.emailAddress");
+      if (typeof fromField === "string" && emailRegex.test(fromField)) {
+        finish(fromField);
+        return;
+      }
+
+      // Source 2: EN's async getPageData (XHR-backed, cached).
       if (
         !ENGrid.checkNested(
           window.EngagingNetworks,
