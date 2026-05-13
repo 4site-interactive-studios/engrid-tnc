@@ -1,15 +1,16 @@
 import {
   Options,
   App,
-  DonationAmount,
   DonationFrequency,
-  EnForm,
+  DonationAmount,
+  IframeQueue,
 } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
 // import {
 //   Options,
 //   App,
 //   DonationFrequency,
 //   DonationAmount,
+//   IframeQueue,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
@@ -48,6 +49,10 @@ declare global {
       includeInPlannedGivingSolicitations?: string;
       plannedGiftProspect?: string;
       totalNumberOfGifts?: string;
+      // Supporter email — set on the EN page via {supporter.emailAddress}.
+      // Used by GdcpManager to populate QCB iframes (replaces the
+      // server-side ?chain prefill).
+      emailAddress?: string;
     };
     EngridDisableIhmoSourceCodeOverriding?: any;
   }
@@ -143,6 +148,16 @@ const options: Options = {
     ) {
       new DonationLightboxForm(DonationAmount, DonationFrequency, App);
     }
+    // Iframe Queue — opt-in ENgrid component. Constructed explicitly
+    // here so the singleton (and its embedded-mode `message` listener,
+    // active on the QCB iframe pages which load this same TNC bundle)
+    // is initialised deliberately, rather than relying on the lazy
+    // construction triggered by the first `IframeQueue.getInstance()`
+    // call elsewhere. Also where any declarative
+    // `window.EngridIframeQueue` config — if a page ever sets it —
+    // gets picked up. Position within onLoad is not significant for
+    // correctness; placed near the top by convention.
+    new IframeQueue();
     new BequestLightbox();
     new Tooltip();
     new IHMO();

@@ -1,4 +1,9 @@
-import { EngridLogger, ENGrid } from "@4site/engrid-scripts";
+import {
+  EngridLogger,
+  ENGrid,
+  IframeQueue,
+  IframeQueueEvents,
+} from "../../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 import { trackEvent } from "./tracking";
 
 export class BequestLightbox {
@@ -15,6 +20,7 @@ export class BequestLightbox {
         includeInPlannedGivingSolicitations?: string;
         plannedGiftProspect?: string;
         totalNumberOfGifts?: string;
+        emailAddress?: string;
       }
     | undefined = undefined;
   private pageJson: any;
@@ -29,13 +35,119 @@ export class BequestLightbox {
       return;
     }
 
+    // Defuse any iframes inside the modal before the user can see it.
+    // The browser starts loading an iframe the moment it parses the
+    // `src` attribute, which is long before this constructor runs — so
+    // by the time we get here a GET to EN may already be in flight. We
+    // rewrite `src` to "about:blank", which navigates the frame and
+    // aborts the in-flight request. The original URL is stashed in
+    // `data-deferred-src` and restored when the modal actually opens
+    // (see `armModalIframes`). This preserves the "one EN thing at a
+    // time" invariant of the Iframe Queue refactor — without this,
+    // the bequest iframe would load concurrently with queued QCB
+    // iframes even though the bequest *submit* is correctly gated on
+    // `onChainComplete`.
+    this.defuseModalIframes();
+
     this.addModal();
 
     if (this.shouldOpen()) {
-      this.open();
+      this.openWhenSafe();
     }
 
     this.logConditions();
+  }
+
+  /**
+   * Open the bequest lightbox now, or defer until the IframeQueue
+   * (used by GDCP Manager to record post-submit QCB opt-ins) finishes
+   * its chain. Opening synchronously alongside in-flight iframe
+   * submissions causes EN to drop QCB records (the original bug
+   * tracked in EN-2802 / EN-2803).
+   *
+   * `queueMicrotask` is used so the decision runs after all sibling
+   * constructors in the App's `onLoad` hook (notably GdcpManager,
+   * which populates the queue synchronously in its constructor) —
+   * this way we don't depend on the order of `new BequestLightbox()`
+   * vs. `new GdcpManager()` in the App bootstrap.
+   */
+  private openWhenSafe(): void {
+    queueMicrotask(() => {
+      const queue = IframeQueue.getInstance();
+      const events = IframeQueueEvents.getInstance();
+      const queueActive = queue.isProcessing || queue.size > 0;
+
+      if (!queueActive) {
+        this.armModalIframes();
+        this.open();
+        return;
+      }
+
+      this.logger.log(
+        `Iframe queue is active (size=${queue.size}, ` +
+          `processing=${queue.isProcessing}); deferring bequest lightbox ` +
+          `open until the chain completes.`
+      );
+
+      // Open after the chain completes successfully, OR if the chain
+      // errors out — we don't want the lightbox stuck closed if a
+      // QCB iframe times out.
+      let opened = false;
+      const openOnce = (reason: string) => {
+        if (opened) return;
+        opened = true;
+        this.logger.log(`Opening bequest lightbox after ${reason}.`);
+        this.armModalIframes();
+        this.open();
+      };
+      events.onChainComplete.one(() => openOnce("iframe queue chain complete"));
+      events.onChainError.one(() => openOnce("iframe queue chain error"));
+    });
+  }
+
+  /**
+   * Replace the `src` of every iframe inside `.modal--bequest` with
+   * `about:blank` (aborting any in-flight load) and stash the original
+   * URL on `data-deferred-src` so it can be restored when the modal
+   * is about to be shown. Called in the constructor.
+   */
+  private defuseModalIframes(): void {
+    const iframes = this.modalContent?.querySelectorAll<HTMLIFrameElement>(
+      "iframe[src]"
+    );
+    if (!iframes || iframes.length === 0) return;
+    iframes.forEach((iframe) => {
+      const src = iframe.getAttribute("src");
+      if (!src || src === "about:blank") return;
+      iframe.dataset.deferredSrc = src;
+      iframe.setAttribute("src", "about:blank");
+      this.logger.log(`Defused iframe load: ${src}`);
+    });
+  }
+
+  /**
+   * Restore the original `src` on every iframe previously defused by
+   * `defuseModalIframes`. Called immediately before each `open()` call
+   * site in `openWhenSafe()`. After this runs the iframe begins
+   * loading normally and the user can interact with it as they would
+   * have before the queue refactor.
+   *
+   * We scope the query through the document (not `this.modalContent`)
+   * because `addModal()` moves the modal element into a wrapper, so
+   * the iframes now live under `.engrid-modal__body`.
+   */
+  private armModalIframes(): void {
+    const iframes = document.querySelectorAll<HTMLIFrameElement>(
+      ".engrid-modal__body iframe[data-deferred-src]"
+    );
+    if (iframes.length === 0) return;
+    iframes.forEach((iframe) => {
+      const src = iframe.dataset.deferredSrc;
+      if (!src) return;
+      iframe.setAttribute("src", src);
+      delete iframe.dataset.deferredSrc;
+      this.logger.log(`Armed iframe load: ${src}`);
+    });
   }
 
   private shouldRun(): boolean {

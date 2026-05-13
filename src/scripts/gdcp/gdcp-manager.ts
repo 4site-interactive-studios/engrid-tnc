@@ -1,9 +1,13 @@
-import { ENGrid, EngridLogger } from "@4site/engrid-scripts";
+import {
+  ENGrid,
+  EngridLogger,
+  IframeQueue,
+  EnForm,
+} from "@4site/engrid-scripts"; // Uses ENGrid via NPM
 import { GdcpField } from "./interfaces/gdcp-field.interface";
 import { gdcpFields } from "./config/gdcp-fields";
 import { GdcpFieldManager } from "./gdcp-field-manager";
 import { RuleHandler } from "./rule-handler";
-import { EnForm } from "@4site/engrid-scripts";
 import { pages } from "./config/pages";
 
 declare global {
@@ -45,9 +49,12 @@ export class GdcpManager {
   private pages: Record<string, string> = pages;
 
   constructor() {
-    this.handleDoubleOptInEmail();
-    this.handlePostalMailQcb();
-    this.handleMobilePhoneQcb();
+    // Enqueue any pending GDCP follow-up iframe submissions (double opt-in
+    // email, postal mail QCB, mobile phone QCB) onto the shared IframeQueue
+    // and start processing. Must run synchronously here so anything
+    // listening on `IframeQueue.size` / `IframeQueueEvents.onChainComplete`
+    // (e.g. the Bequest Lightbox) sees the work coming.
+    this.queueGdcpFollowUps();
     if (!this.shouldRun()) {
       ENGrid.setBodyData("gdcp", "false");
       this.logger.log("GDCP is not running on this page.");
@@ -582,68 +589,185 @@ export class GdcpManager {
   }
 
   /**
-   * Send double opt in email if the user has opted in and the page is not the first page
+   * Enqueue any pending GDCP follow-up iframe submissions onto the shared
+   * IframeQueue and start processing. Replaces three independent
+   * setTimeout-spaced submissions which suffered ~40% record loss when
+   * EN handled concurrent iframe submits. The queue processes items
+   * strictly sequentially (the next iframe is created only after the
+   * previous one reaches its Thank You page), without `?chain`.
+   *
+   * This method runs synchronously so that other components — notably
+   * the Bequest Lightbox — can inspect the queue's pending size before
+   * deciding whether to defer work.
    */
-  private handleDoubleOptInEmail() {
-    const sessionData = JSON.parse(
-      sessionStorage.getItem("gdcp-email-double-opt-in") || "{}"
-    );
+  private queueGdcpFollowUps() {
+    // QCB follow-up work is only ever applicable on a Thank You page
+    // — the supporter's identity and opt-in choices have to exist
+    // before we can record them, and both are established by an
+    // earlier form submission. Skipping on entry pages avoids a
+    // spurious "supporter email not found" error log on every
+    // donation form load.
+    if (!ENGrid.isThankYouPage()) return;
 
-    const shouldSendDoubleOptInEmail =
-      sessionData.page &&
-      sessionData.page !== window.location.pathname &&
-      !this.submissionFailed;
-
-    if (shouldSendDoubleOptInEmail) {
-      // Set timeout because EN does not work properly if multiple forms are submitted in quick succession
-      setTimeout(() => {
-        const iframe = this.createChainedIframeForm(
-          this.pages.double_opt_in_email_trigger,
-          true
-        );
-        sessionStorage.removeItem("gdcp-email-double-opt-in");
-        this.logger.log(
-          `Sending double opt in email using form: ${iframe.getAttribute(
-            "src"
-          )}`
-        );
-      }, 1000);
+    // EN's QCB forms need the supporter's email to match the record
+    // to a supporter — the job `?chain` used to do server-side. The
+    // email is set on every TNC TY page by the user-profile script
+    // block via EN's `{supporter.emailAddress}` token. If it isn't
+    // there, no QCB record can be created, so we bail out loudly
+    // rather than queueing iframes that are guaranteed to time out.
+    const email = window.bequestUserProfile?.emailAddress;
+    if (typeof email !== "string" || email === "") {
+      this.logger.error(
+        "Skipping QCB iframe queue: supporter email not found at " +
+          "window.bequestUserProfile.emailAddress. Ensure the TY-page " +
+          "user-profile script block sets " +
+          "`emailAddress: '{supporter.emailAddress}'`."
+      );
+      return;
     }
+
+    const queue = IframeQueue.getInstance();
+    this.maybeEnqueueDoubleOptInEmail(queue, email);
+    this.maybeEnqueuePostalMailQcb(queue, email);
+    this.maybeEnqueueMobilePhoneQcb(queue, email);
+
+    if (queue.size === 0 && !queue.isProcessing) return;
+
+    this.logger.log(
+      `Starting iframe queue with ${queue.size} pending follow-up(s).`
+    );
+    queue.process().catch((err) => {
+      this.logger.error("Iframe queue rejected:", err);
+    });
   }
 
   /**
-   * Send QCB for postal mail if we have the session data to do that
+   * Enqueue the double-opt-in email trigger iframe, if the session data
+   * indicates the supporter just opted in to email on a different page.
    */
-  private handlePostalMailQcb() {
+  private maybeEnqueueDoubleOptInEmail(queue: IframeQueue, email: string) {
+    const sessionData = JSON.parse(
+      sessionStorage.getItem("gdcp-email-double-opt-in") || "{}"
+    );
+    const shouldSend =
+      sessionData.page &&
+      sessionData.page !== window.location.pathname &&
+      !this.submissionFailed;
+    if (!shouldSend) return;
+
+    const url = this.pages.double_opt_in_email_trigger;
+    queue.enqueue({
+      url,
+      fields: { "supporter.emailAddress": email },
+      autoSubmit: true,
+      // keepIframeOnError: true, // uncomment to debug (or enable ENgrid debug mode)
+      onComplete: () => {
+        this.logger.log(`Double opt-in email sent via iframe queue: ${url}`);
+      },
+      onError: (error) => {
+        this.logger.error(
+          `Double opt-in email iframe queue item failed: ${error.message}`
+        );
+      },
+    });
+    sessionStorage.removeItem("gdcp-email-double-opt-in");
+  }
+
+  /**
+   * Enqueue the postal-mail QCB iframe, if the session data indicates a
+   * QCB needs to be recorded. When the supporter opted out (state === "N")
+   * we still enqueue, but pass the negative answer via the populate
+   * message so the embedded form records the negative QCB.
+   */
+  private maybeEnqueuePostalMailQcb(queue: IframeQueue, email: string) {
     const sessionData = JSON.parse(
       sessionStorage.getItem("gdcp-postal-mail-create-qcb") || "{}"
     );
-
     const shouldCreateQcb =
       sessionData.page &&
       sessionData.page !== window.location.pathname &&
       !this.submissionFailed;
+    if (!shouldCreateQcb) return;
 
-    if (shouldCreateQcb) {
-      let url = this.pages.postal_mail_qcb;
-      if (sessionData.state === "N") {
-        url += "?supporter.questions.1942219=N";
-      }
-      // Set timeout because EN does not work properly if multiple forms are submitted in quick succession
-      setTimeout(() => {
-        const iframe = this.createChainedIframeForm(url, true);
-        sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
-        this.logger.log(
-          `Creating QCB for postal mail using form: ${iframe.getAttribute(
-            "src"
-          )}`
-        );
-      }, 3500);
+    const fields: Record<string, string> = {
+      "supporter.emailAddress": email,
+    };
+    if (sessionData.state === "N") {
+      fields["supporter.questions.1942219"] = "N";
     }
+
+    const url = this.pages.postal_mail_qcb;
+    queue.enqueue({
+      url,
+      fields,
+      autoSubmit: true,
+      // keepIframeOnError: true, // uncomment to debug (or enable ENgrid debug mode)
+      onComplete: () => {
+        this.logger.log(
+          `Postal mail QCB created via iframe queue (state=${
+            sessionData.state || "Y"
+          }).`
+        );
+      },
+      onError: (error) => {
+        this.logger.error(
+          `Postal mail QCB iframe queue item failed: ${error.message}`
+        );
+      },
+    });
+    sessionStorage.removeItem("gdcp-postal-mail-create-qcb");
   }
 
   /**
-   * Create an iframe form with autosubmit form
+   * Enqueue the mobile-phone QCB iframe, if the session data indicates
+   * a QCB needs to be recorded. Negative QCBs are intentionally not
+   * created for the mobile-phone channel — when state === "N" the
+   * session marker is cleared and no iframe is enqueued.
+   */
+  private maybeEnqueueMobilePhoneQcb(queue: IframeQueue, email: string) {
+    const sessionData = JSON.parse(
+      sessionStorage.getItem("gdcp-mobile-phone-create-qcb") || "{}"
+    );
+    const shouldCreateQcb =
+      sessionData.page &&
+      sessionData.page !== window.location.pathname &&
+      !this.submissionFailed;
+    if (!shouldCreateQcb) return;
+
+    if (sessionData.state === "N") {
+      // Negative QCBs are not recorded for the mobile-phone channel.
+      sessionStorage.removeItem("gdcp-mobile-phone-create-qcb");
+      this.logger.log(
+        "Skipping mobile phone QCB (state=N — negative QCBs are not recorded for this channel)."
+      );
+      return;
+    }
+
+    const url = this.pages.mobile_phone_qcbs;
+    queue.enqueue({
+      url,
+      fields: { "supporter.emailAddress": email },
+      autoSubmit: true,
+      // keepIframeOnError: true, // uncomment to debug (or enable ENgrid debug mode)
+      onComplete: () => {
+        this.logger.log(`Mobile phone QCB created via iframe queue: ${url}`);
+      },
+      onError: (error) => {
+        this.logger.error(
+          `Mobile phone QCB iframe queue item failed: ${error.message}`
+        );
+      },
+    });
+    sessionStorage.removeItem("gdcp-mobile-phone-create-qcb");
+  }
+
+  /**
+   * Create a hidden chained iframe (with `?chain` and optional
+   * `?autosubmit=Y`). Used **only** by `isPresentOnEmbeddedForm` for
+   * synchronous DOM inspection — that flow loads an iframe, waits for
+   * `load`, and reads the document, without submitting. The
+   * post-submission QCB / opt-in chains use the IframeQueue component
+   * instead and never go through this helper.
    */
   private createChainedIframeForm(
     urlString: string,
@@ -788,40 +912,6 @@ export class GdcpManager {
       this.logger.log(
         `Mobile Phone channel missing required data, won't create a QCB`
       );
-    }
-  }
-
-  /**
-   * Send QCB for Mobile Phone if we have the session data to do that
-   */
-  private handleMobilePhoneQcb() {
-    const sessionData = JSON.parse(
-      sessionStorage.getItem("gdcp-mobile-phone-create-qcb") || "{}"
-    );
-
-    const shouldCreateQcb =
-      sessionData.page &&
-      sessionData.page !== window.location.pathname &&
-      !this.submissionFailed;
-
-    if (shouldCreateQcb) {
-      let url = new URL(this.pages.mobile_phone_qcbs);
-      if (sessionData.state === "N") {
-        // Don't create Negative QCBs
-        return;
-        // url.searchParams.append("supporter.questions.848527", "N");
-        // url.searchParams.append("supporter.questions.848528", "N");
-      }
-      // Set timeout because EN does not work properly if multiple forms are submitted in quick succession
-      setTimeout(() => {
-        const iframe = this.createChainedIframeForm(url.toString(), true);
-        sessionStorage.removeItem("gdcp-mobile-phone-create-qcb");
-        this.logger.log(
-          `Creating QCB for Mobile Phone using form: ${iframe.getAttribute(
-            "src"
-          )}`
-        );
-      }, 3500);
     }
   }
 }
