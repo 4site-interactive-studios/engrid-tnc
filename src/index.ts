@@ -49,10 +49,6 @@ declare global {
       includeInPlannedGivingSolicitations?: string;
       plannedGiftProspect?: string;
       totalNumberOfGifts?: string;
-      // Supporter email — set on the EN page via {supporter.emailAddress}.
-      // Used by GdcpManager to populate QCB iframes (replaces the
-      // server-side ?chain prefill).
-      emailAddress?: string;
     };
     EngridDisableIhmoSourceCodeOverriding?: any;
   }

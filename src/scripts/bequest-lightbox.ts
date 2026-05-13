@@ -1,10 +1,9 @@
 import {
   EngridLogger,
   ENGrid,
-  IframeQueue,
-  IframeQueueEvents,
 } from "../../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 import { trackEvent } from "./tracking";
+import { GdcpManager } from "./gdcp/gdcp-manager";
 
 export class BequestLightbox {
   private logger: EngridLogger = new EngridLogger(
@@ -20,7 +19,6 @@ export class BequestLightbox {
         includeInPlannedGivingSolicitations?: string;
         plannedGiftProspect?: string;
         totalNumberOfGifts?: string;
-        emailAddress?: string;
       }
     | undefined = undefined;
   private pageJson: any;
@@ -59,50 +57,41 @@ export class BequestLightbox {
   }
 
   /**
-   * Open the bequest lightbox now, or defer until the IframeQueue
-   * (used by GDCP Manager to record post-submit QCB opt-ins) finishes
-   * its chain. Opening synchronously alongside in-flight iframe
-   * submissions causes EN to drop QCB records (the original bug
-   * tracked in EN-2802 / EN-2803).
+   * Open the bequest lightbox after GdcpManager has decided what to
+   * do with any pending QCB iframe submissions. Opening synchronously
+   * alongside in-flight QCB submits causes EN to drop QCB records
+   * (the original bug tracked in EN-2802 / EN-2803), so this defers
+   * until `GdcpManager.qcbChainDecided()` resolves.
    *
-   * `queueMicrotask` is used so the decision runs after all sibling
-   * constructors in the App's `onLoad` hook (notably GdcpManager,
-   * which populates the queue synchronously in its constructor) —
-   * this way we don't depend on the order of `new BequestLightbox()`
-   * vs. `new GdcpManager()` in the App bootstrap.
+   * That promise resolves under all of:
+   *   - the iframe queue chain finishes successfully,
+   *   - the chain errors out (so we don't get stuck closed),
+   *   - GdcpManager determines there's no chain to run (not a Thank
+   *     You page, no supporter email available, no pending QCB
+   *     sessions).
+   *
+   * A safety-net timeout opens the lightbox after 90s if the
+   * promise never resolves (e.g., GdcpManager wasn't instantiated
+   * for some reason).
    */
   private openWhenSafe(): void {
-    queueMicrotask(() => {
-      const queue = IframeQueue.getInstance();
-      const events = IframeQueueEvents.getInstance();
-      const queueActive = queue.isProcessing || queue.size > 0;
+    const safetyNetMs = 90000;
+    let opened = false;
+    const openOnce = (reason: string) => {
+      if (opened) return;
+      opened = true;
+      this.logger.log(`Opening bequest lightbox: ${reason}.`);
+      this.armModalIframes();
+      this.open();
+    };
 
-      if (!queueActive) {
-        this.armModalIframes();
-        this.open();
-        return;
-      }
-
-      this.logger.log(
-        `Iframe queue is active (size=${queue.size}, ` +
-          `processing=${queue.isProcessing}); deferring bequest lightbox ` +
-          `open until the chain completes.`
-      );
-
-      // Open after the chain completes successfully, OR if the chain
-      // errors out — we don't want the lightbox stuck closed if a
-      // QCB iframe times out.
-      let opened = false;
-      const openOnce = (reason: string) => {
-        if (opened) return;
-        opened = true;
-        this.logger.log(`Opening bequest lightbox after ${reason}.`);
-        this.armModalIframes();
-        this.open();
-      };
-      events.onChainComplete.one(() => openOnce("iframe queue chain complete"));
-      events.onChainError.one(() => openOnce("iframe queue chain error"));
+    GdcpManager.qcbChainDecided().then(() => {
+      openOnce("QCB chain decided");
     });
+
+    window.setTimeout(() => {
+      openOnce(`safety-net timeout (${safetyNetMs}ms)`);
+    }, safetyNetMs);
   }
 
   /**

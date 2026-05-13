@@ -48,13 +48,49 @@ export class GdcpManager {
   private _form: EnForm = EnForm.getInstance();
   private pages: Record<string, string> = pages;
 
+  /**
+   * Deferred used to signal when the QCB iframe queue's outcome has
+   * been decided — i.e. either the chain finished (success or error)
+   * or it was determined there's no chain to run (not a Thank You
+   * page, no supporter email, or no pending QCB sessions).
+   *
+   * BequestLightbox awaits this before opening so the bequest iframe
+   * isn't competing with EN's form-submission machinery while QCB
+   * iframes are in flight. The promise is created at class-load time
+   * so callers (notably BequestLightbox, which is constructed before
+   * GdcpManager in TNC's bootstrap) get a stable reference regardless
+   * of construction order.
+   */
+  private static _qcbChainDecidedResolve: (() => void) | null = null;
+  private static _qcbChainDecidedPromise: Promise<void> = new Promise(
+    (resolve) => {
+      GdcpManager._qcbChainDecidedResolve = resolve;
+    }
+  );
+
+  /**
+   * Returns a promise that resolves once GdcpManager has finished
+   * dealing with any pending QCB iframe submissions for the current
+   * page — including the "nothing to do" case. Safe to call before
+   * GdcpManager is instantiated.
+   */
+  public static qcbChainDecided(): Promise<void> {
+    return GdcpManager._qcbChainDecidedPromise;
+  }
+
+  /** Idempotent resolve of the qcb-chain-decided deferred. */
+  private resolveQcbChainDecided() {
+    if (GdcpManager._qcbChainDecidedResolve) {
+      GdcpManager._qcbChainDecidedResolve();
+      GdcpManager._qcbChainDecidedResolve = null;
+    }
+  }
+
   constructor() {
-    // Enqueue any pending GDCP follow-up iframe submissions (double opt-in
-    // email, postal mail QCB, mobile phone QCB) onto the shared IframeQueue
-    // and start processing. Must run synchronously here so anything
-    // listening on `IframeQueue.size` / `IframeQueueEvents.onChainComplete`
-    // (e.g. the Bequest Lightbox) sees the work coming.
-    this.queueGdcpFollowUps();
+    // Kick off the async QCB follow-up flow. We don't `await` here —
+    // the rest of the constructor proceeds with the usual GDCP setup,
+    // and BequestLightbox coordinates via `qcbChainDecided()`.
+    void this.queueGdcpFollowUps();
     if (!this.shouldRun()) {
       ENGrid.setBodyData("gdcp", "false");
       this.logger.log("GDCP is not running on this page.");
@@ -596,48 +632,131 @@ export class GdcpManager {
    * strictly sequentially (the next iframe is created only after the
    * previous one reaches its Thank You page), without `?chain`.
    *
-   * This method runs synchronously so that other components — notably
-   * the Bequest Lightbox — can inspect the queue's pending size before
-   * deciding whether to defer work.
+   * Asynchronous because resolving the supporter email goes through
+   * EN's async `enjs.getPageData` callback (the synchronous
+   * `getSupporterData` XHR is unreliable in modern browsers — see
+   * the comment on `resolveSupporterEmail`). The method always
+   * resolves the static `qcbChainDecided` promise on the way out so
+   * BequestLightbox can stop waiting regardless of which branch was
+   * taken (skipped, errored, or completed).
    */
-  private queueGdcpFollowUps() {
-    // QCB follow-up work is only ever applicable on a Thank You page
-    // — the supporter's identity and opt-in choices have to exist
-    // before we can record them, and both are established by an
-    // earlier form submission. Skipping on entry pages avoids a
-    // spurious "supporter email not found" error log on every
-    // donation form load.
-    if (!ENGrid.isThankYouPage()) return;
+  private async queueGdcpFollowUps(): Promise<void> {
+    try {
+      // QCB follow-up work is only ever applicable on a Thank You
+      // page — the supporter's identity and opt-in choices have to
+      // exist before we can record them, and both are established by
+      // an earlier form submission. Skipping on entry pages avoids a
+      // spurious "supporter email not found" error log on every
+      // donation form load.
+      if (!ENGrid.isThankYouPage()) return;
 
-    // EN's QCB forms need the supporter's email to match the record
-    // to a supporter — the job `?chain` used to do server-side. The
-    // email is set on every TNC TY page by the user-profile script
-    // block via EN's `{supporter.emailAddress}` token. If it isn't
-    // there, no QCB record can be created, so we bail out loudly
-    // rather than queueing iframes that are guaranteed to time out.
-    const email = window.bequestUserProfile?.emailAddress;
-    if (typeof email !== "string" || email === "") {
-      this.logger.error(
-        "Skipping QCB iframe queue: supporter email not found at " +
-          "window.bequestUserProfile.emailAddress. Ensure the TY-page " +
-          "user-profile script block sets " +
-          "`emailAddress: '{supporter.emailAddress}'`."
+      // EN's QCB forms need the supporter's email to match the
+      // record to a supporter — the job `?chain` used to do
+      // server-side. If we can't find one, no QCB record can be
+      // created, so we bail out loudly rather than queueing iframes
+      // that are guaranteed to time out.
+      const email = await this.resolveSupporterEmail();
+      if (!email) {
+        this.logger.error(
+          "Skipping QCB iframe queue: could not resolve supporter " +
+            "email. EN's `enjs.getPageData` did not return a valid " +
+            "`emailAddress`. Check that the /pagedata response on " +
+            "this Thank You page contains supporter data."
+        );
+        return;
+      }
+
+      const queue = IframeQueue.getInstance();
+      this.maybeEnqueueDoubleOptInEmail(queue, email);
+      this.maybeEnqueuePostalMailQcb(queue, email);
+      this.maybeEnqueueMobilePhoneQcb(queue, email);
+
+      if (queue.size === 0 && !queue.isProcessing) return;
+
+      this.logger.log(
+        `Starting iframe queue with ${queue.size} pending follow-up(s).`
       );
-      return;
+      // Await the chain so callers awaiting `qcbChainDecided()` only
+      // see the promise resolve after the queue is done.
+      await queue.process().catch((err) => {
+        this.logger.error("Iframe queue rejected:", err);
+      });
+    } finally {
+      this.resolveQcbChainDecided();
     }
+  }
 
-    const queue = IframeQueue.getInstance();
-    this.maybeEnqueueDoubleOptInEmail(queue, email);
-    this.maybeEnqueuePostalMailQcb(queue, email);
-    this.maybeEnqueueMobilePhoneQcb(queue, email);
+  /**
+   * Resolve the supporter's email address from EN's enjs data layer
+   * via the asynchronous `getPageData` API.
+   *
+   * Why the async API and not the synchronous `getSupporterData`:
+   * `getSupporterData`'s underlying XHR is set with `async: false`,
+   * which modern browsers (Chrome, Firefox) routinely block or abort
+   * silently in cross-origin / iframe contexts. When that happens
+   * EN caches an empty result, and every subsequent call returns
+   * the empty cache. `getPageData` is the well-behaved callback-based
+   * alternative on the same data source — it caches the response
+   * into `enjs._pageDataResponse` and replays it for subsequent
+   * callers, so it's both reliable and idempotent.
+   *
+   * The validation regex is intentionally lenient — EN already
+   * validated the email on submission, so we're just guarding
+   * against empty strings or obviously malformed values. Resolves
+   * to null after a 30s timeout if EN's framework isn't loaded or
+   * the /pagedata call hangs.
+   */
+  private resolveSupporterEmail(): Promise<string | null> {
+    return new Promise((resolve) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const maxWaitMs = 30000;
+      let settled = false;
 
-    if (queue.size === 0 && !queue.isProcessing) return;
+      const finish = (email: string | null) => {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timeoutId);
+        resolve(email);
+      };
 
-    this.logger.log(
-      `Starting iframe queue with ${queue.size} pending follow-up(s).`
-    );
-    queue.process().catch((err) => {
-      this.logger.error("Iframe queue rejected:", err);
+      const timeoutId = window.setTimeout(() => {
+        this.logger.error(
+          `resolveSupporterEmail: timed out after ${maxWaitMs}ms ` +
+            `waiting for EN's getPageData callback.`
+        );
+        finish(null);
+      }, maxWaitMs);
+
+      if (
+        !ENGrid.checkNested(
+          window.EngagingNetworks,
+          "require",
+          "_defined",
+          "enjs",
+          "getPageData"
+        )
+      ) {
+        finish(null);
+        return;
+      }
+
+      try {
+        window.EngagingNetworks.require._defined.enjs.getPageData(
+          (data: { emailAddress?: unknown } | undefined) => {
+            const email = data?.emailAddress;
+            if (typeof email === "string" && emailRegex.test(email)) {
+              finish(email);
+            } else {
+              finish(null);
+            }
+          },
+          (_err: unknown) => {
+            finish(null);
+          }
+        );
+      } catch {
+        finish(null);
+      }
     });
   }
 
