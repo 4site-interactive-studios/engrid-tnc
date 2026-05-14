@@ -567,61 +567,61 @@
   }
 
   // EN NATIVE WAITLIST OVERLAY
-  .en__overlay--waitlist {
-    .en__overlay__popup {
-      top: 15vh;
-    }
+  // .en__overlay--waitlist {
+  //   .en__overlay__popup {
+  //     top: 15vh;
+  //   }
 
-    .en__overlay__header {
-      background: white;
-      border-bottom: unset;
-      border-radius: unset;
-    }
+  //   .en__overlay__header {
+  //     background: white;
+  //     border-bottom: unset;
+  //     border-radius: unset;
+  //   }
 
-    .en__waitlistCopy {
-      font-size: var(--h2_font-size);
-      line-height: var(--h2_line-height);
-      font-weight: var(--h2_font-weight);
-      font-family: var(--serif-fonts);
-      max-width: 400px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+  //   .en__waitlistCopy {
+  //     font-size: var(--h2_font-size);
+  //     line-height: var(--h2_line-height);
+  //     font-weight: var(--h2_font-weight);
+  //     font-family: var(--serif-fonts);
+  //     max-width: 400px;
+  //     margin-left: auto;
+  //     margin-right: auto;
+  //   }
 
-    .en__waitlistForm {
-      max-width: 475px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+  //   .en__waitlistForm {
+  //     max-width: 475px;
+  //     margin-left: auto;
+  //     margin-right: auto;
+  //   }
 
-    .en__field {
-      display: grid;
-      gap: 8px;
-    }
+  //   .en__field {
+  //     display: grid;
+  //     gap: 8px;
+  //   }
 
-    .en__overlay__actions {
-      display: flex;
-      flex-direction: row-reverse;
-      justify-content: space-between;
-      max-width: 450px;
-      margin: 16px auto;
+  //   .en__overlay__actions {
+  //     display: flex;
+  //     flex-direction: row-reverse;
+  //     justify-content: space-between;
+  //     max-width: 450px;
+  //     margin: 16px auto;
 
-      .en__button {
-        min-width: 120px;
-        text-transform: uppercase;
-        padding: 1.3rem 2.8rem;
-      }
+  //     .en__button {
+  //       min-width: 120px;
+  //       text-transform: uppercase;
+  //       padding: 1.3rem 2.8rem;
+  //     }
 
-      .en__button--submit {
-        --button_background-color: var(--submit__button_background-color);
-        --button_border-color: var(--submit__button_border-color);
-        --button_color: var(--submit__button_color);
-        --button_background-color_hover: var(--submit__button_background-color_hover);
-        --button_border-color_hover: var(--submit__button_border-color_hover);
-        --button_color_hover: var(--submit__button_color_hover);
-      }
-    }
-  }
+  //     .en__button--submit {
+  //       --button_background-color: var(--submit__button_background-color);
+  //       --button_border-color: var(--submit__button_border-color);
+  //       --button_color: var(--submit__button_color);
+  //       --button_background-color_hover: var(--submit__button_background-color_hover);
+  //       --button_border-color_hover: var(--submit__button_border-color_hover);
+  //       --button_color_hover: var(--submit__button_color_hover);
+  //     }
+  //   }
+  // }
 
   &[data-engrid-free-event="true"] {
     .hideif-free {

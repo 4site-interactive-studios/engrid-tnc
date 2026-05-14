@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 14, 2026 @ 10:33:01 ET
+ *  Date: Thursday, May 14, 2026 @ 16:21:48 ET
  *  By: nick
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.1
@@ -2857,8 +2857,16 @@ a.button,a.button.active,a.button:active,a.button:focus,a.button:hover{
   --click-to-expand__cta-image_height:16px;
 }
 
+body#en__pagebuilder .click-to-expand-screenreader-tip{
+  background-color:rgba(248,168,9,.102) !important;
+}
+
 body:not(#en__pagebuilder) .click-to-expand .click-to-expand-text-wrapper>:first-child{
   margin-top:0;
+}
+
+body:not(#en__pagebuilder) .click-to-expand .click-to-expand-screenreader-tip{
+  display:none;
 }
 
 body:not(#en__pagebuilder) .click-to-expand:not(.expanded){
@@ -2872,21 +2880,29 @@ body:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-text
 }
 body:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-cta{
   background:var(--click-to-expand__cta-image_url);
+  background-color:initial;
   background-position:bottom;
   background-repeat:no-repeat;
   background-size:var(--click-to-expand__cta-image_width) var(--click-to-expand__cta-image_height);
+  border:none;
   bottom:0;
+  cursor:pointer;
   height:var(--click-to-expand__cta-image_height);
   left:0;
   margin-left:auto;
   margin-right:auto;
+  padding:0;
   position:absolute;
   right:0;
   width:var(--click-to-expand__cta-image_width);
 }
+body:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-cta:focus-visible{
+  outline:2px solid currentColor;
+  outline-offset:2px;
+}
 
-body:not(#en__pagebuilder) .click-to-expand.expanded .click-to-expand-text-wrapper{
-  outline:none;
+body:not(#en__pagebuilder) .click-to-expand.expanded .click-to-expand-cta{
+  display:none;
 }
 
 [data-engrid-theme]{
@@ -4291,6 +4307,54 @@ button.en__eventOccurrence__select>label{
 .en__additional__promo{
   grid-area:en__additional__promo;
   justify-self:end;
+}
+
+.en__overlay--waitlist .en__overlay__popup{
+  top:15vh;
+}
+.en__overlay--waitlist .en__overlay__header{
+  border-bottom:unset;
+  border-radius:unset;
+}
+.en__overlay--waitlist .en__overlay__content,.en__overlay--waitlist .en__overlay__header{
+  background:var(--engrid__page_background-color);
+}
+.en__overlay--waitlist .en__waitlistCopy{
+  font-size:var(--h2_font-size);
+  font-weight:var(--h2_font-weight);
+  line-height:var(--h2_line-height);
+  margin-left:auto;
+  margin-right:auto;
+  max-width:400px;
+}
+.en__overlay--waitlist .en__waitlistForm{
+  margin-left:auto;
+  margin-right:auto;
+  max-width:475px;
+}
+.en__overlay--waitlist .en__field{
+  display:grid;
+  gap:8px;
+}
+.en__overlay--waitlist .en__overlay__actions{
+  display:flex;
+  flex-direction:row-reverse;
+  justify-content:space-between;
+  margin:16px auto;
+  max-width:450px;
+}
+.en__overlay--waitlist .en__overlay__actions .en__button{
+  min-width:120px;
+  padding:var(--button_padding);
+  text-transform:uppercase;
+}
+.en__overlay--waitlist .en__overlay__actions .en__button--submit{
+  --button_background-color:var(--submit__button_background-color);
+  --button_border-color:var(--submit__button_border-color);
+  --button_color:var(--submit__button_color);
+  --button_background-color_hover:var(--submit__button_background-color_hover);
+  --button_border-color_hover:var(--submit__button_border-color_hover);
+  --button_color_hover:var(--submit__button_color_hover);
 }
 
 @media screen and (max-width:600px){
@@ -12916,52 +12980,6 @@ body[data-engrid-debug]:before{
     border:none;
     display:block;
   }
-}
-[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__popup,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__popup,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__popup,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__popup,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__popup{
-  top:15vh;
-}
-[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__header,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__header,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__header,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__header,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__header{
-  background:#fff;
-  border-bottom:unset;
-  border-radius:unset;
-}
-[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__waitlistCopy,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__waitlistCopy,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__waitlistCopy,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__waitlistCopy,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__waitlistCopy{
-  font-family:var(--serif-fonts);
-  font-size:var(--h2_font-size);
-  font-weight:var(--h2_font-weight);
-  line-height:var(--h2_line-height);
-  margin-left:auto;
-  margin-right:auto;
-  max-width:400px;
-}
-[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__waitlistForm,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__waitlistForm,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__waitlistForm,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__waitlistForm,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__waitlistForm{
-  margin-left:auto;
-  margin-right:auto;
-  max-width:475px;
-}
-[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__field,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__field,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__field,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__field,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__field{
-  display:grid;
-  gap:8px;
-}
-[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions{
-  display:flex;
-  flex-direction:row-reverse;
-  justify-content:space-between;
-  margin:16px auto;
-  max-width:450px;
-}
-[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions .en__button,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions .en__button,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions .en__button,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions .en__button,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions .en__button{
-  min-width:120px;
-  padding:1.3rem 2.8rem;
-  text-transform:uppercase;
-}
-[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions .en__button--submit,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions .en__button--submit,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions .en__button--submit,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions .en__button--submit,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__overlay--waitlist .en__overlay__actions .en__button--submit{
-  --button_background-color:var(--submit__button_background-color);
-  --button_border-color:var(--submit__button_border-color);
-  --button_color:var(--submit__button_color);
-  --button_background-color_hover:var(--submit__button_background-color_hover);
-  --button_border-color_hover:var(--submit__button_border-color_hover);
-  --button_color_hover:var(--submit__button_color_hover);
 }
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-free-event=true] .hideif-free,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-free-event=true] .hideif-free,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-free-event=true] .hideif-free,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-free-event=true] .hideif-free,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-free-event=true] .hideif-free{
   display:none;
