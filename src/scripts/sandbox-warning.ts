@@ -17,7 +17,7 @@ export class SandboxWarning {
 
     const message = document.createElement('span');
     message.textContent =
-      'This page is in the SANDBOX environment. Please switch gateways for live transactions.';
+      'This page is using a test payment gateway. Please switch gateways for live transactions.';
 
     warning.appendChild(message);
     document.body.appendChild(warning);
