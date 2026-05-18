@@ -369,6 +369,10 @@
       flex-direction: row;
       justify-content: space-between;
 
+      @media screen and (max-width: 500px) {
+        flex-direction: column-reverse;
+      }
+
       .btn-outline-primary {
         --submit__button_background-color: transparent;
         --submit__button_border-color: var(--color-green);
@@ -377,9 +381,8 @@
         --submit__button_hover_border-color: var(--color-green);
         --submit__button_hover_color: #fff;
 
-        @media screen and (max-width: 767.99px) {
+        @media screen and (max-width: 500px) {
           margin-top: 0;
-          width: initial;
         }
       }
     }
