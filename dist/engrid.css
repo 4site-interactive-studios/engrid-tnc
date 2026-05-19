@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, May 18, 2026 @ 11:00:44 ET
+ *  Date: Tuesday, May 19, 2026 @ 13:31:17 ET
  *  By: nick
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.1
@@ -12464,14 +12464,25 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col],[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col],[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col],[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col],[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col]{
   --p_font-size:22px;
   --p_line-height:40px;
+  --radio_font-size:16px;
+  --radio_line-height:1.5rem;
   --h3_font-size:16px;
   --h3_line-height:19px;
   --h3_font-weight:600;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col],[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col],[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col],[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col],[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col]{
+    --p_font-size:18px;
+    --p_line-height:30px;
+  }
 }
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top{
   border:none;
   margin-bottom:0;
   padding-bottom:0 !important;
+}
+[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top h2,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top h2,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top h2,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top h2,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top h2{
+  font-family:var(--serif-fonts);
 }
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main{
   max-width:900px;
@@ -12479,8 +12490,17 @@ body[data-engrid-debug]:before{
 }
 @media screen and (max-width:992px){
   [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main{
-    width:calc(100% - 28px);
+    max-width:748px;
   }
+}
+@media screen and (max-width:767.99px){
+  [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main{
+    max-width:548px;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .main-page-footer,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .main-page-footer,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .main-page-footer,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .main-page-footer,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .main-page-footer{
+  --p_font-size:16px;
+  --p_line-height:1.5rem;
 }
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .basic-h3-header,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .basic-h3-header,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .basic-h3-header,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .basic-h3-header,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .basic-h3-header{
   border:none;
@@ -12503,19 +12523,19 @@ body[data-engrid-debug]:before{
 }
 @media screen and (min-width:768px){
   [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__overlay,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__overlay,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__overlay,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__overlay,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__overlay{
-    max-width:750px;
+    max-width:700px;
     padding:1.875rem 2.5rem .75rem;
   }
 }
-@media screen and (min-width:994px){
+@media screen and (min-width:992.01px){
   [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__overlay,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__overlay,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__overlay,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__overlay,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__overlay{
     max-width:850px;
   }
 }
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__title,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__title,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__title,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__title,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__title{
   font-family:var(--serif-fonts);
-  font-size:30px;
-  line-height:36px;
+  font-size:2.5rem;
+  line-height:1.2;
   margin-bottom:8px;
   margin-top:0;
 }
@@ -12528,6 +12548,12 @@ body[data-engrid-debug]:before{
   font-weight:600;
   line-height:27px;
   margin:0 0 16px;
+}
+@media screen and (max-width:992.01px){
+  [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__title,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__title,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__title,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__title,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__title{
+    font-size:30px;
+    line-height:36px;
+  }
 }
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__location-wrapper,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__location-wrapper,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__location-wrapper,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__location-wrapper,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__eventdetails__location-wrapper{
   display:flex;
@@ -12577,6 +12603,9 @@ body[data-engrid-debug]:before{
   content:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13.339' height='16.5'%3E%3Cg fill='none' stroke='%231a1a1a' stroke-miterlimit='10' stroke-width='1.5'%3E%3Cpath d='M8.894 6.844a2.311 2.311 0 0 1-2.277 2.344A2.311 2.311 0 0 1 4.34 6.844 2.311 2.311 0 0 1 6.617 4.5a2.311 2.311 0 0 1 2.277 2.344z'/%3E%3Cpath d='M2.945 11.477a13.189 13.189 0 0 1-1.507-2.211A5.55 5.55 0 0 1 .85 7.782a.3.3 0 0 1-.014-.062 5.92 5.92 0 1 1 11.667 0c0 .019 0 .043-.01.063a10.708 10.708 0 0 1-1.823 3.304l-3.944 4.6a.183.183 0 0 1-.279 0z'/%3E%3C/g%3E%3C/svg%3E");
   line-height:1;
   vertical-align:middle;
+}
+[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__event-details-summary p,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__event-details-summary p,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__event-details-summary p,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__event-details-summary p,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__event-details-summary p{
+  font-family:var(--serif-fonts);
 }
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__ticketBlockHeaders,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__ticketBlockHeaders,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__ticketBlockHeaders,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__ticketBlockHeaders,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__ticketBlockHeaders{
   border-bottom:1px solid #cdcdcd;
@@ -12978,6 +13007,28 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__orderSummary{
   margin-top:16px;
+}
+[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top{
+  max-width:900px;
+  width:100%;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top{
+    max-width:748px;
+  }
+  [data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top h2{
+    font-size:30px;
+    line-height:36px;
+  }
+  [data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top p{
+    font-size:18px;
+    line-height:30px;
+  }
+}
+@media screen and (max-width:767.99px){
+  [data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top{
+    max-width:548px;
+  }
 }
 
 [data-engrid-theme=tnc][data-engrid-multistep]{

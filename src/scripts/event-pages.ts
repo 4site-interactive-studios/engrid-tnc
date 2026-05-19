@@ -65,6 +65,7 @@ export class EventPages {
         this.createAdditionalDonationBlock();
         this.createPromoCodeBlock();
         this.addTotalAmountListener();
+        this.preventResetButtonChanging();
         break;
       case 2:
         this.logger.log("On event checkout page");
@@ -86,7 +87,6 @@ export class EventPages {
         if (ENGrid.isThankYouPage()) {
           this.logger.log("On thank you page");
           ENGrid.setBodyData("event-page", "thank-you");
-          this.displayEventSummaryOnThankYouPage();
           const billingInfo = this.getBillingInfo();
           this.logger.log("Billing info on thank you page:", billingInfo);
           if (billingInfo && billingInfo.totalAmount === 0) {
@@ -103,6 +103,7 @@ export class EventPages {
           this.logger.warn("Unknown event page number: " + ENGrid.getPageNumber());
         }
     }
+    this.displayEventSummary();
     this.updateOrderSummaryTable();
     this.formatAllAmounts();
   }
@@ -436,7 +437,23 @@ export class EventPages {
     this.updateTotalAmount();
   }
 
-  private displayEventSummaryOnThankYouPage() {
+  private preventResetButtonChanging() {
+    const resetButton = document.querySelector('button[type="reset"]') as HTMLButtonElement | null;
+    if (resetButton) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === "childList" && resetButton.textContent?.trim() !== "Reset") {
+            resetButton.textContent = "Reset";
+          }
+        });
+      });
+      observer.observe(resetButton, { childList: true });
+    } else {
+      this.logger.warn("Could not find reset button to prevent text changes.");
+    }
+  }
+
+  private displayEventSummary() {
     const eventSummaryData = localStorage.getItem("eventDetails." + ENGrid.getPageID());
     if (eventSummaryData) {
       const eventDetails: Partial<EventDetails> = JSON.parse(eventSummaryData);

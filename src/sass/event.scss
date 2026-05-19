@@ -6,6 +6,13 @@
   --p_font-size: 22px;
   --p_line-height: 40px;
 
+  @media screen and (max-width: 992px) {
+    --p_font-size: 18px;
+    --p_line-height: 30px;
+  }
+
+  --radio_font-size: 16px;
+  --radio_line-height: 1.5rem;
   --h3_font-size: 16px;
   --h3_line-height: 19px;
   --h3_font-weight: 600;
@@ -14,7 +21,12 @@
     border: none;
     margin-bottom: 0;
     padding-bottom: 0px !important;
+
+    h2 {
+      font-family: var(--serif-fonts);
+    }
   }
+
 
   // Specifically exclude waitlist page from these styles
   &[data-engrid-page-type="event"] {
@@ -25,9 +37,18 @@
       width: 100%;
 
       @media screen and (max-width: 992px) {
-        width: calc(100% - 28px);
+        max-width: 748px;
+      }
+
+      @media screen and (max-width: 767.99px) {
+        max-width: 548px;
       }
     }
+  }
+
+  .main-page-footer {
+    --p_font-size: 16px;
+    --p_line-height: 1.5rem;
   }
 
   .basic-h3-header {
@@ -56,18 +77,18 @@
 
     @media screen and (min-width: 768px) {
       padding: 1.875rem 2.5rem .75rem;
-      max-width: 750px;
+      max-width: 700px;
     }
 
-    @media screen and (min-width: 994px) {
+    @media screen and (min-width: 992.01px) {
       max-width: 850px;
     }
 
   }
 
   .engrid__eventdetails__title {
-    font-size: 30px;
-    line-height: 36px;
+    font-size: 2.5rem;
+    line-height: 1.2;
     margin-top: 0px;
     margin-bottom: 8px;
     font-family: var(--serif-fonts);
@@ -83,6 +104,13 @@
     line-height: 27px;
     font-weight: 600;
     margin: 0 0 16px 0;
+  }
+
+  @media screen and (max-width: 992.01px) {
+    .engrid__eventdetails__title {
+      font-size: 30px;
+      line-height: 36px;
+    }
   }
 
   .engrid__eventdetails__location-wrapper {
@@ -133,6 +161,12 @@
         line-height: 1;
         vertical-align: middle;
       }
+    }
+  }
+
+  .engrid__event-details-summary {
+    p {
+      font-family: var(--serif-fonts);
     }
   }
 
@@ -650,5 +684,28 @@
 &[data-engrid-event-page="thank-you"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"] {
   .en__orderSummary {
     margin-top: 16px;
+  }
+
+  .body-top {
+    max-width: 900px;
+    width: 100%;
+
+    @media screen and (max-width: 992px) {
+      h2 {
+        font-size: 30px;
+        line-height: 36px;
+      }
+
+      p {
+        font-size: 18px;
+        line-height: 30px;
+      }
+
+      max-width: 748px;
+    }
+
+    @media screen and (max-width: 767.99px) {
+      max-width: 548px;
+    }
   }
 }
