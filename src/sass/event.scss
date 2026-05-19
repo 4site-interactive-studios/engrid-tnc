@@ -3,6 +3,9 @@
 &[data-engrid-event-page="checkout"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"],
 &[data-engrid-event-page="thank-you"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"],
 &[data-engrid-event-page="unknown"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"] {
+
+  // STRUCTURAL STYLES FOR BODIES
+
   --p_font-size: 22px;
   --p_line-height: 40px;
 
@@ -57,6 +60,8 @@
     margin-bottom: .9375rem;
     padding-bottom: 0;
   }
+
+  // EVENT DETAILS OVERLAY CARD
 
   .engrid__eventdetails__overlay {
     background-color: #fff;
@@ -164,11 +169,15 @@
     }
   }
 
+  // EVENT DETAIL SUMMARY
+
   .engrid__event-details-summary {
     p {
       font-family: var(--serif-fonts);
     }
   }
+
+  // TICKET SELECTION TABLE
 
   .engrid__ticketBlockHeaders {
     display: grid;
@@ -180,6 +189,12 @@
     font-size: 18px;
     line-height: 26px;
     text-transform: uppercase;
+  }
+
+  @media screen and (max-width: 767.99px) {
+    .en__ticket {
+      margin-top: 20px;
+    }
   }
 
   .en__ticket__field--cost {
@@ -197,14 +212,23 @@
 
   .en__ticket {
     padding-bottom: 0;
-  }
-
-  .en__ticket__field.en__ticket__field--quantity {
-    padding-bottom: 0;
+    margin-bottom: 0;
   }
 
   .en__ticket__field:last-child {
     padding-right: 0;
+  }
+
+  .en__ticket__selector {
+    margin-top: -0.75rem;
+  }
+
+  .en__ticket__remaining {
+    text-align: center;
+    font-size: .875rem;
+    font-weight: 500;
+    line-height: 1.5;
+    margin-top: .25rem;
   }
 
   @media (min-width: 768px) {
@@ -226,7 +250,7 @@
 
     .en__ticket {
       display: grid;
-      grid-template-columns: 1fr 20%;
+      grid-template-columns: 1fr auto;
       grid-template-areas: "en__ticket__field--info en__ticket__field--cost" "en__ticket__field--quantity en__ticket__field--quantity";
     }
 
@@ -238,14 +262,27 @@
     .en__ticket__field--quantity {
       text-align: right;
       width: 100%;
-      padding-right: 6px;
-      margin-top: -12px;
-      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.833rem;
+      padding-bottom: 1.5rem;
+      width: 100%;
+    }
+
+    .en__ticket__field--quantity::before {
+      content: "Quantity";
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
   }
 
   @media screen and (max-width: 600px) {
+
+    .en__ticket__remaining {
+      padding-top: 0;
+    }
 
     .en__ticket__name,
     .en__ticket__desc {
@@ -256,9 +293,6 @@
       margin-right: unset;
     }
 
-    .en__ticket__field--quantity {
-      margin-top: 0px;
-    }
   }
 
   .input-group> :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
@@ -306,10 +340,13 @@
     padding: 0;
   }
 
-  .en__ticket__selector {
-    margin-top: -0.75rem;
+  .en__ticket__quantity-wrapper {
     border: 1px solid #979797;
     flex-wrap: nowrap;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    width: 100%;
   }
 
   .en__ticket__minus,
@@ -323,7 +360,7 @@
     justify-content: center;
     margin: 0;
     position: relative;
-    width: 2.667rem;
+    min-width: 2.667rem;
   }
 
   .en__ticket__minus::after,
@@ -394,6 +431,8 @@
     text-decoration: none;
     margin-bottom: 32px;
   }
+
+  // SUBMIT BUTTONS
 
   .event-buttons {
 

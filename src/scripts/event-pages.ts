@@ -160,10 +160,20 @@ export class EventPages {
           ticket.classList.add("hide");
         }
       }
-      // Relocate quantity remaining
-      const quantityRemainingElement = ticket.querySelector('.en__ticket__remaining');
-      if (quantityRemainingElement) {
-        quantityRemainingElement.parentElement?.insertAdjacentElement("afterend", quantityRemainingElement);
+      // Group ticket inputs
+      const quantityInput = ticket.querySelector('.en__ticket__selector');
+      if (quantityInput) {
+        const minusButton = quantityInput.querySelector('.en__ticket__minus');
+        const plusButton = quantityInput.querySelector('.en__ticket__plus');
+        const quantityDisplay = quantityInput.querySelector('.en__ticket__quantity');
+        if (minusButton && plusButton && quantityDisplay) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "en__ticket__quantity-wrapper";
+          wrapper.appendChild(minusButton);
+          wrapper.appendChild(quantityDisplay);
+          wrapper.appendChild(plusButton);
+          quantityInput.insertAdjacentElement("afterbegin", wrapper);
+        }
       }
       // Handle EN native waitlist
       const waitlistElement = ticket.querySelector('.en__ticket__waitlist__join');
