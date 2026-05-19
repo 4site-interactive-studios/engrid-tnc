@@ -58,6 +58,7 @@ export class EventPages {
         }
         const eventDetails = this.parseEventDetails(eventDetailTable);
         localStorage.setItem("eventDetails." + ENGrid.getPageID(), JSON.stringify(eventDetails));
+        this.showWaitlistLinkIfApplicable();
         this.showWaitlistConfirm();
         this.updateTicketRows();
         this.createEventBlock(eventDetailTable, eventDetails);
@@ -133,6 +134,21 @@ export class EventPages {
       }
     });
     return eventDetails;
+  }
+
+  private showWaitlistLinkIfApplicable() {
+    const waitlistLink = document.querySelector(".waitlist-link a");
+    if (!waitlistLink) {
+      return;
+    }
+    document.querySelectorAll('.en__ticket').forEach((ticket) => {
+      const soldOutMessage = ticket.querySelector(".en__ticket__soldout");
+      if (soldOutMessage) {
+        const waitlistClone = waitlistLink.cloneNode(true) as HTMLElement;
+        waitlistClone.className = "waitlist-link";
+        soldOutMessage.insertAdjacentElement("afterend", waitlistClone);
+      }
+    });
   }
 
   private showWaitlistConfirm() {
