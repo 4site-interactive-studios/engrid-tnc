@@ -6,9 +6,6 @@
 
   // STRUCTURAL STYLES FOR BODIES
 
-  --p_font-size: 22px;
-  --p_line-height: 40px;
-
   @media screen and (max-width: 992px) {
     --p_font-size: 18px;
     --p_line-height: 30px;
@@ -174,6 +171,8 @@
   .engrid__event-details-summary {
     p {
       font-family: var(--serif-fonts);
+      --p_font-size: 1.375rem;
+      --p_line-height: 1.8181;
     }
   }
 
@@ -211,6 +210,7 @@
   }
 
   .en__ticket {
+    min-height: 130px;
     padding-bottom: 0;
     margin-bottom: 0;
   }
@@ -378,8 +378,8 @@
   }
 
   .event-ticket-summary {
-    --p_font-size: 1.25rem;
-    font-size: 1.25rem;
+    --p_font-size: 1.125rem;
+    font-size: 1.125rem;
     line-height: 1.66;
     text-align: right;
     margin-top: 40px;
@@ -501,12 +501,6 @@
         text-transform: none;
       }
 
-      p {
-        margin: 0;
-        font-size: 1rem;
-        line-height: 1.375;
-      }
-
       .en__additional__input,
       .en__code__input {
         display: block;
@@ -520,7 +514,7 @@
 
   // PAGE 2 - CHECKOUT PAGE SPECIFIC STYLES
   .en__component--eventtickets {
-    margin-bottom: 64px;
+    margin-bottom: 32px;
     font-size: 1.125rem;
     line-height: 1.66;
 

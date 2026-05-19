@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 19, 2026 @ 16:21:41 ET
+ *  Date: Tuesday, May 19, 2026 @ 16:37:08 ET
  *  By: nick
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.1
@@ -12462,8 +12462,6 @@ body[data-engrid-debug]:before{
   margin:2rem 0 1rem;
 }
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col],[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col],[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col],[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col],[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col]{
-  --p_font-size:22px;
-  --p_line-height:40px;
   --radio_font-size:16px;
   --radio_line-height:1.5rem;
   --h3_font-size:16px;
@@ -12605,6 +12603,8 @@ body[data-engrid-debug]:before{
   vertical-align:middle;
 }
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__event-details-summary p,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__event-details-summary p,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__event-details-summary p,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__event-details-summary p,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__event-details-summary p{
+  --p_font-size:1.375rem;
+  --p_line-height:1.8181;
   font-family:var(--serif-fonts);
 }
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__ticketBlockHeaders,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__ticketBlockHeaders,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__ticketBlockHeaders,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__ticketBlockHeaders,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .engrid__ticketBlockHeaders{
@@ -12636,6 +12636,7 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__ticket,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__ticket,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__ticket,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__ticket,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__ticket{
   margin-bottom:0;
+  min-height:130px;
   padding-bottom:0;
 }
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__ticket__field:last-child,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__ticket__field:last-child,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__ticket__field:last-child,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__ticket__field:last-child,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__ticket__field:last-child{
@@ -12768,8 +12769,8 @@ body[data-engrid-debug]:before{
   content:"+";
 }
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-ticket-summary,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-ticket-summary,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-ticket-summary,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-ticket-summary,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-ticket-summary{
-  --p_font-size:1.25rem;
-  font-size:1.25rem;
+  --p_font-size:1.125rem;
+  font-size:1.125rem;
   line-height:1.66;
   margin-top:40px;
   text-align:right;
@@ -12874,11 +12875,6 @@ body[data-engrid-debug]:before{
   padding-bottom:0;
   text-transform:none;
 }
-[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional p,[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo p,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional p,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo p,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional p,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo p,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional p,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo p,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional p,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo p{
-  font-size:1rem;
-  line-height:1.375;
-  margin:0;
-}
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional .en__additional__input,[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional .en__code__input,[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo .en__additional__input,[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo .en__code__input,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional .en__additional__input,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional .en__code__input,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo .en__additional__input,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo .en__code__input,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional .en__additional__input,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional .en__code__input,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo .en__additional__input,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo .en__code__input,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional .en__additional__input,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional .en__code__input,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo .en__additional__input,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo .en__code__input,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional .en__additional__input,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-additional .en__code__input,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo .en__additional__input,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .event-extras .event-promo .en__code__input{
   display:block;
   flex:none;
@@ -12889,7 +12885,7 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__component--eventtickets,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__component--eventtickets,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__component--eventtickets,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__component--eventtickets,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__component--eventtickets{
   font-size:1.125rem;
   line-height:1.66;
-  margin-bottom:64px;
+  margin-bottom:32px;
 }
 @media screen and (max-width:767.99px){
   [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__component--eventtickets,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__component--eventtickets,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__component--eventtickets,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__component--eventtickets,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .en__component--eventtickets{
