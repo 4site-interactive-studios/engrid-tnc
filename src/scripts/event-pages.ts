@@ -596,7 +596,7 @@ export class EventPages {
 
     document.querySelectorAll(".en__ticket__quantity").forEach((el) => {
       const quantity = Number((el as HTMLInputElement).value);
-      const row = el.parentElement?.parentElement?.parentElement;
+      const row = el.closest(".en__ticket");
       if (row) {
         const price = Number(row.querySelector(".en__ticket__price")?.textContent?.replace(/[^0-9.]/g, "")) || 0;
         const currency = row.querySelector(".en__ticket__currency")?.textContent?.trim() || "USD";

@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 19, 2026 @ 16:48:54 ET
+ *  Date: Wednesday, May 20, 2026 @ 11:14:51 ET
  *  By: nick
  *  ENGrid styles: v0.25.0
  *  ENGrid scripts: v0.25.1
@@ -52232,7 +52232,7 @@ class EventPages {
     const lineItems = [];
     document.querySelectorAll(".en__ticket__quantity").forEach(el => {
       const quantity = Number(el.value);
-      const row = el.parentElement?.parentElement?.parentElement;
+      const row = el.closest(".en__ticket");
       if (row) {
         const price = Number(row.querySelector(".en__ticket__price")?.textContent?.replace(/[^0-9.]/g, "")) || 0;
         const currency = row.querySelector(".en__ticket__currency")?.textContent?.trim() || "USD";
