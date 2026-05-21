@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, May 20, 2026 @ 11:14:51 ET
+ *  Date: Thursday, May 21, 2026 @ 10:28:42 ET
  *  By: nick
- *  ENGrid styles: v0.25.0
- *  ENGrid scripts: v0.25.1
+ *  ENGrid styles: v0.25.4
+ *  ENGrid scripts: v0.25.2
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -4293,6 +4293,68 @@ button.en__eventOccurrence__select>label{
   justify-self:end;
 }
 
+.en__overlay--waitlist .en__overlay__popup{
+  top:15vh;
+  width:100%;
+}
+.en__overlay--waitlist .en__overlay__header{
+  background:var(--engrid__page_background-color);
+  border-bottom:unset;
+  border-radius:unset;
+}
+.en__overlay--waitlist .en__overlay__content{
+  background:var(--engrid__page_background-color);
+  padding:10px 20px;
+}
+.en__overlay--waitlist .en__overlay__content .en__button--confirm{
+  --button_background-color:var(--submit__button_background-color);
+  --button_border-color:var(--submit__button_border-color);
+  --button_color:var(--submit__button_color);
+  --button_background-color_hover:var(--submit__button_background-color_hover);
+  --button_border-color_hover:var(--submit__button_border-color_hover);
+  --button_color_hover:var(--submit__button_color_hover);
+  margin:auto;
+  min-width:100px;
+  padding:var(--button_padding);
+}
+.en__overlay--waitlist .en__waitlistCopy{
+  font-size:var(--h2_font-size);
+  font-weight:var(--h2_font-weight);
+  line-height:var(--h2_line-height);
+  margin-left:auto;
+  margin-right:auto;
+  max-width:400px;
+}
+.en__overlay--waitlist .en__waitlistForm{
+  margin-left:auto;
+  margin-right:auto;
+  max-width:475px;
+}
+.en__overlay--waitlist .en__field{
+  display:grid;
+  gap:8px;
+}
+.en__overlay--waitlist .en__overlay__actions{
+  display:flex;
+  flex-direction:row-reverse;
+  justify-content:space-between;
+  margin:16px auto;
+  max-width:450px;
+}
+.en__overlay--waitlist .en__overlay__actions .en__button{
+  min-width:120px;
+  padding:var(--button_padding);
+  text-transform:uppercase;
+}
+.en__overlay--waitlist .en__overlay__actions .en__button--submit{
+  --button_background-color:var(--submit__button_background-color);
+  --button_border-color:var(--submit__button_border-color);
+  --button_color:var(--submit__button_color);
+  --button_background-color_hover:var(--submit__button_background-color_hover);
+  --button_border-color_hover:var(--submit__button_border-color_hover);
+  --button_color_hover:var(--submit__button_color_hover);
+}
+
 @media screen and (max-width:600px){
   .en__ticket{
     display:flex;
@@ -4337,6 +4399,9 @@ button.en__eventOccurrence__select>label{
   .en__ticket__plus{
     margin-right:2rem;
   }
+}
+#engrid:has(.en__overlay--open) .content-footer,#engrid:has(.en__overlay--open) .content-footerSpacer,#engrid:has(.en__overlay--open) .content-header,#engrid:has(.en__overlay--open) .content-preFooter{
+  z-index:unset;
 }
 [data-engrid-errors=fancy] .en__field__error{
   background-color:var(--error__color);
