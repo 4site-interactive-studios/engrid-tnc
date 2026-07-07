@@ -73,12 +73,15 @@ export class EventPages {
         ENGrid.setBodyData("event-page", "checkout");
         const billingInfo = this.getBillingInfo();
         this.updateRegistrantsFieldsets();
-        if (billingInfo) {
+        if (billingInfo !== null) {
+          this.logger.log("Billing info on checkout page:", billingInfo);
           if (billingInfo.totalAmount === 0) {
+            this.logger.log("Total amount is 0, marking as free event.");
             ENGrid.setBodyData("free-event", "true");
             this.handleFreeEvent();
           }
           if (billingInfo.lineItems.find(item => item.name?.includes("Additional Donation") && item.price > 0)) {
+            this.logger.log("Additional donation found, marking as additional donation.");
             ENGrid.setBodyData("additional-donation", "true");
           }
         }
@@ -97,10 +100,12 @@ export class EventPages {
           this.logger.log("Billing info on thank you page:", billingInfo);
           if (billingInfo) {
             if (billingInfo.totalAmount === 0) {
+              this.logger.log("Total amount is 0, marking as free event.");
               ENGrid.setBodyData("free-event", "true");
               this.handleFreeEvent();
             }
             if (billingInfo.lineItems.find(item => item.name?.includes("Additional Donation") && item.price > 0)) {
+              this.logger.log("Additional donation found, marking as additional donation.");
               ENGrid.setBodyData("additional-donation", "true");
             }
           }

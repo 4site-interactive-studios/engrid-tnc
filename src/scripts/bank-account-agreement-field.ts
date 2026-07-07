@@ -75,7 +75,7 @@ export class BankAccountAgreementField {
     const giveBySelect = document.querySelector(
       "[name='transaction.giveBySelect']:checked"
     ) as HTMLInputElement;
-
+    if(!giveBySelect) return "";
     return giveBySelect.value || "";
   }
 

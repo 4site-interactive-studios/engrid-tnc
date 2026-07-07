@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, July 7, 2026 @ 11:34:16 ET
+ *  Date: Tuesday, July 7, 2026 @ 14:36:23 ET
  *  By: nick
  *  ENGrid styles: v0.25.4
  *  ENGrid scripts: v0.25.2
@@ -30321,6 +30321,7 @@ class BankAccountAgreementField {
   }
   getGiveBySelectValue() {
     const giveBySelect = document.querySelector("[name='transaction.giveBySelect']:checked");
+    if (!giveBySelect) return "";
     return giveBySelect.value || "";
   }
   addEventListeners() {
@@ -31005,12 +31006,15 @@ class EventPages {
         engrid_ENGrid.setBodyData("event-page", "checkout");
         const billingInfo = this.getBillingInfo();
         this.updateRegistrantsFieldsets();
-        if (billingInfo) {
+        if (billingInfo !== null) {
+          this.logger.log("Billing info on checkout page:", billingInfo);
           if (billingInfo.totalAmount === 0) {
+            this.logger.log("Total amount is 0, marking as free event.");
             engrid_ENGrid.setBodyData("free-event", "true");
             this.handleFreeEvent();
           }
           if (billingInfo.lineItems.find(item => item.name?.includes("Additional Donation") && item.price > 0)) {
+            this.logger.log("Additional donation found, marking as additional donation.");
             engrid_ENGrid.setBodyData("additional-donation", "true");
           }
         }
@@ -31029,10 +31033,12 @@ class EventPages {
           this.logger.log("Billing info on thank you page:", billingInfo);
           if (billingInfo) {
             if (billingInfo.totalAmount === 0) {
+              this.logger.log("Total amount is 0, marking as free event.");
               engrid_ENGrid.setBodyData("free-event", "true");
               this.handleFreeEvent();
             }
             if (billingInfo.lineItems.find(item => item.name?.includes("Additional Donation") && item.price > 0)) {
+              this.logger.log("Additional donation found, marking as additional donation.");
               engrid_ENGrid.setBodyData("additional-donation", "true");
             }
           }
