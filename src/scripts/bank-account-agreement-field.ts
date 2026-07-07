@@ -40,6 +40,15 @@ export class BankAccountAgreementField {
   }
 
   showBankAccountAgreementField(): void {
+    // On a free event there is no payment, so the ACH bank account agreement must
+    // never be shown/required. EventPages hides it and sets this flag; respect it
+    // so a late give-by-select change/blur can't re-show and re-require the field.
+    if (ENGrid.getBodyData("free-event") === "true") {
+      this.logger.log(
+        "Free event detected; leaving bank account agreement field hidden."
+      );
+      return;
+    }
     if (
       ENGrid.checkNested(
         window.EngagingNetworks,

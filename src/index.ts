@@ -157,10 +157,10 @@ const options: Options = {
     trackUserInteractions();
     new WidgetProgressBar();
     new AddDAFBanner();
+    new EventPages();
     new BankAccountAgreementField();
     new Workday();
     new MultistepForm();
-    new EventPages();
     new SandboxWarning();
     new GenerateEmail();
 

@@ -701,6 +701,10 @@
     .hideif-paid {
       display: block;
     }
+
+    .give-by-select {
+      display: none;
+    }
   }
 
   &:not([data-engrid-free-event="true"]) {
@@ -711,16 +715,13 @@
     .hideif-paid {
       display: none;
     }
-
-    .give-by-select {
-      display: none;
-    }
   }
 
   &[data-engrid-additional-donation="true"] {
     .hideif-additional-donation {
       display: none;
     }
+
     .showif-additional-donation {
       display: block;
     }
@@ -730,6 +731,7 @@
     .hideif-additional-donation {
       display: block;
     }
+
     .showif-additional-donation {
       display: none;
     }

@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, July 7, 2026 @ 14:51:11 ET
+ *  Date: Tuesday, July 7, 2026 @ 18:17:12 ET
  *  By: nick
  *  ENGrid styles: v0.25.4
  *  ENGrid scripts: v0.25.2
@@ -30308,6 +30308,13 @@ class BankAccountAgreementField {
     return this.bankAccountAgreementField !== null && this.giveBySelectInputs.length > 0;
   }
   showBankAccountAgreementField() {
+    // On a free event there is no payment, so the ACH bank account agreement must
+    // never be shown/required. EventPages hides it and sets this flag; respect it
+    // so a late give-by-select change/blur can't re-show and re-require the field.
+    if (engrid_ENGrid.getBodyData("free-event") === "true") {
+      this.logger.log("Free event detected; leaving bank account agreement field hidden.");
+      return;
+    }
     if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "hideField") && this.bankAccountAgreementField?.classList.contains("en__hidden")) {
       this.logger.log("showing bank account agreement field");
       window.EngagingNetworks.require._defined.enjs.showField("879592");
@@ -31311,12 +31318,70 @@ class EventPages {
         childList: true
       });
     }
+    // Find .en__field--giveBySelect and remove en__mandatory
+    const giveBySelectField = document.querySelector(".en__field--giveBySelect");
+    if (giveBySelectField) {
+      giveBySelectField.classList.remove("en__mandatory");
+    }
+
+    // A free event takes no payment, so EN's ACH "bank account agreement" field
+    // must not block submission. It is marked required in EN, and the only way to
+    // stop EN's validator from requiring it is to call EN's hideField(). On a free
+    // event the payment section is hidden and there is no give-by-select interaction
+    // to trigger BankAccountAgreementField's own (deferred, racy) hide, so hide it here.
+    // this.hideBankAccountAgreementField();
+
     document.querySelectorAll("h3").forEach(header => {
       if (header.textContent?.trim().toLowerCase().includes("billing")) {
         header.textContent = header.textContent.replace(/billing/i, "Your");
       }
     });
   }
+
+  // // EN field ID for the ACH "bank account agreement" checkbox. This field is marked
+  // // required in EN; see bank-account-agreement-field.ts for the show/hide workaround.
+  // private static readonly BANK_ACCOUNT_AGREEMENT_FIELD_ID = "879592";
+
+  // // Ask EN to hide the bank account agreement field so its validator skips it.
+  // // Retries until EN's enjs is available because it can load after this runs.
+  // private hideBankAccountAgreementField(attempt = 0): void {
+  //   const fieldId = EventPages.BANK_ACCOUNT_AGREEMENT_FIELD_ID;
+  //   const field = document.querySelector(`.en__field--${fieldId}`);
+  //   // No bank account agreement field on this page: nothing to do.
+  //   if (!field) return;
+  //   // Already hidden by EN: nothing to do.
+  //   if (field.classList.contains("en__hidden")) return;
+
+  //   const enjsReady = ENGrid.checkNested(
+  //     window.EngagingNetworks,
+  //     "require",
+  //     "_defined",
+  //     "enjs",
+  //     "hideField"
+  //   );
+
+  //   if (enjsReady) {
+  //     this.logger.log(
+  //       `Free event: hiding bank account agreement field (${fieldId}).`
+  //     );
+  //     window.EngagingNetworks.require._defined.enjs.hideField(fieldId);
+  //     return;
+  //   }
+
+  //   // EN's enjs has not loaded yet. On a free event there is no give-by-select
+  //   // interaction to retry the hide, so poll until EN is available (~10s max).
+  //   if (attempt >= 40) {
+  //     this.logger.warn(
+  //       `EN enjs.hideField unavailable; could not hide bank account agreement field (${fieldId}).`
+  //     );
+  //     return;
+  //   }
+  //   window.setTimeout(
+  //     () => this.hideBankAccountAgreementField(attempt + 1),
+  //     250
+  //   );
+  // }
+
   addPromoRow(code) {
     const billingInfo = this.getBillingInfo();
     const currentTotal = document.querySelector(".en__orderSummary__data--totalAmount")?.textContent?.trim().replace(/[^0-9.]/g, "") || "";
@@ -31683,10 +31748,10 @@ const options = {
     trackUserInteractions();
     new WidgetProgressBar();
     new AddDAFBanner();
+    new EventPages();
     new BankAccountAgreementField();
     new Workday();
     new MultistepForm();
-    new EventPages();
     new SandboxWarning();
     new GenerateEmail();
 
