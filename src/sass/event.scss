@@ -711,6 +711,10 @@
     .hideif-paid {
       display: none;
     }
+
+    .give-by-select {
+      display: none;
+    }
   }
 
   &[data-engrid-additional-donation="true"] {
