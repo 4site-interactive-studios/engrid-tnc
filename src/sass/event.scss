@@ -712,6 +712,24 @@
       display: none;
     }
   }
+
+  &[data-engrid-additional-donation="true"] {
+    .hideif-additional-donation {
+      display: none;
+    }
+    .showif-additional-donation {
+      display: block;
+    }
+  }
+
+  &:not([data-engrid-additional-donation="true"]) {
+    .hideif-additional-donation {
+      display: block;
+    }
+    .showif-additional-donation {
+      display: none;
+    }
+  }
 }
 
 &[data-engrid-event-page="thank-you"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"] {

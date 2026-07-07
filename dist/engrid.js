@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 21, 2026 @ 10:44:47 ET
+ *  Date: Tuesday, July 7, 2026 @ 11:34:16 ET
  *  By: nick
  *  ENGrid styles: v0.25.4
  *  ENGrid scripts: v0.25.2
@@ -31005,9 +31005,14 @@ class EventPages {
         engrid_ENGrid.setBodyData("event-page", "checkout");
         const billingInfo = this.getBillingInfo();
         this.updateRegistrantsFieldsets();
-        if (billingInfo && billingInfo.totalAmount === 0) {
-          engrid_ENGrid.setBodyData("free-event", "true");
-          this.handleFreeEvent();
+        if (billingInfo) {
+          if (billingInfo.totalAmount === 0) {
+            engrid_ENGrid.setBodyData("free-event", "true");
+            this.handleFreeEvent();
+          }
+          if (billingInfo.lineItems.find(item => item.name?.includes("Additional Donation") && item.price > 0)) {
+            engrid_ENGrid.setBodyData("additional-donation", "true");
+          }
         }
         this.dataLayer.push({
           event: "EN_EVENT_CHECKOUT_PAGE_VIEW",
@@ -31022,8 +31027,14 @@ class EventPages {
           engrid_ENGrid.setBodyData("event-page", "thank-you");
           const billingInfo = this.getBillingInfo();
           this.logger.log("Billing info on thank you page:", billingInfo);
-          if (billingInfo && billingInfo.totalAmount === 0) {
-            engrid_ENGrid.setBodyData("free-event", "true");
+          if (billingInfo) {
+            if (billingInfo.totalAmount === 0) {
+              engrid_ENGrid.setBodyData("free-event", "true");
+              this.handleFreeEvent();
+            }
+            if (billingInfo.lineItems.find(item => item.name?.includes("Additional Donation") && item.price > 0)) {
+              engrid_ENGrid.setBodyData("additional-donation", "true");
+            }
           }
           this.dataLayer.push({
             event: "EN_EVENT_THANK_YOU_PAGE_VIEW",

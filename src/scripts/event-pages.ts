@@ -73,9 +73,14 @@ export class EventPages {
         ENGrid.setBodyData("event-page", "checkout");
         const billingInfo = this.getBillingInfo();
         this.updateRegistrantsFieldsets();
-        if (billingInfo && billingInfo.totalAmount === 0) {
-          ENGrid.setBodyData("free-event", "true");
-          this.handleFreeEvent();
+        if (billingInfo) {
+          if (billingInfo.totalAmount === 0) {
+            ENGrid.setBodyData("free-event", "true");
+            this.handleFreeEvent();
+          }
+          if (billingInfo.lineItems.find(item => item.name?.includes("Additional Donation") && item.price > 0)) {
+            ENGrid.setBodyData("additional-donation", "true");
+          }
         }
         this.dataLayer.push({
           event: "EN_EVENT_CHECKOUT_PAGE_VIEW",
@@ -90,8 +95,14 @@ export class EventPages {
           ENGrid.setBodyData("event-page", "thank-you");
           const billingInfo = this.getBillingInfo();
           this.logger.log("Billing info on thank you page:", billingInfo);
-          if (billingInfo && billingInfo.totalAmount === 0) {
-            ENGrid.setBodyData("free-event", "true");
+          if (billingInfo) {
+            if (billingInfo.totalAmount === 0) {
+              ENGrid.setBodyData("free-event", "true");
+              this.handleFreeEvent();
+            }
+            if (billingInfo.lineItems.find(item => item.name?.includes("Additional Donation") && item.price > 0)) {
+              ENGrid.setBodyData("additional-donation", "true");
+            }
           }
           this.dataLayer.push({
             event: "EN_EVENT_THANK_YOU_PAGE_VIEW",
