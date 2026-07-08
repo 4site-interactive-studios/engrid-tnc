@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, July 7, 2026 @ 18:17:12 ET
+ *  Date: Wednesday, July 8, 2026 @ 14:51:55 ET
  *  By: nick
  *  ENGrid styles: v0.25.4
  *  ENGrid scripts: v0.25.2
@@ -31019,6 +31019,9 @@ class EventPages {
             this.logger.log("Total amount is 0, marking as free event.");
             engrid_ENGrid.setBodyData("free-event", "true");
             this.handleFreeEvent();
+            if (window.HideAddressFieldsOnFreeEvent) {
+              this.handleNoAddressFields();
+            }
           }
           if (billingInfo.lineItems.find(item => item.name?.includes("Additional Donation") && item.price > 0)) {
             this.logger.log("Additional donation found, marking as additional donation.");
@@ -31336,6 +31339,16 @@ class EventPages {
         header.textContent = header.textContent.replace(/billing/i, "Your");
       }
     });
+  }
+  handleNoAddressFields() {
+    this.logger.log("HideAddressFieldsOnFreeEvent is true, hiding address fields and address-header.");
+    document.querySelector(".address-header")?.classList.add("hide");
+    window.EngagingNetworks.require._defined.enjs.hideField("country");
+    window.EngagingNetworks.require._defined.enjs.hideField("address2");
+    window.EngagingNetworks.require._defined.enjs.hideField("address1");
+    window.EngagingNetworks.require._defined.enjs.hideField("city");
+    window.EngagingNetworks.require._defined.enjs.hideField("region");
+    window.EngagingNetworks.require._defined.enjs.hideField("postcode");
   }
 
   // // EN field ID for the ACH "bank account agreement" checkbox. This field is marked

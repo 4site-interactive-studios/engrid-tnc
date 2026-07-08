@@ -23,6 +23,13 @@ interface EventLineItem {
   currency: string;
 }
 
+declare global {
+  interface Window {
+    HideAddressFieldsOnFreeEvent?: boolean;
+    EngagingNetworks: any;
+  }
+}
+
 export class EventPages {
   private logger: EngridLogger = new EngridLogger(
     "Event Pages",
@@ -79,6 +86,9 @@ export class EventPages {
             this.logger.log("Total amount is 0, marking as free event.");
             ENGrid.setBodyData("free-event", "true");
             this.handleFreeEvent();
+            if (window.HideAddressFieldsOnFreeEvent) {
+              this.handleNoAddressFields();
+            }
           }
           if (billingInfo.lineItems.find(item => item.name?.includes("Additional Donation") && item.price > 0)) {
             this.logger.log("Additional donation found, marking as additional donation.");
@@ -423,6 +433,17 @@ export class EventPages {
         header.textContent = header.textContent.replace(/billing/i, "Your");
       }
     });
+  }
+
+  private handleNoAddressFields() {
+    this.logger.log("HideAddressFieldsOnFreeEvent is true, hiding address fields and address-header.");
+    document.querySelector(".address-header")?.classList.add("hide");
+    window.EngagingNetworks.require._defined.enjs.hideField("country");
+    window.EngagingNetworks.require._defined.enjs.hideField("address2");
+    window.EngagingNetworks.require._defined.enjs.hideField("address1");
+    window.EngagingNetworks.require._defined.enjs.hideField("city");
+    window.EngagingNetworks.require._defined.enjs.hideField("region");
+    window.EngagingNetworks.require._defined.enjs.hideField("postcode");
   }
 
   // // EN field ID for the ACH "bank account agreement" checkbox. This field is marked
