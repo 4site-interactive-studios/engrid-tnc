@@ -66,6 +66,7 @@ export class EventPages {
         const eventDetails = this.parseEventDetails(eventDetailTable);
         localStorage.setItem("eventDetails." + ENGrid.getPageID(), JSON.stringify(eventDetails));
         this.showWaitlistLinkIfApplicable();
+        this.scrollToTicketsIfApplicable();
         this.showWaitlistConfirm();
         this.updateTicketRows();
         this.createEventBlock(eventDetailTable, eventDetails);
@@ -175,6 +176,17 @@ export class EventPages {
         soldOutMessage.insertAdjacentElement("afterend", waitlistClone);
       }
     });
+  }
+
+  private scrollToTicketsIfApplicable() {
+    // If url contains wl_id, scroll to the ticket section (id = ticket-selection)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("wl_id")) {
+      const ticketSection = document.getElementById("ticket-selection");
+      if (ticketSection) {
+        ticketSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }
   }
 
   private showWaitlistConfirm() {

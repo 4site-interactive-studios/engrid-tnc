@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, July 8, 2026 @ 14:51:55 ET
+ *  Date: Thursday, July 9, 2026 @ 09:19:39 ET
  *  By: nick
  *  ENGrid styles: v0.25.4
  *  ENGrid scripts: v0.25.2
@@ -30999,6 +30999,7 @@ class EventPages {
         const eventDetails = this.parseEventDetails(eventDetailTable);
         localStorage.setItem("eventDetails." + engrid_ENGrid.getPageID(), JSON.stringify(eventDetails));
         this.showWaitlistLinkIfApplicable();
+        this.scrollToTicketsIfApplicable();
         this.showWaitlistConfirm();
         this.updateTicketRows();
         this.createEventBlock(eventDetailTable, eventDetails);
@@ -31103,6 +31104,18 @@ class EventPages {
         soldOutMessage.insertAdjacentElement("afterend", waitlistClone);
       }
     });
+  }
+  scrollToTicketsIfApplicable() {
+    // If url contains wl_id, scroll to the ticket section (id = ticket-selection)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("wl_id")) {
+      const ticketSection = document.getElementById("ticket-selection");
+      if (ticketSection) {
+        ticketSection.scrollIntoView({
+          behavior: "smooth"
+        });
+      }
+    }
   }
   showWaitlistConfirm() {
     // If url params contains "chain"
