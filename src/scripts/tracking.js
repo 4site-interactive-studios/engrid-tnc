@@ -110,6 +110,14 @@ export function trackFormSubmit(App, DonationAmount) {
       return;
     }
 
+    // Tealium (utag_data) isn't loaded on every page type — notably,
+    // the QCB data-capture iframes processed by the IframeQueue
+    // don't include it. Bail out cleanly instead of throwing
+    // ReferenceError, which would abort the form submission.
+    if (typeof utag_data === "undefined") {
+      return;
+    }
+
     let utagData = {};
     utagData.form_type = pageJson.pageType;
     utagData.form_name = utag_data.page_name.slice(0, -2);
@@ -204,7 +212,12 @@ export function trackFormErrors() {
       trackEvent("form_error", {
         form_field_error_field: invalidFields.slice(0, -1),
         form_field_error_value: errors.slice(0, -1),
-        form_name: utag_data.page_name.slice(0, -2),
+        // Tealium isn't loaded on every page (e.g. QCB iframes);
+        // fall back to empty string instead of throwing.
+        form_name:
+          typeof utag_data !== "undefined"
+            ? utag_data.page_name.slice(0, -2)
+            : "",
         form_type: pageJson.pageType,
       });
     }
@@ -219,7 +232,10 @@ export function trackProcessingErrors(App) {
       form_field_error_field: "payment error",
       form_field_error_value: "payment error",
       payment_type: App.getPaymentType(),
-      form_name: utag_data.page_name.slice(0, -2),
+      form_name:
+        typeof utag_data !== "undefined"
+          ? utag_data.page_name.slice(0, -2)
+          : "",
       form_type: pageJson.pageType,
     });
   }
