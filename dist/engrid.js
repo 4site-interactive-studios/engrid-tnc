@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 27, 2026 @ 11:22:18 ET
+ *  Date: Monday, July 27, 2026 @ 11:30:59 ET
  *  By: michael
- *  ENGrid styles: v0.25.11
- *  ENGrid scripts: v0.25.11
+ *  ENGrid styles: v0.27.0
+ *  ENGrid scripts: v0.27.0
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -18675,6 +18675,7 @@ const OptionsDefaults = {
         "rightright1col",
         "none",
     ],
+    UseBodyBannerImageAsBackground: false,
 };
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/interfaces/upsell-options.js
@@ -19380,7 +19381,7 @@ class engrid_ENGrid {
         return null;
     }
     static isThankYouPage() {
-        return this.getPageNumber() === this.getPageCount();
+        return (this.getPageNumber() === this.getPageCount() && this.getPageCount() > 1);
     }
     // Return the current page ID
     static getPageID() {
@@ -20369,12 +20370,14 @@ class App extends engrid_ENGrid {
         new CustomCurrency();
         // Auto Country Select
         new AutoCountrySelect();
+        // Page Background
+        new PageBackground(this.options.UseBodyBannerImageAsBackground);
         // Add Image Attribution
         if (this.options.MediaAttribution)
             new MediaAttribution();
         // Apple Pay
         if (this.options.applePay)
-            new ApplePay();
+            ApplePay.getInstance();
         // Capitalize Fields
         if (this.options.CapitalizeFields)
             new CapitalizeFields();
@@ -20419,8 +20422,6 @@ class App extends engrid_ENGrid {
         new A11y();
         new AddNameToMessage();
         new ExpandRegionName();
-        // Page Background
-        new PageBackground();
         // Url Params to Form Fields
         new UrlToForm();
         // Required if Visible Fields
@@ -20445,10 +20446,11 @@ class App extends engrid_ENGrid {
         // Supporter Hub Features
         new SupporterHub();
         // Digital Wallets Features
-        if (engrid_ENGrid.getPageType() === "DONATION") {
+        if (engrid_ENGrid.getPageType() === "DONATION" ||
+            engrid_ENGrid.getPageType() === "EVENT") {
             new DigitalWallets();
-            new PreferredPaymentMethod();
         }
+        new PreferredPaymentMethod();
         // Mobile CTA
         new MobileCTA();
         // Live Frequency
@@ -20605,50 +20607,313 @@ const merchantCapabilities = window.merchantCapabilities;
 const merchantTotalLabel = window.merchantTotalLabel;
 class ApplePay {
     constructor() {
+        this.logger = new logger_EngridLogger("ApplePay", "#000000", "#a6f3a6", "🍎");
         this.applePay = document.querySelector('.en__field__input.en__field__input--radio[value="applepay"]');
         this._amount = DonationAmount.getInstance();
         this._fees = ProcessingFees.getInstance();
         this._form = en_form_EnForm.getInstance();
+        // Client hook: runs after the built-in pre-flight, right before the Apple
+        // Pay sheet opens. Return false to abort. The hook shows its own errors
+        // with ENGrid.setError; the donation amount field error is cleared before
+        // every attempt.
+        this.beforeSession = null;
+        // Fields the wallet supplies via requiredBillingContactFields, so they are
+        // excluded from the mandatory-field pre-flight.
+        this.walletFields = [
+            "supporter.address1",
+            "supporter.address2",
+            "supporter.city",
+            "supporter.region",
+            "supporter.postcode",
+            "supporter.country",
+            "supporter.phoneNumber",
+        ];
+        // Field containers this component flagged with ENGrid.setError, so they can
+        // be cleared on the next attempt.
+        this.errorFields = [];
+        ApplePay.instance = this;
         this.checkApplePay();
+    }
+    static getInstance() {
+        if (!ApplePay.instance) {
+            ApplePay.instance = new ApplePay();
+        }
+        return ApplePay.instance;
+    }
+    // True when the page offers Apple Pay, either as a giveBySelect radio tile
+    // or as an option of the payment type select.
+    hasApplePayOption() {
+        if (this.applePay)
+            return true;
+        const paymentTypeField = engrid_ENGrid.getField("transaction.paymenttype");
+        if (!paymentTypeField || !paymentTypeField.options)
+            return false;
+        return Array.from(paymentTypeField.options).some((option) => option.value.toLowerCase() === "applepay");
     }
     checkApplePay() {
         return __awaiter(this, void 0, void 0, function* () {
-            const pageform = document.querySelector("form.en__component--page");
-            if (!this.applePay || !window.hasOwnProperty("ApplePaySession")) {
+            if (!this.hasApplePayOption() ||
+                !window.hasOwnProperty("ApplePaySession")) {
                 const applePayContainer = document.querySelector(".en__field__item.applepay");
                 if (applePayContainer)
                     applePayContainer.remove();
-                if (engrid_ENGrid.debug)
-                    console.log("Apple Pay DISABLED");
+                engrid_ENGrid.setBodyData("apple-pay-available", "false");
+                this.logger.log("DISABLED: not supported by this browser or page");
                 return false;
             }
-            const promise = ApplePaySession.canMakePaymentsWithActiveCard(merchantIdentifier);
+            if (!merchantIdentifier) {
+                engrid_ENGrid.setBodyData("apple-pay-available", "false");
+                this.logger.log("DISABLED: window.merchantIdentifier is not defined");
+                return false;
+            }
             let applePayEnabled = false;
-            yield promise.then((canMakePayments) => {
-                applePayEnabled = canMakePayments;
-                if (canMakePayments) {
-                    let input = document.createElement("input");
-                    input.setAttribute("type", "hidden");
-                    input.setAttribute("name", "PkPaymentToken");
-                    input.setAttribute("id", "applePayToken");
-                    pageform.appendChild(input);
-                    this._form.onSubmit.subscribe(() => this.onPayClicked());
-                }
-            });
-            if (engrid_ENGrid.debug)
-                console.log("applePayEnabled", applePayEnabled);
-            let applePayWrapper = this.applePay.closest(".en__field__item");
-            if (applePayEnabled) {
-                // Set Apple Pay Class
-                applePayWrapper === null || applePayWrapper === void 0 ? void 0 : applePayWrapper.classList.add("applePayWrapper");
+            try {
+                applePayEnabled = yield ApplePaySession.canMakePaymentsWithActiveCard(merchantIdentifier);
             }
-            else {
-                // Hide Apple Pay Wrapper
-                if (applePayWrapper)
-                    applePayWrapper.style.display = "none";
+            catch (e) {
+                applePayEnabled = false;
             }
-            return applePayEnabled;
+            engrid_ENGrid.setBodyData("apple-pay-available", applePayEnabled ? "true" : "false");
+            if (!applePayEnabled) {
+                this.logger.log("DISABLED: no provisioned card");
+                return false;
+            }
+            // Hidden field that carries the wallet token to EN. Only create it if it
+            // doesn't exist yet, so we never post a duplicate PkPaymentToken.
+            if (!engrid_ENGrid.getField("PkPaymentToken")) {
+                engrid_ENGrid.createHiddenInput("PkPaymentToken").setAttribute("id", "applePayToken");
+            }
+            this.writeButtonContainer();
+            // Fallback trigger: an implicit submit (e.g. Enter key) while Apple Pay
+            // is selected and no token exists yet opens the sheet instead of
+            // submitting. After authorization the token is set and the submit
+            // passes through.
+            this._form.onSubmit.subscribe(() => this.onSubmitFallback());
+            this.logger.log("ENABLED");
+            return true;
         });
+    }
+    // Writes the native Apple Pay button container right before the submit
+    // button. CSS swaps it with the submit button while the applepay payment
+    // type is selected (data-engrid-payment-type="applepay").
+    writeButtonContainer() {
+        if (document.querySelector(".apple-pay-container"))
+            return;
+        if (!document.querySelector(".en__submit"))
+            return;
+        // The -apple-pay-button-* properties are set inline because cssnano's
+        // colormin rewrites the keyword "black" to #000 in built stylesheets,
+        // which is not a valid value for -apple-pay-button-style, so Safari
+        // drops it and falls back to white-outline.
+        engrid_ENGrid.addHtml('<div class="apple-pay-container showif-applepay-selected">' +
+            '<div class="apple-pay-button" role="button" tabindex="0" aria-label="Donate with Apple Pay" ' +
+            'style="-apple-pay-button-type: donate; -apple-pay-button-style: black;"></div>' +
+            "</div>", ".en__submit", "before");
+        const button = document.querySelector(".apple-pay-container .apple-pay-button");
+        if (!button)
+            return;
+        button.addEventListener("click", () => this.onPayClicked());
+        button.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                this.onPayClicked();
+            }
+        });
+    }
+    onSubmitFallback() {
+        const applePayToken = document.getElementById("applePayToken");
+        if (engrid_ENGrid.getPaymentType().toLowerCase() !== "applepay" ||
+            (applePayToken && applePayToken.value !== "")) {
+            return; // Not Apple Pay, or already authorized: let the submit proceed
+        }
+        if (!this._form.submit)
+            return; // Another component vetoed this submit
+        this._form.submit = false; // Veto the submit and open the sheet instead
+        this.onPayClicked();
+    }
+    onPayClicked() {
+        if (!this.preflight())
+            return;
+        this.openSession();
+    }
+    preflight() {
+        this.clearErrors();
+        // The wallet supplies billing address and phone, but nothing else. Flag
+        // empty mandatory fields before the sheet opens so a donor never
+        // authorizes a payment EN will bounce for a missing mandatory field.
+        const missing = this.missingMandatoryFields();
+        missing.forEach((field) => {
+            engrid_ENGrid.setError(field, "This field is required");
+            this.errorFields.push(field);
+        });
+        if (missing.length) {
+            this.scrollToError();
+            return false;
+        }
+        const amount = this._amount.amount;
+        if (!amount || amount <= 0) {
+            engrid_ENGrid.setError(".en__field--donationAmt", "Please select a gift amount.");
+            this.scrollToError();
+            return false;
+        }
+        // The client hook owns the donation amount field error from here on
+        engrid_ENGrid.removeError(".en__field--donationAmt");
+        if (this.beforeSession && this.beforeSession() === false) {
+            this.scrollToError();
+            return false;
+        }
+        return true;
+    }
+    // Scrolls to the first field flagged with a validation error so the donor
+    // sees what needs fixing; without this the button looks unresponsive.
+    scrollToError() {
+        const errorField = (this.errorFields[0] ||
+            document.querySelector(".en__field--validationFailed"));
+        if (errorField) {
+            errorField.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    }
+    clearErrors() {
+        this.errorFields.forEach((field) => engrid_ENGrid.removeError(field));
+        this.errorFields = [];
+        engrid_ENGrid.removeError(".en__field--donationAmt");
+    }
+    // Every visible mandatory field container that is empty and that the
+    // wallet cannot fill.
+    missingMandatoryFields() {
+        const missing = [];
+        document
+            .querySelectorAll(".en__field.en__mandatory")
+            .forEach((field) => {
+            const fieldElement = field;
+            if (!engrid_ENGrid.isVisible(fieldElement))
+                return;
+            const input = fieldElement.querySelector("input, select, textarea");
+            if (!input || !input.name)
+                return;
+            if (this.walletFields.indexOf(input.name) !== -1)
+                return;
+            if (input.type === "radio" || input.type === "checkbox") {
+                if (!fieldElement.querySelector("input:checked")) {
+                    missing.push(fieldElement);
+                }
+                return;
+            }
+            if (input.value.trim() === "") {
+                missing.push(fieldElement);
+            }
+        });
+        return missing;
+    }
+    openSession() {
+        // ProcessingFees mirrors EN's own fee cover calculation, so the sheet
+        // total matches what EN will actually charge.
+        const donationAmount = (this._amount.amount + this._fees.fee).toFixed(2);
+        const request = {
+            supportedNetworks: merchantSupportedNetworks,
+            merchantCapabilities: merchantCapabilities,
+            countryCode: merchantCountryCode,
+            currencyCode: merchantCurrencyCode,
+            requiredBillingContactFields: ["postalAddress", "phone"],
+            total: {
+                label: merchantTotalLabel || merchantDisplayName || "Donation",
+                amount: donationAmount,
+                type: "final",
+            },
+        };
+        let session;
+        try {
+            session = new ApplePaySession(3, request);
+        }
+        catch (e) {
+            const errorTarget = (document.querySelector(".apple-pay-container") || document.querySelector(".en__submit"));
+            if (errorTarget) {
+                engrid_ENGrid.setError(errorTarget, "Apple Pay error: '" + e.message + "'");
+            }
+            this._form.dispatchError();
+            return;
+        }
+        const thisClass = this;
+        session.onvalidatemerchant = function (event) {
+            thisClass
+                .performValidation(event.validationURL)
+                .then(function (merchantSession) {
+                if (engrid_ENGrid.debug)
+                    console.log("Apple Pay merchantSession", merchantSession);
+                session.completeMerchantValidation(merchantSession);
+            })
+                .catch(function () {
+                session.abort();
+            });
+        };
+        session.onpaymentauthorized = function (event) {
+            thisClass.onPaymentAuthorized(session, event);
+        };
+        session.oncancel = function () {
+            // Donor closed the sheet; return them to the form quietly.
+            thisClass.logger.log("Sheet cancelled by the donor");
+        };
+        session.begin();
+    }
+    onPaymentAuthorized(session, event) {
+        if (engrid_ENGrid.debug)
+            console.log("Apple Pay Token", event.payment.token);
+        // Pass the billing info from Apple Pay back into the EN billing fields -
+        // this won't happen automatically with Vantiv Apple Pay.
+        const billing = event.payment.billingContact || {};
+        const addressLines = billing.addressLines || [];
+        // Country goes first, dispatching change: EN swaps country-dependent
+        // fields (supporter.region is a select for some countries and a text
+        // input for others) when the country changes, so the region field must
+        // already be in its final shape when we fill it below.
+        this.setField("supporter.country", billing.countryCode, true);
+        this.setField("supporter.address1", addressLines[0]);
+        this.setField("supporter.address2", addressLines[1]);
+        this.setField("supporter.city", billing.locality);
+        if (billing.administrativeArea) {
+            this.setRegion(billing.administrativeArea);
+        }
+        this.setField("supporter.postcode", billing.postalCode);
+        this.setField("supporter.phoneNumber", billing.phone);
+        // Apple Pay gifts are one-time on this setup; make sure recurrpay isn't
+        // submitted blank when we bypass the EN submit button.
+        const recurrpay = engrid_ENGrid.getField("transaction.recurrpay");
+        if (recurrpay && !recurrpay.value)
+            recurrpay.value = "N";
+        const applePayToken = document.getElementById("applePayToken");
+        if (applePayToken) {
+            applePayToken.value = JSON.stringify(event.payment.token);
+        }
+        session.completePayment(ApplePaySession.STATUS_SUCCESS);
+        this._form.submitForm();
+    }
+    setField(name, value, dispatchEvents = false) {
+        if (value == null || value === "")
+            return;
+        if (!engrid_ENGrid.getField(name))
+            return;
+        engrid_ENGrid.setFieldValue(name, value, true, dispatchEvents);
+    }
+    // The region field is a select for countries EN has subdivisions for and a
+    // text input for the rest. On a select, the wallet value must match an
+    // option or the write is silently dropped, so match case-insensitively by
+    // option value or label (Apple returns subdivision codes for some
+    // countries and full names for others).
+    setRegion(value) {
+        const field = engrid_ENGrid.getField("supporter.region");
+        if (!field)
+            return;
+        if (field instanceof HTMLSelectElement) {
+            const option = Array.from(field.options).find((o) => o.value.toLowerCase() === value.toLowerCase() ||
+                o.text.toLowerCase() === value.toLowerCase());
+            if (!option) {
+                this.logger.log(`Region "${value}" doesn't match any region select option`);
+                return;
+            }
+            engrid_ENGrid.setFieldValue("supporter.region", option.value);
+            return;
+        }
+        engrid_ENGrid.setFieldValue("supporter.region", value);
     }
     performValidation(url) {
         return new Promise(function (resolve, reject) {
@@ -20677,75 +20942,6 @@ class ApplePay {
             xhr.open("GET", validationUrl);
             xhr.send();
         });
-    }
-    log(name, msg) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/ea-dataservice/rest/applepay/log?name=" + name + "&msg=" + msg);
-        xhr.send();
-    }
-    sendPaymentToken(token) {
-        return new Promise(function (resolve, reject) {
-            resolve(true);
-        });
-    }
-    onPayClicked() {
-        if (!this._form.submit)
-            return;
-        const enFieldPaymentType = document.querySelector("#en__field_transaction_paymenttype");
-        const applePayToken = document.getElementById("applePayToken");
-        const formClass = this._form;
-        // Only work if Payment Type is Apple Pay
-        if (enFieldPaymentType.value == "applepay" && applePayToken.value == "") {
-            try {
-                let donationAmount = this._amount.amount + this._fees.fee;
-                var request = {
-                    supportedNetworks: merchantSupportedNetworks,
-                    merchantCapabilities: merchantCapabilities,
-                    countryCode: merchantCountryCode,
-                    currencyCode: merchantCurrencyCode,
-                    total: {
-                        label: merchantTotalLabel,
-                        amount: donationAmount,
-                    },
-                };
-                var session = new ApplePaySession(1, request);
-                var thisClass = this;
-                session.onvalidatemerchant = function (event) {
-                    thisClass
-                        .performValidation(event.validationURL)
-                        .then(function (merchantSession) {
-                        if (engrid_ENGrid.debug)
-                            console.log("Apple Pay merchantSession", merchantSession);
-                        session.completeMerchantValidation(merchantSession);
-                    });
-                };
-                session.onpaymentauthorized = function (event) {
-                    thisClass
-                        .sendPaymentToken(event.payment.token)
-                        .then(function (success) {
-                        if (engrid_ENGrid.debug)
-                            console.log("Apple Pay Token", event.payment.token);
-                        document.getElementById("applePayToken").value = JSON.stringify(event.payment.token);
-                        formClass.submitForm();
-                    });
-                };
-                session.oncancel = function (event) {
-                    if (engrid_ENGrid.debug)
-                        console.log("Cancelled", event);
-                    alert("You cancelled. Sorry it didn't work out.");
-                    formClass.dispatchError();
-                };
-                session.begin();
-                this._form.submit = false;
-                return false;
-            }
-            catch (e) {
-                alert("Developer mistake: '" + e.message + "'");
-                formClass.dispatchError();
-            }
-        }
-        this._form.submit = true;
-        return true;
     }
 }
 
@@ -24784,12 +24980,17 @@ class setRecurrFreq {
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/page-background.js
 
 class PageBackground {
-    constructor() {
+    constructor(useBodyBannerImage = false) {
         // @TODO: Change page-backgroundImage to page-background
         this.pageBackground = document.querySelector(".page-backgroundImage");
+        this.bodyBanner = document.querySelector(".body-banner");
+        this.bodyBannerImage = null;
         this.mutationObserver = null;
         this.logger = new logger_EngridLogger("PageBackground", "lightblue", "darkblue", "🖼️");
-        if (!this.pageBackground) {
+        if (useBodyBannerImage) {
+            this.bodyBannerImage = this.findBodyBannerImage();
+        }
+        if (!this.pageBackground && !this.bodyBannerImage) {
             this.logger.log("A background image set in the page was not found, any default image set in the theme on --engrid__page-backgroundImage_url will be used");
             return;
         }
@@ -24798,28 +24999,66 @@ class PageBackground {
         this.processAttributionPositioning();
         this.setupMutationObserver();
     }
+    findBodyBannerImage() {
+        var _a;
+        if (!this.bodyBanner) {
+            return null;
+        }
+        return ((_a = this.bodyBanner.querySelector("img.preferred-image")) !== null && _a !== void 0 ? _a : this.bodyBanner.querySelector("img"));
+    }
     /**
      * Initialize background image by finding and setting CSS custom property
      */
     initializeBackgroundImage() {
-        if (!this.pageBackground)
-            return;
-        const pageBackgroundImg = this.pageBackground.querySelector("img");
-        if (!pageBackgroundImg) {
-            this.logger.log("A background image set in the page was not found, any default image set in the theme on --engrid__page-backgroundImage_url will be used");
+        const backgroundImg = this.getBackgroundImage();
+        if (!backgroundImg) {
+            this.logger.log("No image found in page background and no body banner image found (or pageBackground is already occupied), any default image set in the theme on --engrid__page-backgroundImage_url will be used");
             return;
         }
-        const dataSrc = pageBackgroundImg.getAttribute("data-src");
-        const src = pageBackgroundImg.src;
+        const imageSource = this.getImageSource(backgroundImg);
+        if (!imageSource) {
+            this.logger.log("A background image set in the page was found but without a data-src or src value, no action taken", backgroundImg);
+            return;
+        }
+        this.setBackgroundImageUrl(imageSource.url, imageSource.sourceType);
+    }
+    getBackgroundImage() {
+        if (!this.pageBackground) {
+            return null;
+        }
+        const existingImage = this.pageBackground.querySelector("img");
+        if (existingImage) {
+            return existingImage;
+        }
+        if (this.bodyBannerImage && this.pageBackground.children.length === 0) {
+            return this.useBodyBannerAsBackground();
+        }
+        return null;
+    }
+    useBodyBannerAsBackground() {
+        var _a;
+        if (!this.pageBackground || !this.bodyBanner) {
+            return null;
+        }
+        this.logger.log("No image found in page background, using body banner image as background image instead");
+        const clonedBodyBanner = this.bodyBanner.cloneNode(true);
+        while (clonedBodyBanner.firstChild) {
+            this.pageBackground.appendChild(clonedBodyBanner.firstChild);
+        }
+        document.body.removeAttribute("data-engrid-no-page-backgroundImage");
+        engrid_ENGrid.setBodyData("use-body-banner-background", "");
+        return ((_a = this.pageBackground.querySelector("img.preferred-image")) !== null && _a !== void 0 ? _a : this.pageBackground.querySelector("img"));
+    }
+    getImageSource(backgroundImg) {
+        const dataSrc = backgroundImg.getAttribute("data-src");
         if (dataSrc) {
-            this.setBackgroundImageUrl(dataSrc, "data-src");
+            return { sourceType: "data-src", url: dataSrc };
         }
-        else if (src) {
-            this.setBackgroundImageUrl(src, "src");
+        const src = backgroundImg.src;
+        if (src) {
+            return { sourceType: "src", url: src };
         }
-        else {
-            this.logger.log("A background image set in the page was found but without a data-src or src value, no action taken", pageBackgroundImg);
-        }
+        return null;
     }
     /**
      * Set the background image URL as a CSS custom property
@@ -25671,14 +25910,29 @@ class ProgressBar {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/remember-me.js
+var remember_me_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 
 
 const remember_me_tippy = (__webpack_require__(9244)/* ["default"] */ .Ay);
+// localStorage key used to cache the per-device AES-GCM encryption key.
+// A random secret generated once per device and held in localStorage.
+const RM_ENCRYPTION_KEY_STORAGE_NAME = "engrid-remember-me-key";
 class RememberMe {
     constructor(options) {
         this._form = en_form_EnForm.getInstance();
         this._events = RememberMeEvents.getInstance();
+        this._frequency = DonationFrequency.getInstance();
         this.iframe = null;
+        this.encryptData = options.encryptData ? options.encryptData : false;
+        this.hide = options.hide ? options.hide : false;
         this.remoteUrl = options.remoteUrl ? options.remoteUrl : null;
         this.cookieName = options.cookieName
             ? options.cookieName
@@ -25698,6 +25952,10 @@ class RememberMe {
             options.fieldDonationRecurrPayRadioName
                 ? options.fieldDonationRecurrPayRadioName
                 : "transaction.recurrpay";
+        this.fieldDonationRecurrFreqRadioName =
+            options.fieldDonationRecurrFreqRadioName
+                ? options.fieldDonationRecurrFreqRadioName
+                : "transaction.recurrfreq";
         this.fieldDonationAmountOtherCheckboxID =
             options.fieldDonationAmountOtherCheckboxID
                 ? options.fieldDonationAmountOtherCheckboxID
@@ -25716,11 +25974,18 @@ class RememberMe {
             options.fieldClearSelectorTargetLocation
                 ? options.fieldClearSelectorTargetLocation
                 : "before";
+        this.fieldClearLabel = options.fieldClearLabel
+            ? options.fieldClearLabel
+            : "(clear autofill)";
         this.fieldData = {};
         if (this.useRemote()) {
             this.createIframe(() => {
                 if (this.iframe && this.iframe.contentWindow) {
-                    this.iframe.contentWindow.postMessage(JSON.stringify({ key: this.cookieName, operation: "read" }), "*");
+                    this.iframe.contentWindow.postMessage(JSON.stringify({
+                        key: this.cookieName,
+                        operation: "read",
+                        encryptData: this.encryptData,
+                    }), "*");
                     this._form.onSubmit.subscribe(() => {
                         if (this.rememberMeOptIn) {
                             this.readFields();
@@ -25739,7 +26004,9 @@ class RememberMe {
                     data.key &&
                     data.value !== undefined &&
                     data.key === this.cookieName) {
-                    this.updateFieldData(data.value);
+                    if (data.value !== null) {
+                        this.updateFieldData(data.value);
+                    }
                     this.writeFields();
                     let hasFieldData = Object.keys(this.fieldData).length > 0;
                     if (!hasFieldData) {
@@ -25747,8 +26014,35 @@ class RememberMe {
                     }
                     else {
                         this.insertClearRememberMeLink();
+                        this.reapplyDonationAmtAfterSwap();
                     }
                 }
+            });
+        }
+        else if (this.encryptData) {
+            // Same flow as the unencrypted branch below, but the cookie payload is
+            // AES-GCM encrypted/decrypted (browser-native Web Crypto), so reading
+            // the cookie is asynchronous. A failed decrypt (foreign device or
+            // cleared localStorage) leaves fieldData empty and silently falls back
+            // to the standard, no-autofill experience.
+            this.readCookieEncrypted().then(() => {
+                let hasFieldData = Object.keys(this.fieldData).length > 0;
+                if (!hasFieldData) {
+                    this.insertRememberMeOptin();
+                }
+                else {
+                    this.insertClearRememberMeLink();
+                }
+                this.writeFields();
+                if (hasFieldData) {
+                    this.reapplyDonationAmtAfterSwap();
+                }
+                this._form.onSubmit.subscribe(() => {
+                    if (this.rememberMeOptIn) {
+                        this.readFields();
+                        this.saveCookieEncrypted();
+                    }
+                });
             });
         }
         else {
@@ -25761,6 +26055,9 @@ class RememberMe {
                 this.insertClearRememberMeLink();
             }
             this.writeFields();
+            if (hasFieldData) {
+                this.reapplyDonationAmtAfterSwap();
+            }
             this._form.onSubmit.subscribe(() => {
                 if (this.rememberMeOptIn) {
                     this.readFields();
@@ -25770,24 +26067,31 @@ class RememberMe {
         }
     }
     updateFieldData(jsonData) {
-        if (jsonData) {
-            let data = JSON.parse(jsonData);
-            for (let i = 0; i < this.fieldNames.length; i++) {
-                if (data[this.fieldNames[i]] !== undefined) {
-                    this.fieldData[this.fieldNames[i]] = decodeURIComponent(data[this.fieldNames[i]]);
-                }
+        if (!jsonData)
+            return;
+        let data;
+        try {
+            data = JSON.parse(jsonData);
+        }
+        catch (e) {
+            // Payload is not valid JSON (e.g. corrupted or unexpected ciphertext).
+            // Fall back silently to the no-autofill experience.
+            return;
+        }
+        for (let i = 0; i < this.fieldNames.length; i++) {
+            if (data[this.fieldNames[i]] !== undefined) {
+                this.fieldData[this.fieldNames[i]] = decodeURIComponent(data[this.fieldNames[i]]);
             }
         }
     }
     insertClearRememberMeLink() {
         let clearRememberMeField = document.getElementById("clear-autofill-data");
         if (!clearRememberMeField) {
-            const clearAutofillLabel = "clear autofill";
             clearRememberMeField = document.createElement("a");
             clearRememberMeField.setAttribute("id", "clear-autofill-data");
             clearRememberMeField.classList.add("label-tooltip");
             clearRememberMeField.setAttribute("style", "cursor: pointer;");
-            clearRememberMeField.innerHTML = `(${clearAutofillLabel})`;
+            clearRememberMeField.innerHTML = this.fieldClearLabel;
             const targetField = this.getElementByFirstSelector(this.fieldClearSelectorTarget);
             if (targetField) {
                 if (this.fieldClearSelectorTargetLocation === "after") {
@@ -25803,6 +26107,9 @@ class RememberMe {
             this.clearFields(["supporter.country" /*, 'supporter.emailAddress'*/]);
             if (this.useRemote()) {
                 this.clearCookieOnRemote();
+            }
+            else if (this.encryptData) {
+                this.clearCookieEncrypted();
             }
             else {
                 this.clearCookie();
@@ -25875,6 +26182,9 @@ class RememberMe {
                         }
                     });
                 }
+                if (this.hide) {
+                    rememberMeOptInField.classList.add("hide");
+                }
                 remember_me_tippy("#rememberme-learn-more-toggle", { content: rememberMeInfo });
             }
         }
@@ -25924,6 +26234,7 @@ class RememberMe {
                 value: this.fieldData,
                 operation: "write",
                 expires: this.cookieExpirationDays,
+                encryptData: this.encryptData,
             }), "*");
         }
     }
@@ -25935,6 +26246,142 @@ class RememberMe {
             expires: this.cookieExpirationDays,
         });
     }
+    /**
+     * Reads and decrypts the local (non-remote) Remember Me cookie using
+     * browser-native AES-GCM (Web Crypto), with the key held in localStorage
+     * on this device. If the key is absent (different device or cleared
+     * storage) or decryption otherwise fails, the field data is left empty
+     * and the component falls back to the normal, no-autofill experience.
+     */
+    readCookieEncrypted() {
+        return remember_me_awaiter(this, void 0, void 0, function* () {
+            const raw = get(this.cookieName);
+            if (!raw) {
+                return;
+            }
+            const decrypted = yield this.decryptPayload(raw);
+            if (decrypted) {
+                this.updateFieldData(decrypted);
+            }
+        });
+    }
+    /**
+     * Encrypts the current fieldData with AES-GCM (Web Crypto) and stores the
+     * base64-encoded result in the local cookie. If encryption isn't possible
+     * (e.g. Web Crypto unavailable), nothing is written.
+     */
+    saveCookieEncrypted() {
+        return remember_me_awaiter(this, void 0, void 0, function* () {
+            const encrypted = yield this.encryptPayload(JSON.stringify(this.fieldData));
+            if (encrypted) {
+                set(this.cookieName, encrypted, {
+                    expires: this.cookieExpirationDays,
+                });
+            }
+        });
+    }
+    clearCookieEncrypted() {
+        this.fieldData = {};
+        this.saveCookieEncrypted();
+    }
+    /**
+     * Retrieves the per-device AES-GCM encryption key. A random secret
+     * generated once per device and held in localStorage — never written
+     * to the cookie, so it never travels with the transported value.
+     */
+    getEncryptionKey() {
+        return remember_me_awaiter(this, void 0, void 0, function* () {
+            if (!window.crypto || !window.crypto.subtle) {
+                return null;
+            }
+            const storedKey = window.localStorage.getItem(RM_ENCRYPTION_KEY_STORAGE_NAME);
+            if (storedKey) {
+                try {
+                    return yield window.crypto.subtle.importKey("raw", this.base64ToArrayBuffer(storedKey), { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+                }
+                catch (e) {
+                    return null;
+                }
+            }
+            try {
+                const key = yield window.crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, true, ["encrypt", "decrypt"]);
+                const exported = yield window.crypto.subtle.exportKey("raw", key);
+                window.localStorage.setItem(RM_ENCRYPTION_KEY_STORAGE_NAME, this.arrayBufferToBase64(exported));
+                return key;
+            }
+            catch (e) {
+                return null;
+            }
+        });
+    }
+    /**
+     * Encrypts a plaintext string with AES-GCM and returns the base64-encoded
+     * IV + ciphertext, ready for storage. Returns null if a key isn't
+     * available (e.g. Web Crypto unsupported).
+     */
+    encryptPayload(plaintext) {
+        return remember_me_awaiter(this, void 0, void 0, function* () {
+            const key = yield this.getEncryptionKey();
+            if (!key) {
+                return null;
+            }
+            const iv = window.crypto.getRandomValues(new Uint8Array(12));
+            const ciphertext = yield window.crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(plaintext));
+            const combined = new Uint8Array(iv.length + ciphertext.byteLength);
+            combined.set(iv);
+            combined.set(new Uint8Array(ciphertext), iv.length);
+            return this.arrayBufferToBase64(combined);
+        });
+    }
+    /**
+     * Decrypts a base64-encoded IV + ciphertext payload previously produced by
+     * encryptPayload. Returns null (rather than throwing) if the key is
+     * missing or decryption otherwise fails, so callers can gracefully fall
+     * back to the standard, no-autofill experience.
+     */
+    decryptPayload(encryptedBase64) {
+        return remember_me_awaiter(this, void 0, void 0, function* () {
+            const key = yield this.getEncryptionKey();
+            if (!key) {
+                return null;
+            }
+            let combined;
+            try {
+                combined = new Uint8Array(this.base64ToArrayBuffer(encryptedBase64));
+            }
+            catch (e) {
+                return null;
+            }
+            if (combined.length < 13) {
+                return null;
+            }
+            const iv = combined.slice(0, 12);
+            const ciphertext = combined.slice(12);
+            try {
+                const decrypted = yield window.crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, ciphertext);
+                return new TextDecoder().decode(decrypted);
+            }
+            catch (e) {
+                return null;
+            }
+        });
+    }
+    arrayBufferToBase64(buffer) {
+        let binary = "";
+        const bytes = buffer instanceof Uint8Array ? buffer : new Uint8Array(buffer);
+        for (let i = 0; i < bytes.byteLength; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    }
+    base64ToArrayBuffer(base64) {
+        const binary = window.atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) {
+            bytes[i] = binary.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
     readFields() {
         for (let i = 0; i < this.fieldNames.length; i++) {
             let fieldSelector = "[name='" + this.fieldNames[i] + "']";
@@ -25944,6 +26391,17 @@ class RememberMe {
                     let type = field.getAttribute("type");
                     if (type === "radio" || type === "checkbox") {
                         field = document.querySelector(fieldSelector + ":checked");
+                    }
+                    // When the donation amount radio is set to "Other", save the actual
+                    // custom value from the .other text input instead of "Other".
+                    if (this.fieldNames[i] === this.fieldDonationAmountRadioName &&
+                        field &&
+                        field.value.toLowerCase() === "other") {
+                        const otherField = document.querySelector("input[name='" + this.fieldDonationAmountOtherName + "']");
+                        if (otherField && otherField.value) {
+                            this.fieldData[this.fieldNames[i]] = encodeURIComponent(otherField.value);
+                            continue;
+                        }
                     }
                     this.fieldData[this.fieldNames[i]] = encodeURIComponent(field.value);
                 }
@@ -26028,17 +26486,36 @@ class RememberMe {
                             field.click();
                         }
                     }
+                    else if (this.fieldNames[i] === this.fieldDonationRecurrFreqRadioName) {
+                        // recurrfreq is a radio group — find the specific radio with the saved value and click it
+                        const savedValue = this.fieldData[this.fieldNames[i]];
+                        if (savedValue) {
+                            const freqRadio = document.querySelector(fieldSelector + "[value='" + CSS.escape(savedValue) + "']");
+                            if (freqRadio) {
+                                freqRadio.click();
+                            }
+                        }
+                    }
                     else if (this.fieldDonationAmountRadioName === this.fieldNames[i]) {
-                        field = document.querySelector(fieldSelector +
-                            "[value='" +
-                            this.fieldData[this.fieldNames[i]] +
-                            "']");
+                        const savedAmt = this.fieldData[this.fieldNames[i]];
+                        const escapedAmt = CSS.escape(savedAmt);
+                        field = document.querySelector(fieldSelector + "[value='" + escapedAmt + "']");
                         if (field) {
+                            // Saved value matches a predefined radio option — just click it
                             field.click();
                         }
                         else {
-                            field = document.querySelector("input[name='" + this.fieldDonationAmountOtherName + "']");
-                            this.setFieldValue(field, this.fieldData[this.fieldNames[i]], true);
+                            // No matching radio: the value is a custom amount.
+                            // Click the "Other" radio first so the text input becomes active,
+                            // then fill in the numeric value.
+                            const otherRadio = document.querySelector(fieldSelector + "[value='Other'], " +
+                                fieldSelector + "[value='other'], " +
+                                fieldSelector + "[value='OTHER']");
+                            if (otherRadio) {
+                                otherRadio.click();
+                            }
+                            const otherField = document.querySelector("input[name='" + this.fieldDonationAmountOtherName + "']");
+                            this.setFieldValue(otherField, savedAmt, true);
                         }
                     }
                     else {
@@ -26050,6 +26527,74 @@ class RememberMe {
                 }
             }
         }
+    }
+    /**
+     * SwapAmounts replaces the donationAmt radio DOM nodes ~1 second after page
+     * load (triggered by DonationFrequency.load() setTimeout). When that happens
+     * the selection the RememberMe just wrote gets wiped out.
+     *
+     * This method subscribes to the first onFrequencyChange event and, after a
+     * short delay to let SwapAmounts finish its DOM update, re-applies only the
+     * donation amount. It unsubscribes immediately so it only fires once.
+     *
+     * To avoid overwriting a manual donor interaction, the handler checks
+     * whether the current amount selection is empty/wiped (as SwapAmounts does)
+     * OR still matches what writeFields originally set. If the donor already
+     * picked a different amount, we skip re-application.
+     */
+    reapplyDonationAmtAfterSwap() {
+        const savedAmt = this.fieldData[this.fieldDonationAmountRadioName];
+        if (!savedAmt)
+            return;
+        // Capture the amount that writeFields just set so we can detect manual changes
+        const amountAtRegistration = this.getCurrentSelectedAmount();
+        const handler = () => {
+            // SwapAmounts calls _amount.load() after swapList — give it a tick to settle
+            window.setTimeout(() => {
+                const currentAmt = this.getCurrentSelectedAmount();
+                // Only re-apply if the selection is now empty (DOM was swapped out)
+                // or still matches what we originally wrote. If the donor manually
+                // selected a different amount, respect their choice.
+                const selectionWiped = currentAmt === null || currentAmt === "";
+                const selectionUnchanged = currentAmt === amountAtRegistration;
+                if (!selectionWiped && !selectionUnchanged) {
+                    return;
+                }
+                const fieldSelector = "[name='" + this.fieldDonationAmountRadioName + "']";
+                const escapedAmt = CSS.escape(savedAmt);
+                let radio = document.querySelector(fieldSelector + "[value='" + escapedAmt + "']");
+                if (radio) {
+                    radio.click();
+                }
+                else {
+                    // Custom amount: click "Other" radio then fill the text input
+                    const otherRadio = document.querySelector(fieldSelector + "[value='Other'], " +
+                        fieldSelector + "[value='other'], " +
+                        fieldSelector + "[value='OTHER']");
+                    if (otherRadio)
+                        otherRadio.click();
+                    const otherField = document.querySelector("input[name='" + this.fieldDonationAmountOtherName + "']");
+                    this.setFieldValue(otherField, savedAmt, true);
+                }
+            }, 200);
+        };
+        // Subscribe once: fires on the first frequency change then auto-unsubscribes
+        this._frequency.onFrequencyChange.one(handler);
+    }
+    /**
+     * Returns the currently selected donation amount value, or null if nothing
+     * is selected. Checks both predefined radio buttons and the "Other" text input.
+     */
+    getCurrentSelectedAmount() {
+        const fieldSelector = "[name='" + this.fieldDonationAmountRadioName + "']";
+        const checkedRadio = document.querySelector(fieldSelector + ":checked");
+        if (!checkedRadio)
+            return null;
+        if (checkedRadio.value.toLowerCase() === "other") {
+            const otherField = document.querySelector("input[name='" + this.fieldDonationAmountOtherName + "']");
+            return otherField ? otherField.value : null;
+        }
+        return checkedRadio.value;
     }
     isJson(str) {
         try {
@@ -34053,7 +34598,7 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.25.11";
+const AppVersion = "0.27.0";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
@@ -43926,7 +44471,7 @@ class progress_bar_ProgressBar {
   }
 }
 ;// CONCATENATED MODULE: ../engrid/packages/scripts/dist/remember-me.js
-var remember_me_awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+var dist_remember_me_awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
       resolve(value);
@@ -43958,7 +44503,7 @@ var remember_me_awaiter = undefined && undefined.__awaiter || function (thisArg,
 const dist_remember_me_tippy = (__webpack_require__(716)/* ["default"] */ .Ay);
 // localStorage key used to cache the per-device AES-GCM encryption key.
 // A random secret generated once per device and held in localStorage.
-const RM_ENCRYPTION_KEY_STORAGE_NAME = "engrid-remember-me-key";
+const remember_me_RM_ENCRYPTION_KEY_STORAGE_NAME = "engrid-remember-me-key";
 class remember_me_RememberMe {
   constructor(options) {
     this._form = events_en_form_EnForm.getInstance();
@@ -44246,7 +44791,7 @@ class remember_me_RememberMe {
    * and the component falls back to the normal, no-autofill experience.
    */
   readCookieEncrypted() {
-    return remember_me_awaiter(this, void 0, void 0, function* () {
+    return dist_remember_me_awaiter(this, void 0, void 0, function* () {
       const raw = cookie_get(this.cookieName);
       if (!raw) {
         return;
@@ -44263,7 +44808,7 @@ class remember_me_RememberMe {
    * (e.g. Web Crypto unavailable), nothing is written.
    */
   saveCookieEncrypted() {
-    return remember_me_awaiter(this, void 0, void 0, function* () {
+    return dist_remember_me_awaiter(this, void 0, void 0, function* () {
       const encrypted = yield this.encryptPayload(JSON.stringify(this.fieldData));
       if (encrypted) {
         cookie_set(this.cookieName, encrypted, {
@@ -44282,11 +44827,11 @@ class remember_me_RememberMe {
    * to the cookie, so it never travels with the transported value.
    */
   getEncryptionKey() {
-    return remember_me_awaiter(this, void 0, void 0, function* () {
+    return dist_remember_me_awaiter(this, void 0, void 0, function* () {
       if (!window.crypto || !window.crypto.subtle) {
         return null;
       }
-      const storedKey = window.localStorage.getItem(RM_ENCRYPTION_KEY_STORAGE_NAME);
+      const storedKey = window.localStorage.getItem(remember_me_RM_ENCRYPTION_KEY_STORAGE_NAME);
       if (storedKey) {
         try {
           return yield window.crypto.subtle.importKey("raw", this.base64ToArrayBuffer(storedKey), {
@@ -44303,7 +44848,7 @@ class remember_me_RememberMe {
           length: 256
         }, true, ["encrypt", "decrypt"]);
         const exported = yield window.crypto.subtle.exportKey("raw", key);
-        window.localStorage.setItem(RM_ENCRYPTION_KEY_STORAGE_NAME, this.arrayBufferToBase64(exported));
+        window.localStorage.setItem(remember_me_RM_ENCRYPTION_KEY_STORAGE_NAME, this.arrayBufferToBase64(exported));
         return key;
       } catch (e) {
         return null;
@@ -44316,7 +44861,7 @@ class remember_me_RememberMe {
    * available (e.g. Web Crypto unsupported).
    */
   encryptPayload(plaintext) {
-    return remember_me_awaiter(this, void 0, void 0, function* () {
+    return dist_remember_me_awaiter(this, void 0, void 0, function* () {
       const key = yield this.getEncryptionKey();
       if (!key) {
         return null;
@@ -44339,7 +44884,7 @@ class remember_me_RememberMe {
    * back to the standard, no-autofill experience.
    */
   decryptPayload(encryptedBase64) {
-    return remember_me_awaiter(this, void 0, void 0, function* () {
+    return dist_remember_me_awaiter(this, void 0, void 0, function* () {
       const key = yield this.getEncryptionKey();
       if (!key) {
         return null;
