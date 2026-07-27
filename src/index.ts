@@ -35,6 +35,9 @@ import { GroupQuiz } from "./scripts/group-quiz";
 import { ENGrid } from "@4site/engrid-scripts";
 import { Workday } from "./scripts/workday/workday";
 import MultistepForm from "./scripts/multistep-form";
+import { EventPages } from "./scripts/event-pages";
+import { SandboxWarning } from "./scripts/sandbox-warning";
+import { GenerateEmail } from "./scripts/generate-email";
 
 declare global {
   interface Window {
@@ -165,9 +168,12 @@ const options: Options = {
     trackUserInteractions();
     new WidgetProgressBar();
     new AddDAFBanner();
+    new EventPages();
     new BankAccountAgreementField();
     new Workday();
     new MultistepForm();
+    new SandboxWarning();
+    new GenerateEmail();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");

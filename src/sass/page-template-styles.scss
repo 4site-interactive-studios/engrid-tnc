@@ -537,6 +537,20 @@
     }
   }
 
+  .btn-block {
+    display: block;
+    width: 100%;
+  }
+  
+  .btn-dark {
+    --button_background-color: #1a1a1a;
+    --button_color: #ffffff;
+    --button_background-color_hover: #3c3c3c;
+    --button_color_hover: #ffffff;
+    --button_background-color_disabled: #1a1a1a;
+    --button_background-color_checked: #313131;
+  }
+
   .daf-banner {
     background-color: #f6f5f3;
     padding: 0.5em 1.5rem;
@@ -3999,6 +4013,34 @@
     }
   }
 
+    // Sandbox warning banner
+  .sandbox-warning {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #ffcc00dd;
+    color: #000;
+    text-align: center;
+    padding: 10px 0;
+    z-index: 9999;
+
+    &__dismiss {
+      margin-left: 16px;
+      cursor: pointer;
+      padding: 2px 10px;
+      border: none;
+      color: black;
+      border-radius: 3px;
+      background-color: transparent;
+      font-weight: bold;
+      margin: 0;
+    }
+  }
+
   // SUBTHEME: Multistep
   &[data-engrid-subtheme="multistep"] {
     @import "./multistep";
@@ -4015,4 +4057,5 @@
   @import "./supporter-hub.scss";
   @import "gdcp.scss";
   @import "quiz.scss";
+  @import "event.scss";
 }
