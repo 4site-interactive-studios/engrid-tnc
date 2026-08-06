@@ -128,6 +128,13 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     "after"
   );
 
+  // If there is a annual-renew-copy and a annual-renew-selector, move the copy afterbegin of the selector
+  const annualRenewCopy = document.querySelector(".annual-renew-copy");
+  const annualRenewSelector = document.querySelector(".annual-renew-selector");
+  if (annualRenewCopy && annualRenewSelector) {
+    annualRenewSelector.insertAdjacentElement("afterbegin", annualRenewCopy);
+  }
+
   /**
    * Add a Tippy tooltip to a field
    * @param {HTMLElement} labelElement
