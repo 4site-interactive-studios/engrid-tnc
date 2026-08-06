@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 27, 2026 @ 11:33:30 ET
+ *  Date: Thursday, August 6, 2026 @ 11:39:49 ET
  *  By: michael
  *  ENGrid styles: v0.27.0
- *  ENGrid scripts: v0.27.0
+ *  ENGrid scripts: v0.27.1
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -24052,7 +24052,7 @@ class ShowHideRadioCheckboxes {
                 state.push({
                     page: engrid_ENGrid.getPageID(),
                     class: this.classes,
-                    value: element.value,
+                    value: element.value.replace(/\W/g, ""),
                 });
                 this.logger.log("storing radio state", state[state.length - 1]);
             }
@@ -24067,7 +24067,7 @@ class ShowHideRadioCheckboxes {
                 state.push({
                     page: engrid_ENGrid.getPageID(),
                     class: this.classes,
-                    value: (_b = (_a = [...this.elements].find((el) => el.checked)) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : "N", // First checked value or "N" if none
+                    value: (_b = (_a = [...this.elements].find((el) => el.checked)) === null || _a === void 0 ? void 0 : _a.value.replace(/\W/g, "")) !== null && _b !== void 0 ? _b : "N", // First checked value or "N" if none
                 });
                 this.logger.log("storing checkbox state", state[state.length - 1]);
             }
@@ -33291,13 +33291,16 @@ class ThankYouPageConditionalContent {
             state.forEach((item) => {
                 this.logger.log("Processing TY page conditional content item:", item);
                 if (engrid_ENGrid.getPageID() === item.page) {
+                    const inputValue = item.value.replace(/\W/g, "");
+                    const classPrefix = CSS.escape(item.class);
+                    const selectedClass = CSS.escape(`${item.class}${inputValue}`);
                     document
-                        .querySelectorAll(`[class*="${item.class}"]`)
+                        .querySelectorAll(`[class*="${classPrefix}"]`)
                         .forEach((el) => {
                         el.classList.add("hide");
                     });
                     document
-                        .querySelectorAll(`.${item.class}${item.value}`)
+                        .querySelectorAll(`.${selectedClass}`)
                         .forEach((el) => {
                         el.classList.remove("hide");
                     });
@@ -34598,7 +34601,7 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.27.0";
+const AppVersion = "0.27.1";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
@@ -42274,7 +42277,7 @@ class show_hide_radio_checkboxes_ShowHideRadioCheckboxes {
         state.push({
           page: dist_engrid_ENGrid.getPageID(),
           class: this.classes,
-          value: element.value
+          value: element.value.replace(/\W/g, "")
         });
         this.logger.log("storing radio state", state[state.length - 1]);
       }
@@ -42289,7 +42292,7 @@ class show_hide_radio_checkboxes_ShowHideRadioCheckboxes {
         state.push({
           page: dist_engrid_ENGrid.getPageID(),
           class: this.classes,
-          value: (_b = (_a = [...this.elements].find(el => el.checked)) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : "N" // First checked value or "N" if none
+          value: (_b = (_a = [...this.elements].find(el => el.checked)) === null || _a === void 0 ? void 0 : _a.value.replace(/\W/g, "")) !== null && _b !== void 0 ? _b : "N" // First checked value or "N" if none
         });
         this.logger.log("storing checkbox state", state[state.length - 1]);
       }
@@ -51128,10 +51131,13 @@ class thank_you_page_conditional_content_ThankYouPageConditionalContent {
       state.forEach(item => {
         this.logger.log("Processing TY page conditional content item:", item);
         if (dist_engrid_ENGrid.getPageID() === item.page) {
-          document.querySelectorAll(`[class*="${item.class}"]`).forEach(el => {
+          const inputValue = item.value.replace(/\W/g, "");
+          const classPrefix = CSS.escape(item.class);
+          const selectedClass = CSS.escape(`${item.class}${inputValue}`);
+          document.querySelectorAll(`[class*="${classPrefix}"]`).forEach(el => {
             el.classList.add("hide");
           });
-          document.querySelectorAll(`.${item.class}${item.value}`).forEach(el => {
+          document.querySelectorAll(`.${selectedClass}`).forEach(el => {
             el.classList.remove("hide");
           });
         }
@@ -52403,7 +52409,7 @@ class preferred_payment_method_PreferredPaymentMethod {
   }
 }
 ;// CONCATENATED MODULE: ../engrid/packages/scripts/dist/version.js
-const version_AppVersion = "0.27.0";
+const version_AppVersion = "0.27.1";
 ;// CONCATENATED MODULE: ../engrid/packages/scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
 
