@@ -1979,6 +1979,124 @@
       }
     }
 
+    .annual-upsell-switch.en__field--auto-renew {
+      $track-width: 66px;
+      $track-height: 34px;
+      $knob-size: 26px;
+      $knob-inset: 5px;
+      $slot-height: 64px;
+
+      --annual-upsell-switch_color: #707070; // Track and knob
+      --annual-upsell-switch_copy-color: #707070;
+      --annual-upsell-switch_background-color: #f8f8f8;
+      --annual-upsell-switch_border-color: #707070;
+      --checkbox_text-transform: none;
+      margin: 0;
+      padding: 16px;
+      background-color: var(--annual-upsell-switch_background-color);
+      border-bottom: 1px solid var(--annual-upsell-switch_border-color);
+      transition: background-color 200ms ease, border-bottom-color 200ms ease;
+
+      // Checked: the banner, its copy and the switch all go green
+      &:has(input:checked) {
+        --annual-upsell-switch_color: #00703c;
+        --annual-upsell-switch_copy-color: #0f4a28;
+        --annual-upsell-switch_background-color: #e5f2ea;
+        --annual-upsell-switch_border-color: var(--color-green);
+      }
+
+      .en__field__item {
+        width: 98%;
+        position: relative;
+        padding: 0;
+
+        > label.en__field__label--item {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 4px;
+          padding: 0 0 0 ($track-width + 17px);
+          border: none;
+          min-height: $slot-height;
+
+          &::before {
+            content: "";
+            box-sizing: border-box;
+            position: absolute;
+            left: 0;
+            top: calc(($slot-height - $track-height) / 2);
+            width: $track-width;
+            height: $track-height;
+            margin: 0;
+            padding: 0;
+            border: 2px solid var(--annual-upsell-switch_color);
+            border-radius: $track-height;
+            box-shadow: none;
+            background-color: #ffffff;
+            transition: border-color 200ms ease;
+          }
+
+          &::after {
+            content: "";
+            box-sizing: border-box;
+            position: absolute;
+            left: $knob-inset;
+            top: calc(($slot-height - $knob-size) / 2);
+            width: $knob-size;
+            height: $knob-size;
+            border-radius: 50%;
+            background-color: var(--annual-upsell-switch_color);
+            transition: transform 200ms ease, background-color 200ms ease;
+          }
+
+          > div,
+          > p {
+            font-weight: 600;
+            color: var(--annual-upsell-switch_copy-color);
+            overflow-wrap: break-word;
+          }
+
+          > div {
+            font-family: var(--serif-fonts);
+            font-size: 22px;
+            line-height: 28px;
+          }
+
+          > p {
+            margin: 0;
+            font-family: var(--sans-serif-fonts);
+            font-size: 16px;
+            line-height: 24px;
+          }
+        }
+
+        // Flip the knob to the far end of the track
+        > input:checked + label.en__field__label--item {
+          &::before {
+            content: "";
+          }
+
+          &::after {
+            transform: translateX(
+              $track-width - $knob-size - (2 * $knob-inset)
+            );
+          }
+        }
+      }
+
+      @media screen and (max-width: 535px) {
+        padding: 10px;
+
+        .en__field__item > label.en__field__label--item {
+          padding-left: $track-width + 10px;
+        }
+      }
+    }
+
+    &[data-engrid-no-annual-append-label] {
+      --give-annual-donation-amount-appended-label: "";
+    }
+
     .annual-renew-selector {
       .annual-renew-copy {
         margin: 0px auto;

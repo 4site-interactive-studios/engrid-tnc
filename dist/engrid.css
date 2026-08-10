@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, August 6, 2026 @ 16:35:46 ET
+ *  Date: Monday, August 10, 2026 @ 16:34:14 ET
  *  By: nick
  *  ENGrid styles: v0.27.0
  *  ENGrid scripts: v0.27.1
@@ -9479,6 +9479,99 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content])[data-engrid-thank-you=true] #generate-social-share{
   width:auto;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew{
+  --annual-upsell-switch_color:#707070;
+  --annual-upsell-switch_copy-color:#707070;
+  --annual-upsell-switch_background-color:#f8f8f8;
+  --annual-upsell-switch_border-color:#707070;
+  --checkbox_text-transform:none;
+  background-color:var(--annual-upsell-switch_background-color);
+  border-bottom:1px solid var(--annual-upsell-switch_border-color);
+  margin:0;
+  padding:16px;
+  transition:background-color .2s ease,border-bottom-color .2s ease;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew:has(input:checked){
+  --annual-upsell-switch_color:#00703c;
+  --annual-upsell-switch_copy-color:#0f4a28;
+  --annual-upsell-switch_background-color:#e5f2ea;
+  --annual-upsell-switch_border-color:var(--color-green);
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item{
+  padding:0;
+  position:relative;
+  width:98%;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item{
+  align-items:stretch;
+  border:none;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-height:64px;
+  padding:0 0 0 83px;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item:before{
+  background-color:#fff;
+  border:2px solid var(--annual-upsell-switch_color);
+  border-radius:34px;
+  box-shadow:none;
+  box-sizing:border-box;
+  content:"";
+  height:34px;
+  left:0;
+  margin:0;
+  padding:0;
+  position:absolute;
+  top:15px;
+  transition:border-color .2s ease;
+  width:66px;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item:after{
+  background-color:var(--annual-upsell-switch_color);
+  border-radius:50%;
+  box-sizing:border-box;
+  content:"";
+  height:26px;
+  left:5px;
+  position:absolute;
+  top:19px;
+  transition:transform .2s ease,background-color .2s ease;
+  width:26px;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item>div,[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item>p{
+  color:var(--annual-upsell-switch_copy-color);
+  font-weight:600;
+  overflow-wrap:break-word;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item>div{
+  font-family:var(--serif-fonts);
+  font-size:22px;
+  line-height:28px;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item>p{
+  font-family:var(--sans-serif-fonts);
+  font-size:16px;
+  line-height:24px;
+  margin:0;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>input:checked+label.en__field__label--item:before{
+  content:"";
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>input:checked+label.en__field__label--item:after{
+  transform:translateX(30px);
+}
+@media screen and (max-width:535px){
+  [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew{
+    padding:10px;
+  }
+  [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item{
+    padding-left:76px;
+  }
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content])[data-engrid-no-annual-append-label]{
+  --give-annual-donation-amount-appended-label:"";
 }
 [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector{
   --give-annual-donation-amount-appended-label:"/Yearly";

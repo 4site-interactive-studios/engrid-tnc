@@ -135,6 +135,12 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     annualRenewSelector.insertAdjacentElement("afterbegin", annualRenewCopy);
   }
 
+  // If there is a annual-upsell-switch, add data-engrid-no-annual-append-label to the body
+  const annualUpsellSwitch = document.querySelector(".annual-upsell-switch");
+  if (annualUpsellSwitch) {
+    App.setBodyData("no-annual-append-label", "true");
+  }
+
   /**
    * Add a Tippy tooltip to a field
    * @param {HTMLElement} labelElement

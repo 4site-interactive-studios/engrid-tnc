@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, August 6, 2026 @ 16:35:46 ET
+ *  Date: Monday, August 10, 2026 @ 16:34:14 ET
  *  By: nick
  *  ENGrid styles: v0.27.0
  *  ENGrid scripts: v0.27.1
@@ -36291,6 +36291,12 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     annualRenewSelector.insertAdjacentElement("afterbegin", annualRenewCopy);
   }
 
+  // If there is a annual-upsell-switch, add data-engrid-no-annual-append-label to the body
+  const annualUpsellSwitch = document.querySelector(".annual-upsell-switch");
+  if (annualUpsellSwitch) {
+    App.setBodyData("no-annual-append-label", "true");
+  }
+
   /**
    * Add a Tippy tooltip to a field
    * @param {HTMLElement} labelElement
@@ -41790,7 +41796,7 @@ class upsell_lightbox_UpsellLightbox {
   // the cached _suggestAmount / _upsellFrequency in sync with the current
   // donation amount and any value entered in the "other amount" field.
   resolveUpsell() {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     const amount = this._amount.amount;
     const otherAmount = parseFloat((_b = (_a = this.overlay.querySelector("#secondOtherField")) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : "");
     const defaultFrequency = (_c = this.options.upsellToFrequency) !== null && _c !== void 0 ? _c : "monthly";
@@ -41808,14 +41814,20 @@ class upsell_lightbox_UpsellLightbox {
         const val = this.options.amountRange[i];
         if (upsellAmount == 0 && amount <= val.max) {
           if (val.suggestion === 0) {
-            upsellAmount = 0;
+            upsellFrequency = (_d = val.frequency) !== null && _d !== void 0 ? _d : defaultFrequency;
+            this._suggestAmount = 0;
+            this._upsellFrequency = upsellFrequency;
+            return {
+              amount: 0,
+              frequency: upsellFrequency
+            };
           } else if (typeof val.suggestion === "number") {
             upsellAmount = val.suggestion;
           } else {
             const suggestionMath = val.suggestion.replace("amount", amount.toFixed(2));
             upsellAmount = parseFloat(Function('"use strict";return (' + suggestionMath + ")")());
           }
-          upsellFrequency = (_d = val.frequency) !== null && _d !== void 0 ? _d : defaultFrequency;
+          upsellFrequency = (_e = val.frequency) !== null && _e !== void 0 ? _e : defaultFrequency;
           break;
         }
       }
@@ -42352,7 +42364,7 @@ class show_hide_radio_checkboxes_ShowHideRadioCheckboxes {
         state.push({
           page: dist_engrid_ENGrid.getPageID(),
           class: this.classes,
-          value: element.value
+          value: element.value.replace(/\W/g, "")
         });
         this.logger.log("storing radio state", state[state.length - 1]);
       }
@@ -42367,7 +42379,7 @@ class show_hide_radio_checkboxes_ShowHideRadioCheckboxes {
         state.push({
           page: dist_engrid_ENGrid.getPageID(),
           class: this.classes,
-          value: (_b = (_a = [...this.elements].find(el => el.checked)) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : "N" // First checked value or "N" if none
+          value: (_b = (_a = [...this.elements].find(el => el.checked)) === null || _a === void 0 ? void 0 : _a.value.replace(/\W/g, "")) !== null && _b !== void 0 ? _b : "N" // First checked value or "N" if none
         });
         this.logger.log("storing checkbox state", state[state.length - 1]);
       }
@@ -43690,6 +43702,9 @@ class page_background_PageBackground {
     this.bodyBannerImage = null;
     this.mutationObserver = null;
     this.logger = new dist_logger_EngridLogger("PageBackground", "lightblue", "darkblue", "🖼️");
+    if (typeof window.UseBodyBannerImageAsBackground !== "undefined") {
+      useBodyBannerImage = !!window.UseBodyBannerImageAsBackground;
+    }
     if (useBodyBannerImage) {
       this.bodyBannerImage = this.findBodyBannerImage();
     }
@@ -51206,10 +51221,13 @@ class thank_you_page_conditional_content_ThankYouPageConditionalContent {
       state.forEach(item => {
         this.logger.log("Processing TY page conditional content item:", item);
         if (dist_engrid_ENGrid.getPageID() === item.page) {
-          document.querySelectorAll(`[class*="${item.class}"]`).forEach(el => {
+          const inputValue = item.value.replace(/\W/g, "");
+          const classPrefix = CSS.escape(item.class);
+          const selectedClass = CSS.escape(`${item.class}${inputValue}`);
+          document.querySelectorAll(`[class*="${classPrefix}"]`).forEach(el => {
             el.classList.add("hide");
           });
-          document.querySelectorAll(`.${item.class}${item.value}`).forEach(el => {
+          document.querySelectorAll(`.${selectedClass}`).forEach(el => {
             el.classList.remove("hide");
           });
         }
@@ -52482,7 +52500,7 @@ class preferred_payment_method_PreferredPaymentMethod {
   }
 }
 ;// CONCATENATED MODULE: ../engrid/packages/scripts/dist/version.js
-const version_AppVersion = "0.27.0";
+const version_AppVersion = "0.27.2";
 ;// CONCATENATED MODULE: ../engrid/packages/scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
 
