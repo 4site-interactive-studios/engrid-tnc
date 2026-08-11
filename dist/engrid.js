@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, August 10, 2026 @ 16:34:14 ET
+ *  Date: Tuesday, August 11, 2026 @ 16:56:55 ET
  *  By: nick
  *  ENGrid styles: v0.27.0
  *  ENGrid scripts: v0.27.1
@@ -36295,6 +36295,10 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   const annualUpsellSwitch = document.querySelector(".annual-upsell-switch");
   if (annualUpsellSwitch) {
     App.setBodyData("no-annual-append-label", "true");
+    // If clicked, add "annual-switch-clicked" to the body
+    annualUpsellSwitch.addEventListener("click", () => {
+      App.setBodyData("annual-switch-clicked", "true");
+    });
   }
 
   /**

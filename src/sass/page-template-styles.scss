@@ -2096,7 +2096,11 @@
     &[data-engrid-no-annual-append-label] {
       --give-annual-donation-amount-appended-label: "";
     }
-
+    &[data-engrid-annual-switch-clicked] {
+      .hideif-annual-switch-clicked {
+        display: none;
+      }
+    }
     .annual-renew-selector {
       .annual-renew-copy {
         margin: 0px auto;

@@ -139,6 +139,10 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
   const annualUpsellSwitch = document.querySelector(".annual-upsell-switch");
   if (annualUpsellSwitch) {
     App.setBodyData("no-annual-append-label", "true");
+    // If clicked, add "annual-switch-clicked" to the body
+    annualUpsellSwitch.addEventListener("click", () => {
+      App.setBodyData("annual-switch-clicked", "true");
+    });
   }
 
   /**
