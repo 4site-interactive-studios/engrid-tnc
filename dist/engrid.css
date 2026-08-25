@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, August 19, 2026 @ 17:10:43 ET
+ *  Date: Tuesday, August 25, 2026 @ 10:53:51 ET
  *  By: nick
  *  ENGrid styles: v0.27.3
  *  ENGrid scripts: v0.27.5
@@ -9604,10 +9604,10 @@ body[data-engrid-debug]:before{
   font-family:Chronicle Text G2;
   font-size:39px;
   font-style:normal;
-  font-weight:700;
+  font-weight:600;
   justify-content:center;
-  line-height:28px;
-  margin-bottom:4px;
+  line-height:36px;
+  margin-bottom:0;
   margin-top:0;
 }
 [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .annual-renew-copy p{
