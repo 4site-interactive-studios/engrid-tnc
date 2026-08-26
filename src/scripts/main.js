@@ -128,6 +128,42 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     "after"
   );
 
+  // If there is a annual-renew-copy and a annual-renew-selector, move the copy afterbegin of the selector
+  const annualRenewCopy = document.querySelector(".annual-renew-copy");
+  const annualRenewSelector = document.querySelector(".annual-renew-selector");
+  if (annualRenewCopy && annualRenewSelector) {
+    annualRenewSelector.insertAdjacentElement("afterbegin", annualRenewCopy);
+  }
+
+  // If there is a annual-upsell-switch, add data-engrid-no-annual-append-label to the body
+  const annualUpsellSwitch = document.querySelector(".annual-upsell-switch");
+  if (annualUpsellSwitch) {
+    App.setBodyData("no-annual-append-label", "true");
+    const annualUpsellSwitchInput = annualUpsellSwitch.querySelector("input");
+    if (annualUpsellSwitchInput) {
+      // Set/unset "annual-switch-clicked" on the body only from direct
+      // interaction with the switch. ENgrid also checks this input
+      // programmatically (no change event) when the frequency becomes annual
+      // via other means, like the auto-renew checkbox, and that must not set
+      // the flag or it would hide that very checkbox.
+      annualUpsellSwitchInput.addEventListener("change", () => {
+        if (annualUpsellSwitchInput.checked) {
+          App.setBodyData("annual-switch-clicked", "true");
+        } else {
+          App.setBodyData("annual-switch-clicked", false);
+        }
+      });
+      // The switch can be unchecked without a change event when the frequency
+      // is changed elsewhere, so unset the flag whenever the frequency is no
+      // longer annual
+      freq.onFrequencyChange.subscribe((frequency) => {
+        if (frequency !== "annual") {
+          App.setBodyData("annual-switch-clicked", false);
+        }
+      });
+    }
+  }
+
   /**
    * Add a Tippy tooltip to a field
    * @param {HTMLElement} labelElement

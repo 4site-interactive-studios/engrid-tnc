@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, August 6, 2026 @ 11:39:49 ET
- *  By: michael
- *  ENGrid styles: v0.27.0
- *  ENGrid scripts: v0.27.1
+ *  Date: Tuesday, August 25, 2026 @ 10:53:51 ET
+ *  By: nick
+ *  ENGrid styles: v0.27.3
+ *  ENGrid scripts: v0.27.5
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -2565,23 +2565,14 @@ input[disabled],input[readonly],select[disabled],textarea[disabled],textarea[rea
 body[data-engrid-live-currency=active] .en__field--donationAmt .en__field__item:not([data-engrid-currency-symbol-updated=true]) label{
   color:#0000 !important;
 }
-.en__field__error__alert{
-  color:var(--error__color);
-  font-family:var(--p_font-family);
-  font-size:max(75%, 10px);
-  font-weight:var(--p_font-weight);
-  line-height:var(--p_line-height);
-  order:3;
-}
-
-.en__field__error--hidden-by-a11y{
-  display:none !important;
-}
-
 .engrid__sr-only{
   clip:rect(0 0 0 0);
+  border:0;
+  clip-path:inset(50%);
   height:1px;
+  margin:-1px;
   overflow:hidden;
+  padding:0;
   position:absolute;
   white-space:nowrap;
   width:1px;
@@ -4800,7 +4791,7 @@ body:not(#en__pagebuilder) img:not([src]):not([srcset]){
 #goMonthly h1{
   margin-top:0;
 }
-#goMonthly h1 .upsell_suggestion{
+#goMonthly h1 .upsell_suggestion,#goMonthly h1 .upsell_suggestion_frequency{
   font-weight:700;
 }
 #goMonthly .upsellOtherAmountLabel p{
@@ -9480,6 +9471,244 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content])[data-engrid-thank-you=true] #generate-social-share{
   width:auto;
 }
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew{
+  --annual-upsell-switch_color:#707070;
+  --annual-upsell-switch_copy-color:#707070;
+  --annual-upsell-switch_background-color:#f8f8f8;
+  --annual-upsell-switch_border-color:#707070;
+  --checkbox_text-transform:none;
+  background-color:var(--annual-upsell-switch_background-color);
+  border-bottom:1px solid var(--annual-upsell-switch_border-color);
+  margin:0;
+  padding:16px;
+  transition:background-color .2s ease,border-bottom-color .2s ease;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew:has(input:checked){
+  --annual-upsell-switch_color:#00703c;
+  --annual-upsell-switch_copy-color:#0f4a28;
+  --annual-upsell-switch_background-color:#e5f2ea;
+  --annual-upsell-switch_border-color:var(--color-green);
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item{
+  padding:0;
+  position:relative;
+  width:98%;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item{
+  align-items:stretch;
+  border:none;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-height:64px;
+  padding:0 0 0 83px;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item:before{
+  background-color:#fff;
+  border:2px solid var(--annual-upsell-switch_color);
+  border-radius:34px;
+  box-shadow:none;
+  box-sizing:border-box;
+  content:"";
+  height:34px;
+  left:0;
+  margin:0;
+  padding:0;
+  position:absolute;
+  top:15px;
+  transition:border-color .2s ease;
+  width:66px;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item:after{
+  background-color:var(--annual-upsell-switch_color);
+  border-radius:50%;
+  box-sizing:border-box;
+  content:"";
+  height:26px;
+  left:5px;
+  position:absolute;
+  top:19px;
+  transition:transform .2s ease,background-color .2s ease;
+  width:26px;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item>div,[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item>p{
+  color:var(--annual-upsell-switch_copy-color);
+  font-weight:600;
+  overflow-wrap:break-word;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item>div{
+  font-family:var(--serif-fonts);
+  font-size:22px;
+  line-height:28px;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item>p{
+  font-family:var(--sans-serif-fonts);
+  font-size:16px;
+  line-height:24px;
+  margin:0;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>input:checked+label.en__field__label--item:before{
+  content:"";
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>input:checked+label.en__field__label--item:after{
+  transform:translateX(30px);
+}
+@media screen and (max-width:535px){
+  [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew{
+    padding:10px;
+  }
+  [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-upsell-switch.en__field--auto-renew .en__field__item>label.en__field__label--item{
+    padding-left:76px;
+  }
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content])[data-engrid-no-annual-append-label]{
+  --give-annual-donation-amount-appended-label:"";
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content])[data-engrid-annual-switch-clicked] .hideif-annual-switch-clicked{
+  display:none;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector{
+  --give-annual-donation-amount-appended-label:"/Yearly";
+  --donation-amount__button_font-size:40px;
+  --donation-amount__button_font-weight:700;
+  --donation-amount__button_padding:24px;
+  --donation-amount__button_line-height:28px;
+  --donation-amount__button_background-color_checked:#fff;
+  --donation-amount__button_background-color:#e5f2ea;
+  --donation-amount__button_color_checked:var(
+    --donation-amount__button_color
+  );
+  --donation-amount__button_border-color:var(--color-green);
+  --donation-amount__button_border-color_checked:var(--color-green);
+  background-color:#e5f2ea;
+  border:1px solid var(--color-green);
+  margin-top:48px;
+  padding:20px;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .annual-renew-copy{
+  margin:0 auto;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .annual-renew-copy div{
+  align-items:center;
+  display:flex;
+  gap:8px;
+  justify-content:center;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .annual-renew-copy img{
+  margin:0;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .annual-renew-copy h2{
+  align-items:center;
+  color:#0f4a28;
+  display:flex;
+  font-family:Chronicle Text G2;
+  font-size:39px;
+  font-style:normal;
+  font-weight:600;
+  justify-content:center;
+  line-height:36px;
+  margin-bottom:0;
+  margin-top:0;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .annual-renew-copy p{
+  color:#0f4a28;
+  font-family:Whitney;
+  font-size:16px;
+  font-style:normal;
+  font-weight:700;
+  line-height:24px;
+  text-align:center;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field__item{
+  position:relative;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field__item.en__field__item--other{
+  flex-basis:calc(100%/var(--donation-amount__button_count));
+  margin-top:0;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field__item.en__field__item--other:hover{
+  color:var(--donation-amount__button_color_hover);
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field__item.en__field__item--other:hover .en__field__input--other{
+  background-color:var(--donation-amount__button_background-color_hover);
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field__item.en__field__item--other:hover .en__field__input--other::placeholder{
+  color:var(--donation-amount__button_color_hover);
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field__item.en__field__item--other:focus-within{
+  color:var(--color_black);
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field__item.en__field__item--other:has(.en__field__input--other:placeholder-shown):not(:hover):not(:focus-within){
+  color:var(--donation-amount__button_color);
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field__item.en__field__item--other .en__field__input--other{
+  background-color:#e5f2ea;
+  border:1px solid var(--donation-amount__button_border-color);
+  color:inherit;
+  font-size:28px;
+  padding-bottom:18px;
+  padding-left:36px;
+  padding-top:17px;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field__item.en__field__item--other .en__field__input--other:focus{
+  background-color:var(--donation-amount__button_background-color_checked);
+  border-color:var(--donation-amount__button_border-color_checked);
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field__item.en__field__item--other .en__field__input--other::placeholder{
+  color:var(--donation-amount__button_color);
+  font-style:italic;
+  font-weight:350;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field--donationAmt.en__field--withOther--active .en__field__item--other{
+  color:var(--color_black);
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field--donationAmt.en__field--withOther--active .en__field__item--other .en__field__input--other{
+  background-color:var(--donation-amount__button_background-color_checked);
+  border-color:var(--donation-amount__button_border-color_checked);
+  color:var(--color_black);
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:after{
+  align-self:center;
+  font-size:16px;
+  line-height:.8;
+  text-transform:capitalize;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item{
+  align-items:baseline;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Ccircle cx='13' cy='13' r='12.5' fill='%23fdfdfd' stroke='%23007931'/%3E%3C/svg%3E");
+  background-position:23px;
+  background-repeat:no-repeat;
+  background-size:26px 26px;
+  padding-left:50px;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field--donationAmt div:not(.en__field__item--other) input.en__field__input--radio:checked+.en__field__label--item{
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26'%3E%3Ccircle cx='13' cy='13' r='12.5' fill='%23007931' stroke='%23007931'/%3E%3Cpath d='m16.7 10.06-6.16 5.89-2.06-3.5' fill='none' stroke='%23fff' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .engrid-currency-symbol{
+  clip:rect(0, 0, 0, 0) !important;
+  border:0 !important;
+  height:1px !important;
+  margin:-1px !important;
+  overflow:hidden !important;
+  padding:0 !important;
+  position:absolute !important;
+  white-space:nowrap !important;
+  width:1px !important;
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector{
+    --donation-amount__button_count:2;
+  }
+}
+@media screen and (max-width:535px){
+  [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector{
+    --donation-amount__button_count:1;
+    padding:10px;
+  }
+  [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-selector .annual-upsell-copy h2{
+    font-size:28px;
+  }
+}
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col]#en__pagebuilder .body-header,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col]#en__pagebuilder .page-backgroundImage{
   display:none !important;
 }
@@ -12098,6 +12327,39 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc] .premium-theme-3:has(.en__component--premiumgiftblock[disabled=disabled]) .premium-theme-3-header,[data-engrid-theme=tnc] .premium-theme-3:has(.en__component--premiumgiftblock[style*=none]) .premium-theme-3-header{
   display:none;
+}
+[data-engrid-theme=tnc][data-engrid-currency-code=USD]:not([data-engrid-en-nsg]):not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field__item.en__field__item--other:before{
+  height:20px;
+  left:24px;
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  width:10.5px;
+}
+[data-engrid-theme=tnc][data-engrid-currency-code=USD]:not([data-engrid-en-nsg]):not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:before,[data-engrid-theme=tnc][data-engrid-currency-code=USD]:not([data-engrid-en-nsg]):not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field__item.en__field__item--other:before{
+  background-color:currentColor;
+  border:none;
+  border-radius:0;
+  box-shadow:none;
+  color:inherit;
+  content:"";
+  display:block;
+  -webkit-mask-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10.479' height='20.126'%3E%3Cpath d='M10.332 12.253a4.06 4.06 0 0 0-.354-.86 2.906 2.906 0 0 0-.595-.713 7.113 7.113 0 0 0-.696-.56 6.79 6.79 0 0 0-.848-.478c-.36-.176-.644-.307-.853-.393a36.99 36.99 0 0 0-.91-.354 36.098 36.098 0 0 1-.787-.309 17.34 17.34 0 0 1-.679-.303 3.96 3.96 0 0 1-.629-.348 4.945 4.945 0 0 1-.444-.37 1.265 1.265 0 0 1-.33-.467 1.486 1.486 0 0 1-.096-.54c0-.508.224-.924.673-1.246.45-.322 1.03-.483 1.741-.483.315 0 .635.043.96.13.326.086.605.183.837.292.233.108.452.228.657.359.206.131.352.23.439.298.086.067.14.112.162.134a.358.358 0 0 0 .304.079c.112-.007.198-.067.258-.18l.91-1.64c.09-.15.071-.291-.056-.426a3.842 3.842 0 0 0-.169-.157 5.832 5.832 0 0 0-.438-.326 5.421 5.421 0 0 0-.713-.421 7.213 7.213 0 0 0-.977-.377 6.23 6.23 0 0 0-1.241-.258V.36a.35.35 0 0 0-.101-.258A.35.35 0 0 0 6.098 0H4.582a.345.345 0 0 0-.253.107.345.345 0 0 0-.106.252v2.022c-1.176.225-2.13.726-2.864 1.505C.625 4.665.258 5.57.258 6.604c0 .307.032.599.096.876.063.277.142.526.235.747.094.22.227.438.4.651.171.214.334.397.488.55.153.154.353.313.6.478.248.164.46.297.635.398.176.101.41.218.702.348.292.131.522.23.69.298.17.067.4.161.692.28.404.158.704.28.898.366.195.086.442.206.742.36.299.152.518.293.657.42.138.128.263.285.376.472.112.187.169.385.169.595 0 .592-.23 1.048-.691 1.37-.46.322-.994.483-1.6.483-.278 0-.555-.03-.832-.09-.973-.194-1.883-.662-2.729-1.404l-.022-.022a.279.279 0 0 0-.27-.1c-.12.014-.206.059-.258.134L.079 15.33c-.112.15-.105.303.022.46.038.046.103.113.197.203.094.09.268.23.522.421.255.191.532.37.831.54.3.168.68.334 1.14.5.461.164.938.28 1.432.347v1.965c0 .098.036.182.107.253a.345.345 0 0 0 .253.107h1.516a.35.35 0 0 0 .259-.101.35.35 0 0 0 .1-.259v-1.965c1.191-.195 2.159-.706 2.904-1.533.745-.828 1.117-1.814 1.117-2.96 0-.374-.049-.726-.147-1.055Z'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10.479' height='20.126'%3E%3Cpath d='M10.332 12.253a4.06 4.06 0 0 0-.354-.86 2.906 2.906 0 0 0-.595-.713 7.113 7.113 0 0 0-.696-.56 6.79 6.79 0 0 0-.848-.478c-.36-.176-.644-.307-.853-.393a36.99 36.99 0 0 0-.91-.354 36.098 36.098 0 0 1-.787-.309 17.34 17.34 0 0 1-.679-.303 3.96 3.96 0 0 1-.629-.348 4.945 4.945 0 0 1-.444-.37 1.265 1.265 0 0 1-.33-.467 1.486 1.486 0 0 1-.096-.54c0-.508.224-.924.673-1.246.45-.322 1.03-.483 1.741-.483.315 0 .635.043.96.13.326.086.605.183.837.292.233.108.452.228.657.359.206.131.352.23.439.298.086.067.14.112.162.134a.358.358 0 0 0 .304.079c.112-.007.198-.067.258-.18l.91-1.64c.09-.15.071-.291-.056-.426a3.842 3.842 0 0 0-.169-.157 5.832 5.832 0 0 0-.438-.326 5.421 5.421 0 0 0-.713-.421 7.213 7.213 0 0 0-.977-.377 6.23 6.23 0 0 0-1.241-.258V.36a.35.35 0 0 0-.101-.258A.35.35 0 0 0 6.098 0H4.582a.345.345 0 0 0-.253.107.345.345 0 0 0-.106.252v2.022c-1.176.225-2.13.726-2.864 1.505C.625 4.665.258 5.57.258 6.604c0 .307.032.599.096.876.063.277.142.526.235.747.094.22.227.438.4.651.171.214.334.397.488.55.153.154.353.313.6.478.248.164.46.297.635.398.176.101.41.218.702.348.292.131.522.23.69.298.17.067.4.161.692.28.404.158.704.28.898.366.195.086.442.206.742.36.299.152.518.293.657.42.138.128.263.285.376.472.112.187.169.385.169.595 0 .592-.23 1.048-.691 1.37-.46.322-.994.483-1.6.483-.278 0-.555-.03-.832-.09-.973-.194-1.883-.662-2.729-1.404l-.022-.022a.279.279 0 0 0-.27-.1c-.12.014-.206.059-.258.134L.079 15.33c-.112.15-.105.303.022.46.038.046.103.113.197.203.094.09.268.23.522.421.255.191.532.37.831.54.3.168.68.334 1.14.5.461.164.938.28 1.432.347v1.965c0 .098.036.182.107.253a.345.345 0 0 0 .253.107h1.516a.35.35 0 0 0 .259-.101.35.35 0 0 0 .1-.259v-1.965c1.191-.195 2.159-.706 2.904-1.533.745-.828 1.117-1.814 1.117-2.96 0-.374-.049-.726-.147-1.055Z'/%3E%3C/svg%3E");
+  -webkit-mask-position:center;
+  mask-position:center;
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+  -webkit-mask-size:contain;
+  mask-size:contain;
+}
+[data-engrid-theme=tnc][data-engrid-currency-code=USD]:not([data-engrid-en-nsg]):not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:before{
+  height:.503em;
+  margin-right:1px;
+  min-width:.262em;
+  position:relative;
+  top:-.195em;
+  width:.262em;
 }
 [data-engrid-theme=tnc] .engrid--ihmo-wrapper{
   border:1px solid #cdcdcd;

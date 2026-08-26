@@ -541,7 +541,7 @@
     display: block;
     width: 100%;
   }
-  
+
   .btn-dark {
     --button_background-color: #1a1a1a;
     --button_color: #ffffff;
@@ -874,7 +874,7 @@
   h2.by-the-num-accordion {
     cursor: pointer;
     @media screen and (max-width: 600px) {
-      font-size: 30px!important;
+      font-size: 30px !important;
     }
   }
 
@@ -882,7 +882,6 @@
   input[type="radio"] + label:before {
     margin-right: max(var(--fields_spacing-inline), 0.5rem);
   }
-
 
   ///////////////////////////////////////////////////
   /*
@@ -1977,6 +1976,298 @@
 
       #generate-social-share {
         width: auto;
+      }
+    }
+
+    .annual-upsell-switch.en__field--auto-renew {
+      $track-width: 66px;
+      $track-height: 34px;
+      $knob-size: 26px;
+      $knob-inset: 5px;
+      $slot-height: 64px;
+
+      --annual-upsell-switch_color: #707070; // Track and knob
+      --annual-upsell-switch_copy-color: #707070;
+      --annual-upsell-switch_background-color: #f8f8f8;
+      --annual-upsell-switch_border-color: #707070;
+      --checkbox_text-transform: none;
+      margin: 0;
+      padding: 16px;
+      background-color: var(--annual-upsell-switch_background-color);
+      border-bottom: 1px solid var(--annual-upsell-switch_border-color);
+      transition: background-color 200ms ease, border-bottom-color 200ms ease;
+
+      // Checked: the banner, its copy and the switch all go green
+      &:has(input:checked) {
+        --annual-upsell-switch_color: #00703c;
+        --annual-upsell-switch_copy-color: #0f4a28;
+        --annual-upsell-switch_background-color: #e5f2ea;
+        --annual-upsell-switch_border-color: var(--color-green);
+      }
+
+      .en__field__item {
+        width: 98%;
+        position: relative;
+        padding: 0;
+
+        > label.en__field__label--item {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 4px;
+          padding: 0 0 0 ($track-width + 17px);
+          border: none;
+          min-height: $slot-height;
+
+          &::before {
+            content: "";
+            box-sizing: border-box;
+            position: absolute;
+            left: 0;
+            top: calc(($slot-height - $track-height) / 2);
+            width: $track-width;
+            height: $track-height;
+            margin: 0;
+            padding: 0;
+            border: 2px solid var(--annual-upsell-switch_color);
+            border-radius: $track-height;
+            box-shadow: none;
+            background-color: #ffffff;
+            transition: border-color 200ms ease;
+          }
+
+          &::after {
+            content: "";
+            box-sizing: border-box;
+            position: absolute;
+            left: $knob-inset;
+            top: calc(($slot-height - $knob-size) / 2);
+            width: $knob-size;
+            height: $knob-size;
+            border-radius: 50%;
+            background-color: var(--annual-upsell-switch_color);
+            transition: transform 200ms ease, background-color 200ms ease;
+          }
+
+          > div,
+          > p {
+            font-weight: 600;
+            color: var(--annual-upsell-switch_copy-color);
+            overflow-wrap: break-word;
+          }
+
+          > div {
+            font-family: var(--serif-fonts);
+            font-size: 22px;
+            line-height: 28px;
+          }
+
+          > p {
+            margin: 0;
+            font-family: var(--sans-serif-fonts);
+            font-size: 16px;
+            line-height: 24px;
+          }
+        }
+
+        // Flip the knob to the far end of the track
+        > input:checked + label.en__field__label--item {
+          &::before {
+            content: "";
+          }
+
+          &::after {
+            transform: translateX(
+              $track-width - $knob-size - (2 * $knob-inset)
+            );
+          }
+        }
+      }
+
+      @media screen and (max-width: 535px) {
+        padding: 10px;
+
+        .en__field__item > label.en__field__label--item {
+          padding-left: $track-width + 10px;
+        }
+      }
+    }
+
+    &[data-engrid-no-annual-append-label] {
+      --give-annual-donation-amount-appended-label: "";
+    }
+    &[data-engrid-annual-switch-clicked] {
+      .hideif-annual-switch-clicked {
+        display: none;
+      }
+    }
+    .annual-renew-selector {
+      .annual-renew-copy {
+        margin: 0px auto;
+
+        div {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+        }
+
+        img {
+          margin: 0px;
+        }
+
+        h2 {
+          color: #0f4a28;
+          font-family: "Chronicle Text G2";
+          font-size: 39px;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 36px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 0px;
+          margin-top: 0px;
+        }
+        p {
+          color: #0f4a28;
+          text-align: center;
+          font-family: Whitney;
+          font-size: 16px;
+          font-style: normal;
+          font-weight: bold;
+          line-height: 24px;
+        }
+      }
+      --give-annual-donation-amount-appended-label: "/Yearly";
+      --donation-amount__button_font-size: 40px;
+      --donation-amount__button_font-weight: 700;
+      --donation-amount__button_padding: 24px;
+      --donation-amount__button_line-height: 28px;
+      --donation-amount__button_background-color_checked: white;
+      --donation-amount__button_background-color: #e5f2ea;
+      --donation-amount__button_color_checked: var(
+        --donation-amount__button_color
+      );
+      --donation-amount__button_border-color: var(--color-green);
+      --donation-amount__button_border-color_checked: var(--color-green);
+
+      margin-top: 48px;
+      padding: 20px;
+      background-color: #e5f2ea;
+      border: 1px solid var(--color-green);
+
+      .en__field__item {
+        position: relative;
+      }
+
+      .en__field__item.en__field__item--other {
+        margin-top: 0px;
+        flex-basis: calc(100% / var(--donation-amount__button_count));
+        &:hover {
+          color: var(--donation-amount__button_color_hover);
+          .en__field__input--other {
+            background-color: var(
+              --donation-amount__button_background-color_hover
+            );
+            &::placeholder {
+              color: var(--donation-amount__button_color_hover);
+            }
+          }
+        }
+        &:focus-within {
+          color: var(--color_black);
+        }
+        // Match the placeholder's green while it is shown; hover and focus
+        // keep their own colors, hence the exclusions.
+        &:has(.en__field__input--other:placeholder-shown):not(:hover):not(:focus-within) {
+          color: var(--donation-amount__button_color);
+        }
+        .en__field__input--other {
+          padding-top: 17px;
+          padding-bottom: 18px;
+          padding-left: 36px;
+          font-size: 28px;
+          color: inherit;
+          background-color: #e5f2ea;
+          border: 1px solid var(--donation-amount__button_border-color);
+          &:focus {
+            background-color: var(
+              --donation-amount__button_background-color_checked
+            );
+            border-color: var(--donation-amount__button_border-color_checked);
+          }
+          &::placeholder {
+            color: var(--donation-amount__button_color);
+            font-style: italic;
+            font-weight: 350;
+          }
+        }
+      }
+
+      // The "other" active class lives on the parent .en__field--donationAmt,
+      // so this must be a descendant rule, not & inside the item block.
+      .en__field--donationAmt.en__field--withOther--active
+        .en__field__item--other {
+        color: var(--color_black);
+        .en__field__input--other {
+          color: var(--color_black);
+          background-color: var(
+            --donation-amount__button_background-color_checked
+          );
+          border-color: var(--donation-amount__button_border-color_checked);
+        }
+      }
+
+      .en__field--donationAmt
+        div:not(.en__field__item--other)
+        .en__field__label--item::after {
+        font-size: 16px;
+        line-height: 0.8; // Figma leading-[0.8]
+        text-transform: capitalize;
+        align-self: center;
+      }
+
+      // The 26px radio indicator rides on the label's own background so it
+      // anchors to the card box, leaving ::before free for the dollar icon
+      .en__field--donationAmt
+        div:not(.en__field__item--other)
+        .en__field__label--item {
+        padding-left: 50px;
+        align-items: baseline;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Ccircle cx='13' cy='13' r='12.5' fill='%23fdfdfd' stroke='%23007931'/%3E%3C/svg%3E");
+        background-position: 23px center;
+        background-repeat: no-repeat;
+        background-size: 26px 26px;
+      }
+
+      .en__field--donationAmt
+        div:not(.en__field__item--other)
+        input.en__field__input--radio:checked
+        + .en__field__label--item {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Ccircle cx='13' cy='13' r='12.5' fill='%23007931' stroke='%23007931'/%3E%3Cpath d='M16.7 10.06 10.54 15.95 8.48 12.45' fill='none' stroke='%23ffffff' stroke-width='2.3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      }
+
+      .engrid-currency-symbol {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+      }
+      @media screen and (max-width: 992px) {
+        --donation-amount__button_count: 2;
+      }
+      @media screen and (max-width: 535px) {
+        --donation-amount__button_count: 1;
+        padding: 10px;
+        .annual-upsell-copy h2 {
+          font-size: 28px;
+        }
       }
     }
   }
@@ -3821,7 +4112,9 @@
     }
 
     &[data-engrid-transaction-recurring="y"][data-engrid-ihmo="true"] {
-      .en__field--recurrfreq .en__field__element--radio .en__field__item:last-child:after {
+      .en__field--recurrfreq
+        .en__field__element--radio
+        .en__field__item:last-child:after {
         position: relative;
         top: 3px;
         left: -80%;
@@ -3842,7 +4135,8 @@
     .en__field--give-by-select > .en__field__element .en__field__item {
       @media screen and (min-width: 767px) {
         flex-basis: 100%;
-        padding: calc(var(--fields_spacing-block) * .5) var(--fields_spacing-inline) var(--fields_spacing-block);
+        padding: calc(var(--fields_spacing-block) * 0.5)
+          var(--fields_spacing-inline) var(--fields_spacing-block);
       }
     }
 
@@ -3858,7 +4152,7 @@
     }
 
     .en__submit button {
-      width: 100%
+      width: 100%;
     }
 
     .body-bottom-content {
@@ -4013,7 +4307,7 @@
     }
   }
 
-    // Sandbox warning banner
+  // Sandbox warning banner
   .sandbox-warning {
     display: flex;
     justify-content: center;
@@ -4052,6 +4346,7 @@
 
   //Premiums
   @import "./components/premiums";
+  @import "./components/currency-dollar-symbol";
   @import "ihmo.scss";
   @import "ecard.scss";
   @import "./supporter-hub.scss";
