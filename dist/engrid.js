@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, August 27, 2026 @ 12:11:37 ET
- *  By: michael
+ *  Date: Friday, August 28, 2026 @ 01:13:28 ET
+ *  By: fernando
  *  ENGrid styles: v0.27.3
  *  ENGrid scripts: v0.27.6
  *
@@ -19160,9 +19160,14 @@ class DonationAmount {
     // Load the current amount
     this.load();
   }
-  syncOtherAmount(field, formatValue = false) {
+  // The "other" radio is the one whose value isn't a numeric amount
+  // (EN renders it as value="other"), so it cleans to 0
+  isOtherAmountSelected() {
     const selectedAmount = document.querySelector(`input[name="${this._radios}"]:checked`);
-    const otherIsSelected = selectedAmount !== null && engrid_ENGrid.cleanAmount(selectedAmount.value) === 0;
+    return selectedAmount !== null && engrid_ENGrid.cleanAmount(selectedAmount.value) === 0;
+  }
+  syncOtherAmount(field, formatValue = false) {
+    const otherIsSelected = this.isOtherAmountSelected();
     const amount = engrid_ENGrid.cleanAmount(field.value);
     if (!otherIsSelected || amount <= 0) {
       return;
@@ -26960,6 +26965,10 @@ class OtherAmount {
       otherAmountField.setAttribute("autocomplete", "off");
       otherAmountField.setAttribute("data-lpignore", "true");
       otherAmountField.addEventListener("change", e => {
+        // Formatting only matters when entering a custom amount; skip
+        // unrelated change events (e.g. browser autofill firing on the
+        // field while a preset amount is selected)
+        if (!this._amount.isOtherAmountSelected()) return;
         const target = e.target;
         const amount = target.value;
         const cleanAmount = engrid_ENGrid.cleanAmount(amount);
