@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, August 26, 2026 @ 07:47:38 ET
+ *  Date: Monday, August 31, 2026 @ 10:04:51 ET
  *  By: michael
- *  ENGrid styles: v0.27.3
- *  ENGrid scripts: v0.27.6
+ *  ENGrid styles: v0.28.0
+ *  ENGrid scripts: v0.28.1
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -18753,6 +18753,21 @@ const nlTranslation = [
     { field: "supporter.region", translation: "Provincie" },
     { field: "supporter.country", translation: "Country" },
 ];
+// Page-language layer: keyed by lowercase 2-letter language code
+// (see ENGrid.getPageLanguage()), applied as the base translation layer
+// before any country-specific translations.
+const esTranslation = [
+    { field: "supporter.firstName", translation: "Nombre" },
+    { field: "supporter.lastName", translation: "Apellidos" },
+    { field: "supporter.emailAddress", translation: "Correo electrónico" },
+    { field: "supporter.phoneNumber", translation: "Teléfono" },
+    { field: "supporter.address1", translation: "Dirección" },
+    { field: "supporter.address2", translation: "Departamento/Piso" },
+    { field: "supporter.postcode", translation: "Código Postal" },
+    { field: "supporter.city", translation: "Ciudad" },
+    { field: "supporter.region", translation: "Provincia/Estado" },
+    { field: "supporter.country", translation: "País" },
+];
 const TranslateOptionsDefaults = {
     BR: ptbrTranslation,
     BRA: ptbrTranslation,
@@ -18762,6 +18777,65 @@ const TranslateOptionsDefaults = {
     FRA: frTranslation,
     NL: nlTranslation,
     NLD: nlTranslation,
+    es: esTranslation,
+};
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/interfaces/i18n-options.js
+const I18nDefaults = {
+    en: {
+        "rememberMe.label": "Remember Me",
+        "rememberMe.clearLabel": "(clear autofill)",
+        "rememberMe.tooltip": "Check “{label}” to complete forms on this device faster. While your financial information won’t be stored, you should only check this box from a personal device. Click “{clearLabel}” to remove the information from your device at any time.",
+        "rememberMe.iframeTitle": "Remember Me iframe",
+        "translateFields.state": "State",
+        "translateFields.stateGeneric": "Province / State",
+        "translateFields.stateRegion": "State/Region",
+        "translateFields.provinceTerritory": "Province / Territory",
+        "translateFields.selectState": "Select State",
+        "translateFields.select": "Select",
+        "translateFields.recipientTo": "To:",
+        "a11y.errorSummary": "There are {count} errors: {messages}.",
+        // InputPlaceholders component defaults
+        "placeholders.firstName": "First Name",
+        "placeholders.lastName": "Last Name",
+        "placeholders.emailAddress": "Email Address",
+        "placeholders.phoneNumber": "Phone Number",
+        "placeholders.phoneNumberOptional": "Phone Number (Optional)",
+        "placeholders.phoneNumber2Optional": "000-000-0000 (Optional)",
+        "placeholders.country": "Country",
+        "placeholders.address1": "Street Address",
+        "placeholders.address2": "Apt., Ste., Bldg.",
+        "placeholders.city": "City",
+        "placeholders.region": "Region",
+        "placeholders.postcode": "ZIP Code",
+    },
+    es: {
+        "rememberMe.label": "Recuérdame",
+        "rememberMe.clearLabel": "(borrar autocompletado)",
+        "rememberMe.tooltip": "Marque “{label}” para completar los formularios en este dispositivo más rápido. Aunque su información financiera no se almacenará, solo debe marcar esta casilla desde un dispositivo personal. Haga clic en “{clearLabel}” para eliminar la información de su dispositivo en cualquier momento.",
+        "rememberMe.iframeTitle": "iframe de Recuérdame",
+        "translateFields.state": "Estado",
+        "translateFields.stateGeneric": "Provincia/Estado",
+        "translateFields.stateRegion": "Estado/Región",
+        "translateFields.provinceTerritory": "Provincia/Territorio",
+        "translateFields.selectState": "Seleccione Estado",
+        "translateFields.select": "Seleccione",
+        "translateFields.recipientTo": "Para:",
+        "a11y.errorSummary": "Hay {count} errores: {messages}.",
+        // InputPlaceholders component defaults
+        "placeholders.firstName": "Nombre",
+        "placeholders.lastName": "Apellidos",
+        "placeholders.emailAddress": "Correo electrónico",
+        "placeholders.phoneNumber": "Teléfono",
+        "placeholders.phoneNumberOptional": "Teléfono (opcional)",
+        "placeholders.phoneNumber2Optional": "000-000-0000 (opcional)",
+        "placeholders.country": "País",
+        "placeholders.address1": "Calle y número",
+        "placeholders.address2": "Depto., Piso, Edif.",
+        "placeholders.city": "Ciudad",
+        "placeholders.region": "Provincia/Estado",
+        "placeholders.postcode": "Código Postal",
+    },
 };
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/interfaces/exit-intent-options.js
@@ -19100,12 +19174,7 @@ class DonationAmount {
                     this.amount = parseFloat(element.value);
                 }
                 else if (element.name == other) {
-                    const cleanedAmount = engrid_ENGrid.cleanAmount(element.value);
-                    element.value =
-                        cleanedAmount % 1 != 0
-                            ? cleanedAmount.toFixed(2)
-                            : cleanedAmount.toString();
-                    this.amount = cleanedAmount;
+                    this.syncOtherAmount(element, true);
                 }
             }
         });
@@ -19113,11 +19182,29 @@ class DonationAmount {
         const otherField = document.querySelector(`[name='${this._other}']`);
         if (otherField) {
             otherField.addEventListener("keyup", (e) => {
-                this.amount = engrid_ENGrid.cleanAmount(otherField.value);
+                this.syncOtherAmount(otherField);
             });
         }
         // Load the current amount
         this.load();
+    }
+    // The "other" radio is the one whose value isn't a numeric amount
+    // (EN renders it as value="other"), so it cleans to 0
+    isOtherAmountSelected() {
+        const selectedAmount = document.querySelector(`input[name="${this._radios}"]:checked`);
+        return (selectedAmount !== null &&
+            engrid_ENGrid.cleanAmount(selectedAmount.value) === 0);
+    }
+    syncOtherAmount(field, formatValue = false) {
+        const otherIsSelected = this.isOtherAmountSelected();
+        const amount = engrid_ENGrid.cleanAmount(field.value);
+        if (!otherIsSelected || amount <= 0) {
+            return;
+        }
+        if (formatValue) {
+            field.value = amount % 1 != 0 ? amount.toFixed(2) : amount.toString();
+        }
+        this.amount = amount;
     }
     static getInstance(radios = "transaction.donationAmt", other = "transaction.donationAmt.other") {
         if (!DonationAmount.instance) {
@@ -19216,6 +19303,7 @@ class DonationAmount {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/engrid.js
+
 const errorCallbacks = new Map();
 class engrid_ENGrid {
     constructor() {
@@ -19478,6 +19566,52 @@ class engrid_ENGrid {
         else {
             return "UNKNOWN";
         }
+    }
+    // Return the current page language: the first 2 characters of
+    // pageJson.locale, lowercased (e.g. "es_US" -> "es"). Defaults to "en"
+    // when pageJson or the locale is not available.
+    static getPageLanguage() {
+        var _a;
+        const locale = (_a = window.pageJson) === null || _a === void 0 ? void 0 : _a.locale;
+        if (typeof locale === "string" && locale.length >= 2) {
+            return locale.substring(0, 2).toLowerCase();
+        }
+        return "en";
+    }
+    // Return the merged i18n dictionaries: window.EngridI18n merged over
+    // I18nDefaults, key-by-key per language, without mutating the defaults.
+    static getI18nDictionaries() {
+        const dictionaries = Object.assign({}, I18nDefaults);
+        if ("EngridI18n" in window && window.EngridI18n) {
+            for (const lang in window.EngridI18n) {
+                dictionaries[lang] = Object.assign(Object.assign({}, (I18nDefaults[lang] || {})), window.EngridI18n[lang]);
+            }
+        }
+        return dictionaries;
+    }
+    // Check if an i18n key is defined in the merged dictionary for the current
+    // page language (the English fallback does not count).
+    static hasI18nKey(key) {
+        var _a;
+        const language = engrid_ENGrid.getPageLanguage();
+        return key in ((_a = engrid_ENGrid.getI18nDictionaries()[language]) !== null && _a !== void 0 ? _a : {});
+    }
+    // Translate a UI string key using the i18n dictionary: I18nDefaults merged
+    // with the window.EngridI18n global (key-by-key, per language, without
+    // mutating the defaults). Resolution order: current page language bucket ->
+    // English bucket -> the key itself. {placeholders} are interpolated from
+    // the replacements argument.
+    static t(key, replacements = {}) {
+        var _a, _b, _c, _d;
+        const dictionaries = engrid_ENGrid.getI18nDictionaries();
+        const language = engrid_ENGrid.getPageLanguage();
+        let text = (_d = (_b = (_a = dictionaries[language]) === null || _a === void 0 ? void 0 : _a[key]) !== null && _b !== void 0 ? _b : (_c = dictionaries["en"]) === null || _c === void 0 ? void 0 : _c[key]) !== null && _d !== void 0 ? _d : key;
+        for (const name in replacements) {
+            // Function replacement: the value is inserted literally, so $-sequences
+            // ($&, $$, ...) in user-facing text are never interpreted.
+            text = text.replace(new RegExp(`\\{${name}\\}`, "g"), () => String(replacements[name]));
+        }
+        return text;
     }
     // Set body engrid data attributes
     static setBodyData(dataName, value) {
@@ -21428,7 +21562,10 @@ class A11y {
         }
         else {
             const cleaned = allMessages.map(message => message.replace(/[.!?]+$/, '').trim());
-            region.textContent = `There are ${allMessages.length} errors: ${cleaned.join('. ')}.`;
+            region.textContent = engrid_ENGrid.t("a11y.errorSummary", {
+                count: allMessages.length,
+                messages: cleaned.join('. '),
+            });
         }
         if (this.shouldFocusFirstInvalidField) {
             this.shouldFocusFirstInvalidField = false;
@@ -21964,6 +22101,10 @@ class DataAttributes {
         // Add the Page Type as a Data Attribute on the Body Tag
         if (engrid_ENGrid.checkNested(window, "pageJson", "pageType")) {
             engrid_ENGrid.setBodyData("page-type", window.pageJson.pageType);
+        }
+        // Add the locale as a Data Attribute on the Body Tag
+        if (engrid_ENGrid.checkNested(window, "pageJson", "locale")) {
+            engrid_ENGrid.setBodyData("locale", window.pageJson.locale.toLowerCase());
         }
         // Add the currency code as a Data Attribute on the Body Tag
         engrid_ENGrid.setBodyData("currency-code", engrid_ENGrid.getCurrencyCode());
@@ -23178,6 +23319,9 @@ class InputHasValueAndFocus {
 
 class InputPlaceholders {
     constructor() {
+        // NOTE: for selectors listed in selectorToI18nKey below, these English
+        // strings are shadowed by the i18n dictionary — edit
+        // interfaces/i18n-options.ts ("placeholders.*" keys) instead of here.
         this.defaultPlaceholders = {
             "input#en__field_supporter_firstName": "First Name",
             "input#en__field_supporter_lastName": "Last Name",
@@ -23223,10 +23367,30 @@ class InputPlaceholders {
             "input#en__field_supporter_billingRegion": "Billing Region",
             "input#en__field_supporter_billingPostcode": "Billing Postal Code",
         };
+        // Maps the default-placeholder selectors to i18n dictionary keys, so the
+        // built-in strings follow the page language. Selectors the client overrides
+        // via the Placeholders option are never translated.
+        this.selectorToI18nKey = {
+            "input#en__field_supporter_firstName": "placeholders.firstName",
+            "input#en__field_supporter_lastName": "placeholders.lastName",
+            "input#en__field_supporter_emailAddress": "placeholders.emailAddress",
+            "input#en__field_supporter_phoneNumber": "placeholders.phoneNumberOptional",
+            ".en__mandatory input#en__field_supporter_phoneNumber": "placeholders.phoneNumber",
+            ".i-required input#en__field_supporter_phoneNumber": "placeholders.phoneNumber",
+            "input#en__field_supporter_phoneNumber2": "placeholders.phoneNumber2Optional",
+            "input#en__field_supporter_country": "placeholders.country",
+            "input#en__field_supporter_address1": "placeholders.address1",
+            "input#en__field_supporter_address2": "placeholders.address2",
+            "input#en__field_supporter_city": "placeholders.city",
+            "input#en__field_supporter_region": "placeholders.region",
+            "input#en__field_supporter_postcode": "placeholders.postcode",
+        };
+        this.customSelectors = new Set();
         if (this.shouldRun()) {
             // If there's a Placeholders option, merge it with the default placeholders
             const placeholders = engrid_ENGrid.getOption("Placeholders");
             if (placeholders) {
+                this.customSelectors = new Set(Object.keys(placeholders));
                 this.defaultPlaceholders = Object.assign(Object.assign({}, this.defaultPlaceholders), placeholders);
             }
             this.run();
@@ -23238,8 +23402,17 @@ class InputPlaceholders {
     run() {
         Object.keys(this.defaultPlaceholders).forEach((selector) => {
             if (selector in this.defaultPlaceholders)
-                this.addPlaceholder(selector, this.defaultPlaceholders[selector]);
+                this.addPlaceholder(selector, this.resolvePlaceholder(selector));
         });
+    }
+    // Built-in placeholder strings follow the page language; client-provided
+    // Placeholders options always win.
+    resolvePlaceholder(selector) {
+        const key = this.selectorToI18nKey[selector];
+        if (key && !this.customSelectors.has(selector)) {
+            return engrid_ENGrid.t(key);
+        }
+        return this.defaultPlaceholders[selector];
     }
     addPlaceholder(selector, placeholder) {
         const fieldEl = document.querySelector(selector);
@@ -24376,7 +24549,9 @@ class TranslateFields {
         };
         this.countriesSelect = document.querySelectorAll('select[name="supporter.country"], select[name="transaction.shipcountry"], select[name="supporter.billingCountry"], select[name="transaction.infcountry"]');
         let options = "EngridTranslate" in window ? window.EngridTranslate : {};
-        this.options = TranslateOptionsDefaults;
+        // Shallow clone: the EngridTranslate merge below concatenates arrays per
+        // key and must never mutate the shared TranslateOptionsDefaults.
+        this.options = Object.assign({}, TranslateOptionsDefaults);
         // Don't run this for US-only forms.
         if (document.querySelector(".en__component--formblock.us-only-form .en__field--country")) {
             return;
@@ -24414,11 +24589,18 @@ class TranslateFields {
                 }
             }
         }
+        else {
+            // No country field on the page: still translate to the page language
+            this.applyLanguageLayer();
+        }
     }
     translateFields(countryName = "supporter.country") {
         this.resetTranslatedFields();
         const countryValue = engrid_ENGrid.getFieldValue(countryName);
-        // Translate the State Field
+        // Apply the page language as the base translation layer
+        this.applyLanguageLayer();
+        // Translate the State Field (runs last so country-specific state labels
+        // like "Provincia" or "Estado" win over the language layer)
         this.setStateField(countryValue, this.countryToStateFields[countryName]);
         if (countryName === "supporter.country") {
             if (countryValue in this.options) {
@@ -24430,6 +24612,14 @@ class TranslateFields {
             // Translate the "To:"
             const recipient_block = document.querySelectorAll(".recipient-block");
             if (!!recipient_block.length) {
+                // Capture the original page-builder text once per cycle so
+                // resetTranslatedFields() can restore it — a country change never
+                // leaves a stale translation behind.
+                recipient_block.forEach((elem) => {
+                    const el = elem;
+                    if (!el.dataset.original)
+                        el.dataset.original = el.innerHTML;
+                });
                 switch (countryValue) {
                     case "FR":
                     case "FRA":
@@ -24446,8 +24636,27 @@ class TranslateFields {
                     case "Netherlands":
                         recipient_block.forEach((elem) => (elem.innerHTML = "Aan:"));
                         break;
+                    default:
+                        // No country-specific rule: use the page language string when the
+                        // language dictionary defines one (e.g. "es" -> "Para:"). English
+                        // pages keep the page-builder text, already restored above.
+                        if (engrid_ENGrid.getPageLanguage() !== "en" &&
+                            engrid_ENGrid.hasI18nKey("translateFields.recipientTo")) {
+                            recipient_block.forEach((elem) => (elem.innerHTML = engrid_ENGrid.t("translateFields.recipientTo")));
+                        }
+                        break;
                 }
             }
+        }
+    }
+    // Apply the translation layer for the current page language (e.g. "es").
+    // This is the base layer; country-specific translations override it per field.
+    applyLanguageLayer() {
+        const language = engrid_ENGrid.getPageLanguage();
+        if (language in this.options) {
+            this.options[language].forEach((field) => {
+                this.translateField(field.field, field.translation);
+            });
         }
     }
     translateField(name, translation) {
@@ -24462,7 +24671,20 @@ class TranslateFields {
                     ? simplecountriesSelect.cloneNode(true)
                     : null;
                 if (field instanceof HTMLInputElement && field.placeholder != "") {
-                    if (!fieldLabel || fieldLabel.innerHTML == field.placeholder) {
+                    // Translate the placeholder when it mirrors the label (the common
+                    // case). Compare normalized visible text so template whitespace and
+                    // required-marker markup don't break the match. Order matters:
+                    // trim before stripping the marker, or labels like "Name *\n"
+                    // keep the asterisk.
+                    const labelText = ((fieldLabel === null || fieldLabel === void 0 ? void 0 : fieldLabel.textContent) || "")
+                        .replace(/\s+/g, " ")
+                        .trim()
+                        .replace(/\s*\*$/, "");
+                    const placeholderText = field.placeholder
+                        .replace(/\s+/g, " ")
+                        .trim()
+                        .replace(/\s*\*$/, "");
+                    if (!fieldLabel || labelText === placeholderText) {
                         field.dataset.original = field.placeholder;
                         field.placeholder = translation;
                     }
@@ -24517,7 +24739,7 @@ class TranslateFields {
             case "GB":
             case "GBR":
             case "United Kingdom":
-                this.setStateValues(state, "State/Region", null);
+                this.setStateValues(state, engrid_ENGrid.t("translateFields.stateRegion"), null);
                 break;
             case "DE":
             case "DEU":
@@ -24531,8 +24753,8 @@ class TranslateFields {
                 break;
             case "AU":
             case "AUS":
-                this.setStateValues(state, "Province / State", [
-                    { label: "Select", value: "" },
+                this.setStateValues(state, engrid_ENGrid.t("translateFields.stateGeneric"), [
+                    { label: engrid_ENGrid.t("translateFields.select"), value: "" },
                     { label: "New South Wales", value: "NSW" },
                     { label: "Victoria", value: "VIC" },
                     { label: "Queensland", value: "QLD" },
@@ -24544,8 +24766,8 @@ class TranslateFields {
                 ]);
                 break;
             case "Australia":
-                this.setStateValues(state, "Province / State", [
-                    { label: "Select", value: "" },
+                this.setStateValues(state, engrid_ENGrid.t("translateFields.stateGeneric"), [
+                    { label: engrid_ENGrid.t("translateFields.select"), value: "" },
                     { label: "New South Wales", value: "New South Wales" },
                     { label: "Victoria", value: "Victoria" },
                     { label: "Queensland", value: "Queensland" },
@@ -24561,8 +24783,8 @@ class TranslateFields {
                 break;
             case "US":
             case "USA":
-                this.setStateValues(state, "State", [
-                    { label: "Select State", value: "" },
+                this.setStateValues(state, engrid_ENGrid.t("translateFields.state"), [
+                    { label: engrid_ENGrid.t("translateFields.selectState"), value: "" },
                     { label: "Alabama", value: "AL" },
                     { label: "Alaska", value: "AK" },
                     { label: "Arizona", value: "AZ" },
@@ -24639,8 +24861,8 @@ class TranslateFields {
                 ]);
                 break;
             case "United States":
-                this.setStateValues(state, "State", [
-                    { label: "Select State", value: "" },
+                this.setStateValues(state, engrid_ENGrid.t("translateFields.state"), [
+                    { label: engrid_ENGrid.t("translateFields.selectState"), value: "" },
                     { label: "Alabama", value: "Alabama" },
                     { label: "Alaska", value: "Alaska" },
                     { label: "Arizona", value: "Arizona" },
@@ -24727,8 +24949,8 @@ class TranslateFields {
                 break;
             case "CA":
             case "CAN":
-                this.setStateValues(state, "Province / Territory", [
-                    { label: "Select", value: "" },
+                this.setStateValues(state, engrid_ENGrid.t("translateFields.provinceTerritory"), [
+                    { label: engrid_ENGrid.t("translateFields.select"), value: "" },
                     { label: "Alberta", value: "AB" },
                     { label: "British Columbia", value: "BC" },
                     { label: "Manitoba", value: "MB" },
@@ -24745,8 +24967,8 @@ class TranslateFields {
                 ]);
                 break;
             case "Canada":
-                this.setStateValues(state, "Province / Territory", [
-                    { label: "Select", value: "" },
+                this.setStateValues(state, engrid_ENGrid.t("translateFields.provinceTerritory"), [
+                    { label: engrid_ENGrid.t("translateFields.select"), value: "" },
                     { label: "Alberta", value: "Alberta" },
                     { label: "British Columbia", value: "British Columbia" },
                     { label: "Manitoba", value: "Manitoba" },
@@ -24839,7 +25061,7 @@ class TranslateFields {
                 ]);
                 break;
             default:
-                this.setStateValues(state, "Province / State", null);
+                this.setStateValues(state, engrid_ENGrid.t("translateFields.stateGeneric"), null);
                 break;
         }
     }
@@ -26112,6 +26334,7 @@ var remember_me_awaiter = (undefined && undefined.__awaiter) || function (thisAr
 };
 
 
+
 const remember_me_tippy = (__webpack_require__(9244)/* ["default"] */ .Ay);
 // localStorage key used to cache the per-device AES-GCM encryption key.
 // A random secret generated once per device and held in localStorage.
@@ -26167,10 +26390,10 @@ class RememberMe {
                 : "before";
         this.fieldClearLabel = options.fieldClearLabel
             ? options.fieldClearLabel
-            : "(clear autofill)";
+            : engrid_ENGrid.t("rememberMe.clearLabel");
         this.rememberMeLabel = options.rememberMeLabel
             ? options.rememberMeLabel
-            : "Remember Me";
+            : engrid_ENGrid.t("rememberMe.label");
         this.fieldData = {};
         if (this.useRemote()) {
             this.createIframe(() => {
@@ -26335,11 +26558,10 @@ class RememberMe {
         let rememberMeOptInField = document.getElementById("remember-me-opt-in");
         if (!rememberMeOptInField) {
             const rememberMeLabel = this.rememberMeLabel;
-            const rememberMeInfo = `
-				Check “${rememberMeLabel}” to complete forms on this device faster. 
-				While your financial information won’t be stored, you should only check this box from a personal device. 
-				Click “${this.fieldClearLabel}” to remove the information from your device at any time.
-			`;
+            const rememberMeInfo = engrid_ENGrid.t("rememberMe.tooltip", {
+                label: rememberMeLabel,
+                clearLabel: this.fieldClearLabel,
+            });
             const rememberMeOptInFieldChecked = this.rememberMeOptIn ? "checked" : "";
             const rememberMeOptInField = document.createElement("div");
             rememberMeOptInField.classList.add("en__field", "en__field--checkbox", "en__field--question", "rememberme-wrapper");
@@ -26401,7 +26623,7 @@ class RememberMe {
                 "position:absolute;width:1px;height:1px;left:-9999px;";
             iframe.src = this.remoteUrl;
             iframe.setAttribute("sandbox", "allow-same-origin allow-scripts");
-            iframe.setAttribute("title", "Remember Me iframe");
+            iframe.setAttribute("title", engrid_ENGrid.t("rememberMe.iframeTitle"));
             this.iframe = iframe;
             document.body.appendChild(this.iframe);
             this.iframe.addEventListener("load", () => iframeLoaded(), false);
@@ -26946,6 +27168,11 @@ class OtherAmount {
             otherAmountField.setAttribute("autocomplete", "off");
             otherAmountField.setAttribute("data-lpignore", "true");
             otherAmountField.addEventListener("change", (e) => {
+                // Formatting only matters when entering a custom amount; skip
+                // unrelated change events (e.g. browser autofill firing on the
+                // field while a preset amount is selected)
+                if (!this._amount.isOtherAmountSelected())
+                    return;
                 const target = e.target;
                 const amount = target.value;
                 const cleanAmount = engrid_ENGrid.cleanAmount(amount);
@@ -34841,10 +35068,11 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.27.6";
+const AppVersion = "0.28.1";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
 
 
 
@@ -37943,9 +38171,7 @@ class donation_amount_DonationAmount {
         if (element.name == radios) {
           this.amount = parseFloat(element.value);
         } else if (element.name == other) {
-          const cleanedAmount = dist_engrid_ENGrid.cleanAmount(element.value);
-          element.value = cleanedAmount % 1 != 0 ? cleanedAmount.toFixed(2) : cleanedAmount.toString();
-          this.amount = cleanedAmount;
+          this.syncOtherAmount(element, true);
         }
       }
     });
@@ -37953,11 +38179,23 @@ class donation_amount_DonationAmount {
     const otherField = document.querySelector(`[name='${this._other}']`);
     if (otherField) {
       otherField.addEventListener("keyup", e => {
-        this.amount = dist_engrid_ENGrid.cleanAmount(otherField.value);
+        this.syncOtherAmount(otherField);
       });
     }
     // Load the current amount
     this.load();
+  }
+  syncOtherAmount(field, formatValue = false) {
+    const selectedAmount = document.querySelector(`input[name="${this._radios}"]:checked`);
+    const otherIsSelected = selectedAmount !== null && dist_engrid_ENGrid.cleanAmount(selectedAmount.value) === 0;
+    const amount = dist_engrid_ENGrid.cleanAmount(field.value);
+    if (!otherIsSelected || amount <= 0) {
+      return;
+    }
+    if (formatValue) {
+      field.value = amount % 1 != 0 ? amount.toFixed(2) : amount.toString();
+    }
+    this.amount = amount;
   }
   static getInstance(radios = "transaction.donationAmt", other = "transaction.donationAmt.other") {
     if (!donation_amount_DonationAmount.instance) {
