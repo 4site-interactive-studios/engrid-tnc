@@ -135,6 +135,12 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
     annualRenewSelector.insertAdjacentElement("afterbegin", annualRenewCopy);
   }
 
+  const annualRenewToggle = document.querySelector(".annual-renew-toggle");
+  const donationAmtField = document.querySelector(".en__field--donationAmt");
+  if (annualRenewCopy && annualRenewToggle && donationAmtField) {
+    donationAmtField.insertAdjacentElement("afterbegin", annualRenewCopy);
+  }
+
   // If there is a annual-upsell-switch, add data-engrid-no-annual-append-label to the body
   const annualUpsellSwitch = document.querySelector(".annual-upsell-switch");
   if (annualUpsellSwitch) {
@@ -388,7 +394,10 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       );
       autoRenew.closest(".en__field--auto-renew").remove();
     } else {
-      annualFrequencyOption.parentElement.classList.add("hide");
+      const autoRenewToggle = document.querySelector(".annual-renew-toggle");
+      if (!autoRenewToggle) {
+        annualFrequencyOption.parentElement.classList.add("hide");
+      }
       App.setBodyData("auto-renew-on-page", "true");
       App.setBodyData("auto-renew-active", autoRenew.checked.toString());
       extRef2Input.value = autoRenew.checked ? "auto_renew" : "";
@@ -397,6 +406,12 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
         const autoRenewActive = autoRenew.checked;
         if (autoRenewActive) {
           movePremiumContainerContent("down");
+        }
+        // When we have auto renew toggle, we want to update the values on the donation buttons too.
+        if (autoRenewToggle) {
+          window.EngagingNetworks?.require?._defined?.enDependencies?.dependencies?.parseDependencies(
+            window.EngagingNetworks.dependencies
+          );
         }
       });
 
@@ -1236,4 +1251,39 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
   }
 
   addEcardAltTags();
+
+  // Tracks which control initiated a frequency change on "annual renew toggle" pages so CSS
+  // can keep the bottom auto-renew checkbox visible only when it was the trigger.
+  function trackAutoRenewVia(App) {
+    const annualRenewToggleEl = document.querySelector(".annual-renew-toggle");
+    const autoRenewCheckboxEl = document.getElementById("en__field_auto_renew");
+    const autoRenewSwitchEl = document.querySelector(
+      ".annual-upsell-switch input"
+    );
+    if (!annualRenewToggleEl || !autoRenewCheckboxEl) return;
+
+    document.querySelectorAll("[name='transaction.recurrfreq']").forEach(
+      (el) => {
+        el.addEventListener("change", (e) => {
+          if (!e.isTrusted) return;
+          App.setBodyData("auto-renew-via", "radio");
+        });
+      }
+    );
+
+    autoRenewCheckboxEl.addEventListener("change", (e) => {
+      if (!e.isTrusted) return;
+      if (autoRenewCheckboxEl.checked) {
+        App.setBodyData("auto-renew-via", "checkbox");
+      }
+    });
+
+    if (autoRenewSwitchEl) {
+      autoRenewSwitchEl.addEventListener("change", (e) => {
+        if (!e.isTrusted) return;
+        App.setBodyData("auto-renew-via", "switch");
+      });
+    }
+  }
+  trackAutoRenewVia(App);
 };
