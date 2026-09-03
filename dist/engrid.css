@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, September 3, 2026 @ 09:49:52 ET
+ *  Date: Thursday, September 3, 2026 @ 12:00:25 ET
  *  By: michael
  *  ENGrid styles: v0.28.0
  *  ENGrid scripts: v0.28.1
@@ -9738,11 +9738,7 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]):not([data-engrid-transaction-recurring-frequency=annual]) .annual-renew-toggle .en__field--donationAmt>label{
   font-weight:600;
 }
-[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-toggle{
-  --give-annual-donation-amount-appended-label:"/YEARLY";
-  --recurring-frequency__button_padding:33px 4px;
-}
-[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-toggle input[name="transaction.recurrfreq"][value=ANNUAL]+label:after{
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .highlight-annual input[name="transaction.recurrfreq"][value=ANNUAL]+label:after{
   background-color:initial;
   background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg width='24' height='35' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13.433 22.466c-1.398-2.76-2.602-7.412 2.502-10.59 2.097 3.921.034 7.622-1.68 10.612.179.173-.71.198-.822-.022Z' fill='%23007931'/%3E%3Cpath d='M13.828 22.919c-3.71-1.66-5.94-3.86-5.392-8.94 3.236.164 5.864 3.032 5.926 6.355.022 1.177-.736 3.442-.534 2.585Z' fill='%23007931'/%3E%3Cpath d='M12.985 14.992c0-.498.57-.109.411.279.347 1.284.463 2.77.555 4.102.075 1.096 0 2.209 0 2.88 0 .672-.823.672-.805 0 .019-.671.12-1.916.083-3.232-.029-1.028-.083-1.47-.101-1.886-.033-.716-.156-1.421-.143-2.143Z' fill='%23007931'/%3E%3C/svg%3E");
   background-repeat:no-repeat;
@@ -9754,16 +9750,35 @@ body[data-engrid-debug]:before{
   order:-1;
   width:24px;
 }
-[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-toggle input[name="transaction.recurrfreq"][value=ANNUAL]:checked+label:after{
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .highlight-annual input[name="transaction.recurrfreq"][value=ANNUAL]:checked+label:after{
   background-color:initial;
   background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg width='24' height='35' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.992 14.402C13.097 8.942 14.827.702 24.003 0c0 7.85-5.451 11.893-9.92 15.12.117.419-1.1-.282-1.09-.718ZM13.636 24.768C6.353 23.573 1.412 20.715 0 11.423c5.754-1.244 11.705 2.613 13.367 8.493.588 2.084.317 6.47.27 4.852Z' fill='%23CCE4D6'/%3E%3Cpath d='M12.987 14.78c0-1.28 1.511-.28 1.091.718.921 3.304 1.23 7.126 1.473 10.554.201 2.82 0 5.683 0 7.41 0 1.727-2.186 1.727-2.137 0 .05-1.727.32-4.93.22-8.316-.077-2.646-.22-3.783-.27-4.851-.085-1.843-.413-3.658-.377-5.514Z' fill='%23CCE4D6'/%3E%3C/svg%3E");
 }
 @media screen and (max-width:600px){
+  [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .highlight-annual input[name="transaction.recurrfreq"][value=ANNUAL]+label:after{
+    display:none;
+  }
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-nudge{
+  margin-left:15%;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-nudge p.img{
+  margin-right:20px;
+  order:-1;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-nudge p.img img{
+  transform:scaleX(-1);
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-nudge p:first-of-type{
+  margin-right:0;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-toggle{
+  --give-annual-donation-amount-appended-label:"/YEARLY";
+  --recurring-frequency__button_padding:33px 4px;
+}
+@media screen and (max-width:600px){
   [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-toggle{
     padding:10px;
-  }
-  [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-toggle input[name="transaction.recurrfreq"][value=ANNUAL]+label:after{
-    display:none;
   }
 }
 [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-renew-toggle .en__field--donationAmt{
@@ -9779,10 +9794,10 @@ body[data-engrid-debug]:before{
     padding-right:0;
   }
 }
-[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content])[data-engrid-transaction-recurring-frequency=annual]:has(.annual-renew-toggle) .en__field--auto-renew{
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content])[data-engrid-transaction-recurring-frequency=annual]:has(.annual-renew-toggle) .en__field--auto-renew,[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content])[data-engrid-transaction-recurring-frequency=annual]:has(.highlight-annual) .en__field--auto-renew{
   display:none;
 }
-[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content])[data-engrid-transaction-recurring-frequency=annual][data-engrid-auto-renew-via=checkbox]:has(.annual-renew-toggle) .en__field--auto-renew:has(#en__field_auto_renew:checked){
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content])[data-engrid-transaction-recurring-frequency=annual][data-engrid-auto-renew-via=checkbox]:has(.annual-renew-toggle) .en__field--auto-renew:has(#en__field_auto_renew:checked),[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content])[data-engrid-transaction-recurring-frequency=annual][data-engrid-auto-renew-via=checkbox]:has(.highlight-annual) .en__field--auto-renew:has(#en__field_auto_renew:checked){
   display:block !important;
 }
 [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content])[data-engrid-transaction-recurring-frequency=monthly]:has(.annual-renew-toggle) .en__field--auto-renew{
@@ -9790,6 +9805,25 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .donation-fees-bottom{
   margin-top:20px;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]):not([data-engrid-annual-giving=true]) .showif-data-engrid-annual-giving{
+  display:none;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-giving-notice-banner{
+  background-color:#e5f2ea;
+  border-bottom:1px solid #007931;
+  color:#007931;
+  font-weight:700;
+  margin-top:40px;
+  text-align:center;
+  width:100%;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-giving-notice-banner svg{
+  margin-right:3px;
+  vertical-align:initial;
+}
+[data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .annual-giving-notice-banner+div{
+  margin-top:40px;
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter1col]#en__pagebuilder .body-header,[data-engrid-theme=tnc][data-engrid-layout=centercenter1col]#en__pagebuilder .page-backgroundImage{
   display:none !important;

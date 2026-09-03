@@ -395,7 +395,8 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
       autoRenew.closest(".en__field--auto-renew").remove();
     } else {
       const autoRenewToggle = document.querySelector(".annual-renew-toggle");
-      if (!autoRenewToggle) {
+      const highlightAnnual = document.querySelector(".highlight-annual");
+      if (!autoRenewToggle && !highlightAnnual) {
         annualFrequencyOption.parentElement.classList.add("hide");
       }
       App.setBodyData("auto-renew-on-page", "true");
@@ -1254,22 +1255,25 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
 
   // Tracks which control initiated a frequency change on "annual renew toggle" pages so CSS
   // can keep the bottom auto-renew checkbox visible only when it was the trigger.
+  // also runs on pages that highlight the annual option manually ".highlight-annual".
   function trackAutoRenewVia(App) {
     const annualRenewToggleEl = document.querySelector(".annual-renew-toggle");
     const autoRenewCheckboxEl = document.getElementById("en__field_auto_renew");
     const autoRenewSwitchEl = document.querySelector(
       ".annual-upsell-switch input"
     );
-    if (!annualRenewToggleEl || !autoRenewCheckboxEl) return;
+    const highlightAnnual = document.querySelector(".highlight-annual");
+    if ((!annualRenewToggleEl && !highlightAnnual) || !autoRenewCheckboxEl)
+      return;
 
-    document.querySelectorAll("[name='transaction.recurrfreq']").forEach(
-      (el) => {
+    document
+      .querySelectorAll("[name='transaction.recurrfreq']")
+      .forEach((el) => {
         el.addEventListener("change", (e) => {
           if (!e.isTrusted) return;
           App.setBodyData("auto-renew-via", "radio");
         });
-      }
-    );
+      });
 
     autoRenewCheckboxEl.addEventListener("change", (e) => {
       if (!e.isTrusted) return;

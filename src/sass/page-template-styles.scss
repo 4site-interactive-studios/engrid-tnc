@@ -2144,7 +2144,8 @@
 
     // This donation button styling is used for both annual-only pages and the annual renew toggle pages.
     .annual-renew-selector,
-    &[data-engrid-transaction-recurring-frequency="annual"] .annual-renew-toggle {
+    &[data-engrid-transaction-recurring-frequency="annual"]
+      .annual-renew-toggle {
       --give-annual-donation-amount-appended-label: "/Yearly";
       --donation-amount__button_font-size: 40px;
       --donation-amount__button_font-weight: 700;
@@ -2184,7 +2185,7 @@
 
         //Hide "Gift Amount" label
         .en__field--donationAmt > label {
-          display: none!important;
+          display: none !important;
         }
       }
 
@@ -2304,7 +2305,8 @@
     }
 
     // Auto renew toggle rules that apply when annual is not selected
-    &:not([data-engrid-transaction-recurring-frequency="annual"]) .annual-renew-toggle {
+    &:not([data-engrid-transaction-recurring-frequency="annual"])
+      .annual-renew-toggle {
       --donation-amount__button_count: 6;
 
       @media screen and (max-width: 992px) {
@@ -2316,11 +2318,7 @@
       }
     }
 
-    // Auto renew toggle rules that apply regardless of selected state
-    .annual-renew-toggle {
-      --give-annual-donation-amount-appended-label: "/YEARLY";
-      --recurring-frequency__button_padding: 33px 4px;
-
+    .highlight-annual {
       input[name="transaction.recurrfreq"][value="ANNUAL"] + label:after {
         content: "";
         order: -1;
@@ -2334,17 +2332,42 @@
         background-size: 24px 35px;
       }
 
-      input[name="transaction.recurrfreq"][value="ANNUAL"]:checked + label:after {
+      input[name="transaction.recurrfreq"][value="ANNUAL"]:checked
+        + label:after {
         background-color: transparent;
         background-image: url('data:image/svg+xml,<svg width="24" height="35" viewBox="0 0 24 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.9922 14.4023C13.0975 8.94241 14.8269 0.701665 24.0034 0C24.0036 7.84919 18.5515 11.8934 14.0836 15.1196C14.2005 15.5389 12.9838 14.8375 12.9922 14.4023Z" fill="%23CCE4D6"/><path d="M13.6364 24.7676C6.35311 23.5735 1.4118 20.7145 0 11.4227C5.75355 10.1792 11.7053 14.0364 13.3666 19.916C13.9553 21.9998 13.6837 26.3866 13.6364 24.7676Z" fill="%23CCE4D6"/><path d="M12.9871 14.7808C12.9871 13.5002 14.498 14.5003 14.0784 15.4982C14.9995 18.8016 15.3074 22.6237 15.5514 26.0525C15.752 28.8727 15.5514 31.7346 15.5514 33.4617C15.5514 35.1889 13.3648 35.1889 13.4144 33.4617C13.4641 31.7346 13.7335 28.5315 13.6346 25.1464C13.5573 22.5002 13.414 21.3629 13.3648 20.2948C13.2791 18.452 12.9513 16.6373 12.9871 14.7808Z" fill="%23CCE4D6"/></svg>');
       }
 
       @media screen and (max-width: 600px) {
-        & {
-          padding: 10px;
-        }
         input[name="transaction.recurrfreq"][value="ANNUAL"] + label:after {
           display: none;
+        }
+      }
+    }
+
+    // annual version of the nudge arrow
+    .annual-nudge {
+      margin-left: 15%;
+      p.img {
+        order: -1;
+        margin-right: 20px;
+        img {
+          transform: scaleX(-1);
+        }
+      }
+      p:first-of-type {
+        margin-right: 0;
+      }
+    }
+
+    // Auto renew toggle rules that apply regardless of selected state
+    .annual-renew-toggle {
+      --give-annual-donation-amount-appended-label: "/YEARLY";
+      --recurring-frequency__button_padding: 33px 4px;
+
+      @media screen and (max-width: 600px) {
+        & {
+          padding: 10px;
         }
       }
 
@@ -2357,7 +2380,9 @@
         margin-right: 0;
       }
 
-      .en__field--recurrfreq.en__field .en__field__element.en__field__element--radio .en__field__item {
+      .en__field--recurrfreq.en__field
+        .en__field__element.en__field__element--radio
+        .en__field__item {
         @media screen and (max-width: 599px) {
           padding-left: 0;
           padding-right: 0;
@@ -2366,7 +2391,9 @@
     }
 
     // Base auto-renew checkbox rule on "annual-renew-toggle" pages - hide on annual frequency.
-    &[data-engrid-transaction-recurring-frequency="annual"]:has(.annual-renew-toggle) {
+    // Also applied to ".highlight-annual" pages
+    &[data-engrid-transaction-recurring-frequency="annual"]:has(.annual-renew-toggle),
+    &[data-engrid-transaction-recurring-frequency="annual"]:has(.highlight-annual) {
       .en__field--auto-renew {
         display: none;
       }
@@ -2375,7 +2402,9 @@
     // Annual reached via the bottom auto-renew checkbox: keep it visible so it can be
     // unchecked. The :has(:checked) guard covers the case where the top switch's EN
     // dependency also checks the bottom box.
-    &[data-engrid-transaction-recurring-frequency="annual"][data-engrid-auto-renew-via="checkbox"]:has(.annual-renew-toggle) {
+    // Also applied to ".highlight-annual" pages
+    &[data-engrid-transaction-recurring-frequency="annual"][data-engrid-auto-renew-via="checkbox"]:has(.annual-renew-toggle),
+    &[data-engrid-transaction-recurring-frequency="annual"][data-engrid-auto-renew-via="checkbox"]:has(.highlight-annual) {
       .en__field--auto-renew:has(#en__field_auto_renew:checked) {
         display: block !important;
       }
@@ -2390,6 +2419,33 @@
 
     .donation-fees-bottom {
       margin-top: 20px;
+    }
+
+    // Conditional when URL contains "data-engrid-annual-giving=true"
+    // Usually from advocacy page redirects
+    &:not([data-engrid-annual-giving="true"]) {
+      .showif-data-engrid-annual-giving {
+        display: none;
+      }
+    }
+
+    .annual-giving-notice-banner {
+      background-color: #e5f2ea;
+      color: #007931;
+      border-bottom: 1px solid #007931;
+      width: 100%;
+      text-align: center;
+      font-weight: bold;
+      margin-top: 40px;
+
+      svg {
+        vertical-align: baseline;
+        margin-right: 3px;
+      }
+    }
+
+    .annual-giving-notice-banner + div {
+      margin-top: 40px;
     }
   }
 
