@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, September 1, 2026 @ 13:11:30 ET
+ *  Date: Thursday, September 3, 2026 @ 09:49:52 ET
  *  By: michael
  *  ENGrid styles: v0.28.0
  *  ENGrid scripts: v0.28.1
@@ -9146,7 +9146,7 @@ body[data-engrid-debug]:before{
   left:1.5rem;
   position:absolute;
   top:1.3rem;
-  transition:all .2s ease-in-out;
+  transition:color .2s ease-in-out;
   z-index:1;
 }
 [data-engrid-theme=tnc]:not([data-engrid-subtheme=gated-content]) .radio-to-buttons_donationAmt .en__field--withOther--active .en__field__item.en__field__item--other{
@@ -12416,6 +12416,7 @@ body[data-engrid-debug]:before{
   position:absolute;
   top:50%;
   transform:translateY(-50%);
+  transition:none;
   width:10.5px;
 }
 [data-engrid-theme=tnc][data-engrid-currency-code=USD]:not([data-engrid-en-nsg]):not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:before,[data-engrid-theme=tnc][data-engrid-currency-code=USD]:not([data-engrid-en-nsg]):not([data-engrid-subtheme=gated-content]) .annual-renew-selector .en__field__item.en__field__item--other:before,[data-engrid-theme=tnc][data-engrid-currency-code=USD]:not([data-engrid-en-nsg]):not([data-engrid-subtheme=gated-content])[data-engrid-transaction-recurring-frequency=annual] .annual-renew-toggle .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:before,[data-engrid-theme=tnc][data-engrid-currency-code=USD]:not([data-engrid-en-nsg]):not([data-engrid-subtheme=gated-content])[data-engrid-transaction-recurring-frequency=annual] .annual-renew-toggle .en__field__item.en__field__item--other:before{
