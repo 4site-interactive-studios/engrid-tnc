@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, August 31, 2026 @ 10:04:51 ET
+ *  Date: Wednesday, September 9, 2026 @ 11:51:51 ET
  *  By: michael
- *  ENGrid styles: v0.28.0
- *  ENGrid scripts: v0.28.1
+ *  ENGrid styles: v0.28.3
+ *  ENGrid scripts: v0.28.5
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -2611,6 +2611,9 @@ body[data-engrid-live-currency=active] .en__field--donationAmt .en__field__item:
     display:none;
   }
 }
+body:not(#en__pagebuilder):not([data-engrid-payment-type=applepay]) .showif-applepay-selected,body:not(#en__pagebuilder)[data-engrid-payment-type=applepay] .hideif-applepay-selected{
+  display:none;
+}
 input:-webkit-autofill,select:-webkit-autofill,textarea:-webkit-autofill{
   animation-name:onAutoFillStart;
   -webkit-transition:background-color 50000s ease-in-out 0s;
@@ -5068,6 +5071,140 @@ div[id^=nb-field-].nb-success input{
   display:none !important;
 }
 
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation .background-rotation-layer{
+  background-position:100% 0;
+  background-repeat:no-repeat;
+  background-size:cover;
+  height:100vh;
+  left:0;
+  object-position:top right;
+  opacity:0;
+  pointer-events:none;
+  position:fixed;
+  top:0;
+  transition:opacity var(--background-rotation-transition-duration, .5s) ease-in-out;
+  width:100vw;
+  z-index:0;
+}
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation .background-rotation-layer.active{
+  opacity:1;
+}
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation .background-rotation-layer.active:not(.background-rotation-outgoing){
+  z-index:1;
+}
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation.background-rotation-transition .background-rotation-layer{
+  will-change:opacity;
+}
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation img.background-rotation-layer{
+  display:block;
+  object-fit:cover;
+}
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation figure.background-rotation-layer.active{
+  pointer-events:auto;
+}
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation figure.media-with-attribution:not(.background-rotation-layer){
+  background-image:none;
+  display:block;
+  position:static;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation] .page-backgroundImage:before{
+  background-image:var(--background-rotation-image, none);
+}
+body:not(#en__pagebuilder)[data-engrid-layout=centercenter1col] .page-backgroundImage .page-background-rotation .background-rotation-layer,body:not(#en__pagebuilder)[data-engrid-layout=centercenter2col] .page-backgroundImage .page-background-rotation .background-rotation-layer{
+  background-position:top;
+  object-position:top center;
+}
+body:not(#en__pagebuilder)[data-engrid-layout=centerright1col] .page-backgroundImage .page-background-rotation .background-rotation-layer,body:not(#en__pagebuilder)[data-engrid-layout=rightright1col] .page-backgroundImage .page-background-rotation .background-rotation-layer{
+  background-position:0 0;
+  object-position:top left;
+}
+
+@media screen and (max-width:499px){
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation{
+    overflow:hidden;
+    position:relative;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation .background-rotation-layer,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation .background-rotation-layer{
+    display:none !important;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation .background-rotation-layer.active,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation .background-rotation-layer.active{
+    background-image:none !important;
+    display:block !important;
+    height:auto;
+    left:0;
+    opacity:1;
+    position:absolute;
+    top:0;
+    width:100%;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation .background-rotation-layer.background-rotation-flow,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation .background-rotation-layer.background-rotation-flow{
+    position:static;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation .background-rotation-layer.background-rotation-outgoing,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation .background-rotation-layer.background-rotation-outgoing{
+    z-index:0;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation figure.background-rotation-layer.active,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation figure.background-rotation-layer.active{
+    height:auto !important;
+    transform:none !important;
+    width:100% !important;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation figure.background-rotation-layer.background-rotation-flow,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation figure.background-rotation-layer.background-rotation-flow{
+    position:relative !important;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation img.background-rotation-layer.active,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation img.background-rotation-layer.active{
+    object-fit:fill;
+  }
+}
+.background-rotation-controls{
+  display:none;
+}
+
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls{
+  display:flex;
+  gap:.5rem;
+  position:fixed;
+  right:1rem;
+  top:1rem;
+  z-index:8;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button{
+  align-items:center;
+  background-color:#000000bf;
+  border:none;
+  border-radius:50%;
+  color:#fff;
+  cursor:pointer;
+  display:flex;
+  height:40px;
+  justify-content:center;
+  padding:0;
+  transition:background-color .15s ease-in-out;
+  width:40px;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button:focus-visible,body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button:hover{
+  background-color:#000000bf;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button:focus-visible{
+  outline:2px solid #fff;
+  outline-offset:2px;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button:disabled{
+  cursor:default;
+  opacity:.4;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button:disabled:focus-visible,body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button:disabled:hover{
+  background-color:#00000080;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button svg{
+  height:20px;
+  width:20px;
+}
+
+@media (prefers-reduced-motion:reduce){
+  body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation .background-rotation-layer{
+    transition:none;
+  }
+}
 [data-engrid-theme]{
   --premium__border-width:0;
   --premium__border-color:none;
