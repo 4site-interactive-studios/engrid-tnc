@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, September 3, 2026 @ 12:00:25 ET
+ *  Date: Wednesday, September 9, 2026 @ 11:37:11 ET
  *  By: michael
  *  ENGrid styles: v0.28.0
  *  ENGrid scripts: v0.28.1
@@ -13545,6 +13545,164 @@ body[data-engrid-debug]:before{
 @media screen and (max-width:767.99px){
   [data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top{
     max-width:548px;
+  }
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1{
+  --arc1_accent:var(--color-green);
+  --arc1_background-color_checked:#3d9c46;
+  --arc1_track_background-color:#e6f2eb;
+  --arc1_icon:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-icon.svg?v=1788959872000);
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox{
+  align-items:center;
+  border-bottom:2px solid var(--arc1_accent);
+  color:var(--default_color);
+  column-gap:20px;
+  display:grid;
+  grid-template-areas:"icon heading toggle" "icon description toggle";
+  grid-template-columns:auto 1fr auto;
+  padding:20px;
+  transition:background-color .3s ease-in-out,border-color .3s ease-in-out;
+}
+@media screen and (max-width:628px){
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox{
+    column-gap:15px;
+    padding:15px;
+  }
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:before,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:before{
+  background-color:var(--arc1_accent);
+  content:"";
+  grid-area:icon;
+  height:90px;
+  mask:var(--arc1_icon) center/contain no-repeat;
+  transition:background-color .3s ease-in-out;
+  width:90px;
+}
+@media screen and (max-width:628px){
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:before,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:before{
+    height:60px;
+    width:60px;
+  }
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label:not(.en__field__label--item),[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__label:not(.en__field__label--item){
+  color:var(--arc1_accent);
+  display:block;
+  font-family:var(--serif-fonts);
+  font-size:30px;
+  font-weight:700;
+  grid-area:heading;
+  line-height:1.2;
+  text-transform:none;
+  transition:color .3s ease-in-out;
+  width:auto;
+}
+@media screen and (max-width:628px){
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label:not(.en__field__label--item),[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__label:not(.en__field__label--item){
+    font-size:22px;
+  }
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__element.en__field__element--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__item.en__field__item,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__element.en__field__element--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__item.en__field__item{
+  display:contents;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label--item,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__label--item{
+  display:block;
+  font-size:14px;
+  font-weight:400;
+  grid-area:description;
+  line-height:1.4;
+  margin:0;
+  transition:color .3s ease-in-out;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label--item:before,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__label--item:before{
+  content:none;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__input--checkbox{
+  clip:auto;
+  align-self:center;
+  appearance:none;
+  -webkit-appearance:none;
+  background-color:var(--arc1_track_background-color);
+  border:2px solid var(--arc1_accent);
+  border-radius:999px;
+  clip-path:none;
+  cursor:pointer;
+  grid-area:toggle;
+  height:38px;
+  justify-self:center;
+  margin:0;
+  overflow:visible;
+  padding:0;
+  position:relative;
+  transition:background-color .3s ease-in-out,border-color .3s ease-in-out;
+  white-space:normal;
+  width:76px;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox:before,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__input--checkbox:before{
+  background-color:var(--arc1_accent);
+  border-radius:50%;
+  content:"";
+  height:26px;
+  left:5px;
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  transition:transform .3s ease-in-out,background-color .3s ease-in-out;
+  width:26px;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox:focus-visible,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__input--checkbox:focus-visible{
+  outline:2px solid var(--arc1_accent);
+  outline-offset:3px;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox:focus+.en__field__label,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__input--checkbox:focus+.en__field__label{
+  outline:none;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked),[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked){
+  background-color:var(--arc1_background-color_checked);
+  border-bottom-color:#0000;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked):before,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked):before{
+  background-color:#fff;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__label--item,[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__label:not(.en__field__label--item),[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__label--item,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__label:not(.en__field__label--item){
+  color:#fff;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox{
+  background-color:initial;
+  border-color:#fff;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox:before,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox:before{
+  background-color:#fff;
+  transform:translate(38px, -50%);
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox:focus-visible,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox:focus-visible{
+  outline-color:#fff;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked):after,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked):after{
+  align-self:end;
+  color:#fff;
+  content:"Thanks!";
+  font-family:Kalam,cursive;
+  font-size:22px;
+  grid-area:toggle;
+  justify-self:center;
+  line-height:1;
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter2col] .auto-renew-checkbox-1 .en__field--checkbox,[data-engrid-theme=tnc][data-engrid-layout=centercenter2col] .auto-renew-checkbox-1.en__field--checkbox{
+  flex:0 0 auto;
+  margin-inline:-100px;
+  width:calc(100% + 200px);
+}
+@media screen and (max-width:1200px){
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter2col] .auto-renew-checkbox-1 .en__field--checkbox,[data-engrid-theme=tnc][data-engrid-layout=centercenter2col] .auto-renew-checkbox-1.en__field--checkbox{
+    margin-inline:-80px;
+    width:calc(100% + 160px);
+  }
+}
+@media screen and (max-width:992px){
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter2col] .auto-renew-checkbox-1 .en__field--checkbox,[data-engrid-theme=tnc][data-engrid-layout=centercenter2col] .auto-renew-checkbox-1.en__field--checkbox{
+    margin-inline:-20px;
+    width:calc(100% + 40px);
   }
 }
 

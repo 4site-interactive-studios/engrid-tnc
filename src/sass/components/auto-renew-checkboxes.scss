@@ -1,0 +1,206 @@
+// Custom checkbox designs for the auto-renew membership question.
+// The page builder applies a class like "auto-renew-checkbox-1" to the field
+// or to its parent formblock. Each numbered class is a complete, self-contained design.
+
+.auto-renew-checkbox-1 {
+  --arc1_accent: var(--color-green); // #007931
+  --arc1_background-color_checked: #3d9c46;
+  --arc1_track_background-color: #e6f2eb;
+  --arc1_icon: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-icon.svg?v=1788959872000");
+
+  // The class may be on the field itself or on a parent formblock
+  &.en__field--checkbox,
+  .en__field--checkbox {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "icon heading toggle"
+      "icon description toggle";
+    column-gap: 20px;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 2px solid var(--arc1_accent);
+    color: var(--default_color);
+    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+
+    @media screen and (max-width: 628px) {
+      column-gap: 15px;
+      padding: 15px;
+    }
+
+    // Icon, recolored via mask so it can switch between green and white
+    &::before {
+      content: "";
+      grid-area: icon;
+      width: 90px;
+      height: 90px;
+      background-color: var(--arc1_accent);
+      -webkit-mask: var(--arc1_icon) center / contain no-repeat;
+      mask: var(--arc1_icon) center / contain no-repeat;
+      transition: background-color 0.3s ease-in-out;
+
+      @media screen and (max-width: 628px) {
+        width: 60px;
+        height: 60px;
+      }
+    }
+
+    // Heading: "Auto-renew my annual membership"
+    .en__field__label:not(.en__field__label--item) {
+      display: block;
+      width: auto; // undo enPage.css's fixed 180px label width
+      grid-area: heading;
+      font-family: var(--serif-fonts);
+      font-size: 30px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: var(--arc1_accent);
+      text-transform: none;
+      transition: color 0.3s ease-in-out;
+
+      @media screen and (max-width: 628px) {
+        font-size: 22px;
+      }
+    }
+
+    // Let the input and its label participate directly in the grid.
+    // The doubled-up classes are needed to outspecificy engrid's
+    // ".en__component--formblock .en__field.en__field--checkbox.en__field--question .en__field__element"
+    .en__field__element.en__field__element--checkbox,
+    .en__field__item.en__field__item {
+      display: contents;
+    }
+
+    // Description: "Please set my TNC membership to automatically renew..."
+    .en__field__label--item {
+      display: block;
+      grid-area: description;
+      font-size: 14px;
+      line-height: 1.4;
+      font-weight: 400;
+      margin: 0;
+      transition: color 0.3s ease-in-out;
+
+      // Remove the default engrid checkbox box
+      &::before {
+        content: none;
+      }
+    }
+
+    // Toggle switch, built from the checkbox input itself
+    .en__field__input--checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      // Undo engrid's clip-based hiding of the native input
+      clip: auto;
+      -webkit-clip-path: none;
+      clip-path: none;
+      position: relative;
+      overflow: visible;
+      white-space: normal;
+      grid-area: toggle;
+      align-self: center;
+      justify-self: center;
+      width: 76px;
+      height: 38px;
+      margin: 0;
+      padding: 0;
+      background-color: var(--arc1_track_background-color);
+      border: 2px solid var(--arc1_accent);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+
+      // Knob
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 5px;
+        transform: translateY(-50%);
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background-color: var(--arc1_accent);
+        transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--arc1_accent);
+        outline-offset: 3px;
+      }
+
+      // The toggle itself carries the focus indicator, not the description label
+      &:focus + .en__field__label {
+        outline: none;
+      }
+    }
+
+    // Checked state
+    &:has(.en__field__input--checkbox:checked) {
+      background-color: var(--arc1_background-color_checked);
+      border-bottom-color: transparent;
+
+      &::before {
+        background-color: #ffffff;
+      }
+
+      .en__field__label:not(.en__field__label--item),
+      .en__field__label--item {
+        color: #ffffff;
+      }
+
+      .en__field__input--checkbox {
+        background-color: transparent;
+        border-color: #ffffff;
+
+        &::before {
+          background-color: #ffffff;
+          transform: translate(38px, -50%);
+        }
+
+        &:focus-visible {
+          outline-color: #ffffff;
+        }
+      }
+
+      // "Thanks!" under the toggle
+      &::after {
+        content: "Thanks!";
+        grid-area: toggle;
+        align-self: end;
+        justify-self: center;
+        font-family: Kalam, cursive;
+        font-size: 22px;
+        line-height: 1;
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+// In the centercenter2col layout, break the strip out of body-main's inline
+// padding so it spans (nearly) the full column width like the design. The
+// margins mirror --engrid__body-main_padding for each layout breakpoint.
+&[data-engrid-layout="centercenter2col"] .auto-renew-checkbox-1 {
+  &.en__field--checkbox,
+  .en__field--checkbox {
+    // Column padding is 110px here; stay 10px inside the 620px column.
+    // The width calc + flex-basis reset are needed because the field is a
+    // flex item of the formblock with flex-basis: 100%, which would otherwise
+    // override the width and ignore the negative margins.
+    margin-inline: -100px;
+    width: calc(100% + 200px);
+    flex: 0 0 auto;
+
+    @media screen and (max-width: 1200px) {
+      margin-inline: -80px;
+      width: calc(100% + 160px);
+    }
+
+    @media screen and (max-width: 992px) {
+      margin-inline: -20px;
+      width: calc(100% + 40px);
+    }
+  }
+}
