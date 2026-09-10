@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, September 9, 2026 @ 11:37:11 ET
+ *  Date: Thursday, September 10, 2026 @ 21:22:08 ET
  *  By: michael
- *  ENGrid styles: v0.28.0
- *  ENGrid scripts: v0.28.1
+ *  ENGrid styles: v0.28.3
+ *  ENGrid scripts: v0.28.5
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -2611,6 +2611,9 @@ body[data-engrid-live-currency=active] .en__field--donationAmt .en__field__item:
     display:none;
   }
 }
+body:not(#en__pagebuilder):not([data-engrid-payment-type=applepay]) .showif-applepay-selected,body:not(#en__pagebuilder)[data-engrid-payment-type=applepay] .hideif-applepay-selected{
+  display:none;
+}
 input:-webkit-autofill,select:-webkit-autofill,textarea:-webkit-autofill{
   animation-name:onAutoFillStart;
   -webkit-transition:background-color 50000s ease-in-out 0s;
@@ -5068,6 +5071,140 @@ div[id^=nb-field-].nb-success input{
   display:none !important;
 }
 
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation .background-rotation-layer{
+  background-position:100% 0;
+  background-repeat:no-repeat;
+  background-size:cover;
+  height:100vh;
+  left:0;
+  object-position:top right;
+  opacity:0;
+  pointer-events:none;
+  position:fixed;
+  top:0;
+  transition:opacity var(--background-rotation-transition-duration, .5s) ease-in-out;
+  width:100vw;
+  z-index:0;
+}
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation .background-rotation-layer.active{
+  opacity:1;
+}
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation .background-rotation-layer.active:not(.background-rotation-outgoing){
+  z-index:1;
+}
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation.background-rotation-transition .background-rotation-layer{
+  will-change:opacity;
+}
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation img.background-rotation-layer{
+  display:block;
+  object-fit:cover;
+}
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation figure.background-rotation-layer.active{
+  pointer-events:auto;
+}
+body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation figure.media-with-attribution:not(.background-rotation-layer){
+  background-image:none;
+  display:block;
+  position:static;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation] .page-backgroundImage:before{
+  background-image:var(--background-rotation-image, none);
+}
+body:not(#en__pagebuilder)[data-engrid-layout=centercenter1col] .page-backgroundImage .page-background-rotation .background-rotation-layer,body:not(#en__pagebuilder)[data-engrid-layout=centercenter2col] .page-backgroundImage .page-background-rotation .background-rotation-layer{
+  background-position:top;
+  object-position:top center;
+}
+body:not(#en__pagebuilder)[data-engrid-layout=centerright1col] .page-backgroundImage .page-background-rotation .background-rotation-layer,body:not(#en__pagebuilder)[data-engrid-layout=rightright1col] .page-backgroundImage .page-background-rotation .background-rotation-layer{
+  background-position:0 0;
+  object-position:top left;
+}
+
+@media screen and (max-width:499px){
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation{
+    overflow:hidden;
+    position:relative;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation .background-rotation-layer,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation .background-rotation-layer{
+    display:none !important;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation .background-rotation-layer.active,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation .background-rotation-layer.active{
+    background-image:none !important;
+    display:block !important;
+    height:auto;
+    left:0;
+    opacity:1;
+    position:absolute;
+    top:0;
+    width:100%;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation .background-rotation-layer.background-rotation-flow,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation .background-rotation-layer.background-rotation-flow{
+    position:static;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation .background-rotation-layer.background-rotation-outgoing,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation .background-rotation-layer.background-rotation-outgoing{
+    z-index:0;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation figure.background-rotation-layer.active,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation figure.background-rotation-layer.active{
+    height:auto !important;
+    transform:none !important;
+    width:100% !important;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation figure.background-rotation-layer.background-rotation-flow,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation figure.background-rotation-layer.background-rotation-flow{
+    position:relative !important;
+  }
+  body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-background-image] .page-backgroundImage .page-background-rotation img.background-rotation-layer.active,body:not(#en__pagebuilder)[data-engrid-page-background=image][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty] .page-backgroundImage .page-background-rotation img.background-rotation-layer.active{
+    object-fit:fill;
+  }
+}
+.background-rotation-controls{
+  display:none;
+}
+
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls{
+  display:flex;
+  gap:.5rem;
+  position:fixed;
+  right:1rem;
+  top:1rem;
+  z-index:8;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button{
+  align-items:center;
+  background-color:#000000bf;
+  border:none;
+  border-radius:50%;
+  color:#fff;
+  cursor:pointer;
+  display:flex;
+  height:40px;
+  justify-content:center;
+  padding:0;
+  transition:background-color .15s ease-in-out;
+  width:40px;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button:focus-visible,body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button:hover{
+  background-color:#000000bf;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button:focus-visible{
+  outline:2px solid #fff;
+  outline-offset:2px;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button:disabled{
+  cursor:default;
+  opacity:.4;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button:disabled:focus-visible,body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button:disabled:hover{
+  background-color:#00000080;
+}
+body:not(#en__pagebuilder)[data-engrid-background-rotation=active] .background-rotation-controls button svg{
+  height:20px;
+  width:20px;
+}
+
+@media (prefers-reduced-motion:reduce){
+  body:not(#en__pagebuilder) .page-backgroundImage .page-background-rotation .background-rotation-layer{
+    transition:none;
+  }
+}
 [data-engrid-theme]{
   --premium__border-width:0;
   --premium__border-color:none;
@@ -13552,60 +13689,46 @@ body[data-engrid-debug]:before{
   --arc1_background-color_checked:#3d9c46;
   --arc1_track_background-color:#e6f2eb;
   --arc1_icon:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-icon.svg?v=1788959872000);
+  container-type:inline-size;
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox{
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox{
   align-items:center;
   border-bottom:2px solid var(--arc1_accent);
   color:var(--default_color);
-  column-gap:20px;
+  column-gap:25px;
   display:grid;
-  grid-template-areas:"icon heading toggle" "icon description toggle";
+  grid-template-areas:"icon heading toggle" "description description thanks";
   grid-template-columns:auto 1fr auto;
-  padding:20px;
+  padding:30px 40px;
+  row-gap:8px;
   transition:background-color .3s ease-in-out,border-color .3s ease-in-out;
 }
-@media screen and (max-width:628px){
-  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox{
-    column-gap:15px;
-    padding:15px;
-  }
-}
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:before,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:before{
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:before{
   background-color:var(--arc1_accent);
   content:"";
   grid-area:icon;
-  height:90px;
+  height:70px;
   mask:var(--arc1_icon) center/contain no-repeat;
   transition:background-color .3s ease-in-out;
-  width:90px;
+  width:70px;
 }
-@media screen and (max-width:628px){
-  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:before,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:before{
-    height:60px;
-    width:60px;
-  }
-}
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label:not(.en__field__label--item),[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__label:not(.en__field__label--item){
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label:not(.en__field__label--item){
   color:var(--arc1_accent);
   display:block;
   font-family:var(--serif-fonts);
-  font-size:30px;
+  font-size:28px;
   font-weight:700;
   grid-area:heading;
-  line-height:1.2;
+  line-height:1.15;
+  max-width:340px;
   text-transform:none;
   transition:color .3s ease-in-out;
   width:auto;
 }
-@media screen and (max-width:628px){
-  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label:not(.en__field__label--item),[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__label:not(.en__field__label--item){
-    font-size:22px;
-  }
-}
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__element.en__field__element--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__item.en__field__item,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__element.en__field__element--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__item.en__field__item{
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__element.en__field__element--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__item.en__field__item{
   display:contents;
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label--item,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__label--item{
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label--item{
   display:block;
   font-size:14px;
   font-weight:400;
@@ -13614,12 +13737,12 @@ body[data-engrid-debug]:before{
   margin:0;
   transition:color .3s ease-in-out;
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label--item:before,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__label--item:before{
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label--item:before{
   content:none;
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__input--checkbox{
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox{
   clip:auto;
-  align-self:center;
+  align-self:start;
   appearance:none;
   -webkit-appearance:none;
   background-color:var(--arc1_track_background-color);
@@ -13628,79 +13751,325 @@ body[data-engrid-debug]:before{
   clip-path:none;
   cursor:pointer;
   grid-area:toggle;
-  height:38px;
+  height:44px;
   justify-self:center;
-  margin:0;
+  margin:2px 0 0;
   overflow:visible;
   padding:0;
   position:relative;
   transition:background-color .3s ease-in-out,border-color .3s ease-in-out;
   white-space:normal;
-  width:76px;
+  width:92px;
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox:before,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__input--checkbox:before{
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox:before{
   background-color:var(--arc1_accent);
   border-radius:50%;
   content:"";
-  height:26px;
-  left:5px;
+  height:32px;
+  left:6px;
   position:absolute;
   top:50%;
   transform:translateY(-50%);
   transition:transform .3s ease-in-out,background-color .3s ease-in-out;
-  width:26px;
+  width:32px;
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox:focus-visible,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__input--checkbox:focus-visible{
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox:focus-visible{
   outline:2px solid var(--arc1_accent);
   outline-offset:3px;
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox:focus+.en__field__label,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox .en__field__input--checkbox:focus+.en__field__label{
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox:focus+.en__field__label{
   outline:none;
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked),[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked){
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked){
   background-color:var(--arc1_background-color_checked);
   border-bottom-color:#0000;
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked):before,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked):before{
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked):before{
   background-color:#fff;
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__label--item,[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__label:not(.en__field__label--item),[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__label--item,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__label:not(.en__field__label--item){
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__label--item,[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__label:not(.en__field__label--item){
   color:#fff;
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox{
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox{
   background-color:initial;
   border-color:#fff;
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox:before,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox:before{
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox:before{
   background-color:#fff;
-  transform:translate(38px, -50%);
+  transform:translate(44px, -50%);
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox:focus-visible,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox:focus-visible{
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox:focus-visible{
   outline-color:#fff;
 }
-[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked):after,[data-engrid-theme=tnc] .auto-renew-checkbox-1.en__field--checkbox:has(.en__field__input--checkbox:checked):after{
-  align-self:end;
+[data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked):after{
+  align-self:start;
   color:#fff;
   content:"Thanks!";
   font-family:Kalam,cursive;
-  font-size:22px;
-  grid-area:toggle;
+  font-size:14px;
+  grid-area:thanks;
   justify-self:center;
-  line-height:1;
+  line-height:1.2;
+  white-space:nowrap;
 }
-[data-engrid-theme=tnc][data-engrid-layout=centercenter2col] .auto-renew-checkbox-1 .en__field--checkbox,[data-engrid-theme=tnc][data-engrid-layout=centercenter2col] .auto-renew-checkbox-1.en__field--checkbox{
+@container (max-width: 520px){
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox{
+    column-gap:15px;
+    padding:20px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:before{
+    height:64px;
+    width:64px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label:not(.en__field__label--item){
+    font-size:24px;
+    line-height:1.2;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox{
+    height:36px;
+    width:76px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox:before{
+    height:26px;
+    left:5px;
+    width:26px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox:before{
+    transform:translate(36px, -50%);
+  }
+}
+@container (max-width: 360px){
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox{
+    column-gap:10px;
+    padding:15px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:before{
+    height:48px;
+    width:48px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label:not(.en__field__label--item){
+    font-size:20px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__label--item{
+    font-size:13px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox{
+    height:32px;
+    width:64px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox:before{
+    height:22px;
+    left:5px;
+    width:22px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox:has(.en__field__input--checkbox:checked) .en__field__input--checkbox:before{
+    transform:translate(28px, -50%);
+  }
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-2{
+  --arc2_accent:var(--color-green);
+  --arc2_background-color:#f5f5f5;
+  --arc2_box_background-color_checked:#1a1a1a;
+  --arc2_image_unchecked:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-image-unchecked.png?v=1788959875000);
+  --arc2_image_checked:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-image-checked.png?v=1788998286000);
+  --arc2_tick-icon:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-checkbox-tick.svg?v=1788998359000);
+  --arc2_image-position_unchecked:center;
+  --arc2_image-position_checked:center;
+  --arc2_rail-width:34cqw;
+  --arc2_rail-height:calc(var(--arc2_rail-width)*0.7);
+  --arc2_rail-right:35px;
+  --arc2_rail-breakout:26px;
+  --arc2_image-shadow:0 10px 24px #00000040;
+  container-type:inline-size;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox{
+  background-color:var(--arc2_background-color);
+  border-top:2px solid var(--arc2_accent);
+  color:var(--default_color);
+  display:block;
+  padding:25px 35px;
+  padding-right:calc(var(--arc2_rail-width) + var(--arc2_rail-right) + 30px);
+  position:relative;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__label:not(.en__field__label--item){
+  color:var(--arc2_accent);
+  display:block;
+  font-family:var(--serif-fonts);
+  font-size:24px;
+  font-weight:700;
+  line-height:1.15;
+  margin:0 0 25px;
+  text-transform:none;
+  width:auto;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__element.en__field__element--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__item.en__field__item{
+  display:contents;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__label--item{
+  align-items:center;
+  font-size:15px;
+  font-weight:400;
+  gap:18px;
+  line-height:1.4;
+  margin:0;
+  position:relative;
+  width:auto;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__label--item:before{
+  background-color:#fff;
+  border:2px solid var(--arc2_accent);
+  border-radius:0;
+  content:"";
+  flex:0 0 auto;
+  height:54px;
+  margin:0;
+  min-width:54px;
+  padding:0;
+  transition:background-color .3s ease-in-out,border-color .3s ease-in-out;
+  width:54px;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__label--item:after{
+  background-color:var(--arc2_box_background-color_checked);
+  background-image:var(--arc2_tick-icon);
+  background-position:50%;
+  background-repeat:no-repeat;
+  background-size:56% auto;
+  content:"";
+  height:54px;
+  left:0;
+  opacity:0;
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  transition:opacity .3s ease-in-out;
+  width:54px;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__input--checkbox:checked+.en__field__label--item:before,[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__input--checkbox:focus+.en__field__label--item:before,[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__input--checkbox:hover+.en__field__label--item:before{
+  background-color:#fff;
+  border-color:var(--arc2_accent);
+  color:#0000;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__input--checkbox:checked+.en__field__label--item:after{
+  opacity:1;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__input--checkbox:focus+.en__field__label--item{
+  outline:none;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__input--checkbox:focus-visible+.en__field__label--item:before{
+  outline:2px solid var(--arc2_accent);
+  outline-offset:3px;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox:before{
+  background-image:var(--arc2_image_unchecked), var(--arc2_image_checked);
+  background-position-x:var(--arc2_image-position_unchecked), var(--arc2_image-position_checked);
+  background-position-y:0, var(--arc2_rail-height);
+  background-repeat:no-repeat;
+  background-size:cover, cover;
+  box-shadow:var(--arc2_image-shadow);
+  content:"";
+  height:var(--arc2_rail-height);
+  position:absolute;
+  right:var(--arc2_rail-right);
+  top:calc(var(--arc2_rail-breakout)*-1);
+  transition:background-position-y .6s cubic-bezier(.4, 0, .2, 1);
+  width:var(--arc2_rail-width);
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox:has(.en__field__input--checkbox:checked):before{
+  background-position-y:calc(var(--arc2_rail-height)*-1), 0;
+}
+@media (prefers-reduced-motion:reduce){
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox:before{
+    transition:none;
+  }
+}
+@container (max-width: 520px){
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox{
+    padding:20px 25px;
+    padding-right:calc(var(--arc2_rail-width) + var(--arc2_rail-right) + 25px);
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__label:not(.en__field__label--item){
+    font-size:20px;
+    line-height:1.2;
+    margin-bottom:20px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__label--item{
+    font-size:14px;
+    gap:14px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__label--item:before{
+    height:46px;
+    min-width:46px;
+    width:46px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__label--item:after{
+    height:46px;
+    width:46px;
+  }
+}
+@container (max-width: 360px){
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox{
+    padding:15px;
+    padding-right:calc(var(--arc2_rail-width) + var(--arc2_rail-right) + 20px);
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__label:not(.en__field__label--item){
+    font-size:18px;
+    margin-bottom:15px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__label--item{
+    font-size:13px;
+    gap:12px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__label--item:before{
+    height:40px;
+    min-width:40px;
+    width:40px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2 .en__field.en__field--checkbox .en__field__label--item:after{
+    height:40px;
+    width:40px;
+  }
+}
+@media screen and (min-width:1201px){
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2.auto-renew-checkbox-full-width{
+    --arc2_rail-width:51cqw;
+    --arc2_rail-right:55px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2.auto-renew-checkbox-full-width .en__field.en__field--checkbox{
+    padding:25px 35px;
+    padding-right:calc(var(--arc2_rail-width) + var(--arc2_rail-right) + 30px);
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2.auto-renew-checkbox-full-width .en__field.en__field--checkbox .en__field__label:not(.en__field__label--item){
+    font-size:24px;
+    line-height:1.15;
+    margin-bottom:25px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2.auto-renew-checkbox-full-width .en__field.en__field--checkbox .en__field__label--item{
+    font-size:15px;
+    gap:18px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2.auto-renew-checkbox-full-width .en__field.en__field--checkbox .en__field__label--item:before{
+    height:54px;
+    min-width:54px;
+    width:54px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-2.auto-renew-checkbox-full-width .en__field.en__field--checkbox .en__field__label--item:after{
+    height:54px;
+    width:54px;
+  }
+}
+[data-engrid-theme=tnc][data-engrid-layout=centercenter2col] :is(.auto-renew-checkbox-1,.auto-renew-checkbox-2).auto-renew-checkbox-full-width .en__field--checkbox{
   flex:0 0 auto;
   margin-inline:-100px;
   width:calc(100% + 200px);
 }
 @media screen and (max-width:1200px){
-  [data-engrid-theme=tnc][data-engrid-layout=centercenter2col] .auto-renew-checkbox-1 .en__field--checkbox,[data-engrid-theme=tnc][data-engrid-layout=centercenter2col] .auto-renew-checkbox-1.en__field--checkbox{
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter2col] :is(.auto-renew-checkbox-1,.auto-renew-checkbox-2).auto-renew-checkbox-full-width .en__field--checkbox{
     margin-inline:-80px;
     width:calc(100% + 160px);
   }
 }
 @media screen and (max-width:992px){
-  [data-engrid-theme=tnc][data-engrid-layout=centercenter2col] .auto-renew-checkbox-1 .en__field--checkbox,[data-engrid-theme=tnc][data-engrid-layout=centercenter2col] .auto-renew-checkbox-1.en__field--checkbox{
+  [data-engrid-theme=tnc][data-engrid-layout=centercenter2col] :is(.auto-renew-checkbox-1,.auto-renew-checkbox-2).auto-renew-checkbox-full-width .en__field--checkbox{
     margin-inline:-20px;
     width:calc(100% + 40px);
   }

@@ -1,6 +1,19 @@
 // Custom checkbox designs for the auto-renew membership question.
-// The page builder applies a class like "auto-renew-checkbox-1" to the field
-// or to its parent formblock. Each numbered class is a complete, self-contained design.
+// The page builder applies a class like "auto-renew-checkbox-1" to the field's
+// parent formblock. Each numbered class is a complete, self-contained design.
+// Adding "auto-renew-checkbox-full-width" to the same formblock makes the
+// strip break out of the form padding to span the full column width.
+//
+// Element sizes are driven by container queries on the formblock, so the
+// design adapts to whatever width it actually gets (full-width strip, padded
+// form column, or narrow mobile screen).
+//
+// Design 1 (.auto-renew-checkbox-1): icon + heading + toggle switch, green
+//   fill when checked.
+// Design 2 (.auto-renew-checkbox-2): gray band with green top rule, big
+//   square checkbox, and a landscape photo rail on the right that sits like
+//   the design (breaking out above the rule, with a drop shadow); when
+//   checked, the second photo slides up and pushes the first one out.
 
 .auto-renew-checkbox-1 {
   --arc1_accent: var(--color-green); // #007931
@@ -8,41 +21,32 @@
   --arc1_track_background-color: #e6f2eb;
   --arc1_icon: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-icon.svg?v=1788959872000");
 
-  // The class may be on the field itself or on a parent formblock
-  &.en__field--checkbox,
+  container-type: inline-size;
+
   .en__field--checkbox {
     display: grid;
     grid-template-columns: auto 1fr auto;
     grid-template-areas:
       "icon heading toggle"
-      "icon description toggle";
-    column-gap: 20px;
+      "description description thanks";
+    column-gap: 25px;
+    row-gap: 8px;
     align-items: center;
-    padding: 20px;
+    padding: 30px 40px;
     border-bottom: 2px solid var(--arc1_accent);
     color: var(--default_color);
     transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
-
-    @media screen and (max-width: 628px) {
-      column-gap: 15px;
-      padding: 15px;
-    }
 
     // Icon, recolored via mask so it can switch between green and white
     &::before {
       content: "";
       grid-area: icon;
-      width: 90px;
-      height: 90px;
+      width: 70px;
+      height: 70px;
       background-color: var(--arc1_accent);
       -webkit-mask: var(--arc1_icon) center / contain no-repeat;
       mask: var(--arc1_icon) center / contain no-repeat;
       transition: background-color 0.3s ease-in-out;
-
-      @media screen and (max-width: 628px) {
-        width: 60px;
-        height: 60px;
-      }
     }
 
     // Heading: "Auto-renew my annual membership"
@@ -50,17 +54,14 @@
       display: block;
       width: auto; // undo enPage.css's fixed 180px label width
       grid-area: heading;
+      max-width: 340px; // wrap onto two lines like the design
       font-family: var(--serif-fonts);
-      font-size: 30px;
-      line-height: 1.2;
+      font-size: 28px;
+      line-height: 1.15;
       font-weight: 700;
       color: var(--arc1_accent);
       text-transform: none;
       transition: color 0.3s ease-in-out;
-
-      @media screen and (max-width: 628px) {
-        font-size: 22px;
-      }
     }
 
     // Let the input and its label participate directly in the grid.
@@ -99,11 +100,11 @@
       overflow: visible;
       white-space: normal;
       grid-area: toggle;
-      align-self: center;
+      align-self: start;
       justify-self: center;
-      width: 76px;
-      height: 38px;
-      margin: 0;
+      width: 92px;
+      height: 44px;
+      margin: 2px 0 0; // optically align the top of the toggle with the first heading line
       padding: 0;
       background-color: var(--arc1_track_background-color);
       border: 2px solid var(--arc1_accent);
@@ -116,10 +117,10 @@
         content: "";
         position: absolute;
         top: 50%;
-        left: 5px;
+        left: 6px;
         transform: translateY(-50%);
-        width: 26px;
-        height: 26px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         background-color: var(--arc1_accent);
         transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
@@ -156,7 +157,7 @@
 
         &::before {
           background-color: #ffffff;
-          transform: translate(38px, -50%);
+          transform: translate(44px, -50%);
         }
 
         &:focus-visible {
@@ -167,40 +168,382 @@
       // "Thanks!" under the toggle
       &::after {
         content: "Thanks!";
-        grid-area: toggle;
-        align-self: end;
+        grid-area: thanks;
+        align-self: start;
         justify-self: center;
+        white-space: nowrap;
         font-family: Kalam, cursive;
-        font-size: 22px;
-        line-height: 1;
+        font-size: 14px;
+        line-height: 1.2;
         color: #ffffff;
+      }
+    }
+  }
+
+  // Compact tier: padded form column (~414px) and small screens
+  @container (max-width: 520px) {
+    .en__field--checkbox {
+      column-gap: 15px;
+      padding: 20px;
+
+      &::before {
+        width: 64px;
+        height: 64px;
+      }
+
+      .en__field__label:not(.en__field__label--item) {
+        font-size: 24px;
+        line-height: 1.2;
+      }
+
+      .en__field__input--checkbox {
+        width: 76px;
+        height: 36px;
+
+        &::before {
+          left: 5px;
+          width: 26px;
+          height: 26px;
+        }
+      }
+
+      &:has(.en__field__input--checkbox:checked)
+        .en__field__input--checkbox::before {
+        transform: translate(36px, -50%);
+      }
+    }
+  }
+
+  // Mini tier: very narrow containers (~305px, e.g. 992-1200px viewports)
+  @container (max-width: 360px) {
+    .en__field--checkbox {
+      column-gap: 10px;
+      padding: 15px;
+
+      &::before {
+        width: 48px;
+        height: 48px;
+      }
+
+      .en__field__label:not(.en__field__label--item) {
+        font-size: 20px;
+      }
+
+      .en__field__label--item {
+        font-size: 13px;
+      }
+
+      .en__field__input--checkbox {
+        width: 64px;
+        height: 32px;
+
+        &::before {
+          left: 5px;
+          width: 22px;
+          height: 22px;
+        }
+      }
+
+      &:has(.en__field__input--checkbox:checked)
+        .en__field__input--checkbox::before {
+        transform: translate(28px, -50%);
       }
     }
   }
 }
 
-// In the centercenter2col layout, break the strip out of body-main's inline
-// padding so it spans (nearly) the full column width like the design. The
+// ---------------------------------------------------------------------------
+// Design 2: gray band with a green top rule, a big square checkbox, and a
+// landscape photo rail on the right, positioned like the design (breaking
+// out above the rule, floating above the band's bottom edge, with a drop
+// shadow). When checked, the box fills black with a white tick and the
+// checked photo slides up from below, pushing the unchecked one out through
+// the top (and back down again when unchecked).
+//
+// The rail is a single pseudo-element sized exactly to the photo area: both
+// photos are its two background layers, and the push animates their
+// background-position-y together. Backgrounds never paint outside the
+// element's box, so no clipping container is needed — the parked photo below
+// the rail simply doesn't render, and the shadow sits on the rail itself.
+// ---------------------------------------------------------------------------
+.auto-renew-checkbox-2 {
+  --arc2_accent: var(--color-green); // #007931
+  --arc2_background-color: #f5f5f5;
+  --arc2_box_background-color_checked: #1a1a1a;
+  --arc2_image_unchecked: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-image-unchecked.png?v=1788959875000");
+  --arc2_image_checked: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-image-checked.png?v=1788998286000");
+  --arc2_tick-icon: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-checkbox-tick.svg?v=1788998359000");
+  // Horizontal focal points for the rail crop of the landscape photos
+  --arc2_image-position_unchecked: center;
+  --arc2_image-position_checked: center;
+  // Rail geometry
+  --arc2_rail-width: 34cqw;
+  // Taller than the photos' native 16:9 (≈10:7) so the rail uses the band's
+  // height better; the photos crop horizontally (tune the focal points above).
+  --arc2_rail-height: calc(var(--arc2_rail-width) * 0.7);
+  --arc2_rail-right: 35px;
+  --arc2_rail-breakout: 26px;
+  --arc2_image-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+
+  container-type: inline-size;
+
+  .en__field.en__field--checkbox {
+    display: block;
+    position: relative; // anchor for the photo rail
+    padding: 25px 35px;
+    // Reserve room for the photo rail: rail width + right inset + gap.
+    padding-right: calc(var(--arc2_rail-width) + var(--arc2_rail-right) + 30px);
+    background-color: var(--arc2_background-color);
+    border-top: 2px solid var(--arc2_accent);
+    color: var(--default_color);
+
+    // Heading: "Auto-renew my annual membership"
+    .en__field__label:not(.en__field__label--item) {
+      display: block;
+      width: auto; // undo enPage.css's fixed 180px label width
+      margin: 0 0 25px;
+      font-family: var(--serif-fonts);
+      font-size: 24px;
+      line-height: 1.15;
+      font-weight: 700;
+      color: var(--arc2_accent);
+      text-transform: none;
+    }
+
+    // Let the input and its label participate directly in the field flow.
+    // The doubled-up classes are needed to outspecificy engrid's
+    // ".en__component--formblock .en__field.en__field--checkbox.en__field--question .en__field__element"
+    .en__field__element.en__field__element--checkbox,
+    .en__field__item.en__field__item {
+      display: contents;
+    }
+
+    // Description with the big square box (core renders the box as ::before
+    // and keeps the label a centered flex row, which we keep)
+    .en__field__label--item {
+      position: relative; // anchor for the tick overlay
+      align-items: center; // undo the theme's flex-start so box and text center
+      width: auto;
+      gap: 18px;
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.4;
+      font-weight: 400;
+
+      // The box
+      &::before {
+        content: "";
+        flex: 0 0 auto;
+        width: 54px;
+        min-width: 54px;
+        height: 54px;
+        margin: 0; // gap handles the spacing to the text
+        padding: 0;
+        background-color: #ffffff;
+        border: 2px solid var(--arc2_accent);
+        border-radius: 0;
+        transition: background-color 0.3s ease-in-out,
+          border-color 0.3s ease-in-out;
+      }
+
+      // Black fill + tick that fades in over the box when checked
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 54px;
+        height: 54px;
+        background-color: var(--arc2_box_background-color_checked);
+        background-image: var(--arc2_tick-icon);
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 56% auto;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+      }
+    }
+
+    // Undo core's recoloring of the box on hover/focus and on :checked
+    // (the checked look comes from the tick overlay instead)
+    .en__field__input--checkbox:hover + .en__field__label--item::before,
+    .en__field__input--checkbox:focus + .en__field__label--item::before,
+    .en__field__input--checkbox:checked + .en__field__label--item::before {
+      color: transparent;
+      background-color: #ffffff;
+      border-color: var(--arc2_accent);
+    }
+
+    .en__field__input--checkbox:checked + .en__field__label--item::after {
+      opacity: 1;
+    }
+
+    // The box carries the focus indicator, not the whole description label
+    .en__field__input--checkbox:focus + .en__field__label--item {
+      outline: none;
+    }
+
+    .en__field__input--checkbox:focus-visible
+      + .en__field__label--item::before {
+      outline: 2px solid var(--arc2_accent);
+      outline-offset: 3px;
+    }
+
+    // The photo rail: one box, both photos as its two background layers.
+    // The unchecked photo sits in place; the checked photo is parked one
+    // rail-height below the box (backgrounds never paint outside the box,
+    // so it is invisible). When checked, both slide up together so the new
+    // photo pushes the old one out through the top of the rail; unchecking
+    // reverses the push. The drop shadow sits on the rail box itself.
+    &::before {
+      content: "";
+      position: absolute;
+      top: calc(-1 * var(--arc2_rail-breakout)); // break out above the rule
+      right: var(--arc2_rail-right);
+      width: var(--arc2_rail-width);
+      height: var(--arc2_rail-height);
+      background-image: var(--arc2_image_unchecked), var(--arc2_image_checked);
+      background-size: cover, cover;
+      background-position-x: var(--arc2_image-position_unchecked),
+        var(--arc2_image-position_checked);
+      background-position-y: 0, var(--arc2_rail-height); // checked parked below
+      background-repeat: no-repeat;
+      box-shadow: var(--arc2_image-shadow);
+      transition: background-position-y 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &:has(.en__field__input--checkbox:checked)::before {
+      background-position-y: calc(-1 * var(--arc2_rail-height)), 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &::before {
+        transition: none;
+      }
+    }
+  }
+
+  // Compact tier: padded form column (~414px) and small screens
+  @container (max-width: 520px) {
+    .en__field.en__field--checkbox {
+      padding: 20px 25px;
+      padding-right: calc(var(--arc2_rail-width) + var(--arc2_rail-right) + 25px);
+
+      .en__field__label:not(.en__field__label--item) {
+        font-size: 20px;
+        line-height: 1.2;
+        margin-bottom: 20px;
+      }
+
+      .en__field__label--item {
+        font-size: 14px;
+        gap: 14px;
+
+        &::before {
+          width: 46px;
+          min-width: 46px;
+          height: 46px;
+        }
+
+        &::after {
+          width: 46px;
+          height: 46px;
+        }
+      }
+    }
+  }
+
+  // Mini tier: very narrow containers (~305px, e.g. 992-1200px viewports)
+  @container (max-width: 360px) {
+    .en__field.en__field--checkbox {
+      padding: 15px;
+      padding-right: calc(var(--arc2_rail-width) + var(--arc2_rail-right) + 20px);
+
+      .en__field__label:not(.en__field__label--item) {
+        font-size: 18px;
+        margin-bottom: 15px;
+      }
+
+      .en__field__label--item {
+        font-size: 13px;
+        gap: 12px;
+
+        &::before {
+          width: 40px;
+          min-width: 40px;
+          height: 40px;
+        }
+
+        &::after {
+          width: 40px;
+          height: 40px;
+        }
+      }
+    }
+  }
+
+  // Full-width strip at desktop: the breakout makes the field ~614px wide
+  // while the formblock container stays ~414px (compact tier), so step the
+  // sizes back up and widen the rail to keep the mock's proportions.
+  @media screen and (min-width: 1201px) {
+    &.auto-renew-checkbox-full-width {
+      --arc2_rail-width: 51cqw; // ≈ 34% of the 614px strip
+      --arc2_rail-right: 55px;
+
+      .en__field.en__field--checkbox {
+        padding: 25px 35px;
+        padding-right: calc(
+          var(--arc2_rail-width) + var(--arc2_rail-right) + 30px
+        );
+
+        .en__field__label:not(.en__field__label--item) {
+          font-size: 24px;
+          line-height: 1.15;
+          margin-bottom: 25px;
+        }
+
+        .en__field__label--item {
+          font-size: 15px;
+          gap: 18px;
+
+          &::before {
+            width: 54px;
+            min-width: 54px;
+            height: 54px;
+          }
+
+          &::after {
+            width: 54px;
+            height: 54px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Full-width variant: in the centercenter2col layout, break the strip out of
+// body-main's inline padding so it spans (nearly) the full column width. The
 // margins mirror --engrid__body-main_padding for each layout breakpoint.
-&[data-engrid-layout="centercenter2col"] .auto-renew-checkbox-1 {
-  &.en__field--checkbox,
+// Column padding is 110px here; stay 10px inside the 620px column. The width
+// calc + flex-basis reset are needed because the field is a flex item of the
+// formblock with flex-basis: 100%, which would otherwise override the width
+// and ignore the negative margins.
+&[data-engrid-layout="centercenter2col"]
+  :is(.auto-renew-checkbox-1, .auto-renew-checkbox-2).auto-renew-checkbox-full-width
   .en__field--checkbox {
-    // Column padding is 110px here; stay 10px inside the 620px column.
-    // The width calc + flex-basis reset are needed because the field is a
-    // flex item of the formblock with flex-basis: 100%, which would otherwise
-    // override the width and ignore the negative margins.
-    margin-inline: -100px;
-    width: calc(100% + 200px);
-    flex: 0 0 auto;
+  margin-inline: -100px;
+  width: calc(100% + 200px);
+  flex: 0 0 auto;
 
-    @media screen and (max-width: 1200px) {
-      margin-inline: -80px;
-      width: calc(100% + 160px);
-    }
+  @media screen and (max-width: 1200px) {
+    margin-inline: -80px;
+    width: calc(100% + 160px);
+  }
 
-    @media screen and (max-width: 992px) {
-      margin-inline: -20px;
-      width: calc(100% + 40px);
-    }
+  @media screen and (max-width: 992px) {
+    margin-inline: -20px;
+    width: calc(100% + 40px);
   }
 }
