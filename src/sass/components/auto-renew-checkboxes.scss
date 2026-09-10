@@ -16,52 +16,62 @@
 //   checked, the second photo slides up and pushes the first one out.
 
 .auto-renew-checkbox-1 {
-  --arc1_accent: var(--color-green); // #007931
-  --arc1_background-color_checked: #3d9c46;
-  --arc1_track_background-color: #e6f2eb;
+  --arc1_accent: #4aa241; // interactive green: fill, toggle, rule (Figma bg)
+  --arc1_heading-color: #027932; // brand green used for heading text + icon
+  --arc1_description-color: #525252;
+  --arc1_track-color: #e6f2eb;
+  --arc1_background-color: #ffffff;
   --arc1_icon: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-icon.svg?v=1788959872000");
 
   container-type: inline-size;
 
   .en__field--checkbox {
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: 1fr auto;
     grid-template-areas:
-      "icon heading toggle"
-      "description description thanks";
-    column-gap: 25px;
-    row-gap: 8px;
-    align-items: center;
-    padding: 30px 40px;
+      "heading toggle"
+      "description .";
+    column-gap: 20px;
+    row-gap: 7px;
+    align-items: start;
+    padding: 47px 47px 44px;
+    background-color: var(--arc1_background-color);
+    // Always the same color as the checked-state fill below, so the line
+    // reads as a visible accent rule when unchecked and blends away once
+    // the panel itself turns this color on check (matches the Figma mock,
+    // which never actually removes the rule).
     border-bottom: 2px solid var(--arc1_accent);
     color: var(--default_color);
-    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out;
 
-    // Icon, recolored via mask so it can switch between green and white
-    &::before {
-      content: "";
-      grid-area: icon;
-      width: 70px;
-      height: 70px;
-      background-color: var(--arc1_accent);
-      -webkit-mask: var(--arc1_icon) center / contain no-repeat;
-      mask: var(--arc1_icon) center / contain no-repeat;
-      transition: background-color 0.3s ease-in-out;
-    }
-
-    // Heading: "Auto-renew my annual membership"
+    // Heading: "Auto-renew my annual membership" — the leaf icon lives on
+    // this element (not the field) so it can sit in a tight flex row with
+    // the heading text, independent of the grid's column-gap to the toggle.
     .en__field__label:not(.en__field__label--item) {
-      display: block;
-      width: auto; // undo enPage.css's fixed 180px label width
+      display: flex;
+      align-items: center;
+      gap: 9px;
       grid-area: heading;
-      max-width: 340px; // wrap onto two lines like the design
+      width: auto; // undo enPage.css's fixed 180px label width
       font-family: var(--serif-fonts);
-      font-size: 28px;
-      line-height: 1.15;
-      font-weight: 700;
-      color: var(--arc1_accent);
+      font-size: 40px;
+      line-height: 37px;
+      font-weight: 600;
+      color: var(--arc1_heading-color);
       text-transform: none;
       transition: color 0.3s ease-in-out;
+
+      // Icon, recolored via mask so it can switch between green and white
+      &::before {
+        content: "";
+        flex: 0 0 auto;
+        width: 87px;
+        height: 93px;
+        background-color: var(--arc1_heading-color);
+        -webkit-mask: var(--arc1_icon) center / contain no-repeat;
+        mask: var(--arc1_icon) center / contain no-repeat;
+        transition: background-color 0.3s ease-in-out;
+      }
     }
 
     // Let the input and its label participate directly in the grid.
@@ -76,9 +86,10 @@
     .en__field__label--item {
       display: block;
       grid-area: description;
-      font-size: 14px;
-      line-height: 1.4;
-      font-weight: 400;
+      font-size: 18px;
+      line-height: 26px;
+      font-weight: 600; // same weight in both states, no reflow on check
+      color: var(--arc1_description-color);
       margin: 0;
       transition: color 0.3s ease-in-out;
 
@@ -102,28 +113,30 @@
       grid-area: toggle;
       align-self: start;
       justify-self: center;
-      width: 92px;
-      height: 44px;
-      margin: 2px 0 0; // optically align the top of the toggle with the first heading line
+      width: 117px;
+      height: 60px;
+      margin: 0;
       padding: 0;
-      background-color: var(--arc1_track_background-color);
+      background-color: var(--arc1_track-color);
       border: 2px solid var(--arc1_accent);
       border-radius: 999px;
       cursor: pointer;
       transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 
-      // Knob
+      // Knob — animates via `left` (not transform) so the checked position
+      // is a simple calc() against the track's own width, not a hand-tuned
+      // translate distance layered on top of the unchecked `left`.
       &::before {
         content: "";
         position: absolute;
         top: 50%;
-        left: 6px;
+        left: 8px;
         transform: translateY(-50%);
-        width: 32px;
-        height: 32px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
         background-color: var(--arc1_accent);
-        transition: transform 0.3s ease-in-out, background-color 0.3s ease-in-out;
+        transition: left 0.3s ease-in-out, background-color 0.3s ease-in-out;
       }
 
       &:focus-visible {
@@ -135,20 +148,45 @@
       &:focus + .en__field__label {
         outline: none;
       }
+
+      // "Thanks!", anchored to the toggle's own box (not a grid row shared
+      // with the heading) so it always sits a fixed 7px below the toggle
+      // regardless of how tall the heading text wraps.
+      &::after {
+        content: "Thanks!";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-top: 7px;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        font-family: Kalam, cursive;
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 24px;
+        color: #ffffff;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease-in-out;
+      }
+
+      &:checked::after {
+        opacity: 1;
+      }
     }
 
     // Checked state
     &:has(.en__field__input--checkbox:checked) {
-      background-color: var(--arc1_background-color_checked);
-      border-bottom-color: transparent;
-
-      &::before {
-        background-color: #ffffff;
-      }
+      background-color: var(--arc1_accent);
 
       .en__field__label:not(.en__field__label--item),
       .en__field__label--item {
         color: #ffffff;
+      }
+
+      // Icon mask recolors with the heading text
+      .en__field__label:not(.en__field__label--item)::before {
+        background-color: #ffffff;
       }
 
       .en__field__input--checkbox {
@@ -156,26 +194,13 @@
         border-color: #ffffff;
 
         &::before {
+          left: calc(100% - 36px); // flush to the end of the track
           background-color: #ffffff;
-          transform: translate(44px, -50%);
         }
 
         &:focus-visible {
           outline-color: #ffffff;
         }
-      }
-
-      // "Thanks!" under the toggle
-      &::after {
-        content: "Thanks!";
-        grid-area: thanks;
-        align-self: start;
-        justify-self: center;
-        white-space: nowrap;
-        font-family: Kalam, cursive;
-        font-size: 14px;
-        line-height: 1.2;
-        color: #ffffff;
       }
     }
   }
@@ -183,33 +208,44 @@
   // Compact tier: padded form column (~414px) and small screens
   @container (max-width: 520px) {
     .en__field--checkbox {
-      column-gap: 15px;
-      padding: 20px;
-
-      &::before {
-        width: 64px;
-        height: 64px;
-      }
+      column-gap: 14px;
+      row-gap: 6px;
+      padding: 24px 24px 22px;
 
       .en__field__label:not(.en__field__label--item) {
+        gap: 6px;
         font-size: 24px;
-        line-height: 1.2;
+        line-height: 26px;
+
+        &::before {
+          width: 56px;
+          height: 60px;
+        }
+      }
+
+      .en__field__label--item {
+        font-size: 14px;
+        line-height: 20px;
       }
 
       .en__field__input--checkbox {
         width: 76px;
-        height: 36px;
+        height: 40px;
 
         &::before {
-          left: 5px;
-          width: 26px;
-          height: 26px;
+          left: 6px;
+          width: 28px;
+          height: 28px;
         }
-      }
 
-      &:has(.en__field__input--checkbox:checked)
-        .en__field__input--checkbox::before {
-        transform: translate(36px, -50%);
+        &::after {
+          font-size: 16px;
+          line-height: 20px;
+        }
+
+        &:checked::before {
+          left: calc(100% - 28px); // flush to the end of the track
+        }
       }
     }
   }
@@ -218,35 +254,43 @@
   @container (max-width: 360px) {
     .en__field--checkbox {
       column-gap: 10px;
-      padding: 15px;
-
-      &::before {
-        width: 48px;
-        height: 48px;
-      }
+      row-gap: 5px;
+      padding: 16px;
 
       .en__field__label:not(.en__field__label--item) {
-        font-size: 20px;
+        gap: 5px;
+        font-size: 18px;
+        line-height: 20px;
+
+        &::before {
+          width: 44px;
+          height: 47px;
+        }
       }
 
       .en__field__label--item {
         font-size: 13px;
+        line-height: 18px;
       }
 
       .en__field__input--checkbox {
         width: 64px;
-        height: 32px;
+        height: 34px;
 
         &::before {
           left: 5px;
-          width: 22px;
-          height: 22px;
+          width: 24px;
+          height: 24px;
         }
-      }
 
-      &:has(.en__field__input--checkbox:checked)
-        .en__field__input--checkbox::before {
-        transform: translate(28px, -50%);
+        &::after {
+          font-size: 14px;
+          line-height: 18px;
+        }
+
+        &:checked::before {
+          left: calc(100% - 24px); // flush to the end of the track
+        }
       }
     }
   }
@@ -267,8 +311,9 @@
 // the rail simply doesn't render, and the shadow sits on the rail itself.
 // ---------------------------------------------------------------------------
 .auto-renew-checkbox-2 {
-  --arc2_accent: var(--color-green); // #007931
-  --arc2_background-color: #f5f5f5;
+  --arc2_accent: #00703c; // rule green (Figma-accurate; was --color-green)
+  --arc2_heading-color: #027932; // heading text + checkbox border green
+  --arc2_background-color: #f8f8f8;
   --arc2_box_background-color_checked: #1a1a1a;
   --arc2_image_unchecked: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-image-unchecked.png?v=1788959875000");
   --arc2_image_checked: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-image-checked.png?v=1788998286000");
@@ -278,8 +323,10 @@
   --arc2_image-position_checked: center;
   // Rail geometry
   --arc2_rail-width: 34cqw;
-  // Taller than the photos' native 16:9 (≈10:7) so the rail uses the band's
-  // height better; the photos crop horizontally (tune the focal points above).
+  // Taller than the photos' native 16:9 (≈10:7) — deliberately, since the
+  // card renders much narrower here than Figma's "lg" mock, and the native
+  // ratio crops too shallow at that width. The photos crop horizontally
+  // (tune the focal points above).
   --arc2_rail-height: calc(var(--arc2_rail-width) * 0.7);
   --arc2_rail-right: 35px;
   --arc2_rail-breakout: 26px;
@@ -306,7 +353,7 @@
       font-size: 24px;
       line-height: 1.15;
       font-weight: 700;
-      color: var(--arc2_accent);
+      color: var(--arc2_heading-color);
       text-transform: none;
     }
 
@@ -340,7 +387,7 @@
         margin: 0; // gap handles the spacing to the text
         padding: 0;
         background-color: #ffffff;
-        border: 2px solid var(--arc2_accent);
+        border: 2px solid var(--arc2_heading-color);
         border-radius: 0;
         transition: background-color 0.3s ease-in-out,
           border-color 0.3s ease-in-out;
@@ -372,7 +419,7 @@
     .en__field__input--checkbox:checked + .en__field__label--item::before {
       color: transparent;
       background-color: #ffffff;
-      border-color: var(--arc2_accent);
+      border-color: var(--arc2_heading-color);
     }
 
     .en__field__input--checkbox:checked + .en__field__label--item::after {
@@ -386,7 +433,7 @@
 
     .en__field__input--checkbox:focus-visible
       + .en__field__label--item::before {
-      outline: 2px solid var(--arc2_accent);
+      outline: 2px solid var(--arc2_heading-color);
       outline-offset: 3px;
     }
 
@@ -517,6 +564,237 @@
             width: 54px;
             height: 54px;
           }
+        }
+      }
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Design 3: a plain inline row (no colored panel) matching the rest of the
+// page's fields — hairline dividers above/below, toggle on the left, the
+// leaf icon and heading/description stacked to its right. The toggle track
+// itself carries the checked color (not the whole row): pale green track +
+// solid green knob when unchecked, solid green track + white knob with a
+// small sprout icon when checked. Built from screenshots of Figma node
+// 5166:6235 (view-seat rate limit blocked a direct pull) — tune the tokens
+// below once the "md"/mobile mock can be checked against.
+// ---------------------------------------------------------------------------
+.auto-renew-checkbox-3 {
+  --arc3_accent: #3d9c46; // toggle-checked track + unchecked knob
+  --arc3_track-color: #cfe8d0; // pale unchecked track
+  --arc3_text-color: var(--color-green); // heading + description + icon
+  --arc3_divider-color: #dddddd;
+  --arc3_icon: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-icon.svg?v=1788959872000");
+  // Tiny sprout shown inside the knob once checked. Inlined as a data URI
+  // (from the supplied icon-plant.svg, corrected to a 22x22 viewBox — the
+  // source file's declared 22x18 clipped the bottom of the shape) so the
+  // design works with no upload step; swap in a hosted CDN url() here the
+  // same way the other designs' assets are referenced, if preferred.
+  --arc3_knob-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22' fill='none'%3E%3Cpath d='M9.80096 7.76688C9.71649 7.06146 9.59454 6.33515 9.61446 5.62406C9.62662 5.19023 9.81399 4.70181 9.92396 4.28121C10.1485 3.42227 10.3388 2.46984 10.9055 1.76149C11.9367 0.472673 13.8303 0.00193264 15.4138 0C15.3367 0.446105 15.2768 0.896307 15.1608 1.33636C14.7898 2.74456 14.0817 4.08354 12.8887 4.95323C12.3624 5.33687 11.7239 5.53166 11.1097 5.7192C10.8834 5.78883 10.5947 5.87064 10.3875 5.97356C10.5653 6.41225 10.801 7.49159 10.8982 7.98001C11.0963 8.9764 11.3265 10.1077 11.4308 11.1158C11.4993 11.7787 11.4753 12.6027 11.5186 13.2856C11.5572 13.8951 11.6202 14.8442 11.5309 15.4181C12.6398 15.6381 13.1612 16.1182 14.0677 16.7355C14.4783 17.0151 14.884 17.2627 15.3016 17.5615C16.1142 18.1434 16.8456 18.9466 17.8865 18.9894C19.1296 19.0406 20.4891 18.3008 21.3519 19.5784C21.4771 19.7637 21.5984 20.0487 21.7129 20.1958C21.7287 20.0935 21.8872 19.9276 21.9481 19.7964V21.9481H0C0.434317 21.2003 2.72339 20.3517 3.54431 19.9974C4.05911 19.775 4.77646 19.5972 5.26978 19.2731C5.66107 19.0159 6.13294 18.4727 6.41251 18.0957C7.4792 16.6569 8.30245 16.1866 9.91715 15.5737C9.92573 14.9046 10.0233 14.3358 10.0885 13.6753C10.1341 13.2135 10.0737 12.6632 10.0745 12.1914C10.0753 11.6925 10.0942 11.171 10.0731 10.6743C8.3445 10.3367 6.93839 10.4726 5.35397 9.46845C3.39736 8.22847 2.51567 6.26867 1.95966 4.11261C3.58478 3.871 4.96417 3.88855 6.55706 4.43302C8.02161 4.9336 9.09585 6.53197 9.71677 7.90837L9.88198 8.31057C9.87046 8.14013 9.83055 7.93818 9.80096 7.76688ZM4.88292 5.97524L4.96811 5.90378C4.81516 5.81565 4.66795 5.7283 4.50832 5.65264C4.62886 5.76213 4.75186 5.87969 4.88292 5.97524Z' fill='%2349A942'/%3E%3C/svg%3E");
+
+  container-type: inline-size;
+
+  .en__field--checkbox {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    grid-template-areas:
+      "toggle icon heading"
+      "toggle icon description";
+    column-gap: 20px;
+    align-items: center;
+    padding: 24px 0;
+    border-top: 1px solid var(--arc3_divider-color);
+    border-bottom: 1px solid var(--arc3_divider-color);
+    color: var(--arc3_text-color);
+
+    // Leaf icon — same mark as design 1, recolored via mask
+    &::before {
+      content: "";
+      grid-area: icon;
+      width: 58px;
+      height: 58px;
+      background-color: var(--arc3_text-color);
+      -webkit-mask: var(--arc3_icon) center / contain no-repeat;
+      mask: var(--arc3_icon) center / contain no-repeat;
+    }
+
+    // Heading: "I'm interested in an Annual Membership"
+    .en__field__label:not(.en__field__label--item) {
+      display: block;
+      grid-area: heading;
+      align-self: end;
+      width: auto; // undo enPage.css's fixed 180px label width
+      font-family: var(--serif-fonts);
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: var(--arc3_text-color);
+      text-transform: none;
+    }
+
+    // Let the input and its label participate directly in the grid.
+    // The doubled-up classes are needed to outspecificy engrid's
+    // ".en__component--formblock .en__field.en__field--checkbox.en__field--question .en__field__element"
+    .en__field__element.en__field__element--checkbox,
+    .en__field__item.en__field__item {
+      display: contents;
+    }
+
+    // Description: "Please set my TNC membership to automatically renew..."
+    .en__field__label--item {
+      display: block;
+      grid-area: description;
+      align-self: start;
+      font-size: 16px;
+      line-height: 1.4;
+      font-weight: 600;
+      color: var(--arc3_text-color);
+      margin: 0;
+
+      // Remove the default engrid checkbox box
+      &::before {
+        content: none;
+      }
+    }
+
+    // Toggle switch, built from the checkbox input itself. Unlike design 1,
+    // the checked color lives on the track/knob only — the row around it
+    // never changes.
+    .en__field__input--checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      // Undo engrid's clip-based hiding of the native input
+      clip: auto;
+      -webkit-clip-path: none;
+      clip-path: none;
+      position: relative;
+      overflow: visible;
+      white-space: normal;
+      grid-area: toggle;
+      align-self: center;
+      width: 100px;
+      height: 50px;
+      margin: 0;
+      padding: 0;
+      background-color: var(--arc3_track-color);
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+
+      // Knob — solid color when unchecked; swaps to white + the sprout icon
+      // when checked. Animates via `left`, flush against the track's own
+      // width (see design 1's knob for why this is a calc(), not a
+      // hand-tuned translate distance).
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 5px;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--arc3_accent);
+        background-image: none;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 20px 20px;
+        transition: left 0.3s ease-in-out, background-color 0.3s ease-in-out;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--arc3_accent);
+        outline-offset: 3px;
+      }
+
+      // The toggle itself carries the focus indicator, not the heading
+      &:focus + .en__field__label {
+        outline: none;
+      }
+
+      &:checked {
+        background-color: var(--arc3_accent);
+
+        &::before {
+          left: calc(100% - 45px); // flush to the end of the track
+          background-color: #ffffff;
+          background-image: var(--arc3_knob-icon);
+        }
+      }
+    }
+  }
+
+  // Compact tier: padded form column (~414px) and small screens
+  @container (max-width: 520px) {
+    .en__field--checkbox {
+      column-gap: 16px;
+      padding: 18px 0;
+
+      &::before {
+        width: 46px;
+        height: 46px;
+      }
+
+      .en__field__label:not(.en__field__label--item) {
+        font-size: 20px;
+      }
+
+      .en__field__label--item {
+        font-size: 14px;
+      }
+
+      .en__field__input--checkbox {
+        width: 84px;
+        height: 42px;
+
+        &::before {
+          left: 4px;
+          width: 34px;
+          height: 34px;
+          background-size: 17px 17px;
+        }
+
+        &:checked::before {
+          left: calc(100% - 38px); // flush to the end of the track
+        }
+      }
+    }
+  }
+
+  // Mini tier: very narrow containers (~305px, e.g. 992-1200px viewports)
+  @container (max-width: 360px) {
+    .en__field--checkbox {
+      column-gap: 12px;
+      padding: 14px 0;
+
+      &::before {
+        width: 38px;
+        height: 38px;
+      }
+
+      .en__field__label:not(.en__field__label--item) {
+        font-size: 18px;
+      }
+
+      .en__field__label--item {
+        font-size: 13px;
+      }
+
+      .en__field__input--checkbox {
+        width: 72px;
+        height: 36px;
+
+        &::before {
+          left: 4px;
+          width: 28px;
+          height: 28px;
+          background-size: 14px 14px;
+        }
+
+        &:checked::before {
+          left: calc(100% - 32px); // flush to the end of the track
         }
       }
     }
