@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, September 14, 2026 @ 10:56:22 ET
+ *  Date: Monday, September 14, 2026 @ 13:26:08 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -14098,11 +14098,13 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc] .auto-renew-checkbox-3{
   --arc3_accent:#00703c;
   --arc3_track-color:#cce4d6;
-  --arc3_text-color:var(--color-green);
-  --arc3_divider-color:#ddd;
+  --arc3_text-color:#00703c;
+  --arc3_divider-color:#cdcdcd;
   --arc3_icon:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-icon.svg?v=1788959872000);
+  --arc3_max-width:401px;
   --arc3_knob-icon:url("data:image/svg+xml;charset=utf-8,%3Csvg width='13.454' height='15.574' viewBox='6.096 8.774 13.454 15.574' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M13.938 16.54c-.085-.705-.207-1.43-.187-2.142.012-.434.2-.922.31-1.343.224-.859.415-1.811.981-2.52 1.031-1.288 2.925-1.76 4.508-1.761-.077.446-.137.896-.252 1.336-.371 1.409-1.08 2.748-2.273 3.617-.526.384-1.164.579-1.779.766-.226.07-.515.152-.722.255.178.438.414 1.518.51 2.006.199.996.43 2.128.534 3.136.068.663.044 1.487.087 2.17.039.609.102 1.558.013 2.132-.526.109-1.075.142-1.614.156.008-.67.106-1.238.171-1.899.046-.462-.015-1.012-.014-1.484.001-.499.02-1.02-.001-1.517-1.729-.337-3.135-.201-4.72-1.206-1.956-1.24-2.838-3.2-3.394-5.356 1.625-.241 3.005-.223 4.598.32 1.464.502 2.539 2.1 3.16 3.476l.165.402c-.012-.17-.052-.372-.081-.543ZM9.02 14.75l.085-.072c-.153-.088-.3-.176-.46-.251.12.11.244.227.375.322Z' fill='%2349A942'/%3E%3C/svg%3E");
   --arc_inset:0px;
+  justify-content:center;
 }
 [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox{
   align-items:center;
@@ -14111,29 +14113,33 @@ body[data-engrid-debug]:before{
   color:var(--arc3_text-color);
   column-gap:20px;
   display:grid;
-  grid-template-areas:"toggle icon heading" "toggle description description";
-  grid-template-columns:auto auto 1fr;
-  padding:24px 0;
-}
-[data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox:before{
-  background-color:var(--arc3_text-color);
-  content:"";
-  grid-area:icon;
-  height:58px;
-  mask:var(--arc3_icon) center/contain no-repeat;
-  width:58px;
+  grid-template-areas:"toggle heading" "toggle description";
+  grid-template-columns:auto 1fr;
+  max-width:var(--arc3_max-width);
+  padding:32px 0;
+  row-gap:8px;
 }
 [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__label:not(.en__field__label--item){
-  align-self:end;
+  align-items:center;
   color:var(--arc3_text-color);
-  display:block;
+  display:flex;
   font-family:var(--serif-fonts);
-  font-size:24px;
-  font-weight:700;
+  font-size:22px;
+  font-weight:600;
+  gap:9px;
   grid-area:heading;
-  line-height:1.2;
+  justify-content:flex-start;
+  line-height:1.27;
   text-transform:none;
   width:auto;
+}
+[data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__label:not(.en__field__label--item):before{
+  background-color:var(--arc3_text-color);
+  content:"";
+  flex:0 0 auto;
+  height:69px;
+  mask:var(--arc3_icon) center/contain no-repeat;
+  width:64px;
 }
 [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__element.en__field__element--checkbox,[data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__item.en__field__item{
   display:contents;
@@ -14145,7 +14151,7 @@ body[data-engrid-debug]:before{
   font-size:16px;
   font-weight:600;
   grid-area:description;
-  line-height:1.4;
+  line-height:1.5;
   margin:0;
 }
 [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__label--item:before{
@@ -14174,7 +14180,7 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__input--checkbox:before{
   background-color:var(--arc3_accent);
   background-image:none;
-  background-position:50%;
+  background-position:50% 7px;
   background-repeat:no-repeat;
   background-size:20px 20px;
   border-radius:50%;
@@ -14202,62 +14208,22 @@ body[data-engrid-debug]:before{
   background-image:var(--arc3_knob-icon);
   left:calc(100% - 31px);
 }
-@media screen and (max-width:1200px){
+@media screen and (max-width:480px){
   [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox{
     column-gap:16px;
-    padding:18px 0;
-  }
-  [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox:before{
-    height:46px;
-    width:46px;
+    padding:20px 0;
+    row-gap:6px;
   }
   [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__label:not(.en__field__label--item){
     font-size:20px;
+    gap:6px;
+  }
+  [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__label:not(.en__field__label--item):before{
+    height:50px;
+    width:46px;
   }
   [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__label--item{
     font-size:14px;
-  }
-  [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__input--checkbox{
-    height:42px;
-    width:84px;
-  }
-  [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__input--checkbox:before{
-    background-size:17px 17px;
-    height:34px;
-    left:4px;
-    width:34px;
-  }
-  [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__input--checkbox:checked:before{
-    left:calc(100% - 38px);
-  }
-}
-@media screen and (max-width:480px){
-  [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox{
-    column-gap:12px;
-    padding:14px 0;
-  }
-  [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox:before{
-    height:38px;
-    width:38px;
-  }
-  [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__label:not(.en__field__label--item){
-    font-size:18px;
-  }
-  [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__label--item{
-    font-size:13px;
-  }
-  [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__input--checkbox{
-    height:36px;
-    width:72px;
-  }
-  [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__input--checkbox:before{
-    background-size:14px 14px;
-    height:28px;
-    left:4px;
-    width:28px;
-  }
-  [data-engrid-theme=tnc] .auto-renew-checkbox-3 .en__field--checkbox .en__field__input--checkbox:checked:before{
-    left:calc(100% - 32px);
   }
 }
 [data-engrid-theme=tnc][data-engrid-layout=centercenter2col] :is(.auto-renew-checkbox-1,.auto-renew-checkbox-2) .en__field--checkbox{
