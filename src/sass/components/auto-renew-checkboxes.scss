@@ -1,8 +1,11 @@
 // Custom checkbox designs for the auto-renew membership question.
 // The page builder applies a class like "auto-renew-checkbox-1" to the field's
 // parent formblock. Each numbered class is a complete, self-contained design.
-// Adding "auto-renew-checkbox-full-width" to the same formblock makes the
-// strip break out of the form padding to span the full column width.
+//
+// Width: designs 1 and 2 break out of the form padding to span (nearly) the
+// full column width; design 3 stays inset to match the other form fields.
+// --arc_inset (default 0 on each design) indents the strip from that natural
+// extent, per side.
 //
 // Element sizes are driven by container queries on the formblock, so the
 // design adapts to whatever width it actually gets (full-width strip, padded
@@ -14,14 +17,19 @@
 //   square checkbox, and a landscape photo rail on the right that sits like
 //   the design (breaking out above the rule, with a drop shadow); when
 //   checked, the second photo slides up and pushes the first one out.
+// Design 3 (.auto-renew-checkbox-3): plain inline row with hairline
+//   dividers, toggle on the left, leaf icon + heading/description stacked
+//   to its right; inset to match the other form fields.
 
 .auto-renew-checkbox-1 {
-  --arc1_accent: #4aa241; // interactive green: fill, toggle, rule (Figma bg)
+  --arc1_accent: #027932; // interactive green: fill, toggle, rule (Figma bg)
   --arc1_heading-color: #027932; // brand green used for heading text + icon
-  --arc1_description-color: #525252;
-  --arc1_track-color: #e6f2eb;
+  --arc1_description-color: #1A1A1A;
+  --arc1_track-color: #CCE4D6;
   --arc1_background-color: #ffffff;
   --arc1_icon: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-icon.svg?v=1788959872000");
+  // 0 = full column width; increase to indent the strip from each side
+  --arc_inset: 0px;
 
   container-type: inline-size;
 
@@ -36,10 +44,6 @@
     align-items: start;
     padding: 47px 47px 44px;
     background-color: var(--arc1_background-color);
-    // Always the same color as the checked-state fill below, so the line
-    // reads as a visible accent rule when unchecked and blends away once
-    // the panel itself turns this color on check (matches the Figma mock,
-    // which never actually removes the rule).
     border-bottom: 2px solid var(--arc1_accent);
     color: var(--default_color);
     transition: background-color 0.3s ease-in-out;
@@ -68,15 +72,12 @@
         width: 87px;
         height: 93px;
         background-color: var(--arc1_heading-color);
-        -webkit-mask: var(--arc1_icon) center / contain no-repeat;
         mask: var(--arc1_icon) center / contain no-repeat;
         transition: background-color 0.3s ease-in-out;
       }
     }
 
     // Let the input and its label participate directly in the grid.
-    // The doubled-up classes are needed to outspecificy engrid's
-    // ".en__component--formblock .en__field.en__field--checkbox.en__field--question .en__field__element"
     .en__field__element.en__field__element--checkbox,
     .en__field__item.en__field__item {
       display: contents;
@@ -210,7 +211,7 @@
     .en__field--checkbox {
       column-gap: 14px;
       row-gap: 6px;
-      padding: 24px 24px 22px;
+      padding: 24px 0;
 
       .en__field__label:not(.en__field__label--item) {
         gap: 6px;
@@ -244,7 +245,7 @@
         }
 
         &:checked::before {
-          left: calc(100% - 28px); // flush to the end of the track
+          left: calc(100% - 28px);
         }
       }
     }
@@ -255,7 +256,7 @@
     .en__field--checkbox {
       column-gap: 10px;
       row-gap: 5px;
-      padding: 16px;
+      padding: 16px 0;
 
       .en__field__label:not(.en__field__label--item) {
         gap: 5px;
@@ -289,7 +290,7 @@
         }
 
         &:checked::before {
-          left: calc(100% - 24px); // flush to the end of the track
+          left: calc(100% - 24px);
         }
       }
     }
@@ -331,6 +332,8 @@
   --arc2_rail-right: 35px;
   --arc2_rail-breakout: 26px;
   --arc2_image-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  // 0 = full column width; increase to indent the strip from each side
+  --arc_inset: 0px;
 
   container-type: inline-size;
 
@@ -530,40 +533,38 @@
     }
   }
 
-  // Full-width strip at desktop: the breakout makes the field ~614px wide
+  // Desktop full-width strip: the breakout makes the field ~614px wide
   // while the formblock container stays ~414px (compact tier), so step the
   // sizes back up and widen the rail to keep the mock's proportions.
   @media screen and (min-width: 1201px) {
-    &.auto-renew-checkbox-full-width {
-      --arc2_rail-width: 51cqw; // ≈ 34% of the 614px strip
-      --arc2_rail-right: 55px;
+    --arc2_rail-width: 51cqw; // ≈ 34% of the 614px strip
+    --arc2_rail-right: 55px;
 
-      .en__field.en__field--checkbox {
-        padding: 25px 35px;
-        padding-right: calc(
-          var(--arc2_rail-width) + var(--arc2_rail-right) + 30px
-        );
+    .en__field.en__field--checkbox {
+      padding: 25px 35px;
+      padding-right: calc(
+        var(--arc2_rail-width) + var(--arc2_rail-right) + 30px
+      );
 
-        .en__field__label:not(.en__field__label--item) {
-          font-size: 24px;
-          line-height: 1.15;
-          margin-bottom: 25px;
+      .en__field__label:not(.en__field__label--item) {
+        font-size: 24px;
+        line-height: 1.15;
+        margin-bottom: 25px;
+      }
+
+      .en__field__label--item {
+        font-size: 15px;
+        gap: 18px;
+
+        &::before {
+          width: 54px;
+          min-width: 54px;
+          height: 54px;
         }
 
-        .en__field__label--item {
-          font-size: 15px;
-          gap: 18px;
-
-          &::before {
-            width: 54px;
-            min-width: 54px;
-            height: 54px;
-          }
-
-          &::after {
-            width: 54px;
-            height: 54px;
-          }
+        &::after {
+          width: 54px;
+          height: 54px;
         }
       }
     }
@@ -592,6 +593,9 @@
   // design works with no upload step; swap in a hosted CDN url() here the
   // same way the other designs' assets are referenced, if preferred.
   --arc3_knob-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='22' viewBox='0 0 22 22' fill='none'%3E%3Cpath d='M9.80096 7.76688C9.71649 7.06146 9.59454 6.33515 9.61446 5.62406C9.62662 5.19023 9.81399 4.70181 9.92396 4.28121C10.1485 3.42227 10.3388 2.46984 10.9055 1.76149C11.9367 0.472673 13.8303 0.00193264 15.4138 0C15.3367 0.446105 15.2768 0.896307 15.1608 1.33636C14.7898 2.74456 14.0817 4.08354 12.8887 4.95323C12.3624 5.33687 11.7239 5.53166 11.1097 5.7192C10.8834 5.78883 10.5947 5.87064 10.3875 5.97356C10.5653 6.41225 10.801 7.49159 10.8982 7.98001C11.0963 8.9764 11.3265 10.1077 11.4308 11.1158C11.4993 11.7787 11.4753 12.6027 11.5186 13.2856C11.5572 13.8951 11.6202 14.8442 11.5309 15.4181C12.6398 15.6381 13.1612 16.1182 14.0677 16.7355C14.4783 17.0151 14.884 17.2627 15.3016 17.5615C16.1142 18.1434 16.8456 18.9466 17.8865 18.9894C19.1296 19.0406 20.4891 18.3008 21.3519 19.5784C21.4771 19.7637 21.5984 20.0487 21.7129 20.1958C21.7287 20.0935 21.8872 19.9276 21.9481 19.7964V21.9481H0C0.434317 21.2003 2.72339 20.3517 3.54431 19.9974C4.05911 19.775 4.77646 19.5972 5.26978 19.2731C5.66107 19.0159 6.13294 18.4727 6.41251 18.0957C7.4792 16.6569 8.30245 16.1866 9.91715 15.5737C9.92573 14.9046 10.0233 14.3358 10.0885 13.6753C10.1341 13.2135 10.0737 12.6632 10.0745 12.1914C10.0753 11.6925 10.0942 11.171 10.0731 10.6743C8.3445 10.3367 6.93839 10.4726 5.35397 9.46845C3.39736 8.22847 2.51567 6.26867 1.95966 4.11261C3.58478 3.871 4.96417 3.88855 6.55706 4.43302C8.02161 4.9336 9.09585 6.53197 9.71677 7.90837L9.88198 8.31057C9.87046 8.14013 9.83055 7.93818 9.80096 7.76688ZM4.88292 5.97524L4.96811 5.90378C4.81516 5.81565 4.66795 5.7283 4.50832 5.65264C4.62886 5.76213 4.75186 5.87969 4.88292 5.97524Z' fill='%2349A942'/%3E%3C/svg%3E");
+
+  // 0 = flush with the other form fields; increase to indent from each side
+  --arc_inset: 0px;
 
   container-type: inline-size;
 
@@ -801,27 +805,35 @@
   }
 }
 
-// Full-width variant: in the centercenter2col layout, break the strip out of
-// body-main's inline padding so it spans (nearly) the full column width. The
-// margins mirror --engrid__body-main_padding for each layout breakpoint.
-// Column padding is 110px here; stay 10px inside the 620px column. The width
-// calc + flex-basis reset are needed because the field is a flex item of the
-// formblock with flex-basis: 100%, which would otherwise override the width
-// and ignore the negative margins.
-&[data-engrid-layout="centercenter2col"]
-  :is(.auto-renew-checkbox-1, .auto-renew-checkbox-2).auto-renew-checkbox-full-width
-  .en__field--checkbox {
-  margin-inline: -100px;
-  width: calc(100% + 200px);
-  flex: 0 0 auto;
+// Inset: in the centercenter2col layout, designs 1 and 2 break out of
+// body-main's inline padding so they span (nearly) the full column width,
+// while design 3 stays inset to match the other form fields. --arc_inset
+// (declared per design, default 0) indents the strip from that natural
+// extent, per side. The breakout margins mirror --engrid__body-main_padding
+// for each layout breakpoint (110px column padding here; stay 10px inside
+// the 620px column). The width calc + flex-basis reset are needed because
+// the field is a flex item of the formblock with flex-basis: 100%, which
+// would otherwise override the width and ignore the margins.
+&[data-engrid-layout="centercenter2col"] {
+  :is(.auto-renew-checkbox-1, .auto-renew-checkbox-2) .en__field--checkbox {
+    margin-inline: calc(-100px + var(--arc_inset, 0px));
+    width: calc(100% + (100px - var(--arc_inset, 0px)) * 2);
+    flex: 0 0 auto;
 
-  @media screen and (max-width: 1200px) {
-    margin-inline: -80px;
-    width: calc(100% + 160px);
+    @media screen and (max-width: 1200px) {
+      margin-inline: calc(-80px + var(--arc_inset, 0px));
+      width: calc(100% + (80px - var(--arc_inset, 0px)) * 2);
+    }
+
+    @media screen and (max-width: 992px) {
+      margin-inline: calc(-20px + var(--arc_inset, 0px));
+      width: calc(100% + (20px - var(--arc_inset, 0px)) * 2);
+    }
   }
 
-  @media screen and (max-width: 992px) {
-    margin-inline: -20px;
-    width: calc(100% + 40px);
+  .auto-renew-checkbox-3 .en__field--checkbox {
+    margin-inline: var(--arc_inset, 0px);
+    width: calc(100% - var(--arc_inset, 0px) * 2);
+    flex: 0 0 auto;
   }
 }
