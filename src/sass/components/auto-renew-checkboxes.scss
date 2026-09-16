@@ -14,6 +14,7 @@
   --arc1_accent: #027932; // interactive green: fill, toggle, rule (Figma bg)
   --arc1_heading-color: #027932; // brand green used for heading text + icon
   --arc1_description-color: #1A1A1A;
+  --arc1_description-color_mobile: #525252; // mobile copy sits lighter than desktop
   --arc1_track-color: #CCE4D6;
   --arc1_background-color: #ffffff;
   --arc1_rule-color: #4aa241; // lighter green bottom rule
@@ -249,51 +250,65 @@
     }
   }
 
-  // Mini tier: ≤480px viewports (narrow phones)
+  // Mobile tier: ≤480px viewports. The Figma mobile design restacks the strip
+  // single column — icon above the heading, toggle below the copy
   @media screen and (max-width: 480px) {
     .en__field--checkbox {
-      column-gap: 10px;
-      row-gap: 5px;
-      padding: 16px;
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "heading"
+        "description"
+        "toggle";
+      column-gap: 0;
+      row-gap: 7px;
+      padding: 16px 20px 20px;
 
+      // The mobile design has no rule under the copy
       &::after {
-        left: 16px;
-        right: 16px;
+        content: none;
       }
 
+      // Icon stacks above the heading instead of sitting beside it
       .en__field__label:not(.en__field__label--item) {
-        gap: 5px;
-        font-size: 20px;
-        line-height: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 9px;
+        font-size: 30px;
+        line-height: 1.1;
 
         &::before {
-          width: 44px;
-          height: 47px;
+          width: 84px;
+          height: 90px;
         }
       }
 
       .en__field__label--item {
-        font-size: 14px;
-        line-height: 18px;
+        font-size: 16px;
+        line-height: 26px;
+        font-weight: 500;
+        color: var(--arc1_description-color_mobile);
+        margin: 0;
       }
 
       .en__field__input--checkbox {
-        width: 64px;
-        height: 34px;
+        justify-self: start;
+        width: 100px;
+        height: 50px;
+        margin-top: 10px;
 
         &::before {
-          left: 5px;
-          width: 24px;
-          height: 24px;
+          left: 6px;
+          width: 34px;
+          height: 34px;
         }
 
+        // No "Thanks!" in the mobile design
         &::after {
-          font-size: 13px;
-          line-height: 18px;
+          content: none;
         }
 
         &:checked::before {
-          left: calc(100% - 29px);
+          left: calc(100% - 40px);
         }
       }
     }
@@ -319,7 +334,7 @@
   // Rail geometry (hero: 34% of the 614px strip). Width must be a length,
   // not % — the background-position parking offset needs it. The ~10:7
   // ratio crops the photos horizontally (focal points above).
-  --arc2_rail-width: 209px;
+  --arc2_rail-width: 210px;
   --arc2_rail-height: calc(var(--arc2_rail-width) * 0.7);
   --arc2_rail-right: 30px;
   --arc2_rail-breakout: 26px;
@@ -488,43 +503,54 @@
     }
   }
 
-  // Mini tier: ≤480px viewports (narrow phones)
-  @media screen and (max-width: 480px) {
-    --arc2_rail-right: 15px;
-
-    .en__field.en__field--checkbox {
-      padding: 15px;
-
-      &:before {
-        display: none;
-      }
-
-      .en__field__label:not(.en__field__label--item) {
-        font-size: 18px;
-        margin-bottom: 15px;
-      }
-
-      .en__field__label--item {
-        font-size: 13px;
-        gap: 12px;
-
-        &::before {
-          width: 40px;
-          min-width: 40px;
-          height: 40px;
-        }
-
-        &::after {
-          width: 40px;
-          height: 40px;
-        }
-      }
-    }
-  }
-
   // ≤992px the strip is fluid, so the rail tracks it proportionally
   @media screen and (max-width: 992px) {
     --arc2_rail-width: min(34vw, 238px);
+  }
+
+  // Mobile tier: ≤480px viewports. The photo moves to the top-left corner.
+  @media screen and (max-width: 480px) {
+    --arc2_rail-width: 236px;
+    --arc2_rail-height: 134px;
+    // 50px above the strip in the design, plus the 6px rule the rail clears
+    --arc2_rail-breakout: 56px;
+
+    .en__field.en__field--checkbox {
+      margin-top: 50px;
+      padding: 94px 20px 40px;
+      border-top-width: 6px;
+
+      // The rail sits top-left here rather than hanging off the right edge
+      &::before {
+        right: auto;
+        left: 20px;
+      }
+
+      .en__field__label:not(.en__field__label--item) {
+        margin-bottom: 16px;
+        font-size: 30px;
+        line-height: 1.1;
+      }
+
+      .en__field__label--item {
+        gap: 14px;
+        font-size: 16px;
+        line-height: 26px;
+        font-weight: 500;
+
+        &::before {
+          width: 60px;
+          min-width: 60px;
+          height: 60px;
+        }
+
+        &::after {
+          width: 60px;
+          height: 60px;
+          background-size: 55% auto; // 30px tick, matching the design
+        }
+      }
+    }
   }
 }
 
@@ -534,10 +560,17 @@
 // knob change color when checked.
 // ---------------------------------------------------------------------------
 .auto-renew-checkbox-3 {
-  --arc3_accent: #00703C; // toggle-checked track + unchecked knob
+  --arc3_accent: #027932; // toggle-checked track + unchecked knob
   --arc3_track-color: #CCE4D6; // pale unchecked track
   --arc3_text-color: #00703C; // heading + description + icon (Figma-accurate; was --color-green)
   --arc3_divider-color: #CDCDCD;
+  // Mobile runs a slightly different green than the desktop --arc3_accent, and
+  // splits heading from description until the box is checked.
+  --arc3_description-color_mobile: #525252; // unchecked description
+  // Knob geometry. The 2px border means these are measured from the padding
+  // box, so the knob lands --arc3_knob-inset + 2px in from the track's edge.
+  --arc3_knob-size: 26px;
+  --arc3_knob-inset: 5px;
   --arc3_icon: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-icon.svg?v=1788959872000");
   // Caps the strip in single-column layouts, where it would otherwise stretch
   // to the full body-main width; matches the desktop 2-column form width.
@@ -636,22 +669,41 @@
       cursor: pointer;
       transition: background-color 0.3s ease-in-out;
 
-      // Knob: solid when unchecked, white + sprout when checked; left-animated like design 1
+      // Knob: solid when unchecked, white when checked; left-animated like design 1
       &::before {
         content: "";
         position: absolute;
         top: 50%;
-        left: 5px;
+        left: var(--arc3_knob-inset);
         transform: translateY(-50%);
-        width: 26px;
-        height: 26px;
+        width: var(--arc3_knob-size);
+        height: var(--arc3_knob-size);
         border-radius: 50%;
         background-color: var(--arc3_accent);
-        background-image: none;
-        background-repeat: no-repeat;
-        background-position: 50% 7px;
-        background-size: 20px 20px;
         transition: left 0.3s ease-in-out, background-color 0.3s ease-in-out;
+      }
+
+      // Sprout, on its own layer over the knob so it can scale independently of
+      // the slide. Sized and placed as a share of the knob, so desktop and
+      // mobile read identically at any knob size.
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: var(--arc3_knob-inset);
+        width: var(--arc3_knob-size);
+        height: var(--arc3_knob-size);
+        margin-top: calc(var(--arc3_knob-size) / -2);
+        background-image: var(--arc3_knob-icon);
+        background-repeat: no-repeat;
+        background-position: 42.2% 61.2%;
+        background-size: 54.3% 62.9%;
+        opacity: 0;
+        transform: scale(0.1);
+        transform-origin: 46% 86%; // the base of the stem
+        pointer-events: none;
+        transition: left 0.3s ease-in-out, opacity 0.2s ease-in-out,
+          transform 0.2s ease-in-out;
       }
 
       &:focus-visible {
@@ -668,33 +720,91 @@
         background-color: var(--arc3_accent);
 
         &::before {
-          left: calc(100% - 31px);
+          left: calc(100% - var(--arc3_knob-size) - var(--arc3_knob-inset));
           background-color: #ffffff;
-          background-image: var(--arc3_knob-icon);
+        }
+
+        // Sprouts up from its base as it arrives; also runs on load when the
+        // box comes back already checked
+        &::after {
+          left: calc(100% - var(--arc3_knob-size) - var(--arc3_knob-inset));
+          opacity: 1;
+          transform: scale(1);
+          animation: arc3-sprout-in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1)
+            0.15s backwards;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        &::after {
+          transition: left 0.3s ease-in-out;
+          animation: none;
         }
       }
     }
   }
 
-  // Mini tier: ≤480px viewports
+  // Mobile tier: ≤480px viewports. Restacks into a single column
   @media screen and (max-width: 480px) {
     .en__field--checkbox {
-      column-gap: 16px;
-      row-gap: 6px;
-      padding: 20px 0;
+      --arc3_knob-size: 34px;
+      --arc3_knob-inset: 6px;
 
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "heading"
+        "description"
+        "toggle";
+      column-gap: 0;
+      row-gap: 7px;
+      max-width: none;
+      padding: 16px 20px 20px;
+      background-color: #ffffff;
+      border-top: 0;
+      border-bottom: 0;
+
+      // Icon stacks above the heading instead of sitting beside it
       .en__field__label:not(.en__field__label--item) {
-        gap: 6px;
-        font-size: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+        font-size: 30px;
+        line-height: 1.1;
+        color: var(--arc3_accent);
 
         &::before {
-          width: 46px;
-          height: 50px;
+          width: 84px;
+          height: 90px;
+          background-color: var(--arc3_accent);
         }
       }
 
       .en__field__label--item {
-        font-size: 14px;
+        font-size: 16px;
+        line-height: 26px;
+        font-weight: 500;
+        color: var(--arc3_description-color_mobile);
+        transition: color 0.3s ease-in-out;
+      }
+
+      .en__field__input--checkbox {
+        justify-self: start;
+        width: 100px;
+        height: 50px;
+        border-color: var(--arc3_accent);
+        margin-top: 10px;
+
+        &::before {
+          background-color: var(--arc3_accent);
+        }
+
+        &:checked {
+          border-color: #ffffff;
+        }
+      }
+
+      // Checked: the description joins the heading's green
+      &:has(.en__field__input--checkbox:checked) .en__field__label--item {
+        color: var(--arc3_accent);
       }
     }
   }
@@ -725,5 +835,22 @@
     margin-inline: var(--arc_inset, 0px);
     width: calc(100% - var(--arc_inset, 0px) * 2);
     flex: 0 0 auto;
+  }
+}
+
+// Sprout entrance for design 3's toggle knob (see --arc3_knob-icon)
+@keyframes arc3-sprout-in {
+  from {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
