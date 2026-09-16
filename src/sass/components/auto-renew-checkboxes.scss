@@ -321,25 +321,20 @@
 // tick and the checked photo slides up, pushing the unchecked one out.
 // ---------------------------------------------------------------------------
 .auto-renew-checkbox-2 {
-  --arc2_accent: #00703c; // rule green (Figma-accurate; was --color-green)
-  --arc2_heading-color: #027932; // heading text + checkbox border green
+  --arc2_accent: #00703c;
+  --arc2_heading-color: #027932;
   --arc2_background-color: #f8f8f8;
   --arc2_box_background-color_checked: #1a1a1a;
   --arc2_image_unchecked: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-image-unchecked.png?v=1788959875000");
   --arc2_image_checked: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-image-checked.png?v=1788998286000");
   --arc2_tick-icon: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-checkbox-tick.svg?v=1788998359000");
-  // Horizontal focal points for the rail crop of the landscape photos
   --arc2_image-position_unchecked: center;
   --arc2_image-position_checked: center;
-  // Rail geometry (hero: 34% of the 614px strip). Width must be a length,
-  // not % — the background-position parking offset needs it. The ~10:7
-  // ratio crops the photos horizontally (focal points above).
   --arc2_rail-width: 210px;
   --arc2_rail-height: calc(var(--arc2_rail-width) * 0.7);
   --arc2_rail-right: 30px;
   --arc2_rail-breakout: 26px;
   --arc2_image-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
-  // 0 = full column width; increase to indent the strip from each side
   --arc_inset: 0px;
 
   .en__field.en__field--checkbox {
@@ -472,12 +467,11 @@
 
   // Compact tier: ≤1200px viewports (strip ~465-470px)
   @media screen and (max-width: 1200px) {
-    --arc2_rail-width: 160px; // ≈34% of the strip
-    --arc2_rail-right: 25px;
+    --arc2_rail-right: 15px;
 
     .en__field.en__field--checkbox {
-      padding: 20px 25px;
-      padding-right: calc(var(--arc2_rail-width) + var(--arc2_rail-right) + 25px);
+      padding: 20px 15px;
+      padding-right: calc(var(--arc2_rail-width) + var(--arc2_rail-right) + 10px);
 
       .en__field__label:not(.en__field__label--item) {
         font-size: 20px;
@@ -503,16 +497,24 @@
     }
   }
 
-  // ≤992px the strip is fluid, so the rail tracks it proportionally
+  // Tablet Tier: ≤992px viewports. Increases sizes on single column collapse.
   @media screen and (max-width: 992px) {
-    --arc2_rail-width: min(34vw, 238px);
+    .en__field.en__field--checkbox {
+      .en__field__label:not(.en__field__label--item) {
+        font-size: 30px;
+        line-height: 1.1;
+      }
+
+      .en__field__label--item {
+        font-size: 16px;
+      }
+    }
   }
 
   // Mobile tier: ≤480px viewports. The photo moves to the top-left corner.
   @media screen and (max-width: 480px) {
     --arc2_rail-width: 236px;
     --arc2_rail-height: 134px;
-    // 50px above the strip in the design, plus the 6px rule the rail clears
     --arc2_rail-breakout: 56px;
 
     .en__field.en__field--checkbox {
@@ -520,7 +522,7 @@
       padding: 94px 20px 40px;
       border-top-width: 6px;
 
-      // The rail sits top-left here rather than hanging off the right edge
+      // The rail sits top-left
       &::before {
         right: auto;
         left: 20px;
@@ -562,22 +564,14 @@
 .auto-renew-checkbox-3 {
   --arc3_accent: #027932; // toggle-checked track + unchecked knob
   --arc3_track-color: #CCE4D6; // pale unchecked track
-  --arc3_text-color: #00703C; // heading + description + icon (Figma-accurate; was --color-green)
+  --arc3_text-color: #00703C; // heading + description + icon
   --arc3_divider-color: #CDCDCD;
-  // Mobile runs a slightly different green than the desktop --arc3_accent, and
-  // splits heading from description until the box is checked.
   --arc3_description-color_mobile: #525252; // unchecked description
-  // Knob geometry. The 2px border means these are measured from the padding
-  // box, so the knob lands --arc3_knob-inset + 2px in from the track's edge.
   --arc3_knob-size: 26px;
   --arc3_knob-inset: 5px;
   --arc3_icon: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-icon.svg?v=1788959872000");
-  // Caps the strip in single-column layouts, where it would otherwise stretch
-  // to the full body-main width; matches the desktop 2-column form width.
   --arc3_max-width: 401px;
-  // Sprout shown inside the knob when checked, inlined as a data URI (no upload step)
   --arc3_knob-icon: url('data:image/svg+xml,<svg width="13.454" height="15.574" viewBox="6.0964 8.7739 13.4541 15.5737" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:c2pa="http://c2pa.org/manifest"><path d="M13.9377 16.5408C13.8532 15.8354 13.7313 15.1091 13.7512 14.398C13.7633 13.9642 13.9507 13.4757 14.0607 13.0551C14.2852 12.1962 14.4755 11.2438 15.0422 10.5354C16.0734 9.2466 17.967 8.77586 19.5505 8.77393C19.4734 9.22003 19.4135 9.67023 19.2976 10.1103C18.9266 11.5185 18.2185 12.8575 17.0254 13.7272C16.4991 14.1108 15.8606 14.3056 15.2464 14.4931C15.0201 14.5628 14.7314 14.6446 14.5242 14.7475C14.702 15.1862 14.9378 16.2655 15.0349 16.7539C15.233 17.7503 15.4632 18.8816 15.5675 19.8897C15.6361 20.5526 15.612 21.3766 15.6553 22.0596C15.6939 22.669 15.757 23.6181 15.6676 24.1921C15.1421 24.3009 14.5927 24.3339 14.0539 24.3476C14.0624 23.6786 14.16 23.1097 14.2252 22.4493C14.2709 21.9874 14.2104 21.4371 14.2112 20.9653C14.2121 20.4664 14.2309 19.9449 14.2098 19.4483C12.4812 19.1106 11.0751 19.2465 9.49069 18.2424C7.53408 17.0024 6.65239 15.0426 6.09638 12.8865C7.7215 12.6449 9.10089 12.6625 10.6938 13.2069C12.1583 13.7075 13.2326 15.3059 13.8535 16.6823L14.0187 17.0845C14.0072 16.9141 13.9673 16.7121 13.9377 16.5408ZM9.01964 14.7492L9.10483 14.6777C8.95188 14.5896 8.80467 14.5022 8.64504 14.4266C8.76558 14.5361 8.88858 14.6536 9.01964 14.7492Z" fill="%2349A942"/></svg>');
-  // 0 = flush with the other form fields; increase to indent from each side
   --arc_inset: 0px;
 
   justify-content: center;
@@ -810,24 +804,28 @@
   }
 }
 
-// Inset (centercenter2col): designs 1 and 2 span nearly the full column,
-// design 3 stays with the form fields; --arc_inset indents further per side.
-// Margins are calibrated to keep strips 3px inside body-main (NOT the raw
-// padding values). flex reset: the field is a flex item with flex-basis: 100%.
+// Inset (centercenter2col): designs 1 and 2 span the full column, design 3
+// stays with the form fields; --arc_inset indents further per side.
+// Margins are calibrated against body-main's edges rather than its raw padding
+// (the formblock carries its own -8px). They stop 1px short so body-main's 1px
+// side border stays visible; below 992px the page collapses and that border
+// drops to 0, so the strips take the pixel back and run edge to edge.
+// flex reset: the field is a flex item with flex-basis: 100%.
 &[data-engrid-layout="centercenter2col"] {
   :is(.auto-renew-checkbox-1, .auto-renew-checkbox-2) .en__field--checkbox {
-    margin-inline: calc(-100px + var(--arc_inset, 0px));
-    width: calc(100% + (100px - var(--arc_inset, 0px)) * 2);
+    margin-inline: calc(-102px + var(--arc_inset, 0px));
+    width: calc(100% + (102px - var(--arc_inset, 0px)) * 2);
     flex: 0 0 auto;
 
     @media screen and (max-width: 1200px) {
-      margin-inline: calc(-70px + var(--arc_inset, 0px));
-      width: calc(100% + (70px - var(--arc_inset, 0px)) * 2);
+      margin-inline: calc(-72px + var(--arc_inset, 0px));
+      width: calc(100% + (72px - var(--arc_inset, 0px)) * 2);
     }
 
+    // Border is gone here, so this reclaims the pixel
     @media screen and (max-width: 992px) {
-      margin-inline: calc(-9px + var(--arc_inset, 0px));
-      width: calc(100% + (9px - var(--arc_inset, 0px)) * 2);
+      margin-inline: calc(-12px + var(--arc_inset, 0px));
+      width: calc(100% + (12px - var(--arc_inset, 0px)) * 2);
     }
   }
 
