@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, September 16, 2026 @ 08:59:16 ET
+ *  Date: Monday, September 21, 2026 @ 10:26:45 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -13692,6 +13692,7 @@ body[data-engrid-debug]:before{
   --arc1_track-color:#cce4d6;
   --arc1_background-color:#fff;
   --arc1_rule-color:#4aa241;
+  --arc1_thanks-text:"Thanks!";
   --arc1_icon:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-icon.svg?v=1788959872000);
   --arc_inset:0px;
 }
@@ -13810,7 +13811,7 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc] .auto-renew-checkbox-1 .en__field--checkbox .en__field__input--checkbox:after{
   color:#fff;
-  content:"Thanks!";
+  content:var(--arc1_thanks-text);
   font-family:Kalam,cursive;
   font-size:16px;
   font-weight:700;

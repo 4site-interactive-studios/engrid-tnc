@@ -18,6 +18,7 @@
   --arc1_track-color: #CCE4D6;
   --arc1_background-color: #ffffff;
   --arc1_rule-color: #4aa241; // lighter green bottom rule
+  --arc1_thanks-text: "Thanks!"; // confirmation shown under the toggle when checked
   --arc1_icon: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-icon.svg?v=1788959872000");
   // 0 = full column width; increase to indent the strip from each side
   --arc_inset: 0px;
@@ -162,7 +163,7 @@
 
       // "Thanks!" hangs off the toggle so it stays 7px below it at any heading height
       &::after {
-        content: "Thanks!";
+        content: var(--arc1_thanks-text);
         position: absolute;
         top: 100%;
         left: 50%;
