@@ -1,0 +1,1088 @@
+// Custom Regive themes for TNC.
+//
+// Regive renders its banner inside an iframe that loads PAGE 1 of the donation
+// form, so this stylesheet is already in scope there -- the `<template>` on
+// page 1 only has to carry markup and merge tags, and all styling lives here.
+//
+// The injected DOM is: body[data-regive-embedded="true"] > .regive-embed >
+// (template contents). Regive also injects its own <style> targeting
+// `.regive-embed .regive-amount-btn`, and ships base rules at
+// `body[data-regive-embedded="true"] .regive-amount-btn`. This file is
+// imported inside `[data-engrid-theme="tnc"]`, so `&[data-regive-embedded]`
+// resolves to a two-attribute body selector that outranks both.
+//
+// Each numbered class matches its Figma frame. The photo credit is one shared
+// Figma component used by every design, so it lives in the shared block rather
+// than being repeated per design. Breakpoints measure the IFRAME, not the
+// browser window -- see the note above the media queries.
+
+// ---------------------------------------------------------------------------
+// Shared: the iframe body and the wrapper Regive injects
+// ---------------------------------------------------------------------------
+
+&[data-regive-embedded="true"] {
+  // ENgrid's own body padding (--engrid__body_padding) would inset the banner
+  // inside the iframe; Regive's reset is too low-specificity to win here.
+  padding: 0;
+  margin: 0;
+  background: transparent;
+
+  // Page furniture that belongs to the host page, not to the banner. Both are
+  // appended to <body>, so they ride along into the iframe and would render a
+  // second time inside the card. Same approach as the embedded ecard.
+  #onetrust-consent-sdk,
+  .sandbox-warning {
+    display: none !important;
+  }
+
+  .regive-embed {
+    display: block;
+    width: 100%;
+  }
+
+  // Padlock beside the reassurance line, shared by every design. Masked, so it
+  // takes the text colour.
+  --tnc-regive-lock-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='20' viewBox='0 0 11 20' fill='none'%3E%3Cpath d='M5.5 3.45614C7.98528 3.45614 10 5.47086 10 7.95614V11.9825H1V7.95614C1 5.47086 3.01472 3.45614 5.5 3.45614Z' stroke='black' stroke-width='2'/%3E%3Cpath d='M11 19.2979H0V9.47368H11V19.2979ZM4.40039 11.9297V16.4913H6.59961V11.9297H4.40039Z' fill='black'/%3E%3C/svg%3E");
+
+  // -------------------------------------------------------------------------
+  // Photo credit -- one Figma component, shared by every design.
+  //
+  // Deliberately NOT .media-with-attribution / <figattribution>. Those are
+  // wired up by ENgrid's MediaAttribution component and by the
+  // `img.img-with-attribution[alt]` sweep in index.ts, both of which run at
+  // page load -- while this markup is still inert inside the <template> and
+  // therefore invisible to `querySelectorAll`. Regive injects the banner
+  // afterwards, so neither the wrapper nor the tippy binding would ever
+  // attach. This reproduces the same behaviour with no JS.
+  // -------------------------------------------------------------------------
+
+  .tnc-regive-media {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    line-height: 0; // kill the inline-image descender gap
+  }
+
+  .tnc-regive-attribution {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    // enPage.css puts margin-bottom on every <button>; left in, it lifts the
+    // badge 16px off its `bottom` anchor.
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 100%;
+    background-color: #ffffff;
+    color: #171717;
+    font-family: var(--sans-serif-fonts);
+    font-size: 12px;
+    line-height: 12px;
+    font-weight: 900;
+    letter-spacing: 0.7222px;
+    cursor: pointer;
+  }
+
+  // The component's Variant2 state. Right padding clears the badge: its 16px
+  // inset, its 24px width, and the frame's 32px gap.
+  .tnc-regive-credit {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    height: 90px;
+    margin: 0;
+    padding: 16px 72px 16px 28px;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #ffffff;
+    font-size: 14px;
+    line-height: 19px;
+    font-weight: 500;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+  }
+
+  // :focus-within keeps the caption open while the badge holds focus, so it is
+  // reachable by keyboard and by tap rather than hover-only.
+  .tnc-regive-media:hover,
+  .tnc-regive-media:focus-within {
+    .tnc-regive-credit {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // Design 1: annual upsell card -- header bar, hero photo, ask + CTA.
+  // -------------------------------------------------------------------------
+
+  .tnc-regive-1 {
+    --tncr1_accent: #00703c; // border, panel tint, button fill
+    --tncr1_text-color: #1a1a1a;
+    --tncr1_button-text-color: #ffffff;
+    --tncr1_max-width: 644px; // Figma frame width; card centers in wider columns
+    --tncr1_media-height: 275px;
+    // Source photo is 1.82:1 but the slot is ~2.34:1, so object-fit crops top
+    // and bottom. Shift the focal point here if the subject sits off-center.
+    --tncr1_media-position: center;
+    --tncr1_padding: 16px;
+
+    // Figma stacks a 90% white veil over the accent rather than using a flat
+    // hex, so retinting the card only means changing --tncr1_accent.
+    --tncr1_panel-bg: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.9),
+        rgba(255, 255, 255, 0.9)
+      ),
+      linear-gradient(0deg, var(--tncr1_accent), var(--tncr1_accent));
+
+    box-sizing: border-box;
+    width: 100%;
+    max-width: var(--tncr1_max-width);
+    margin: 0 auto;
+    color: var(--tncr1_text-color);
+    font-family: var(--sans-serif-fonts);
+    text-align: left;
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    .tnc-regive-1__header {
+      display: flex;
+      align-items: center;
+      gap: var(--tncr1_padding);
+      min-height: 82px;
+      padding: var(--tncr1_padding);
+      border: 1px solid var(--tncr1_accent);
+      border-bottom: 0;
+      background-image: var(--tncr1_panel-bg);
+    }
+
+    .tnc-regive-1__title {
+      margin: 0;
+      font-family: var(--serif-fonts);
+      font-size: 34px;
+      line-height: 42px;
+      font-weight: 300;
+      color: var(--tncr1_text-color);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .tnc-regive-1__image {
+      display: block;
+      width: 100%;
+      height: var(--tncr1_media-height);
+      object-fit: cover;
+      object-position: var(--tncr1_media-position);
+    }
+
+    .tnc-regive-1__body {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      padding: var(--tncr1_padding) var(--tncr1_padding) 28px;
+      border: 1px solid var(--tncr1_accent);
+      border-top: 0;
+      background-image: var(--tncr1_panel-bg);
+    }
+
+    .tnc-regive-1__copy {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    // Carries {{ask-amount}}, e.g. "$60 a year protects 3 acres."
+    .tnc-regive-1__ask {
+      margin: 0;
+      font-size: 26px;
+      line-height: 24px; // Figma: tight leading, single line at full width
+      font-weight: 700;
+      color: var(--tncr1_text-color);
+    }
+
+    .tnc-regive-1__lede {
+      margin: 0;
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 500;
+      color: var(--tncr1_text-color);
+    }
+
+    .tnc-regive-1__actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tnc-regive-1__cta {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    //
+    // Regive's base CSS centers .regive-amounts, gives it min-width: 300px and
+    // a 1rem block margin, and makes each button min-width: calc(50% - 20px).
+    // All of that has to come off for a single inline CTA.
+
+    .regive-amounts {
+      flex: 0 0 auto;
+      justify-content: flex-start;
+      min-width: 0;
+      margin: 0;
+      gap: 12px;
+    }
+
+    .regive-amount-btn {
+      min-width: 0;
+      width: auto;
+      margin: 0;
+      padding: 18px 30px;
+      border: 0;
+      border-radius: 0;
+      background-color: var(--tncr1_accent);
+      color: var(--tncr1_button-text-color);
+      font-family: var(--sans-serif-fonts);
+      font-size: 20px;
+      line-height: normal;
+      font-weight: 700;
+      text-transform: uppercase;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+
+      &:hover:not(:disabled),
+      &:focus-visible:not(:disabled) {
+        background-color: color-mix(in srgb, var(--tncr1_accent) 85%, #000000);
+        color: var(--tncr1_button-text-color);
+      }
+    }
+
+    // The currency symbol and amount are separate spans inside the label;
+    // they must not break the "GIVE $60 ANNUALLY" line up.
+    .regive-currency,
+    .regive-amount {
+      font-weight: inherit;
+    }
+
+    .tnc-regive-1__note {
+      margin: 0;
+      font-size: 16px;
+      line-height: 30px;
+      font-weight: 500;
+      font-style: italic;
+      color: var(--tncr1_text-color);
+    }
+
+    .tnc-regive-1__assurance {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      padding-left: 8px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+      color: var(--tncr1_text-color);
+
+      &::before {
+        content: "";
+        flex: 0 0 auto;
+        width: 11px;
+        height: 20px;
+        // Figma wraps the 20px glyph in a 25px box with the padding at the
+        // bottom, so the lock sits above the row's centre rather than on it.
+        margin-bottom: 5px;
+        background-color: currentColor;
+        -webkit-mask: var(--tnc-regive-lock-icon) center / contain no-repeat;
+        mask: var(--tnc-regive-lock-icon) center / contain no-repeat;
+      }
+    }
+
+    // Required by Regive on captcha-enabled pages, or the component exits.
+
+    // An empty container still counts as a flex child of __body and adds a
+    // second 28px gap above the CTA. :has(*) rather than :empty so that
+    // page-builder whitespace inside the div does not read as content.
+    .regive-captcha-container:not(:has(*)) {
+      display: none;
+    }
+
+    .regive-captcha-container:has(*) {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    // Compact: tighter type
+    //
+    // NOTE: these evaluate against the IFRAME viewport, not the browser window,
+    // and the card is min(viewport, 644px) wide -- so the thresholds track the
+    // card, not typical page breakpoints. A 992px breakpoint fired on a normal
+    // desktop, shrinking the type while the card was still at full width.
+
+    @media (max-width: 600px) {
+      --tncr1_media-height: 220px;
+
+      .tnc-regive-1__title {
+        font-size: 28px;
+        line-height: 34px;
+      }
+
+      .tnc-regive-1__ask {
+        font-size: 22px;
+        line-height: 28px;
+      }
+
+      .tnc-regive-1__lede {
+        font-size: 18px;
+        line-height: 26px;
+      }
+
+      .tnc-regive-1__cta {
+        gap: 20px;
+      }
+
+      .regive-amount-btn {
+        padding: 16px 24px;
+        font-size: 18px;
+      }
+    }
+
+    // Stacked: CTA and note on their own lines
+
+    @media (max-width: 460px) {
+      --tncr1_media-height: 180px;
+
+      .tnc-regive-1__header {
+        min-height: 0;
+      }
+
+      .tnc-regive-1__title {
+        font-size: 24px;
+        line-height: 30px;
+      }
+
+      .tnc-regive-1__ask {
+        font-size: 20px;
+        line-height: 26px;
+      }
+
+      .tnc-regive-1__lede {
+        font-size: 16px;
+        line-height: 24px;
+      }
+
+      .tnc-regive-1__body {
+        gap: 20px;
+      }
+
+      .tnc-regive-1__cta {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+
+      .regive-amounts {
+        flex: 1 1 auto;
+      }
+
+      .regive-amount-btn {
+        width: 100%;
+        padding: 16px 20px;
+        font-size: 16px;
+        white-space: normal;
+      }
+
+      .tnc-regive-1__note {
+        line-height: 22px;
+        text-align: center;
+      }
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // Design 2: two-column card -- centred copy on the left, tall photo right.
+  // -------------------------------------------------------------------------
+
+  .tnc-regive-2 {
+    --tncr2_accent: #00703c;
+    --tncr2_text-color: #1a1a1a;
+    --tncr2_button-text-color: #ffffff;
+    --tncr2_max-width: 850px; // Figma frame width
+    --tncr2_min-height: 476px; // Figma frame height; content may grow past it
+    --tncr2_media-position: center;
+
+    --tncr2_panel-bg: linear-gradient(
+        0deg,
+        rgba(255, 255, 255, 0.9),
+        rgba(255, 255, 255, 0.9)
+      ),
+      linear-gradient(0deg, var(--tncr2_accent), var(--tncr2_accent));
+
+    box-sizing: border-box;
+    // The media comes first in the markup so stacking puts the photo on top,
+    // as design 1 does; row-reverse restores the comp's text-left order.
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: stretch;
+    width: 100%;
+    max-width: var(--tncr2_max-width);
+    min-height: var(--tncr2_min-height);
+    margin: 0 auto;
+    border: 1px solid var(--tncr2_accent);
+    color: var(--tncr2_text-color);
+    font-family: var(--sans-serif-fonts);
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    .tnc-regive-2__media {
+      flex: 0 0 50%;
+    }
+
+    .tnc-regive-2__image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: var(--tncr2_media-position);
+    }
+
+    .tnc-regive-2__body {
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      padding: 16px 32px 32px;
+      background-image: var(--tncr2_panel-bg);
+      text-align: center;
+    }
+
+    .tnc-regive-2__copy {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 21px;
+      width: 100%;
+    }
+
+    .tnc-regive-2__intro {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      width: 100%;
+    }
+
+    // Unlike design 1, the suggestion note sits above the title.
+    .tnc-regive-2__note {
+      margin: 0;
+      font-size: 14px;
+      line-height: 30px;
+      font-weight: 500;
+      font-style: italic;
+      color: var(--tncr2_text-color);
+    }
+
+    .tnc-regive-2__title {
+      margin: 0;
+      width: 100%;
+      font-family: var(--serif-fonts);
+      font-size: 34px;
+      line-height: 42px;
+      font-weight: 300;
+      color: var(--tncr2_text-color);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .tnc-regive-2__message {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      width: 100%;
+    }
+
+    // Carries {{ask-amount}}, e.g. "$60 a year protects 3 acres."
+    .tnc-regive-2__ask {
+      margin: 0;
+      font-size: 18px;
+      line-height: 30px;
+      font-weight: 700;
+      color: var(--tncr2_text-color);
+    }
+
+    .tnc-regive-2__lede {
+      margin: 0;
+      width: 100%;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 400;
+      color: var(--tncr2_text-color);
+    }
+
+    .tnc-regive-2__actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      width: 100%;
+    }
+
+    // Regive's base CSS centres .regive-amounts and gives it min-width: 300px
+    // and a 1rem block margin; the CTA here spans the column instead.
+    .regive-amounts {
+      width: 100%;
+      min-width: 0;
+      margin: 0;
+      gap: 12px;
+    }
+
+    .regive-amount-btn {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100%;
+      margin: 0;
+      padding: 18px 30px;
+      border: 0;
+      border-radius: 0;
+      background-color: var(--tncr2_accent);
+      color: var(--tncr2_button-text-color);
+      font-family: var(--sans-serif-fonts);
+      font-size: 20px;
+      line-height: normal;
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+
+      &:hover:not(:disabled),
+      &:focus-visible:not(:disabled) {
+        background-color: color-mix(in srgb, var(--tncr2_accent) 85%, #000000);
+        color: var(--tncr2_button-text-color);
+      }
+    }
+
+    .regive-currency,
+    .regive-amount {
+      font-weight: inherit;
+    }
+
+    .tnc-regive-2__assurance {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+      color: var(--tncr2_text-color);
+
+      &::before {
+        content: "";
+        flex: 0 0 auto;
+        width: 11px;
+        height: 20px;
+        // Figma wraps the 20px glyph in a 25px box with the padding at the
+        // bottom, so the lock sits above the row's centre rather than on it.
+        margin-bottom: 5px;
+        background-color: currentColor;
+        -webkit-mask: var(--tnc-regive-lock-icon) center / contain no-repeat;
+        mask: var(--tnc-regive-lock-icon) center / contain no-repeat;
+      }
+    }
+
+    .regive-captcha-container:not(:has(*)) {
+      display: none;
+    }
+
+    .regive-captcha-container:has(*) {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    // Stacked: photo on top, copy beneath
+    // Two columns stop working well before the card reaches its 850px cap.
+
+    @media (max-width: 700px) {
+      flex-direction: column;
+      min-height: 0;
+
+      .tnc-regive-2__media {
+        flex: 0 0 auto;
+      }
+
+      // The design 2 asset is portrait (the side column is 425x476), so a
+      // short landscape slot crops it to a band across the middle and cuts the
+      // ears. A ratio keeps the framing sane as the card narrows.
+      .tnc-regive-2__image {
+        height: auto;
+        aspect-ratio: 16 / 11;
+      }
+
+      .tnc-regive-2__body {
+        padding: 24px 20px 28px;
+      }
+
+      .tnc-regive-2__title {
+        font-size: 28px;
+        line-height: 34px;
+      }
+    }
+
+    @media (max-width: 460px) {
+      .tnc-regive-2__title {
+        font-size: 24px;
+        line-height: 30px;
+      }
+
+      .regive-amount-btn {
+        padding: 16px 20px;
+        font-size: 16px;
+        white-space: normal;
+      }
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // Design 3: lightbox -- header with badge and close, hero photo, split body.
+  //
+  // Unlike designs 1 and 2 the panel is a flat whitemist lavender rather than a
+  // white veil over the accent, and the CTA uses greenparrot, not the border
+  // green. The overlay itself is on the parent page (see the lightbox block at
+  // the end of this file) because .regive-container lives there, not here.
+  // -------------------------------------------------------------------------
+
+  .tnc-regive-3 {
+    --tncr3_accent: #00703c; // border only
+    --tncr3_panel: #eae8f5; // whitemist
+    --tncr3_button: #05641c; // greenparrot
+    --tncr3_text-color: #1a1a1a;
+    --tncr3_button-text-color: #ffffff;
+    --tncr3_rule-color: #1a1a1a; // divider between copy and CTA
+    --tncr3_max-width: 850px; // Figma frame width
+    --tncr3_media-height: 300px;
+    --tncr3_media-position: center;
+    --tncr3_close-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14.7096' height='14.7096' viewBox='0 0 14.7096 14.7096' fill='none'%3E%3Cpath d='M0.707107 0.707107L14.0025 14.0025' stroke='black' stroke-width='2' stroke-miterlimit='10'/%3E%3Cpath d='M14.0025 0.707107L0.707107 14.0025' stroke='black' stroke-width='2' stroke-miterlimit='10'/%3E%3C/svg%3E");
+
+    box-sizing: border-box;
+    width: 100%;
+    max-width: var(--tncr3_max-width);
+    margin: 0 auto;
+    color: var(--tncr3_text-color);
+    font-family: var(--sans-serif-fonts);
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    .tnc-regive-3__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px;
+      border: 1px solid var(--tncr3_accent);
+      border-bottom: 0;
+      background-color: var(--tncr3_panel);
+    }
+
+    // The Lands_Green mark, shown in this design and hidden in design 1.
+    .tnc-regive-3__badge {
+      flex: 0 0 auto;
+      width: 50px;
+      height: 50px;
+      // ENgrid sets `margin: 0 auto` on every <img>. On a flex item the auto
+      // margins absorb the row's free space and push the mark off the left
+      // edge, breaking the header's space-between.
+      margin: 0;
+      object-fit: contain;
+    }
+
+    .tnc-regive-3__title {
+      margin: 0;
+      font-family: var(--serif-fonts);
+      font-size: 34px;
+      line-height: 42px;
+      font-weight: 300;
+      color: var(--tncr3_text-color);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    // Styled as a control but inert until the dismiss logic is wired up.
+    .tnc-regive-3__close {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--tncr3_text-color);
+      font-family: var(--sans-serif-fonts);
+      font-size: 14px;
+      line-height: 1;
+      font-weight: 700;
+      text-transform: uppercase;
+      cursor: pointer;
+
+      &::after {
+        content: "";
+        flex: 0 0 auto;
+        width: 15px;
+        height: 15px;
+        background-color: #949494;
+        -webkit-mask: var(--tncr3_close-icon) center / contain no-repeat;
+        mask: var(--tncr3_close-icon) center / contain no-repeat;
+      }
+    }
+
+    .tnc-regive-3__image {
+      display: block;
+      width: 100%;
+      height: var(--tncr3_media-height);
+      object-fit: cover;
+      object-position: var(--tncr3_media-position);
+    }
+
+    .tnc-regive-3__body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 24px 49px 28px;
+      border: 1px solid var(--tncr3_accent);
+      border-top: 0;
+      background-color: var(--tncr3_panel);
+    }
+
+    // Copy and CTA sit side by side, separated by a full-height hairline.
+    .tnc-regive-3__split {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      width: 100%;
+      padding: 8px 0;
+    }
+
+    .tnc-regive-3__copy {
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+    }
+
+    // Carries {{ask-amount}}, e.g. "$60 a year protects 3 acres."
+    .tnc-regive-3__ask {
+      margin: 0;
+      font-size: 26px;
+      line-height: 24px;
+      font-weight: 700;
+      color: var(--tncr3_text-color);
+    }
+
+    .tnc-regive-3__lede {
+      margin: 0;
+      width: 100%;
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 500;
+      color: var(--tncr3_text-color);
+    }
+
+    .tnc-regive-3__rule {
+      flex: 0 0 1px;
+      align-self: stretch;
+      background-color: var(--tncr3_rule-color);
+    }
+
+    .tnc-regive-3__actions {
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    // Regive's base CSS centres .regive-amounts and gives it min-width: 300px
+    // and a 1rem block margin; neither suits a single inline CTA.
+    .regive-amounts {
+      flex: 0 0 auto;
+      justify-content: center;
+      min-width: 0;
+      margin: 0;
+      gap: 12px;
+    }
+
+    .regive-amount-btn {
+      min-width: 0;
+      width: auto;
+      margin: 0;
+      padding: 18px 30px;
+      border: 0;
+      border-radius: 0;
+      background-color: var(--tncr3_button);
+      color: var(--tncr3_button-text-color);
+      font-family: var(--sans-serif-fonts);
+      font-size: 20px;
+      line-height: normal;
+      font-weight: 700;
+      text-transform: uppercase;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+
+      &:hover:not(:disabled),
+      &:focus-visible:not(:disabled) {
+        background-color: color-mix(in srgb, var(--tncr3_button) 85%, #000000);
+        color: var(--tncr3_button-text-color);
+      }
+    }
+
+    .regive-currency,
+    .regive-amount {
+      font-weight: inherit;
+    }
+
+    // Styled as a control but inert until the dismiss logic is wired up.
+    .tnc-regive-3__decline {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--tncr3_text-color);
+      font-family: var(--sans-serif-fonts);
+      font-size: 16px;
+      line-height: 30px;
+      font-weight: 500;
+      text-align: center;
+      text-decoration: underline;
+      text-underline-position: from-font;
+      text-decoration-skip-ink: none;
+      cursor: pointer;
+    }
+
+    .tnc-regive-3__assurance {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+      color: var(--tncr3_text-color);
+
+      &::before {
+        content: "";
+        flex: 0 0 auto;
+        width: 11px;
+        height: 20px;
+        // Figma wraps the 20px glyph in a 25px box with the padding at the
+        // bottom, so the lock sits above the row's centre rather than on it.
+        margin-bottom: 5px;
+        background-color: currentColor;
+        -webkit-mask: var(--tnc-regive-lock-icon) center / contain no-repeat;
+        mask: var(--tnc-regive-lock-icon) center / contain no-repeat;
+      }
+    }
+
+    .regive-captcha-container:not(:has(*)) {
+      display: none;
+    }
+
+    .regive-captcha-container:has(*) {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    // Stacked: the split collapses, the hairline becomes horizontal
+
+    @media (max-width: 700px) {
+      --tncr3_media-height: 220px;
+
+      .tnc-regive-3__header {
+        gap: 12px;
+        padding: 12px;
+      }
+
+      .tnc-regive-3__title {
+        font-size: 24px;
+        line-height: 30px;
+      }
+
+      .tnc-regive-3__badge {
+        width: 36px;
+        height: 36px;
+      }
+
+      .tnc-regive-3__body {
+        padding: 20px 20px 24px;
+      }
+
+      .tnc-regive-3__split {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .tnc-regive-3__rule {
+        flex: 0 0 1px;
+        align-self: stretch;
+        width: 100%;
+        height: 1px;
+      }
+
+      .tnc-regive-3__ask {
+        font-size: 22px;
+        line-height: 28px;
+      }
+
+      .tnc-regive-3__lede {
+        font-size: 18px;
+        line-height: 26px;
+      }
+    }
+
+    @media (max-width: 460px) {
+      --tncr3_media-height: 180px;
+
+      .tnc-regive-3__title {
+        font-size: 20px;
+        line-height: 26px;
+      }
+
+      .regive-amounts {
+        width: 100%;
+      }
+
+      .regive-amount-btn {
+        width: 100%;
+        padding: 16px 20px;
+        font-size: 16px;
+        white-space: normal;
+      }
+    }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Lightbox overlay (design 3), on the PARENT thank-you page.
+//
+// Regive replaces the <regive> tag in place, so wrapping the tag in
+// .tnc-regive-lightbox leaves .regive-container inside that wrapper -- the only
+// hook available, since the container records no theme. Body here has no
+// [data-regive-embedded], so this sits outside that block.
+// ---------------------------------------------------------------------------
+
+// ---------------------------------------------------------------------------
+// Inline ask (designs 1 and 2), on the PARENT thank-you page.
+//
+// RegiveInline moves this wrapper into the thank-you copy, between a paragraph
+// and the rule before "Explore Nature.org". Regive's own container carries
+// `margin: 1rem auto`, which is too tight to read as a separate card against
+// surrounding body copy; this collapses with it rather than adding to it.
+// ---------------------------------------------------------------------------
+
+.tnc-regive-inline {
+  margin: 32px 0;
+}
+
+// A fixed overlay cannot escape a stacking context, and EN's own stylesheet
+// puts `z-index: 4` on the column wrapping the code block -- which traps the
+// whole lightbox at that level, so the page header, footer and any positioned
+// section paint over it. `position: relative` with `z-index: auto` creates no
+// stacking context, and :has() limits this to the column actually holding a
+// lightbox.
+.en__component:has(.tnc-regive-lightbox) {
+  // !important because EN's own stylesheet is cross-origin here and wins on
+  // specificity; there is no readable rule to outrank precisely.
+  z-index: auto !important;
+}
+
+.tnc-regive-lightbox .regive-container {
+  position: fixed;
+  inset: 0;
+  // Above the page chrome (the header's column sits at 6, the test-mode
+  // banner at 9999) but deliberately below OneTrust's consent modal, which
+  // must still be able to appear over the lightbox.
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // Regive writes the banner height inline on the container; the overlay has
+  // to fill the viewport regardless, so these have to outrank it. Regive's base
+  // rule is `all: unset`, which drops box-sizing too -- without restoring it the
+  // padding is added to 100% and the overlay overflows the viewport by 40px.
+  box-sizing: border-box;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.6);
+
+  .regive-iframe {
+    width: 100%;
+    max-width: 850px;
+  }
+
+  // Success panel. The base rule makes this a full-size sheet hidden with
+  // translateY(100%) -- over a viewport-sized overlay that washes the whole
+  // screen, and the transform still counts toward scrollable overflow, giving
+  // the lightbox a scrollbar into empty space. Card-sized and centred instead,
+  // hidden with opacity so it contributes no scroll height.
+  .regive-thank-you {
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    max-width: 850px;
+    height: auto;
+    min-height: 200px;
+    padding: 48px 20px;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  }
+
+  &.regive-success .regive-thank-you {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+    visibility: visible;
+  }
+}

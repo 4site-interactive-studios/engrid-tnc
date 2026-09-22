@@ -38,6 +38,8 @@ import MultistepForm from "./scripts/multistep-form";
 import { EventPages } from "./scripts/event-pages";
 import { SandboxWarning } from "./scripts/sandbox-warning";
 import { GenerateEmail } from "./scripts/generate-email";
+import { RegiveLightbox } from "./scripts/regive-lightbox";
+import { RegiveInline } from "./scripts/regive-inline";
 
 declare global {
   interface Window {
@@ -174,6 +176,8 @@ const options: Options = {
     new MultistepForm();
     new SandboxWarning();
     new GenerateEmail();
+    new RegiveLightbox();
+    new RegiveInline();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");

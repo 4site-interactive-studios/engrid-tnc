@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, September 21, 2026 @ 10:26:45 ET
+ *  Date: Tuesday, September 22, 2026 @ 12:35:02 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -58486,6 +58486,124 @@ class GenerateEmail {
     engrid_ENGrid.setFieldValue('supporter.emailAddress', anonAddress);
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/regive-lightbox.ts
+
+
+
+/**
+ * Dismissal for the Regive lightbox (design 3).
+ *
+ * Regive builds its banner inside a same-origin iframe, and a <script> inside a
+ * <template> never executes — so the close controls cannot bind themselves and
+ * the parent page has to reach into the iframe once the banner exists.
+ *
+ * Runs only on pages whose <regive> tag is wrapped in .tnc-regive-lightbox,
+ * which is also what scopes the overlay styling.
+ */
+class RegiveLightbox {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("RegiveLightbox", "lightgray", "darkgreen", "🔁"));
+    _defineProperty(this, "lightbox", void 0);
+    _defineProperty(this, "bound", false);
+    this.lightbox = document.querySelector(".tnc-regive-lightbox");
+    if (!this.shouldRun()) return;
+    this.listen();
+  }
+  shouldRun() {
+    return this.lightbox !== null;
+  }
+  listen() {
+    // Regive replaces the <regive> tag with its iframe after page load, so the
+    // banner is usually not in the DOM yet; "loaded" is the child's signal that
+    // it has finished rendering. Try once up front in case Regive got there
+    // first — bindControls is idempotent.
+    window.addEventListener("message", event => {
+      if (!this.isRegiveLoaded(event.data)) return;
+      this.bindControls();
+    });
+    this.bindControls();
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") this.dismiss();
+    });
+  }
+
+  /** postMessage payloads are untrusted, so narrow before reading them. */
+  isRegiveLoaded(data) {
+    if (typeof data !== "object" || data === null) return false;
+    const message = data;
+    return message.sender === "regive" && message.action === "loaded";
+  }
+  bindControls() {
+    if (this.bound) return;
+    const frame = this.lightbox?.querySelector("iframe");
+    const doc = frame?.contentDocument;
+    if (!doc) return;
+    const controls = doc.querySelectorAll(".tnc-regive-3__close, .tnc-regive-3__decline");
+    if (controls.length === 0) {
+      this.logger.log("Banner has no close controls to bind");
+      return;
+    }
+    controls.forEach(control => {
+      control.addEventListener("click", () => this.dismiss());
+    });
+    this.bound = true;
+    this.logger.log("Bound the lightbox close controls");
+  }
+
+  /**
+   * Hidden rather than removed: removing the container tears down the iframe,
+   * which would cut off Regive's own success and celebrate handling if a
+   * submission were still settling.
+   */
+  dismiss() {
+    if (this.lightbox) this.lightbox.style.display = "none";
+  }
+}
+;// CONCATENATED MODULE: ./src/scripts/regive-inline.ts
+
+
+
+/**
+ * Moves the inline Regive ask (designs 1 and 2) into the thank-you copy, where
+ * the comps place it: immediately above the rule that precedes "Explore
+ * Nature.org".
+ *
+ * The tag cannot be authored there — that copy is a single EN text block, so
+ * putting it inside would mean editing the block on every page using Regive.
+ *
+ * It is the wrapper that moves, not the container. Regive replaces the <regive>
+ * tag in place, so relocating the authored wrapper puts the banner in the right
+ * position whenever Regive gets to it — no waiting on the container it builds
+ * asynchronously.
+ *
+ * Design 3 is a fixed overlay and is scoped by .tnc-regive-lightbox instead, so
+ * it is never matched here.
+ */
+class RegiveInline {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("RegiveInline", "lightgray", "darkgreen", "🔁"));
+    const wrapper = document.querySelector(".tnc-regive-inline");
+    if (!wrapper) return;
+    this.moveIntoThankYouCopy(wrapper);
+  }
+  moveIntoThankYouCopy(wrapper) {
+    const copyBlock = document.querySelector(".en__component--copyblock.recurring-frequency-annual-hide");
+    if (!copyBlock) {
+      this.logger.log("No recurring-frequency-annual-hide copy block found");
+      return;
+    }
+    const rule = copyBlock.querySelector("hr");
+    if (!rule) {
+      this.logger.log("Copy block has no rule to insert above");
+      return;
+    }
+
+    // The code block the tag came from is left in place: EN gives code blocks
+    // no margin or padding, so an emptied one renders at zero height.
+    rule.insertAdjacentElement("beforebegin", wrapper);
+    this.logger.log("Moved the Regive ask above the rule in the thank-you copy");
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -58495,6 +58613,8 @@ class GenerateEmail {
 //   DonationAmount,
 //   IframeQueue,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
+
 
 
 
@@ -58605,6 +58725,8 @@ const options = {
     new MultistepForm();
     new SandboxWarning();
     new GenerateEmail();
+    new RegiveLightbox();
+    new RegiveInline();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");
