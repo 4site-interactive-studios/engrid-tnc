@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, September 22, 2026 @ 12:35:02 ET
+ *  Date: Tuesday, September 22, 2026 @ 13:30:07 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -58518,8 +58518,14 @@ class RegiveLightbox {
     // it has finished rendering. Try once up front in case Regive got there
     // first — bindControls is idempotent.
     window.addEventListener("message", event => {
-      if (!this.isRegiveLoaded(event.data)) return;
-      this.bindControls();
+      switch (this.regiveAction(event.data)) {
+        case "loaded":
+          this.bindControls();
+          break;
+        case "success":
+          this.dismissAfterThanks();
+          break;
+      }
     });
     this.bindControls();
     document.addEventListener("keydown", event => {
@@ -58528,10 +58534,23 @@ class RegiveLightbox {
   }
 
   /** postMessage payloads are untrusted, so narrow before reading them. */
-  isRegiveLoaded(data) {
-    if (typeof data !== "object" || data === null) return false;
+  regiveAction(data) {
+    if (typeof data !== "object" || data === null) return null;
     const message = data;
-    return message.sender === "regive" && message.action === "loaded";
+    if (message.sender !== "regive") return null;
+    return typeof message.action === "string" ? message.action : null;
+  }
+
+  /**
+   * On success Regive shows its thank-you panel and hides the iframe — taking
+   * the close control with it — and nothing ever takes the panel down again.
+   * Over a full-viewport overlay that leaves the donor staring at a blocked
+   * page, so the lightbox has to retire itself. Regive cannot do this: its
+   * `exit` action is ignored once the banner is marked successful.
+   */
+  dismissAfterThanks() {
+    this.logger.log("Gift accepted — closing the lightbox shortly");
+    window.setTimeout(() => this.dismiss(), RegiveLightbox.thanksDuration);
   }
   bindControls() {
     if (this.bound) return;
@@ -58559,6 +58578,8 @@ class RegiveLightbox {
     if (this.lightbox) this.lightbox.style.display = "none";
   }
 }
+/** How long the thank-you panel stays up before the lightbox closes. */
+_defineProperty(RegiveLightbox, "thanksDuration", 6000);
 ;// CONCATENATED MODULE: ./src/scripts/regive-inline.ts
 
 

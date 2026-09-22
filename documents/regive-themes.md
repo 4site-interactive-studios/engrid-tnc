@@ -223,6 +223,11 @@ Same wrapper as design 1.
 Overlays the page on a dimmed backdrop. The close button, the "No thanks" link
 and the Escape key all dismiss it.
 
+Once a donor accepts the ask, the thank-you message shows for six seconds and
+then the lightbox closes itself, revealing the receipt underneath. That is
+handled for you — Regive hides its own close button at that point, so without it
+the overlay would stay up with no way out.
+
 ### Page 1
 
 Library component: `Regive: Design 3 - Page 1`
