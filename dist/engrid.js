@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, September 22, 2026 @ 13:30:07 ET
+ *  Date: Wednesday, September 30, 2026 @ 07:38:20 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -56036,10 +56036,20 @@ _defineProperty(GdcpManager, "_qcbChainDecidedPromise", new Promise(resolve => {
 }));
 ;// CONCATENATED MODULE: ./src/scripts/bequest-lightbox.ts
 
+var _BequestLightbox;
  // Uses ENGrid via Visual Studio Workspace
 
 
 class BequestLightbox {
+  static settled() {
+    return BequestLightbox._settledPromise;
+  }
+  static resolveSettled() {
+    if (BequestLightbox._settledResolve) {
+      BequestLightbox._settledResolve();
+      BequestLightbox._settledResolve = null;
+    }
+  }
   constructor() {
     _defineProperty(this, "logger", new dist_logger_EngridLogger("BequestLightbox", "yellow", "black"));
     _defineProperty(this, "modalContent", null);
@@ -56050,6 +56060,7 @@ class BequestLightbox {
     this.pageJson = window.pageJson;
     if (!this.shouldRun()) {
       this.logger.log("Not running bequest modal.");
+      BequestLightbox.resolveSettled();
       return;
     }
 
@@ -56069,6 +56080,8 @@ class BequestLightbox {
     this.addModal();
     if (this.shouldOpen()) {
       this.openWhenSafe();
+    } else {
+      BequestLightbox.resolveSettled();
     }
     this.logConditions();
   }
@@ -56285,6 +56298,7 @@ class BequestLightbox {
   close() {
     dist_engrid_ENGrid.setBodyData("modal", "closed");
     dist_engrid_ENGrid.setBodyData("bequest-lightbox", "closed");
+    BequestLightbox.resolveSettled();
   }
   resizeIframe(iframe) {
     iframe.style.height = iframe.contentWindow?.document.body.scrollHeight + "px";
@@ -56305,6 +56319,19 @@ class BequestLightbox {
     return null;
   }
 }
+_BequestLightbox = BequestLightbox;
+/**
+ * Signals that the bequest lightbox is done with the page — dismissed,
+ * or never opened. Regive activation waits on this (after the QCB iframe
+ * chain) so its iframe never loads while the modal is open. Deliberately
+ * no timeout: a donor engaged with the bequest ask shouldn't see Regive
+ * at all. Created at class-load time so callers get a stable reference
+ * regardless of construction order.
+ */
+_defineProperty(BequestLightbox, "_settledResolve", null);
+_defineProperty(BequestLightbox, "_settledPromise", new Promise(resolve => {
+  _BequestLightbox._settledResolve = resolve;
+}));
 // EXTERNAL MODULE: ./node_modules/tippy.js/dist/tippy.esm.js + 54 modules
 var tippy_esm = __webpack_require__(9244);
 ;// CONCATENATED MODULE: ./src/scripts/tooltip.ts
@@ -58486,37 +58513,88 @@ class GenerateEmail {
     engrid_ENGrid.setFieldValue('supporter.emailAddress', anonAddress);
   }
 }
-;// CONCATENATED MODULE: ./src/scripts/regive-lightbox.ts
+;// CONCATENATED MODULE: ./src/scripts/regive.ts
+
+
 
 
 
 /**
- * Dismissal for the Regive lightbox (design 3).
- *
- * Regive builds its banner inside a same-origin iframe, and a <script> inside a
- * <template> never executes — so the close controls cannot bind themselves and
- * the parent page has to reach into the iframe once the banner exists.
- *
- * Runs only on pages whose <regive> tag is wrapped in .tnc-regive-lightbox,
- * which is also what scopes the overlay styling.
+ * Activation: the Regive script tag is deliberately absent from the Thank
+ * You page in EN — it is injected here, once `GdcpManager.qcbChainDecided()`
+ * and then `BequestLightbox.settled()` resolve. Regive creates its iframe
+ * the moment it initializes, and EN drops records when iframes in different
+ * frames submit simultaneously, so it must not load while QCB iframes are
+ * in flight or the bequest modal is open.
  */
-class RegiveLightbox {
+class Regive {
   constructor() {
-    _defineProperty(this, "logger", new logger_EngridLogger("RegiveLightbox", "lightgray", "darkgreen", "🔁"));
-    _defineProperty(this, "lightbox", void 0);
+    _defineProperty(this, "logger", new logger_EngridLogger("Regive", "lightgray", "darkgreen", "🔁"));
+    _defineProperty(this, "lightbox", null);
     _defineProperty(this, "bound", false);
     this.lightbox = document.querySelector(".tnc-regive-lightbox");
-    if (!this.shouldRun()) return;
-    this.listen();
+    this.moveInlineAsk();
+    this.listenForLightbox();
+    this.activateWhenSafe();
   }
-  shouldRun() {
-    return this.lightbox !== null;
+  activateWhenSafe() {
+    // The Thank You page inside the Regive iframe (reached after a Regive
+    // submission) needs the bundle immediately to report the result to its
+    // parent; the queue and bequest lightbox are top-level concerns.
+    if (this.isEmbedded()) {
+      this.activate("embedded page");
+      return;
+    }
+    GdcpManager.qcbChainDecided().then(() => BequestLightbox.settled()).then(() => this.activate("iframe queue and bequest lightbox settled"));
   }
-  listen() {
-    // Regive replaces the <regive> tag with its iframe after page load, so the
-    // banner is usually not in the DOM yet; "loaded" is the child's signal that
-    // it has finished rendering. Try once up front in case Regive got there
-    // first — bindControls is idempotent.
+  activate(reason) {
+    if (!document.querySelector("regive")) return;
+    // A surviving template script tag means Regive already self-initialized
+    // ungated; injecting again would double-init it.
+    if (document.querySelector("script[src*='regive']")) {
+      this.logger.log("Regive script is already on the page. It should be removed from " + "the Thank You page in EN — the theme controls activation.");
+      return;
+    }
+    this.logger.log(`Activating Regive: ${reason}.`);
+    const script = document.createElement("script");
+    // Regive detects debug mode from its own script src.
+    const debug = engrid_ENGrid.getUrlParameter("debug") == "true" ? "?debug" : "";
+    script.src = Regive.scriptUrl + debug;
+    document.body.appendChild(script);
+  }
+  isEmbedded() {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  }
+  moveInlineAsk() {
+    const wrapper = document.querySelector(".tnc-regive-inline");
+    if (!wrapper) return;
+    const copyBlock = document.querySelector(".en__component--copyblock.recurring-frequency-annual-hide");
+    if (!copyBlock) {
+      this.logger.log("No recurring-frequency-annual-hide copy block found");
+      return;
+    }
+    const rule = copyBlock.querySelector("hr");
+    if (!rule) {
+      this.logger.log("Copy block has no rule to insert above");
+      return;
+    }
+
+    // The code block the tag came from is left in place: EN gives code blocks
+    // no margin or padding, so an emptied one renders at zero height.
+    rule.insertAdjacentElement("beforebegin", wrapper);
+    this.logger.log("Moved the Regive ask above the rule in the thank-you copy");
+  }
+  listenForLightbox() {
+    if (!this.lightbox) return;
+
+    // The banner's close controls live inside a same-origin iframe built from
+    // a <template>, so scripts inside it never execute — the parent has to
+    // bind them once the child announces "loaded". The up-front bindControls
+    // call covers the race where Regive rendered before this listener.
     window.addEventListener("message", event => {
       switch (this.regiveAction(event.data)) {
         case "loaded":
@@ -58532,8 +58610,6 @@ class RegiveLightbox {
       if (event.key === "Escape") this.dismiss();
     });
   }
-
-  /** postMessage payloads are untrusted, so narrow before reading them. */
   regiveAction(data) {
     if (typeof data !== "object" || data === null) return null;
     const message = data;
@@ -58541,16 +58617,12 @@ class RegiveLightbox {
     return typeof message.action === "string" ? message.action : null;
   }
 
-  /**
-   * On success Regive shows its thank-you panel and hides the iframe — taking
-   * the close control with it — and nothing ever takes the panel down again.
-   * Over a full-viewport overlay that leaves the donor staring at a blocked
-   * page, so the lightbox has to retire itself. Regive cannot do this: its
-   * `exit` action is ignored once the banner is marked successful.
-   */
+  // Regive ignores its own `exit` action once the banner is marked
+  // successful, so without this the thank-you panel would block the page
+  // forever.
   dismissAfterThanks() {
     this.logger.log("Gift accepted — closing the lightbox shortly");
-    window.setTimeout(() => this.dismiss(), RegiveLightbox.thanksDuration);
+    window.setTimeout(() => this.dismiss(), Regive.thanksDuration);
   }
   bindControls() {
     if (this.bound) return;
@@ -58568,63 +58640,14 @@ class RegiveLightbox {
     this.bound = true;
     this.logger.log("Bound the lightbox close controls");
   }
-
-  /**
-   * Hidden rather than removed: removing the container tears down the iframe,
-   * which would cut off Regive's own success and celebrate handling if a
-   * submission were still settling.
-   */
   dismiss() {
+    // Hidden rather than removed: removing the container would tear down the
+    // iframe mid-submission and cut off Regive's success/celebrate handling.
     if (this.lightbox) this.lightbox.style.display = "none";
   }
 }
-/** How long the thank-you panel stays up before the lightbox closes. */
-_defineProperty(RegiveLightbox, "thanksDuration", 6000);
-;// CONCATENATED MODULE: ./src/scripts/regive-inline.ts
-
-
-
-/**
- * Moves the inline Regive ask (designs 1 and 2) into the thank-you copy, where
- * the comps place it: immediately above the rule that precedes "Explore
- * Nature.org".
- *
- * The tag cannot be authored there — that copy is a single EN text block, so
- * putting it inside would mean editing the block on every page using Regive.
- *
- * It is the wrapper that moves, not the container. Regive replaces the <regive>
- * tag in place, so relocating the authored wrapper puts the banner in the right
- * position whenever Regive gets to it — no waiting on the container it builds
- * asynchronously.
- *
- * Design 3 is a fixed overlay and is scoped by .tnc-regive-lightbox instead, so
- * it is never matched here.
- */
-class RegiveInline {
-  constructor() {
-    _defineProperty(this, "logger", new logger_EngridLogger("RegiveInline", "lightgray", "darkgreen", "🔁"));
-    const wrapper = document.querySelector(".tnc-regive-inline");
-    if (!wrapper) return;
-    this.moveIntoThankYouCopy(wrapper);
-  }
-  moveIntoThankYouCopy(wrapper) {
-    const copyBlock = document.querySelector(".en__component--copyblock.recurring-frequency-annual-hide");
-    if (!copyBlock) {
-      this.logger.log("No recurring-frequency-annual-hide copy block found");
-      return;
-    }
-    const rule = copyBlock.querySelector("hr");
-    if (!rule) {
-      this.logger.log("Copy block has no rule to insert above");
-      return;
-    }
-
-    // The code block the tag came from is left in place: EN gives code blocks
-    // no margin or padding, so an emptied one renders at zero height.
-    rule.insertAdjacentElement("beforebegin", wrapper);
-    this.logger.log("Moved the Regive ask above the rule in the thank-you copy");
-  }
-}
+_defineProperty(Regive, "scriptUrl", "https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/regive.js");
+_defineProperty(Regive, "thanksDuration", 6000);
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -58634,7 +58657,6 @@ class RegiveInline {
 //   DonationAmount,
 //   IframeQueue,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
-
 
 
 
@@ -58746,8 +58768,7 @@ const options = {
     new MultistepForm();
     new SandboxWarning();
     new GenerateEmail();
-    new RegiveLightbox();
-    new RegiveInline();
+    new Regive();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");

@@ -1,20 +1,16 @@
-// Custom Regive themes for TNC.
-//
-// Regive renders its banner inside an iframe that loads PAGE 1 of the donation
+// Regive renders its banner inside an iframe that loads page 1 of the donation
 // form, so this stylesheet is already in scope there -- the `<template>` on
 // page 1 only has to carry markup and merge tags, and all styling lives here.
 //
-// The injected DOM is: body[data-regive-embedded="true"] > .regive-embed >
-// (template contents). Regive also injects its own <style> targeting
-// `.regive-embed .regive-amount-btn`, and ships base rules at
-// `body[data-regive-embedded="true"] .regive-amount-btn`. This file is
-// imported inside `[data-engrid-theme="tnc"]`, so `&[data-regive-embedded]`
-// resolves to a two-attribute body selector that outranks both.
+// Regive injects its own <style> targeting `.regive-embed .regive-amount-btn`
+// and ships base rules at `body[data-regive-embedded="true"] .regive-amount-btn`.
+// This file is imported inside `[data-engrid-theme="tnc"]`, so
+// `&[data-regive-embedded]` resolves to a two-attribute body selector that
+// outranks both.
 //
-// Each numbered class matches its Figma frame. The photo credit is one shared
-// Figma component used by every design, so it lives in the shared block rather
-// than being repeated per design. Breakpoints measure the IFRAME, not the
-// browser window -- see the note above the media queries.
+// The photo credit is shared by every design, so it lives in the shared block
+// rather than being repeated per design. Breakpoints measure the iframe, not
+// the browser window -- see the note above the media queries.
 
 // ---------------------------------------------------------------------------
 // Shared: the iframe body and the wrapper Regive injects
@@ -40,12 +36,11 @@
     width: 100%;
   }
 
-  // Padlock beside the reassurance line, shared by every design. Masked, so it
-  // takes the text colour.
+  // Masked, so the padlock takes the text colour.
   --tnc-regive-lock-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='20' viewBox='0 0 11 20' fill='none'%3E%3Cpath d='M5.5 3.45614C7.98528 3.45614 10 5.47086 10 7.95614V11.9825H1V7.95614C1 5.47086 3.01472 3.45614 5.5 3.45614Z' stroke='black' stroke-width='2'/%3E%3Cpath d='M11 19.2979H0V9.47368H11V19.2979ZM4.40039 11.9297V16.4913H6.59961V11.9297H4.40039Z' fill='black'/%3E%3C/svg%3E");
 
   // -------------------------------------------------------------------------
-  // Photo credit -- one Figma component, shared by every design.
+  // Photo credit -- shared by every design.
   //
   // Deliberately NOT .media-with-attribution / <figattribution>. Those are
   // wired up by ENgrid's MediaAttribution component and by the
@@ -89,8 +84,8 @@
     cursor: pointer;
   }
 
-  // The component's Variant2 state. Right padding clears the badge: its 16px
-  // inset, its 24px width, and the frame's 32px gap.
+  // Right padding clears the badge: its 16px inset, its 24px width, and a
+  // 32px gap.
   .tnc-regive-credit {
     position: absolute;
     right: 0;
@@ -127,18 +122,18 @@
   // -------------------------------------------------------------------------
 
   .tnc-regive-1 {
-    --tncr1_accent: #00703c; // border, panel tint, button fill
+    --tncr1_accent: #00703c;
     --tncr1_text-color: #1a1a1a;
     --tncr1_button-text-color: #ffffff;
-    --tncr1_max-width: 644px; // Figma frame width; card centers in wider columns
+    --tncr1_max-width: 644px; // card centers in wider columns
     --tncr1_media-height: 275px;
     // Source photo is 1.82:1 but the slot is ~2.34:1, so object-fit crops top
     // and bottom. Shift the focal point here if the subject sits off-center.
     --tncr1_media-position: center;
     --tncr1_padding: 16px;
 
-    // Figma stacks a 90% white veil over the accent rather than using a flat
-    // hex, so retinting the card only means changing --tncr1_accent.
+    // A 90% white veil over the accent rather than a flat hex, so retinting
+    // the card only means changing --tncr1_accent.
     --tncr1_panel-bg: linear-gradient(
         0deg,
         rgba(255, 255, 255, 0.9),
@@ -210,7 +205,7 @@
     .tnc-regive-1__ask {
       margin: 0;
       font-size: 26px;
-      line-height: 24px; // Figma: tight leading, single line at full width
+      line-height: 24px;
       font-weight: 700;
       color: var(--tncr1_text-color);
     }
@@ -235,7 +230,6 @@
       gap: 28px;
     }
 
-    //
     // Regive's base CSS centers .regive-amounts, gives it min-width: 300px and
     // a 1rem block margin, and makes each button min-width: calc(50% - 20px).
     // All of that has to come off for a single inline CTA.
@@ -305,16 +299,14 @@
         flex: 0 0 auto;
         width: 11px;
         height: 20px;
-        // Figma wraps the 20px glyph in a 25px box with the padding at the
-        // bottom, so the lock sits above the row's centre rather than on it.
+        // Matches the icon artwork's built-in bottom offset, so the lock sits
+        // slightly above the row's centre.
         margin-bottom: 5px;
         background-color: currentColor;
         -webkit-mask: var(--tnc-regive-lock-icon) center / contain no-repeat;
         mask: var(--tnc-regive-lock-icon) center / contain no-repeat;
       }
     }
-
-    // Required by Regive on captcha-enabled pages, or the component exits.
 
     // An empty container still counts as a flex child of __body and adds a
     // second 28px gap above the CTA. :has(*) rather than :empty so that
@@ -328,12 +320,9 @@
       justify-content: flex-start;
     }
 
-    // Compact: tighter type
-    //
-    // NOTE: these evaluate against the IFRAME viewport, not the browser window,
-    // and the card is min(viewport, 644px) wide -- so the thresholds track the
-    // card, not typical page breakpoints. A 992px breakpoint fired on a normal
-    // desktop, shrinking the type while the card was still at full width.
+    // These evaluate against the iframe viewport, not the browser window, and
+    // the card is min(viewport, 644px) wide -- the thresholds track the card,
+    // not typical page breakpoints.
 
     @media (max-width: 600px) {
       --tncr1_media-height: 220px;
@@ -362,8 +351,6 @@
         font-size: 18px;
       }
     }
-
-    // Stacked: CTA and note on their own lines
 
     @media (max-width: 460px) {
       --tncr1_media-height: 180px;
@@ -423,8 +410,8 @@
     --tncr2_accent: #00703c;
     --tncr2_text-color: #1a1a1a;
     --tncr2_button-text-color: #ffffff;
-    --tncr2_max-width: 850px; // Figma frame width
-    --tncr2_min-height: 476px; // Figma frame height; content may grow past it
+    --tncr2_max-width: 850px;
+    --tncr2_min-height: 476px; // content may grow past it
     --tncr2_media-position: center;
 
     --tncr2_panel-bg: linear-gradient(
@@ -436,7 +423,7 @@
 
     box-sizing: border-box;
     // The media comes first in the markup so stacking puts the photo on top,
-    // as design 1 does; row-reverse restores the comp's text-left order.
+    // as design 1 does; row-reverse restores the text-left order.
     display: flex;
     flex-direction: row-reverse;
     align-items: stretch;
@@ -496,7 +483,6 @@
       width: 100%;
     }
 
-    // Unlike design 1, the suggestion note sits above the title.
     .tnc-regive-2__note {
       margin: 0;
       font-size: 14px;
@@ -607,8 +593,8 @@
         flex: 0 0 auto;
         width: 11px;
         height: 20px;
-        // Figma wraps the 20px glyph in a 25px box with the padding at the
-        // bottom, so the lock sits above the row's centre rather than on it.
+        // Matches the icon artwork's built-in bottom offset, so the lock sits
+        // slightly above the row's centre.
         margin-bottom: 5px;
         background-color: currentColor;
         -webkit-mask: var(--tnc-regive-lock-icon) center / contain no-repeat;
@@ -626,7 +612,6 @@
       width: 100%;
     }
 
-    // Stacked: photo on top, copy beneath
     // Two columns stop working well before the card reaches its 850px cap.
 
     @media (max-width: 700px) {
@@ -637,9 +622,9 @@
         flex: 0 0 auto;
       }
 
-      // The design 2 asset is portrait (the side column is 425x476), so a
-      // short landscape slot crops it to a band across the middle and cuts the
-      // ears. A ratio keeps the framing sane as the card narrows.
+      // The asset is portrait, so a fixed-height landscape slot would crop it
+      // to a band and cut the subject; a ratio keeps the framing sane as the
+      // card narrows.
       .tnc-regive-2__image {
         height: auto;
         aspect-ratio: 16 / 11;
@@ -684,8 +669,8 @@
     --tncr3_button: #05641c; // greenparrot
     --tncr3_text-color: #1a1a1a;
     --tncr3_button-text-color: #ffffff;
-    --tncr3_rule-color: #1a1a1a; // divider between copy and CTA
-    --tncr3_max-width: 850px; // Figma frame width
+    --tncr3_rule-color: #1a1a1a;
+    --tncr3_max-width: 850px;
     --tncr3_media-height: 300px;
     --tncr3_media-position: center;
     --tncr3_close-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14.7096' height='14.7096' viewBox='0 0 14.7096 14.7096' fill='none'%3E%3Cpath d='M0.707107 0.707107L14.0025 14.0025' stroke='black' stroke-width='2' stroke-miterlimit='10'/%3E%3Cpath d='M14.0025 0.707107L0.707107 14.0025' stroke='black' stroke-width='2' stroke-miterlimit='10'/%3E%3C/svg%3E");
@@ -714,7 +699,6 @@
       background-color: var(--tncr3_panel);
     }
 
-    // The Lands_Green mark, shown in this design and hidden in design 1.
     .tnc-regive-3__badge {
       flex: 0 0 auto;
       width: 50px;
@@ -737,7 +721,6 @@
       letter-spacing: 0;
     }
 
-    // Styled as a control but inert until the dismiss logic is wired up.
     .tnc-regive-3__close {
       flex: 0 0 auto;
       display: flex;
@@ -786,7 +769,6 @@
       background-color: var(--tncr3_panel);
     }
 
-    // Copy and CTA sit side by side, separated by a full-height hairline.
     .tnc-regive-3__split {
       display: flex;
       align-items: center;
@@ -879,7 +861,6 @@
       font-weight: inherit;
     }
 
-    // Styled as a control but inert until the dismiss logic is wired up.
     .tnc-regive-3__decline {
       margin: 0;
       padding: 0;
@@ -912,8 +893,8 @@
         flex: 0 0 auto;
         width: 11px;
         height: 20px;
-        // Figma wraps the 20px glyph in a 25px box with the padding at the
-        // bottom, so the lock sits above the row's centre rather than on it.
+        // Matches the icon artwork's built-in bottom offset, so the lock sits
+        // slightly above the row's centre.
         margin-bottom: 5px;
         background-color: currentColor;
         -webkit-mask: var(--tnc-regive-lock-icon) center / contain no-repeat;
@@ -930,8 +911,6 @@
       justify-content: center;
       width: 100%;
     }
-
-    // Stacked: the split collapses, the hairline becomes horizontal
 
     @media (max-width: 700px) {
       --tncr3_media-height: 220px;
@@ -1012,14 +991,31 @@
 // ---------------------------------------------------------------------------
 // Inline ask (designs 1 and 2), on the PARENT thank-you page.
 //
-// RegiveInline moves this wrapper into the thank-you copy, between a paragraph
-// and the rule before "Explore Nature.org". Regive's own container carries
-// `margin: 1rem auto`, which is too tight to read as a separate card against
-// surrounding body copy; this collapses with it rather than adding to it.
+// The theme's Regive class moves this wrapper into the thank-you copy,
+// between a paragraph and the rule before "Explore Nature.org". Regive's own
+// container carries `margin: 1rem auto`, which is too tight to read as a
+// separate card against surrounding body copy; this collapses with it rather
+// than adding to it.
 // ---------------------------------------------------------------------------
 
 .tnc-regive-inline {
   margin: 32px 0;
+
+  // Until activation the wrapper holds only the inert <regive> tag, so
+  // collapse what would be a 64px gap in the thank-you copy.
+  &:not(:has(.regive-container)) {
+    margin: 0;
+  }
+}
+
+// Copies of Regive's own utility rules — its stylesheet only arrives with
+// the injected script, so without these the showif content would be
+// visible while Regive is gated.
+body:not([data-regive-enabled="true"]) .showif-regive-enabled {
+  display: none;
+}
+body:not(:has(.regive-success)) .showif-regive-success {
+  display: none;
 }
 
 // A fixed overlay cannot escape a stacking context, and EN's own stylesheet
