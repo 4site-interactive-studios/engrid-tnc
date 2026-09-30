@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, September 22, 2026 @ 13:30:07 ET
+ *  Date: Wednesday, September 30, 2026 @ 11:16:48 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -58732,7 +58732,9 @@ const options = {
     new BequestLightbox();
     new Tooltip();
     new IHMO();
-    new GdcpManager();
+    setTimeout(() => {
+      new GdcpManager();
+    }, 5000);
     new Quiz();
     new GroupQuiz();
     trackUrlParams();

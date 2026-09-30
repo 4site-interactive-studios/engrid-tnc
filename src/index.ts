@@ -162,7 +162,9 @@ const options: Options = {
     new BequestLightbox();
     new Tooltip();
     new IHMO();
-    new GdcpManager();
+    setTimeout(() => {
+      new GdcpManager();
+    }, 5000);
     new Quiz();
     new GroupQuiz();
     trackUrlParams();
