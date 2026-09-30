@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, September 30, 2026 @ 07:38:20 ET
+ *  Date: Wednesday, September 30, 2026 @ 09:31:43 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -55215,6 +55215,8 @@ const pages = {
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/gdcp-manager.ts
 
 var _GdcpManager;
+function gdcp_manager_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function gdcp_manager_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? gdcp_manager_ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : gdcp_manager_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
  // Uses ENGrid via NPM
 
 
@@ -55671,7 +55673,7 @@ class GdcpManager {
    * Asynchronous because resolving the supporter email goes through
    * EN's async `enjs.getPageData` callback (the synchronous
    * `getSupporterData` XHR is unreliable in modern browsers — see
-   * the comment on `resolveSupporterEmail`). The method always
+   * the comment on `resolveSupporterData`). The method always
    * resolves the static `qcbChainDecided` promise on the way out so
    * BequestLightbox can stop waiting regardless of which branch was
    * taken (skipped, errored, or completed).
@@ -55699,15 +55701,15 @@ class GdcpManager {
       // server-side. If we can't find one, no QCB record can be
       // created, so we bail out loudly rather than queueing iframes
       // that are guaranteed to time out.
-      const email = await this.resolveSupporterEmail();
-      if (!email) {
+      const supporter = await this.resolveSupporterData();
+      if (!supporter) {
         this.logger.error("Skipping QCB iframe queue: could not resolve supporter " + "email. EN's `enjs.getPageData` did not return a valid " + "`emailAddress`. Check that the /pagedata response on " + "this Thank You page contains supporter data.");
         return;
       }
       const queue = IframeQueue.getInstance();
-      this.maybeEnqueueDoubleOptInEmail(queue, email);
-      this.maybeEnqueuePostalMailQcb(queue, email);
-      this.maybeEnqueueMobilePhoneQcb(queue, email);
+      this.maybeEnqueueDoubleOptInEmail(queue, supporter);
+      this.maybeEnqueuePostalMailQcb(queue, supporter);
+      this.maybeEnqueueMobilePhoneQcb(queue, supporter);
       if (queue.size === 0 && !queue.isProcessing) return;
       this.logger.log(`Starting iframe queue with ${queue.size} pending follow-up(s).`);
       // Await the chain so callers awaiting `qcbChainDecided()` only
@@ -55745,69 +55747,63 @@ class GdcpManager {
   }
 
   /**
-   * Resolve the supporter's email address, trying sources in this
-   * order:
-   *
-   *   1. `ENGrid.getFieldValue("supporter.emailAddress")` — synchronous
-   *      read of the supporter email form field. On chained pages
-   *      (e.g. advocacy Thank You → donation page 1 via `?chain`)
-   *      EN pre-fills supporter fields on the next page, so the
-   *      email is right there with no XHR required. This is the
-   *      hot path for the chained-page scenario.
-   *
-   *   2. EN's async `enjs.getPageData` API — callback-based, reads
-   *      the supporter from EN's in-page data layer (the `/pagedata`
-   *      response). Used on pages where the email isn't echoed onto
-   *      a form field (typical TY page after a standalone donation).
-   *      Chosen over the synchronous `enjs.getSupporterData` because
-   *      that one's underlying XHR is set with `async: false`, which
-   *      modern browsers (Chrome, Firefox) routinely block or abort
-   *      silently in cross-origin / iframe contexts. When that
-   *      happens EN caches an empty result and every later call
-   *      returns the empty cache. `getPageData` is the well-behaved
-   *      callback-based alternative on the same data source — it
-   *      caches into `enjs._pageDataResponse` and replays for
-   *      subsequent callers, so it's reliable and idempotent.
-   *
-   * The validation regex is intentionally lenient — EN already
-   * validated the email on submission, so we're just guarding
-   * against empty strings or obviously malformed values. Resolves
-   * to null after a 30s timeout if EN's framework isn't loaded or
-   * the /pagedata call hangs.
+   * Maps each supporter field sent with queued QCB submissions to its
+   * key in EN's `/pagedata` response (which drops the "supporter."
+   * prefix). The form-field read path uses the keys of this record.
    */
-  resolveSupporterEmail() {
+
+  /**
+   * Resolve the supporter data sent with every queued QCB submission.
+   * Email is required — it matches the QCB to a supporter record — and
+   * doubles as the bail condition: no valid email, no chain. The other
+   * fields are best-effort and included only when non-empty, so each
+   * QCB submission re-saves the personal data instead of reducing EN's
+   * submission session to email-only (which starved Regive's later
+   * `?chain` prefill).
+   *
+   * Sources, in order:
+   *   1. Form fields via `ENGrid.getFieldValue` — synchronous hot path
+   *      for chained pages, where EN pre-fills supporter fields (e.g.
+   *      advocacy TY → donation page 1 via `?chain`).
+   *   2. EN's async `enjs.getPageData` — XHR-backed and cached, for
+   *      pages with no supporter form (typical Thank You page). Chosen
+   *      over the synchronous `enjs.getSupporterData`, whose
+   *      `async: false` XHR modern browsers silently block in
+   *      cross-origin / iframe contexts, after which EN replays the
+   *      empty cache to every later caller.
+   *
+   * Resolves to null after 30s if EN's framework isn't loaded or the
+   * /pagedata call hangs.
+   */
+  resolveSupporterData() {
     return new Promise(resolve => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const maxWaitMs = 30000;
       let settled = false;
-      const finish = email => {
+      const finish = data => {
         if (settled) return;
         settled = true;
         window.clearTimeout(timeoutId);
-        resolve(email);
+        resolve(data);
       };
       const timeoutId = window.setTimeout(() => {
-        this.logger.error(`resolveSupporterEmail: timed out after ${maxWaitMs}ms ` + `waiting for EN's getPageData callback.`);
+        this.logger.error(`resolveSupporterData: timed out after ${maxWaitMs}ms ` + `waiting for EN's getPageData callback.`);
         finish(null);
       }, maxWaitMs);
-
-      // Source 1: supporter email field on the current page (synchronous).
-      const fromField = engrid_ENGrid.getFieldValue("supporter.emailAddress");
-      if (typeof fromField === "string" && emailRegex.test(fromField)) {
-        finish(fromField);
+      const fromForm = this.readSupporterFieldsFromForm();
+      if (emailRegex.test(fromForm["supporter.emailAddress"] || "")) {
+        finish(fromForm);
         return;
       }
-
-      // Source 2: EN's async getPageData (XHR-backed, cached).
       if (!engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "getPageData")) {
         finish(null);
         return;
       }
       try {
         window.EngagingNetworks.require._defined.enjs.getPageData(data => {
-          const email = data?.emailAddress;
-          if (typeof email === "string" && emailRegex.test(email)) {
-            finish(email);
+          const record = this.readSupporterFieldsFromPageData(data);
+          if (emailRegex.test(record["supporter.emailAddress"] || "")) {
+            finish(record);
           } else {
             finish(null);
           }
@@ -55821,19 +55817,47 @@ class GdcpManager {
   }
 
   /**
+   * Synchronous read of the queue's supporter fields from the current
+   * page's form. Pages without a form (e.g. Thank You pages) make
+   * `getFieldValue` throw, hence the per-field guard.
+   */
+  readSupporterFieldsFromForm() {
+    const record = {};
+    for (const fieldName of Object.keys(GdcpManager.supporterPageDataKeys)) {
+      let value = "";
+      try {
+        value = engrid_ENGrid.getFieldValue(fieldName);
+      } catch {}
+      if (typeof value === "string" && value.trim() !== "") {
+        record[fieldName] = value;
+      }
+    }
+    return record;
+  }
+  readSupporterFieldsFromPageData(data) {
+    const record = {};
+    if (!data || typeof data !== "object") return record;
+    for (const [fieldName, pageDataKey] of Object.entries(GdcpManager.supporterPageDataKeys)) {
+      const value = data[pageDataKey];
+      if (typeof value === "string" && value.trim() !== "") {
+        record[fieldName] = value;
+      }
+    }
+    return record;
+  }
+
+  /**
    * Enqueue the double-opt-in email trigger iframe, if the session data
    * indicates the supporter just opted in to email on a different page.
    */
-  maybeEnqueueDoubleOptInEmail(queue, email) {
+  maybeEnqueueDoubleOptInEmail(queue, supporter) {
     const sessionData = JSON.parse(sessionStorage.getItem("gdcp-email-double-opt-in") || "{}");
     const shouldSend = sessionData.page && sessionData.page !== window.location.pathname && !this.submissionFailed;
     if (!shouldSend) return;
     const url = this.pages.double_opt_in_email_trigger;
     queue.enqueue({
       url,
-      fields: {
-        "supporter.emailAddress": email
-      },
+      fields: gdcp_manager_objectSpread({}, supporter),
       autoSubmit: true,
       // keepIframeOnError: true, // uncomment to debug (or enable ENgrid debug mode)
       onComplete: () => {
@@ -55852,13 +55876,11 @@ class GdcpManager {
    * we still enqueue, but pass the negative answer via the populate
    * message so the embedded form records the negative QCB.
    */
-  maybeEnqueuePostalMailQcb(queue, email) {
+  maybeEnqueuePostalMailQcb(queue, supporter) {
     const sessionData = JSON.parse(sessionStorage.getItem("gdcp-postal-mail-create-qcb") || "{}");
     const shouldCreateQcb = sessionData.page && sessionData.page !== window.location.pathname && !this.submissionFailed;
     if (!shouldCreateQcb) return;
-    const fields = {
-      "supporter.emailAddress": email
-    };
+    const fields = gdcp_manager_objectSpread({}, supporter);
     if (sessionData.state === "N") {
       fields["supporter.questions.1942219"] = "N";
     }
@@ -55884,7 +55906,7 @@ class GdcpManager {
    * created for the mobile-phone channel — when state === "N" the
    * session marker is cleared and no iframe is enqueued.
    */
-  maybeEnqueueMobilePhoneQcb(queue, email) {
+  maybeEnqueueMobilePhoneQcb(queue, supporter) {
     const sessionData = JSON.parse(sessionStorage.getItem("gdcp-mobile-phone-create-qcb") || "{}");
     const shouldCreateQcb = sessionData.page && sessionData.page !== window.location.pathname && !this.submissionFailed;
     if (!shouldCreateQcb) return;
@@ -55897,9 +55919,7 @@ class GdcpManager {
     const url = this.pages.mobile_phone_qcbs;
     queue.enqueue({
       url,
-      fields: {
-        "supporter.emailAddress": email
-      },
+      fields: gdcp_manager_objectSpread({}, supporter),
       autoSubmit: true,
       // keepIframeOnError: true, // uncomment to debug (or enable ENgrid debug mode)
       onComplete: () => {
@@ -56034,6 +56054,14 @@ _defineProperty(GdcpManager, "_qcbChainDecidedResolve", null);
 _defineProperty(GdcpManager, "_qcbChainDecidedPromise", new Promise(resolve => {
   _GdcpManager._qcbChainDecidedResolve = resolve;
 }));
+_defineProperty(GdcpManager, "supporterPageDataKeys", {
+  "supporter.emailAddress": "emailAddress",
+  "supporter.firstName": "firstName",
+  "supporter.lastName": "lastName",
+  "supporter.address1": "address1",
+  "supporter.city": "city",
+  "supporter.postcode": "postcode"
+});
 ;// CONCATENATED MODULE: ./src/scripts/bequest-lightbox.ts
 
 var _BequestLightbox;
