@@ -1,17 +1,17 @@
-import {
-  Options,
-  App,
-  DonationFrequency,
-  DonationAmount,
-  IframeQueue,
-} from "@4site/engrid-scripts"; // Uses ENGrid via NPM
 // import {
 //   Options,
 //   App,
 //   DonationFrequency,
 //   DonationAmount,
 //   IframeQueue,
-// } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+// } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
+import {
+  Options,
+  App,
+  DonationFrequency,
+  DonationAmount,
+  IframeQueue,
+} from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
 import DonationLightboxForm from "./scripts/donation-lightbox-form";
@@ -38,8 +38,7 @@ import MultistepForm from "./scripts/multistep-form";
 import { EventPages } from "./scripts/event-pages";
 import { SandboxWarning } from "./scripts/sandbox-warning";
 import { GenerateEmail } from "./scripts/generate-email";
-import { RegiveLightbox } from "./scripts/regive-lightbox";
-import { RegiveInline } from "./scripts/regive-inline";
+import { Regive } from "./scripts/regive";
 
 declare global {
   interface Window {
@@ -150,21 +149,17 @@ const options: Options = {
       new DonationLightboxForm(DonationAmount, DonationFrequency, App);
     }
     // Iframe Queue — opt-in ENgrid component. Constructed explicitly
-    // here so the singleton (and its embedded-mode `message` listener,
-    // active on the QCB iframe pages which load this same TNC bundle)
-    // is initialised deliberately, rather than relying on the lazy
-    // construction triggered by the first `IframeQueue.getInstance()`
-    // call elsewhere. Also where any declarative
-    // `window.EngridIframeQueue` config — if a page ever sets it —
-    // gets picked up. Position within onLoad is not significant for
-    // correctness; placed near the top by convention.
+    // here so the singleton is initialised deliberately, rather than
+    // relying on the lazy construction triggered by the first
+    // `IframeQueue.getInstance()` call elsewhere. Also where any
+    // declarative `window.EngridIframeQueue` config — if a page ever
+    // sets it — gets picked up. Position within onLoad is not
+    // significant for correctness; placed near the top by convention.
     new IframeQueue();
     new BequestLightbox();
     new Tooltip();
     new IHMO();
-    setTimeout(() => {
-      new GdcpManager();
-    }, 5000);
+    new GdcpManager();
     new Quiz();
     new GroupQuiz();
     trackUrlParams();
@@ -178,8 +173,7 @@ const options: Options = {
     new MultistepForm();
     new SandboxWarning();
     new GenerateEmail();
-    new RegiveLightbox();
-    new RegiveInline();
+    new Regive();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");

@@ -1,9 +1,5 @@
-// Custom checkbox designs for the auto-renew membership question. The page
-// builder applies a class like "auto-renew-checkbox-1" to the field's parent
-// formblock; each numbered class is a complete, self-contained design.
-// Designs 1 and 2 span the full column width; design 3 stays inset with the
-// other form fields. Sizes switch on viewport width: hero ≥1201px,
-// compact ≤1200px, mini ≤480px.
+// The page builder applies a class like "auto-renew-checkbox-1" to the field's
+// parent formblock; each numbered class is a complete, self-contained design.
 
 // ---------------------------------------------------------------------------
 // Design 1: icon + heading + toggle switch; the whole strip fills green when
@@ -11,14 +7,14 @@
 // ---------------------------------------------------------------------------
 
 .auto-renew-checkbox-1 {
-  --arc1_accent: #027932; // interactive green: fill, toggle, rule (Figma bg)
-  --arc1_heading-color: #027932; // brand green used for heading text + icon
+  --arc1_accent: #027932;
+  --arc1_heading-color: #027932;
   --arc1_description-color: #1A1A1A;
   --arc1_description-color_mobile: #525252; // mobile copy sits lighter than desktop
   --arc1_track-color: #CCE4D6;
   --arc1_background-color: #ffffff;
-  --arc1_rule-color: #4aa241; // lighter green bottom rule
-  --arc1_thanks-text: "Thanks!"; // confirmation shown under the toggle when checked
+  --arc1_rule-color: #4aa241;
+  --arc1_thanks-text: "Thanks!";
   --arc1_icon: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/auto-renew-icon.svg?v=1788959872000");
   // 0 = full column width; increase to indent the strip from each side
   --arc_inset: 0px;
@@ -152,7 +148,7 @@
         border-color: #ffffff;
 
         &::before {
-          left: calc(100% - 40px); // flush to the end of the track
+          left: calc(100% - 40px);
           background-color: #ffffff;
         }
 
@@ -199,14 +195,12 @@
     }
   }
 
-  // Compact tier: ≤1200px viewports (strip ~465-700px)
   @media screen and (max-width: 1200px) {
     .en__field--checkbox {
       column-gap: 14px;
       row-gap: 6px;
       padding: 24px 20px;
 
-      // Bottom border rule
       &::after {
         left: 20px;
         right: 20px;
@@ -251,8 +245,6 @@
     }
   }
 
-  // Mobile tier: ≤480px viewports. The Figma mobile design restacks the strip
-  // single column — icon above the heading, toggle below the copy
   @media screen and (max-width: 480px) {
     .en__field--checkbox {
       grid-template-columns: 1fr;
@@ -264,12 +256,10 @@
       row-gap: 7px;
       padding: 16px 20px 20px;
 
-      // The mobile design has no rule under the copy
       &::after {
         content: none;
       }
 
-      // Icon stacks above the heading instead of sitting beside it
       .en__field__label:not(.en__field__label--item) {
         flex-direction: column;
         align-items: flex-start;
@@ -303,7 +293,6 @@
           height: 34px;
         }
 
-        // No "Thanks!" in the mobile design
         &::after {
           content: none;
         }
@@ -365,7 +354,6 @@
       display: contents;
     }
 
-    // Description with the big square box
     .en__field__label--item {
       position: relative; // anchor for the tick overlay
       align-items: center; // undo the theme's flex-start so box and text center
@@ -391,7 +379,6 @@
           border-color 0.3s ease-in-out;
       }
 
-      // Black fill + tick that fades in over the box when checked
       &::after {
         content: "";
         position: absolute;
@@ -466,7 +453,6 @@
     }
   }
 
-  // Compact tier: ≤1200px viewports (strip ~465-470px)
   @media screen and (max-width: 1200px) {
     --arc2_rail-right: 15px;
 
@@ -498,7 +484,7 @@
     }
   }
 
-  // Tablet Tier: ≤992px viewports. Increases sizes on single column collapse.
+  // Sizes step back up once the page collapses to a single column.
   @media screen and (max-width: 992px) {
     .en__field.en__field--checkbox {
       .en__field__label:not(.en__field__label--item) {
@@ -512,7 +498,6 @@
     }
   }
 
-  // Mobile tier: ≤480px viewports. The photo moves to the top-left corner.
   @media screen and (max-width: 480px) {
     --arc2_rail-width: 236px;
     --arc2_rail-height: 134px;
@@ -523,7 +508,6 @@
       padding: 94px 20px 40px;
       border-top-width: 6px;
 
-      // The rail sits top-left
       &::before {
         right: auto;
         left: 20px;
@@ -550,7 +534,7 @@
         &::after {
           width: 60px;
           height: 60px;
-          background-size: 55% auto; // 30px tick, matching the design
+          background-size: 55% auto;
         }
       }
     }
@@ -563,9 +547,9 @@
 // knob change color when checked.
 // ---------------------------------------------------------------------------
 .auto-renew-checkbox-3 {
-  --arc3_accent: #027932; // toggle-checked track + unchecked knob
-  --arc3_track-color: #CCE4D6; // pale unchecked track
-  --arc3_text-color: #00703C; // heading + description + icon
+  --arc3_accent: #027932;
+  --arc3_track-color: #CCE4D6;
+  --arc3_text-color: #00703C;
   --arc3_divider-color: #CDCDCD;
   --arc3_description-color_mobile: #525252; // unchecked description
   --arc3_knob-size: 26px;
@@ -664,7 +648,6 @@
       cursor: pointer;
       transition: background-color 0.3s ease-in-out;
 
-      // Knob: solid when unchecked, white when checked; left-animated like design 1
       &::before {
         content: "";
         position: absolute;
@@ -739,7 +722,6 @@
     }
   }
 
-  // Mobile tier: ≤480px viewports. Restacks into a single column
   @media screen and (max-width: 480px) {
     .en__field--checkbox {
       --arc3_knob-size: 34px;
@@ -758,7 +740,6 @@
       border-top: 0;
       border-bottom: 0;
 
-      // Icon stacks above the heading instead of sitting beside it
       .en__field__label:not(.en__field__label--item) {
         flex-direction: column;
         align-items: flex-start;
@@ -797,7 +778,6 @@
         }
       }
 
-      // Checked: the description joins the heading's green
       &:has(.en__field__input--checkbox:checked) .en__field__label--item {
         color: var(--arc3_accent);
       }
@@ -837,7 +817,6 @@
   }
 }
 
-// Sprout entrance for design 3's toggle knob (see --arc3_knob-icon)
 @keyframes arc3-sprout-in {
   from {
     opacity: 0;

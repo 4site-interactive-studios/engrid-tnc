@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, September 30, 2026 @ 11:16:48 ET
+ *  Date: Wednesday, September 30, 2026 @ 12:53:30 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -15101,6 +15101,12 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=tnc] .tnc-regive-inline{
   margin:32px 0;
+}
+[data-engrid-theme=tnc] .tnc-regive-inline:not(:has(.regive-container)){
+  margin:0;
+}
+[data-engrid-theme=tnc] body:not(:has(.regive-success)) .showif-regive-success,[data-engrid-theme=tnc] body:not([data-regive-enabled=true]) .showif-regive-enabled{
+  display:none;
 }
 [data-engrid-theme=tnc] .en__component:has(.tnc-regive-lightbox){
   z-index:auto !important;
