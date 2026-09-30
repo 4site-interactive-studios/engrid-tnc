@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, September 9, 2026 @ 11:55:54 ET
+ *  Date: Wednesday, September 30, 2026 @ 12:30:48 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -38550,9 +38550,10 @@ const frequency_upsell_options_FrequencyUpsellOptionsDefaults = {
  * Configuration interfaces for the Iframe Queue component.
  *
  * The Iframe Queue loads a sequence of embedded Engaging Networks pages
- * one at a time, passes field values into them via `postMessage`, and
- * exposes a global `IframeQueueEvents` instance so external code can
- * subscribe to chain-completion. See iframe-queue.ts for the component.
+ * one at a time, relies on EN's `?chain` parameter to carry supporter
+ * session data into each embedded page, and exposes a global
+ * `IframeQueueEvents` instance so external code can subscribe to
+ * chain-completion. See iframe-queue.ts for the component.
  *
  * Configuration may be supplied either programmatically (via
  * `IframeQueue.getInstance().enqueue(...).process()`) or declaratively
@@ -42044,22 +42045,22 @@ class iframe_iFrame {
  * iframe submissions inconsistently — when several embedded EN forms
  * are submitted in parallel (e.g. QCB opt-ins for postal mail, mobile
  * phone, and double opt-in email), roughly 40% of records are lost.
- * Loading the iframes sequentially (without `?chain`) resolves the
- * issue. This component generalises that pattern.
+ * Loading the iframes sequentially resolves the issue. This component
+ * generalises that pattern.
  *
- * **What it does.** In _parent_ mode (top-level page) it holds an
- * ordered queue of {@link IframeQueueItem} configs and processes them
- * one at a time: create iframe → wait for `load` → post a populate
- * message with field values → wait for the embedded page to reach a
- * Thank You page → advance. In _embedded_ mode (running inside an
- * iframe owned by an IframeQueue parent) it listens for the populate
- * message, fills the form fields via {@link ENGrid.setFieldValue}, and
- * submits via {@link EnForm.submitForm} when `autoSubmit` is true.
+ * **What it does.** It holds an ordered queue of
+ * {@link IframeQueueItem} configs and processes them one at a time:
+ * create iframe → wait for the embedded page to reach a Thank You
+ * page → advance.
  *
- * **Why not `?chain`?** Engaging Networks' `?chain` URL parameter is
- * unreliable for sequential iframe submission; the agreed solution is
- * to pass field data via `postMessage` instead. The queue defensively
- * strips any `chain` query parameter from queued URLs.
+ * **How data flows.** The queue appends EN's `chain` query parameter
+ * to each queued URL so EN prefills the embedded form from the
+ * supporter session established by the parent page (e.g. the donation
+ * whose Thank You page the queue is running on). Submission is driven
+ * by URL parameter too: unless an item sets `autoSubmit: false`, the
+ * queue appends `autosubmit=Y` and ENgrid's Autosubmit component
+ * submits the chained form once it loads. No ENgrid queue code needs
+ * to run inside the iframe.
  *
  * **Page ID matching.** The Thank-You-page ping (sent by the iFrame
  * component, see iframe.ts) carries the Page ID of the submitting
@@ -42075,7 +42076,6 @@ class iframe_iFrame {
  *   const queue = IframeQueue.getInstance();
  *   queue.enqueue({
  *     url: "https://example.org/page/123/data/1",
- *     fields: { "supporter.emailAddress": "donor@example.org" },
  *     autoSubmit: true,
  *   });
  *   queue.process().then(() => console.log("done"));
@@ -42083,8 +42083,7 @@ class iframe_iFrame {
  * @example Declarative API (set on the EN page before the bundle loads)
  *   window.EngridIframeQueue = {
  *     items: [
- *       { url: "https://example.org/page/123/data/1",
- *         fields: { "supporter.emailAddress": "donor@example.org" } },
+ *       { url: "https://example.org/page/123/data/1" },
  *     ],
  *     autoStart: true,
  *   };
@@ -42119,12 +42118,8 @@ var dist_iframe_queue_awaiter = undefined && undefined.__awaiter || function (th
 
 
 
-/** Wire-format type for the populate message sent parent → iframe. */
-const iframe_queue_MSG_POPULATE = "engrid-iframe-queue:populate";
 /** Wire-format type for the Thank-You-page ping sent iframe → parent. */
 const iframe_queue_MSG_THANK_YOU = "engrid-iframe-queue:thank-you";
-/** Wire-format type for an error message sent iframe → parent. */
-const iframe_queue_MSG_ERROR = "engrid-iframe-queue:error";
 /** Default per-item timeout in milliseconds. */
 const iframe_queue_DEFAULT_TIMEOUT_MS = 30000;
 /**
@@ -42174,7 +42169,6 @@ class iframe_queue_IframeQueue {
   constructor() {
     this.logger = new EngridLogger("IframeQueue", "white", "#1f6feb", "🚂");
     this.events = IframeQueueEvents.getInstance();
-    this._form = EnForm.getInstance();
     this.queue = [];
     this._isProcessing = false;
     this._aborted = false;
@@ -42186,14 +42180,10 @@ class iframe_queue_IframeQueue {
       return iframe_queue_IframeQueue.instance;
     }
     iframe_queue_IframeQueue.instance = this;
-    if (this.inIframe()) {
-      this.setupEmbeddedMode();
-    } else {
-      this.setupParentMode();
-    }
+    this.setupParentMode();
   }
   // ---------------------------------------------------------------------------
-  // Public API (parent mode)
+  // Public API
   // ---------------------------------------------------------------------------
   /** Whether the queue is currently processing. */
   get isProcessing() {
@@ -42260,12 +42250,12 @@ class iframe_queue_IframeQueue {
     this._aborted = true;
   }
   // ---------------------------------------------------------------------------
-  // Parent-mode internals
+  // Internals
   // ---------------------------------------------------------------------------
   /**
-   * In parent mode the constructor checks `window.EngridIframeQueue`
-   * for declarative startup config, enqueues those items, and (if
-   * `autoStart` is true) calls `process()` after DOMContentLoaded.
+   * The constructor checks `window.EngridIframeQueue` for declarative
+   * startup config, enqueues those items, and (if `autoStart` is true)
+   * calls `process()` after DOMContentLoaded.
    */
   setupParentMode() {
     this.logger.log("setupParentMode");
@@ -42329,14 +42319,14 @@ class iframe_queue_IframeQueue {
     });
   }
   /**
-   * Process a single item: create the iframe, post populate, wait for
-   * the matching Thank-You ping (or error/timeout). Resolves on success
-   * and rejects on error/timeout.
+   * Process a single item: create the iframe and wait for the matching
+   * Thank-You ping (or load error/timeout). Resolves on success and
+   * rejects on error/timeout.
    */
   processItem(item) {
     return new Promise((resolve, reject) => {
       var _a, _b;
-      const url = this.prepareIframeUrl(item.url);
+      const url = this.prepareIframeUrl(item);
       const expectedPageId = ENGrid.getPageIdFromUrl(url);
       if (!expectedPageId) {
         reject(new Error(`IframeQueue: could not parse Page ID from URL "${item.url}".`));
@@ -42354,7 +42344,6 @@ class iframe_queue_IframeQueue {
           timeoutId = null;
         }
         window.removeEventListener("message", onMessage);
-        iframe.removeEventListener("load", onIframeLoad);
         iframe.removeEventListener("error", onIframeError);
       };
       const removeIframe = () => {
@@ -42389,7 +42378,6 @@ class iframe_queue_IframeQueue {
         reject(error);
       };
       const onMessage = event => {
-        var _a;
         // Only accept messages from this specific iframe — origin
         // string matching is unreliable because EN may serve embedded
         // pages from different subdomains. `event.source` identity is
@@ -42404,31 +42392,12 @@ class iframe_queue_IframeQueue {
           }
           this.logger.log(`Item complete: ${url} (pageId ${expectedPageId})`);
           succeed();
-        } else if (data.type === iframe_queue_MSG_ERROR) {
-          if (data.pageId !== expectedPageId) return;
-          fail(new Error(`IframeQueue: embedded page reported error: ${(_a = data.message) !== null && _a !== void 0 ? _a : "unknown error"}`));
         }
-      };
-      const onIframeLoad = () => {
-        var _a, _b;
-        if (settled) return;
-        const populate = {
-          type: iframe_queue_MSG_POPULATE,
-          pageId: expectedPageId,
-          fields: (_a = item.fields) !== null && _a !== void 0 ? _a : {},
-          autoSubmit: item.autoSubmit !== false // default true
-        };
-        this.logger.log(`Posting populate to iframe (pageId=${expectedPageId}, ` + `fieldCount=${Object.keys(populate.fields).length}, ` + `autoSubmit=${populate.autoSubmit})`);
-        // Use "*" for the same reason origin matching is skipped on
-        // inbound messages — EN may serve embedded pages from a
-        // different subdomain than the host page.
-        (_b = iframe.contentWindow) === null || _b === void 0 ? void 0 : _b.postMessage(populate, "*");
       };
       const onIframeError = () => {
         fail(new Error(`IframeQueue: iframe failed to load: ${url}`));
       };
       window.addEventListener("message", onMessage);
-      iframe.addEventListener("load", onIframeLoad);
       iframe.addEventListener("error", onIframeError);
       timeoutId = window.setTimeout(() => {
         fail(new Error(`IframeQueue: timed out after ${timeoutMs}ms waiting for ` + `Thank-You-page ping from ${url}`));
@@ -42439,9 +42408,14 @@ class iframe_queue_IframeQueue {
   }
   /**
    * Normalise the URL for a queued iframe:
-   *  1. Strip any `chain` query parameter defensively — the queue
-   *     replaces `?chain` with sequential processing.
-   *  2. Inherit a small allowlist of loader / dev-mode params (see
+   *  1. Append EN's `chain` query parameter so the embedded page is
+   *     prefilled from the supporter session established by the parent
+   *     page. Presence-based (empty value), matching the convention
+   *     used by embedded-ecard.ts and post-donation-embed.ts.
+   *  2. Unless the item sets `autoSubmit: false`, append
+   *     `autosubmit=Y` so ENgrid's Autosubmit component submits the
+   *     chained form once it loads.
+   *  3. Inherit a small allowlist of loader / dev-mode params (see
    *     {@link PROPAGATED_PARENT_PARAMS}) when they're not already set
    *     on the item URL. Each key is resolved with the same precedence
    *     `loader.ts#getOption` uses: parent URL param first, then
@@ -42450,14 +42424,19 @@ class iframe_queue_IframeQueue {
    * Item-specified params always take precedence over inherited ones.
    * Returns the original string unchanged if URL parsing fails.
    */
-  prepareIframeUrl(rawUrl) {
+  prepareIframeUrl(item) {
     let url;
     try {
-      url = new URL(rawUrl, window.location.href);
+      url = new URL(item.url, window.location.href);
     } catch (_a) {
-      return rawUrl;
+      return item.url;
     }
-    url.searchParams.delete("chain");
+    if (!url.searchParams.has("chain")) {
+      url.searchParams.set("chain", "");
+    }
+    if (item.autoSubmit !== false && !url.searchParams.has("autosubmit")) {
+      url.searchParams.set("autosubmit", "Y");
+    }
     const parentUrlParams = this.getParentSearchParams();
     const parentLoader = this.getParentEngridLoader();
     const inherited = [];
@@ -42559,98 +42538,6 @@ class iframe_queue_IframeQueue {
     const style = Object.assign(Object.assign({}, iframe_queue_DEFAULT_HIDDEN_STYLE), styleOverride !== null && styleOverride !== void 0 ? styleOverride : {});
     Object.assign(iframe.style, style);
     return iframe;
-  }
-  // ---------------------------------------------------------------------------
-  // Embedded-mode internals
-  // ---------------------------------------------------------------------------
-  /**
-   * In embedded mode we register a `message` listener that accepts
-   * populate messages from `window.parent`, fills form fields, and
-   * (optionally) submits. The Thank-You-page ping is sent by the iFrame
-   * component (iframe.ts) — not here — so this method does not need to
-   * concern itself with completion signalling.
-   */
-  setupEmbeddedMode() {
-    this.logger.log("setupEmbeddedMode");
-    window.addEventListener("message", event => {
-      if (event.source !== window.parent) return;
-      const data = event.data;
-      if (!data || typeof data !== "object" || data.type !== iframe_queue_MSG_POPULATE) {
-        return;
-      }
-      this.handlePopulate(data);
-    });
-  }
-  /** Handle a populate message sent by an IframeQueue parent. */
-  handlePopulate(data) {
-    var _a, _b;
-    const fields = (_a = data.fields) !== null && _a !== void 0 ? _a : {};
-    const autoSubmit = data.autoSubmit !== false;
-    this.logger.log(`Received populate (pageId=${data.pageId}, ` + `fieldCount=${Object.keys(fields).length}, autoSubmit=${autoSubmit})`);
-    try {
-      for (const [name, value] of Object.entries(fields)) {
-        // Pass `dispatchEvents = true` so each field fires
-        // `change` + `blur` after the value is set. Without that,
-        // EN's form-validation state machine doesn't see the new
-        // values and leaves `en__submit--disabled` on the submit
-        // button, causing the auto-click below to no-op.
-        ENGrid.setFieldValue(name, value, true, true);
-      }
-      if (autoSubmit) {
-        // Defer slightly so any synchronous EN dependency parsing in
-        // setFieldValue settles before the form is submitted.
-        window.setTimeout(() => {
-          // Belt-and-braces: clear EN's "submit disabled" state in
-          // case its validators didn't re-evaluate (e.g. async
-          // validators that hadn't completed when the events fired).
-          this.forceEnableSubmitButton();
-          this._form.submitForm();
-        }, 0);
-      }
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error(String(err));
-      this.logger.danger(`handlePopulate failed: ${error.message}`);
-      window.parent.postMessage({
-        type: iframe_queue_MSG_ERROR,
-        pageId: (_b = data.pageId) !== null && _b !== void 0 ? _b : ENGrid.getPageID(),
-        message: error.message
-      }, "*");
-    }
-  }
-  /**
-   * Strip every "disabled" marker from the EN submit button so the
-   * programmatic `submitForm()` click is honoured. Removes:
-   *   - the `disabled` DOM property/attribute on the button,
-   *   - the `en__submit--disabled` BEM modifier (EN's own class),
-   *   - the `en__submit--disabled` modifier on the `.en__submit`
-   *     wrapper (some templates style the wrapper instead),
-   *   - ENgrid's own loader markup if a previous `disableSubmit()`
-   *     call left it in place.
-   *
-   * Used only by embedded-mode populate flow when `autoSubmit` is on.
-   */
-  forceEnableSubmitButton() {
-    const button = document.querySelector("form .en__submit button");
-    if (button) {
-      if (button.disabled) button.disabled = false;
-      button.removeAttribute("disabled");
-      button.classList.remove("en__submit--disabled");
-    }
-    const wrapper = document.querySelector(".en__submit");
-    if (wrapper) {
-      wrapper.classList.remove("en__submit--disabled");
-    }
-  }
-  // ---------------------------------------------------------------------------
-  // Helpers
-  // ---------------------------------------------------------------------------
-  /** True when this script is executing inside an iframe. */
-  inIframe() {
-    try {
-      return window.self !== window.top;
-    } catch (_a) {
-      return true;
-    }
   }
 }
 ;// CONCATENATED MODULE: ../engrid/packages/scripts/dist/input-has-value-and-focus.js
@@ -54495,7 +54382,7 @@ class preferred_payment_method_PreferredPaymentMethod {
   }
 }
 ;// CONCATENATED MODULE: ../engrid/packages/scripts/dist/version.js
-const version_AppVersion = "0.28.4";
+const version_AppVersion = "0.28.5";
 ;// CONCATENATED MODULE: ../engrid/packages/scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
 
@@ -58443,6 +58330,123 @@ class GenerateEmail {
     engrid_ENGrid.setFieldValue('supporter.emailAddress', anonAddress);
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/continue-your-gift.ts
+
+
+const CONTINUE_YOUR_GIFT_SCRIPT_URL = "https://s3.amazonaws.com/engrid-dev.4sitestudios.com/continue-your-gift/main/continue-your-gift.min.js";
+const DONATION_LIGHTBOX_SCRIPT_URL = "https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/donation-lightbox-parent.js";
+const DONATION_PAGE_URL = "https://preserve.nature.org/page/198490/donate/1";
+class ContinueYourGift {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("ContinueYourGift", "#007931", "white"));
+    this.loadScript(DONATION_LIGHTBOX_SCRIPT_URL, () => typeof window.DonationLightbox === "function");
+    this.loadScript(CONTINUE_YOUR_GIFT_SCRIPT_URL, () => typeof window.ContinueYourGift !== "undefined").then(() => this.init()).catch(() => {
+      this.logger.log("Failed to load the Continue Your Gift script.");
+    });
+  }
+
+  /**
+   * Inject a script tag unless the script is already on the page (by URL or
+   * by the global it defines). Resolves once the script has loaded, or
+   * immediately if it was already present.
+   */
+  loadScript(src, isLoaded) {
+    if (isLoaded()) {
+      return Promise.resolve();
+    }
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if (existing) {
+      return new Promise((resolve, reject) => {
+        existing.addEventListener("load", () => resolve());
+        existing.addEventListener("error", () => reject());
+      });
+    }
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = src;
+      script.addEventListener("load", () => resolve());
+      script.addEventListener("error", () => reject());
+      document.head.appendChild(script);
+    });
+  }
+  init() {
+    if (!window.ContinueYourGift) {
+      this.logger.log("Continue Your Gift script not available.");
+      return;
+    }
+    window.ContinueYourGiftRecovery = window.ContinueYourGift.init({
+      enabled: () => true,
+      continueGift: gift => this.continueGift(gift),
+      sharedDomain: "nature.org",
+      acceptedOrigins: ["https://preserve.nature.org"],
+      layout: "compact",
+      position: "bottom-right",
+      labels: {
+        expandedTitle: "Continue Your Gift",
+        message: "Complete your ${amount} {frequency} gift to make a difference",
+        continue: "I'm ready",
+        dismiss: "Not now"
+      },
+      colors: {
+        background: "#ffffff",
+        text: "#1a1a1a",
+        continueButtonBackground: "#007931",
+        continueButtonText: "#ffffff",
+        continueButtonBorder: "#007931",
+        dismissButtonBackground: "#ffffff",
+        dismissButtonText: "#1a1a1a",
+        dismissButtonBorder: "#949494"
+      },
+      fontFamily: "Inter, system-ui, sans-serif",
+      onError: ({
+        code
+      }) => {
+        console.log(code);
+      },
+      reopenSuppressionHours: 24,
+      dismissalCooldownHours: 168,
+      completionSuppressionHours: 720,
+      displayCap: 6,
+      inactivityResetDays: 180
+    });
+    this.logger.log("Initialized.");
+  }
+  async continueGift({
+    frequency,
+    amount
+  }) {
+    if (!window.DonationLightbox) {
+      this.logger.log("Donation Lightbox script not available.");
+      return;
+    }
+    const hadGlobalOptions = "DonationLightboxOptions" in window;
+    const originalOptions = window.DonationLightboxOptions;
+    try {
+      window.DonationLightboxOptions = {
+        title: "Continue Your Gift",
+        paragraph: "Finish your gift here.",
+        mobile_enabled: true,
+        image: "https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/202210-givingTuesday-PaidSearch.jpg?v=1664310768000",
+        footer: "The Nature Conservancy is a nonprofit, tax-exempt charitable organization (tax identification number 53-0242652) under Section 501(c)(3) of the Internal Revenue Code. Donations are tax-deductible as allowed by law."
+      };
+      for (const lightbox of document.querySelectorAll(".foursiteDonationLightbox.is-hidden")) {
+        lightbox.remove();
+      }
+      const lightbox = new window.DonationLightbox();
+      const url = new URL(DONATION_PAGE_URL);
+      url.searchParams.set("transaction.recurrfreq", frequency.toUpperCase());
+      url.searchParams.set("transaction.recurrpay", frequency === "onetime" ? "N" : "Y");
+      url.searchParams.set("transaction.donationAmt", amount.toString());
+      lightbox.build(url.toString());
+    } finally {
+      if (hadGlobalOptions) {
+        window.DonationLightboxOptions = originalOptions;
+      } else {
+        delete window.DonationLightboxOptions;
+      }
+    }
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -58452,6 +58456,7 @@ class GenerateEmail {
 //   DonationAmount,
 //   IframeQueue,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -58562,6 +58567,7 @@ const options = {
     new MultistepForm();
     new SandboxWarning();
     new GenerateEmail();
+    new ContinueYourGift();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");
