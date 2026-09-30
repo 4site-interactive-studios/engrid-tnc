@@ -3,12 +3,20 @@ import { BequestLightbox } from "./bequest-lightbox";
 import { GdcpManager } from "./gdcp/gdcp-manager";
 
 /**
- * Activation: the Regive script tag is deliberately absent from the Thank
- * You page in EN — it is injected here, once `GdcpManager.qcbChainDecided()`
- * and then `BequestLightbox.settled()` resolve. Regive creates its iframe
- * the moment it initializes, and EN drops records when iframes in different
- * frames submit simultaneously, so it must not load while QCB iframes are
- * in flight or the bequest modal is open.
+ * Loading flow: the Regive script tag is deliberately absent from the
+ * Thank You page in EN — it is injected here, immediately on load, but
+ * the Regive UI stays visually hidden (`body[data-engrid-regive-hidden="true"]`)
+ * while `GdcpManager.qcbChainDecided()` and `BequestLightbox.settled()`
+ * resolve. Regive creates its iframe the moment it initializes, and EN
+ * drops records when iframes in different frames submit simultaneously,
+ * so its UI must not appear while QCB iframes are in flight or the
+ * bequest modal is open.
+ *
+ * Once both settle, a hidden iframe loads a chained EN page
+ * ({@link Regive.chainWarmupUrl}) before Regive is revealed: a chained
+ * page load refreshes EN's supporter session server-side, and we
+ * observed a chained page elsewhere in the flow restoring Regive's
+ * ability to submit — this reproduces that refresh deliberately.
  */
 export class Regive {
   private logger: EngridLogger = new EngridLogger(
@@ -21,6 +29,17 @@ export class Regive {
   private static readonly scriptUrl =
     "https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/regive.js";
 
+  /**
+   * Chained EN page loaded in a hidden iframe after the QCB queue and
+   * bequest lightbox settle, to refresh the supporter session before
+   * Regive is revealed.
+   */
+  private static readonly chainWarmupUrl =
+    "https://preserve.nature.org/page/201716/data/1?chain";
+
+  /** How long to wait for the warm-up iframe before revealing anyway. */
+  private static readonly warmupTimeoutMs = 15000;
+
   private static readonly thanksDuration = 6000;
 
   private readonly lightbox: HTMLElement | null = null;
@@ -30,21 +49,63 @@ export class Regive {
     this.lightbox = document.querySelector<HTMLElement>(".tnc-regive-lightbox");
     this.moveInlineAsk();
     this.listenForLightbox();
-    this.activateWhenSafe();
-  }
 
-  private activateWhenSafe(): void {
     // The Thank You page inside the Regive iframe (reached after a Regive
     // submission) needs the bundle immediately to report the result to its
-    // parent; the queue and bequest lightbox are top-level concerns.
+    // parent; the queue, bequest lightbox and warm-up are top-level concerns.
     if (this.isEmbedded()) {
       this.activate("embedded page");
       return;
     }
 
+    if (!document.querySelector("regive")) return;
+
+    ENGrid.setBodyData("regive-hidden", "true");
+    this.activate("immediately, visually hidden");
+    this.revealWhenWarm();
+  }
+
+  /**
+   * Wait for the QCB queue and the bequest lightbox to settle, load the
+   * chain warm-up iframe, then reveal the Regive UI.
+   */
+  private revealWhenWarm(): void {
     GdcpManager.qcbChainDecided()
       .then(() => BequestLightbox.settled())
-      .then(() => this.activate("iframe queue and bequest lightbox settled"));
+      .then(() => this.loadWarmupIframe())
+      .then(() => {
+        ENGrid.setBodyData("regive-hidden", "false");
+        this.logger.log("Regive revealed.");
+      });
+  }
+
+  /**
+   * Load the chain warm-up page in a hidden iframe. Resolves on `load`,
+   * but also on error or after {@link Regive.warmupTimeoutMs} — a stuck
+   * warm-up must not keep Regive hidden forever.
+   */
+  private loadWarmupIframe(): Promise<void> {
+    return new Promise((resolve) => {
+      const iframe = document.createElement("iframe");
+      iframe.src = Regive.chainWarmupUrl;
+      iframe.style.display = "none";
+
+      let settled = false;
+      const finish = (reason: string) => {
+        if (settled) return;
+        settled = true;
+        this.logger.log(`Chain warm-up iframe ${reason}.`);
+        resolve();
+      };
+
+      iframe.addEventListener("load", () => finish("loaded"));
+      iframe.addEventListener("error", () => finish("failed to load"));
+      window.setTimeout(
+        () => finish(`timed out after ${Regive.warmupTimeoutMs}ms`),
+        Regive.warmupTimeoutMs
+      );
+      document.body.appendChild(iframe);
+    });
   }
 
   private activate(reason: string): void {

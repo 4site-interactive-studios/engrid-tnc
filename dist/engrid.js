@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, September 30, 2026 @ 13:38:02 ET
+ *  Date: Wednesday, September 30, 2026 @ 13:55:26 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -58407,12 +58407,20 @@ class GenerateEmail {
 
 
 /**
- * Activation: the Regive script tag is deliberately absent from the Thank
- * You page in EN — it is injected here, once `GdcpManager.qcbChainDecided()`
- * and then `BequestLightbox.settled()` resolve. Regive creates its iframe
- * the moment it initializes, and EN drops records when iframes in different
- * frames submit simultaneously, so it must not load while QCB iframes are
- * in flight or the bequest modal is open.
+ * Loading flow: the Regive script tag is deliberately absent from the
+ * Thank You page in EN — it is injected here, immediately on load, but
+ * the Regive UI stays visually hidden (`body[data-engrid-regive-hidden="true"]`)
+ * while `GdcpManager.qcbChainDecided()` and `BequestLightbox.settled()`
+ * resolve. Regive creates its iframe the moment it initializes, and EN
+ * drops records when iframes in different frames submit simultaneously,
+ * so its UI must not appear while QCB iframes are in flight or the
+ * bequest modal is open.
+ *
+ * Once both settle, a hidden iframe loads a chained EN page
+ * ({@link Regive.chainWarmupUrl}) before Regive is revealed: a chained
+ * page load refreshes EN's supporter session server-side, and we
+ * observed a chained page elsewhere in the flow restoring Regive's
+ * ability to submit — this reproduces that refresh deliberately.
  */
 class Regive {
   constructor() {
@@ -58422,17 +58430,53 @@ class Regive {
     this.lightbox = document.querySelector(".tnc-regive-lightbox");
     this.moveInlineAsk();
     this.listenForLightbox();
-    this.activateWhenSafe();
-  }
-  activateWhenSafe() {
+
     // The Thank You page inside the Regive iframe (reached after a Regive
     // submission) needs the bundle immediately to report the result to its
-    // parent; the queue and bequest lightbox are top-level concerns.
+    // parent; the queue, bequest lightbox and warm-up are top-level concerns.
     if (this.isEmbedded()) {
       this.activate("embedded page");
       return;
     }
-    GdcpManager.qcbChainDecided().then(() => BequestLightbox.settled()).then(() => this.activate("iframe queue and bequest lightbox settled"));
+    if (!document.querySelector("regive")) return;
+    engrid_ENGrid.setBodyData("regive-hidden", "true");
+    this.activate("immediately, visually hidden");
+    this.revealWhenWarm();
+  }
+
+  /**
+   * Wait for the QCB queue and the bequest lightbox to settle, load the
+   * chain warm-up iframe, then reveal the Regive UI.
+   */
+  revealWhenWarm() {
+    GdcpManager.qcbChainDecided().then(() => BequestLightbox.settled()).then(() => this.loadWarmupIframe()).then(() => {
+      engrid_ENGrid.setBodyData("regive-hidden", "false");
+      this.logger.log("Regive revealed.");
+    });
+  }
+
+  /**
+   * Load the chain warm-up page in a hidden iframe. Resolves on `load`,
+   * but also on error or after {@link Regive.warmupTimeoutMs} — a stuck
+   * warm-up must not keep Regive hidden forever.
+   */
+  loadWarmupIframe() {
+    return new Promise(resolve => {
+      const iframe = document.createElement("iframe");
+      iframe.src = Regive.chainWarmupUrl;
+      iframe.style.display = "none";
+      let settled = false;
+      const finish = reason => {
+        if (settled) return;
+        settled = true;
+        this.logger.log(`Chain warm-up iframe ${reason}.`);
+        resolve();
+      };
+      iframe.addEventListener("load", () => finish("loaded"));
+      iframe.addEventListener("error", () => finish("failed to load"));
+      window.setTimeout(() => finish(`timed out after ${Regive.warmupTimeoutMs}ms`), Regive.warmupTimeoutMs);
+      document.body.appendChild(iframe);
+    });
   }
   activate(reason) {
     if (!document.querySelector("regive")) return;
@@ -58534,6 +58578,14 @@ class Regive {
   }
 }
 _defineProperty(Regive, "scriptUrl", "https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/regive.js");
+/**
+ * Chained EN page loaded in a hidden iframe after the QCB queue and
+ * bequest lightbox settle, to refresh the supporter session before
+ * Regive is revealed.
+ */
+_defineProperty(Regive, "chainWarmupUrl", "https://preserve.nature.org/page/201716/data/1?chain");
+/** How long to wait for the warm-up iframe before revealing anyway. */
+_defineProperty(Regive, "warmupTimeoutMs", 15000);
 _defineProperty(Regive, "thanksDuration", 6000);
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
