@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, September 30, 2026 @ 12:30:48 ET
+ *  Date: Thursday, October 1, 2026 @ 06:47:16 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -58333,13 +58333,70 @@ class GenerateEmail {
 ;// CONCATENATED MODULE: ./src/scripts/continue-your-gift.ts
 
 
-const CONTINUE_YOUR_GIFT_SCRIPT_URL = "https://s3.amazonaws.com/engrid-dev.4sitestudios.com/continue-your-gift/main/continue-your-gift.min.js";
+
+const CONTINUE_YOUR_GIFT_SCRIPT_URL = "https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/continue-your-gift.min.js";
 const DONATION_LIGHTBOX_SCRIPT_URL = "https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/donation-lightbox-parent.js";
-const DONATION_PAGE_URL = "https://preserve.nature.org/page/198490/donate/1";
+const DONATION_PAGE_URL = "https://preserve.nature.org/page/201350/donate/1";
+const ONETRUST_FUNCTIONAL_CATEGORY = "C0003";
+// Gift-planning data/survey pages where the recovery prompt must not appear:
+const EXCLUDED_PAGE_IDS = [76342, 76347, 76350, 84697, 84712, 84719, 84834, 86267, 85518, 143727, 190356];
+const TEALIUM_EVENT_NAMES = {
+  abandonment: "cyg_abandonment",
+  impression: "cyg_impression",
+  dismissed: "cyg_dismissed",
+  restoration: "cyg_restoration",
+  "abandonment-invalidated": "cyg_abandonment-invalidated",
+  "completion-after-restoration": "cyg_completion",
+  "amount-raised-after-restoration": "cyg_revenue"
+};
 class ContinueYourGift {
   constructor() {
     _defineProperty(this, "logger", new logger_EngridLogger("ContinueYourGift", "#007931", "white"));
+    if (EXCLUDED_PAGE_IDS.includes(App.getPageID())) {
+      this.logger.log("Page is excluded. Not initializing.");
+      return;
+    }
     this.loadScript(DONATION_LIGHTBOX_SCRIPT_URL, () => typeof window.DonationLightbox === "function");
+    this.loadModuleWhenConsented();
+    window.addEventListener("continue-your-gift:lifecycle", event => {
+      const detail = event.detail || {};
+      const eventName = TEALIUM_EVENT_NAMES[detail.type];
+      if (!eventName) return;
+      const eventData = {
+        timestamp: detail.timestamp
+      };
+      if (detail.type === "amount-raised-after-restoration") {
+        eventData.amount = detail.amount;
+      }
+      trackEvent(eventName, eventData);
+    });
+  }
+
+  /**
+   * Load the Continue Your Gift module only after OneTrust reports consent
+   * for functional cookies (category C0003). OnetrustActiveGroups holds the
+   * active category IDs (e.g. ",C0001,C0003,"); OneTrustGroupsUpdated fires
+   * whenever consent is granted or changed. Without consent the module never
+   * loads, keeping its first-party cookies from being set.
+   */
+  loadModuleWhenConsented() {
+    if (this.hasFunctionalConsent()) {
+      this.loadModule();
+      return;
+    }
+    this.logger.log(`Waiting for OneTrust functional cookie consent (${ONETRUST_FUNCTIONAL_CATEGORY}).`);
+    const onGroupsUpdated = () => {
+      if (this.hasFunctionalConsent()) {
+        window.removeEventListener("OneTrustGroupsUpdated", onGroupsUpdated);
+        this.loadModule();
+      }
+    };
+    window.addEventListener("OneTrustGroupsUpdated", onGroupsUpdated);
+  }
+  hasFunctionalConsent() {
+    return typeof window.OnetrustActiveGroups === "string" && window.OnetrustActiveGroups.split(",").includes(ONETRUST_FUNCTIONAL_CATEGORY);
+  }
+  loadModule() {
     this.loadScript(CONTINUE_YOUR_GIFT_SCRIPT_URL, () => typeof window.ContinueYourGift !== "undefined").then(() => this.init()).catch(() => {
       this.logger.log("Failed to load the Continue Your Gift script.");
     });
@@ -58382,9 +58439,9 @@ class ContinueYourGift {
       layout: "compact",
       position: "bottom-right",
       labels: {
-        expandedTitle: "Continue Your Gift",
-        message: "Complete your ${amount} {frequency} gift to make a difference",
-        continue: "I'm ready",
+        expandedTitle: "Don’t let your impact stop here",
+        message: "Don’t let your impact stop here. Complete your ${amount} {frequency} gift now.",
+        continue: "Make my gift",
         dismiss: "Not now"
       },
       colors: {
@@ -58407,7 +58464,7 @@ class ContinueYourGift {
       dismissalCooldownHours: 168,
       completionSuppressionHours: 720,
       displayCap: 6,
-      inactivityResetDays: 180
+      inactivityResetDays: 30
     });
     this.logger.log("Initialized.");
   }
@@ -58423,8 +58480,8 @@ class ContinueYourGift {
     const originalOptions = window.DonationLightboxOptions;
     try {
       window.DonationLightboxOptions = {
-        title: "Continue Your Gift",
-        paragraph: "Finish your gift here.",
+        title: "PROTECT NATURE TODAY",
+        paragraph: `Your gift helps protect wildlife, conserve lands and waters, and advance solutions to the challenges facing our natural world. Together, we can create a healthier future for people and nature. <br><br><strong>FREE! Get 1 year of the award winning Nature Conservancy Magazine with membership.</strong><br><br><img alt="Nature Conservancy magazine cover." class="emailImage" data-ratio-lock="true" data-unit="px" height="130" src="https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/nature_mag_slice.png?v=1612306897000" style="float: left; height: 130px; width: 98px; padding-right: 15px; padding-bottom: 10px;" width="98" />`,
         mobile_enabled: true,
         image: "https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/202210-givingTuesday-PaidSearch.jpg?v=1664310768000",
         footer: "The Nature Conservancy is a nonprofit, tax-exempt charitable organization (tax identification number 53-0242652) under Section 501(c)(3) of the Internal Revenue Code. Donations are tax-deductible as allowed by law."
