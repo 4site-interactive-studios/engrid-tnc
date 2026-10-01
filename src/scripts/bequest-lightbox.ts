@@ -1,7 +1,4 @@
-import {
-  EngridLogger,
-  ENGrid,
-} from "../../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+import { EngridLogger, ENGrid } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
 import { trackEvent } from "./tracking";
 import { GdcpManager } from "./gdcp/gdcp-manager";
 
