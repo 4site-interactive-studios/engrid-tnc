@@ -20,6 +20,30 @@ export class BequestLightbox {
     | undefined = undefined;
   private pageJson: any;
 
+  /**
+   * Signals that the bequest lightbox is done with the page — dismissed,
+   * or never opened. Regive activation waits on this (after the QCB iframe
+   * chain) so its iframe never loads while the modal is open. Deliberately
+   * no timeout: a donor engaged with the bequest ask shouldn't see Regive
+   * at all. Created at class-load time so callers get a stable reference
+   * regardless of construction order.
+   */
+  private static _settledResolve: (() => void) | null = null;
+  private static _settledPromise: Promise<void> = new Promise((resolve) => {
+    BequestLightbox._settledResolve = resolve;
+  });
+
+  public static settled(): Promise<void> {
+    return BequestLightbox._settledPromise;
+  }
+
+  private static resolveSettled() {
+    if (BequestLightbox._settledResolve) {
+      BequestLightbox._settledResolve();
+      BequestLightbox._settledResolve = null;
+    }
+  }
+
   constructor() {
     this.modalContent = document.querySelector(".modal--bequest");
     this.bequestUserProfile = window.bequestUserProfile || undefined;
@@ -27,6 +51,7 @@ export class BequestLightbox {
 
     if (!this.shouldRun()) {
       this.logger.log("Not running bequest modal.");
+      BequestLightbox.resolveSettled();
       return;
     }
 
@@ -48,6 +73,8 @@ export class BequestLightbox {
 
     if (this.shouldOpen()) {
       this.openWhenSafe();
+    } else {
+      BequestLightbox.resolveSettled();
     }
 
     this.logConditions();
@@ -322,6 +349,7 @@ export class BequestLightbox {
   private close(): void {
     ENGrid.setBodyData("modal", "closed");
     ENGrid.setBodyData("bequest-lightbox", "closed");
+    BequestLightbox.resolveSettled();
   }
 
   private resizeIframe(iframe: HTMLIFrameElement): void {

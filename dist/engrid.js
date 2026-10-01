@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 1, 2026 @ 07:33:33 ET
+ *  Date: Thursday, October 1, 2026 @ 11:13:07 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -29809,6 +29809,11 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
   if (annualRenewCopy && annualRenewSelector) {
     annualRenewSelector.insertAdjacentElement("afterbegin", annualRenewCopy);
   }
+  const annualRenewToggle = document.querySelector(".annual-renew-toggle");
+  const donationAmtField = document.querySelector(".en__field--donationAmt");
+  if (annualRenewCopy && annualRenewToggle && donationAmtField) {
+    donationAmtField.insertAdjacentElement("afterbegin", annualRenewCopy);
+  }
 
   // If there is a annual-upsell-switch, add data-engrid-no-annual-append-label to the body
   const annualUpsellSwitch = document.querySelector(".annual-upsell-switch");
@@ -30000,7 +30005,11 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
       console.error("ENgrid: Annual frequency option or external reference field not found. Removing Auto Renew checkbox to prevent failed donations.");
       autoRenew.closest(".en__field--auto-renew").remove();
     } else {
-      annualFrequencyOption.parentElement.classList.add("hide");
+      const autoRenewToggle = document.querySelector(".annual-renew-toggle");
+      const highlightAnnual = document.querySelector(".highlight-annual");
+      if (!autoRenewToggle && !highlightAnnual) {
+        annualFrequencyOption.parentElement.classList.add("hide");
+      }
       App.setBodyData("auto-renew-on-page", "true");
       App.setBodyData("auto-renew-active", autoRenew.checked.toString());
       extRef2Input.value = autoRenew.checked ? "auto_renew" : "";
@@ -30008,6 +30017,10 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
         const autoRenewActive = autoRenew.checked;
         if (autoRenewActive) {
           movePremiumContainerContent("down");
+        }
+        // When we have auto renew toggle, we want to update the values on the donation buttons too.
+        if (autoRenewToggle) {
+          window.EngagingNetworks?.require?._defined?.enDependencies?.dependencies?.parseDependencies(window.EngagingNetworks.dependencies);
         }
       });
       freq.onFrequencyChange.subscribe(frequency => {
@@ -30651,6 +30664,36 @@ const customScript = function (App, DonationFrequency, DonationAmount) {
     });
   }
   addEcardAltTags();
+
+  // Tracks which control initiated a frequency change on "annual renew toggle" pages so CSS
+  // can keep the bottom auto-renew checkbox visible only when it was the trigger.
+  // also runs on pages that highlight the annual option manually ".highlight-annual".
+  function trackAutoRenewVia(App) {
+    const annualRenewToggleEl = document.querySelector(".annual-renew-toggle");
+    const autoRenewCheckboxEl = document.getElementById("en__field_auto_renew");
+    const autoRenewSwitchEl = document.querySelector(".annual-upsell-switch input");
+    const highlightAnnual = document.querySelector(".highlight-annual");
+    if (!annualRenewToggleEl && !highlightAnnual || !autoRenewCheckboxEl) return;
+    document.querySelectorAll("[name='transaction.recurrfreq']").forEach(el => {
+      el.addEventListener("change", e => {
+        if (!e.isTrusted) return;
+        App.setBodyData("auto-renew-via", "radio");
+      });
+    });
+    autoRenewCheckboxEl.addEventListener("change", e => {
+      if (!e.isTrusted) return;
+      if (autoRenewCheckboxEl.checked) {
+        App.setBodyData("auto-renew-via", "checkbox");
+      }
+    });
+    if (autoRenewSwitchEl) {
+      autoRenewSwitchEl.addEventListener("change", e => {
+        if (!e.isTrusted) return;
+        App.setBodyData("auto-renew-via", "switch");
+      });
+    }
+  }
+  trackAutoRenewVia(App);
 };
 ;// CONCATENATED MODULE: ./src/scripts/gdcp/config/gdcp-fields.ts
 const gdcpFields = [{
@@ -32049,10 +32092,20 @@ _defineProperty(GdcpManager, "_qcbChainDecidedPromise", new Promise(resolve => {
 }));
 ;// CONCATENATED MODULE: ./src/scripts/bequest-lightbox.ts
 
+var _BequestLightbox;
  // Uses ENGrid via NPM
 
 
 class BequestLightbox {
+  static settled() {
+    return BequestLightbox._settledPromise;
+  }
+  static resolveSettled() {
+    if (BequestLightbox._settledResolve) {
+      BequestLightbox._settledResolve();
+      BequestLightbox._settledResolve = null;
+    }
+  }
   constructor() {
     _defineProperty(this, "logger", new logger_EngridLogger("BequestLightbox", "yellow", "black"));
     _defineProperty(this, "modalContent", null);
@@ -32063,6 +32116,7 @@ class BequestLightbox {
     this.pageJson = window.pageJson;
     if (!this.shouldRun()) {
       this.logger.log("Not running bequest modal.");
+      BequestLightbox.resolveSettled();
       return;
     }
 
@@ -32082,6 +32136,8 @@ class BequestLightbox {
     this.addModal();
     if (this.shouldOpen()) {
       this.openWhenSafe();
+    } else {
+      BequestLightbox.resolveSettled();
     }
     this.logConditions();
   }
@@ -32298,6 +32354,7 @@ class BequestLightbox {
   close() {
     engrid_ENGrid.setBodyData("modal", "closed");
     engrid_ENGrid.setBodyData("bequest-lightbox", "closed");
+    BequestLightbox.resolveSettled();
   }
   resizeIframe(iframe) {
     iframe.style.height = iframe.contentWindow?.document.body.scrollHeight + "px";
@@ -32318,6 +32375,19 @@ class BequestLightbox {
     return null;
   }
 }
+_BequestLightbox = BequestLightbox;
+/**
+ * Signals that the bequest lightbox is done with the page — dismissed,
+ * or never opened. Regive activation waits on this (after the QCB iframe
+ * chain) so its iframe never loads while the modal is open. Deliberately
+ * no timeout: a donor engaged with the bequest ask shouldn't see Regive
+ * at all. Created at class-load time so callers get a stable reference
+ * regardless of construction order.
+ */
+_defineProperty(BequestLightbox, "_settledResolve", null);
+_defineProperty(BequestLightbox, "_settledPromise", new Promise(resolve => {
+  _BequestLightbox._settledResolve = resolve;
+}));
 // EXTERNAL MODULE: ./node_modules/tippy.js/dist/tippy.esm.js + 54 modules
 var tippy_esm = __webpack_require__(9244);
 ;// CONCATENATED MODULE: ./src/scripts/tooltip.ts
@@ -34499,6 +34569,193 @@ class GenerateEmail {
     engrid_ENGrid.setFieldValue('supporter.emailAddress', anonAddress);
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/regive.ts
+
+
+
+
+
+/**
+ * Loading flow: the Regive script tag is deliberately absent from the
+ * Thank You page in EN — it is injected here, immediately on load, but
+ * the Regive UI stays visually hidden (`body[data-engrid-regive-hidden="true"]`)
+ * while `GdcpManager.qcbChainDecided()` and `BequestLightbox.settled()`
+ * resolve. Regive creates its iframe the moment it initializes, and EN
+ * drops records when iframes in different frames submit simultaneously,
+ * so its UI must not appear while QCB iframes are in flight or the
+ * bequest modal is open.
+ *
+ * Once both settle, a hidden iframe loads a chained EN page
+ * ({@link Regive.chainWarmupUrl}) before Regive is revealed: a chained
+ * page load refreshes EN's supporter session server-side, and we
+ * observed a chained page elsewhere in the flow restoring Regive's
+ * ability to submit — this reproduces that refresh deliberately.
+ */
+class Regive {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("Regive", "lightgray", "darkgreen", "🔁"));
+    _defineProperty(this, "lightbox", null);
+    _defineProperty(this, "bound", false);
+    this.lightbox = document.querySelector(".tnc-regive-lightbox");
+    this.moveInlineAsk();
+    this.listenForLightbox();
+
+    // The Thank You page inside the Regive iframe (reached after a Regive
+    // submission) needs the bundle immediately to report the result to its
+    // parent; the queue, bequest lightbox and warm-up are top-level concerns.
+    if (this.isEmbedded()) {
+      this.activate("embedded page");
+      return;
+    }
+    if (!document.querySelector("regive")) return;
+    engrid_ENGrid.setBodyData("regive-hidden", "true");
+    this.activate("immediately, visually hidden");
+    this.revealWhenWarm();
+  }
+
+  /**
+   * Wait for the QCB queue and the bequest lightbox to settle, load the
+   * chain warm-up iframe, then reveal the Regive UI.
+   */
+  revealWhenWarm() {
+    GdcpManager.qcbChainDecided().then(() => BequestLightbox.settled()).then(() => this.loadWarmupIframe()).then(() => {
+      engrid_ENGrid.setBodyData("regive-hidden", "false");
+      this.logger.log("Regive revealed.");
+    });
+  }
+
+  /**
+   * Load the chain warm-up page in a hidden iframe. Resolves on `load`,
+   * but also on error or after {@link Regive.warmupTimeoutMs} — a stuck
+   * warm-up must not keep Regive hidden forever.
+   */
+  loadWarmupIframe() {
+    return new Promise(resolve => {
+      const iframe = document.createElement("iframe");
+      iframe.src = Regive.chainWarmupUrl;
+      iframe.style.display = "none";
+      let settled = false;
+      const finish = reason => {
+        if (settled) return;
+        settled = true;
+        this.logger.log(`Chain warm-up iframe ${reason}.`);
+        resolve();
+      };
+      iframe.addEventListener("load", () => finish("loaded"));
+      iframe.addEventListener("error", () => finish("failed to load"));
+      window.setTimeout(() => finish(`timed out after ${Regive.warmupTimeoutMs}ms`), Regive.warmupTimeoutMs);
+      document.body.appendChild(iframe);
+    });
+  }
+  activate(reason) {
+    if (!document.querySelector("regive")) return;
+    // A surviving template script tag means Regive already self-initialized
+    // ungated; injecting again would double-init it.
+    if (document.querySelector("script[src*='regive']")) {
+      this.logger.log("Regive script is already on the page. It should be removed from " + "the Thank You page in EN — the theme controls activation.");
+      return;
+    }
+    this.logger.log(`Activating Regive: ${reason}.`);
+    const script = document.createElement("script");
+    // Regive detects debug mode from its own script src.
+    const debug = engrid_ENGrid.getUrlParameter("debug") == "true" ? "?debug" : "";
+    script.src = Regive.scriptUrl + debug;
+    document.body.appendChild(script);
+  }
+  isEmbedded() {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  }
+  moveInlineAsk() {
+    const wrapper = document.querySelector(".tnc-regive-inline");
+    if (!wrapper) return;
+    const copyBlock = document.querySelector(".en__component--copyblock.recurring-frequency-annual-hide");
+    if (!copyBlock) {
+      this.logger.log("No recurring-frequency-annual-hide copy block found");
+      return;
+    }
+    const rule = copyBlock.querySelector("hr");
+    if (!rule) {
+      this.logger.log("Copy block has no rule to insert above");
+      return;
+    }
+
+    // The code block the tag came from is left in place: EN gives code blocks
+    // no margin or padding, so an emptied one renders at zero height.
+    rule.insertAdjacentElement("beforebegin", wrapper);
+    this.logger.log("Moved the Regive ask above the rule in the thank-you copy");
+  }
+  listenForLightbox() {
+    if (!this.lightbox) return;
+
+    // The banner's close controls live inside a same-origin iframe built from
+    // a <template>, so scripts inside it never execute — the parent has to
+    // bind them once the child announces "loaded". The up-front bindControls
+    // call covers the race where Regive rendered before this listener.
+    window.addEventListener("message", event => {
+      switch (this.regiveAction(event.data)) {
+        case "loaded":
+          this.bindControls();
+          break;
+        case "success":
+          this.dismissAfterThanks();
+          break;
+      }
+    });
+    this.bindControls();
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") this.dismiss();
+    });
+  }
+  regiveAction(data) {
+    if (typeof data !== "object" || data === null) return null;
+    const message = data;
+    if (message.sender !== "regive") return null;
+    return typeof message.action === "string" ? message.action : null;
+  }
+
+  // Regive ignores its own `exit` action once the banner is marked
+  // successful, so without this the thank-you panel would block the page
+  // forever.
+  dismissAfterThanks() {
+    this.logger.log("Gift accepted — closing the lightbox shortly");
+    window.setTimeout(() => this.dismiss(), Regive.thanksDuration);
+  }
+  bindControls() {
+    if (this.bound) return;
+    const frame = this.lightbox?.querySelector("iframe");
+    const doc = frame?.contentDocument;
+    if (!doc) return;
+    const controls = doc.querySelectorAll(".tnc-regive-3__close, .tnc-regive-3__decline");
+    if (controls.length === 0) {
+      this.logger.log("Banner has no close controls to bind");
+      return;
+    }
+    controls.forEach(control => {
+      control.addEventListener("click", () => this.dismiss());
+    });
+    this.bound = true;
+    this.logger.log("Bound the lightbox close controls");
+  }
+  dismiss() {
+    // Hidden rather than removed: removing the container would tear down the
+    // iframe mid-submission and cut off Regive's success/celebrate handling.
+    if (this.lightbox) this.lightbox.style.display = "none";
+  }
+}
+_defineProperty(Regive, "scriptUrl", "https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/2246/regive.js");
+/**
+ * Chained EN page loaded in a hidden iframe after the QCB queue and
+ * bequest lightbox settle, to refresh the supporter session before
+ * Regive is revealed.
+ */
+_defineProperty(Regive, "chainWarmupUrl", "https://preserve.nature.org/page/201716/data/1?chain");
+/** How long to wait for the warm-up iframe before revealing anyway. */
+_defineProperty(Regive, "warmupTimeoutMs", 15000);
+_defineProperty(Regive, "thanksDuration", 6000);
 ;// CONCATENATED MODULE: ./src/scripts/continue-your-gift.ts
 
 
@@ -34703,6 +34960,7 @@ class ContinueYourGift {
 
 
 
+
 const minimumAmount = window?.donationSettings?.minimumDonationAmount ?? 5;
 
 //Allow banner image with attribution using image block
@@ -34793,6 +35051,7 @@ const options = {
     new MultistepForm();
     new SandboxWarning();
     new GenerateEmail();
+    new Regive();
     new ContinueYourGift();
 
     // Restore donation amount from session storage if submission failed
