@@ -63,10 +63,19 @@ export class ContinueYourGift {
       return;
     }
 
-    this.loadScript(
-      DONATION_LIGHTBOX_SCRIPT_URL,
-      () => typeof window.DonationLightbox === "function"
-    );
+    // The DonationLightbox script is only loaded in the top frame. It
+    // auto-instantiates on window load and auto-builds a lightbox whenever
+    // DonationLightboxOptions.url is present, so loading it inside an iframe
+    // (e.g. the lightbox's own donation page, which runs this same bundle)
+    // makes lightboxes nest recursively. The Continue Your Gift module itself
+    // must still load in iframes: there it acts as the child reporter that
+    // tells the top frame about gift captures and completions.
+    if (!this.isEmbedded()) {
+      this.loadScript(
+        DONATION_LIGHTBOX_SCRIPT_URL,
+        () => typeof window.DonationLightbox === "function"
+      );
+    }
     this.loadModuleWhenConsented();
 
     window.addEventListener("continue-your-gift:lifecycle", ((
@@ -107,6 +116,14 @@ export class ContinueYourGift {
       }
     };
     window.addEventListener("OneTrustGroupsUpdated", onGroupsUpdated);
+  }
+
+  private isEmbedded(): boolean {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
   }
 
   private hasFunctionalConsent(): boolean {

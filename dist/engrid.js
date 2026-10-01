@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 1, 2026 @ 11:13:07 ET
+ *  Date: Thursday, October 1, 2026 @ 12:12:33 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -34782,7 +34782,17 @@ class ContinueYourGift {
       this.logger.log("Page is excluded. Not initializing.");
       return;
     }
-    this.loadScript(DONATION_LIGHTBOX_SCRIPT_URL, () => typeof window.DonationLightbox === "function");
+
+    // The DonationLightbox script is only loaded in the top frame. It
+    // auto-instantiates on window load and auto-builds a lightbox whenever
+    // DonationLightboxOptions.url is present, so loading it inside an iframe
+    // (e.g. the lightbox's own donation page, which runs this same bundle)
+    // makes lightboxes nest recursively. The Continue Your Gift module itself
+    // must still load in iframes: there it acts as the child reporter that
+    // tells the top frame about gift captures and completions.
+    if (!this.isEmbedded()) {
+      this.loadScript(DONATION_LIGHTBOX_SCRIPT_URL, () => typeof window.DonationLightbox === "function");
+    }
     this.loadModuleWhenConsented();
     window.addEventListener("continue-your-gift:lifecycle", event => {
       const detail = event.detail || {};
@@ -34818,6 +34828,13 @@ class ContinueYourGift {
       }
     };
     window.addEventListener("OneTrustGroupsUpdated", onGroupsUpdated);
+  }
+  isEmbedded() {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
   }
   hasFunctionalConsent() {
     return typeof window.OnetrustActiveGroups === "string" && window.OnetrustActiveGroups.split(",").includes(ONETRUST_FUNCTIONAL_CATEGORY);
