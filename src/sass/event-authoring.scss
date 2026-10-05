@@ -1,0 +1,120 @@
+/*
+* ##########################################################
+* # Event Authoring: Page Builder Block Restrictions
+* Add "event-authoring" to the advanced row to turn these on, remove it to show every block in full.
+* .edit-hidden - collapses the block to a small labelled strip
+* .edit-masked - covers the block with a labelled overlay
+* Blocks that cannot take a custom class are hidden or masked by their component class instead,
+* by adding them to the list at the bottom of this file with @include hidden-block("Label")
+* or @include masked-block("Label", max-height).
+* ##########################################################
+*/
+
+&#en__pagebuilder .en__component--advrow.event-authoring {
+  %masked-block {
+    --edit_color: #ffffff;
+    --edit_background-color: #d97a00;
+    --edit_background-color-faded: rgba(217, 122, 0, 0.2);
+    position: relative;
+
+    > :not(.en__component__actions) {
+      max-height: var(--masked_max-height, none);
+      overflow: hidden;
+    }
+
+    &::before,
+    &::after {
+      position: absolute;
+      cursor: not-allowed;
+    }
+
+    &::after {
+      content: "";
+      inset: 0;
+      z-index: 1;
+      background: repeating-linear-gradient(
+          -45deg,
+          transparent 0 10px,
+          rgba(217, 122, 0, 0.08) 10px 20px
+        ),
+        rgba(255, 255, 255, 0.92);
+      outline: 2px dashed var(--edit_background-color);
+    }
+
+    &::before {
+      content: var(--masked_message, "Masked Block");
+      top: 50%;
+      left: 50%;
+      z-index: 2;
+      transform: translate(-50%, -50%);
+      max-width: calc(100% - 2rem);
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--edit_color);
+      background-color: var(--edit_background-color);
+    }
+  }
+
+  @mixin masked-block($message: "Masked Block", $max-height: none) {
+    @extend %masked-block;
+    --masked_message: "#{$message}";
+    --masked_max-height: #{$max-height};
+  }
+
+  %hidden-block {
+    --edit_color: #ffffff;
+    --edit_background-color: #6b6b6b;
+    --edit_background-color-faded: rgba(107, 107, 107, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2rem;
+    background-color: var(--edit_background-color-faded);
+    outline: 1px dashed rgba(107, 107, 107, 0.5);
+
+    > :not(.en__component__actions) {
+      display: none !important;
+    }
+
+    &::before {
+      content: var(--hidden_message, "Hidden Block");
+      padding: 0 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--edit_background-color);
+    }
+  }
+
+  @mixin hidden-block($message: "Hidden Block") {
+    @extend %hidden-block;
+    --hidden_message: "#{$message}";
+  }
+
+  .edit-hidden.en__component,
+  .edit-masked.en__component {
+    // The block itself is labelled, so skip the label the shared edit-* styles add to the actions bar
+    .en__component__actions::before {
+      display: none;
+    }
+  }
+
+  .edit-hidden.en__component {
+    @extend %hidden-block;
+  }
+
+  .edit-masked.en__component {
+    @extend %masked-block;
+  }
+
+  // Blocks that cannot take a custom class
+  .en__component--eventregistrants {
+    @include masked-block("Event Registrants", 12rem);
+  }
+
+  .en__component--eventtickets {
+    @include hidden-block("Event Tickets");
+  }
+}

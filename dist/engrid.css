@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 1, 2026 @ 12:12:33 ET
+ *  Date: Monday, October 5, 2026 @ 12:36:14 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -15150,6 +15150,73 @@ body[data-engrid-debug]:before{
   opacity:1;
   transform:translate(-50%, -50%);
   visibility:visible;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants{
+  --edit_color:#fff;
+  --edit_background-color:#d97a00;
+  --edit_background-color-faded:#d97a0033;
+  position:relative;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component>:not(.en__component__actions),[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants>:not(.en__component__actions){
+  max-height:var(--masked_max-height, none);
+  overflow:hidden;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants:before{
+  cursor:not-allowed;
+  position:absolute;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants:after{
+  background:repeating-linear-gradient(-45deg, #0000 0 10px, #d97a0014 10px 20px), #ffffffeb;
+  content:"";
+  inset:0;
+  outline:2px dashed var(--edit_background-color);
+  z-index:1;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants:before{
+  background-color:var(--edit_background-color);
+  border-radius:4px;
+  color:var(--edit_color);
+  content:var(--masked_message, "Masked Block");
+  font-size:1rem;
+  font-weight:700;
+  left:50%;
+  max-width:calc(100% - 2rem);
+  padding:.5rem 1rem;
+  text-align:center;
+  top:50%;
+  transform:translate(-50%, -50%);
+  z-index:2;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-hidden.en__component,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets{
+  --edit_color:#fff;
+  --edit_background-color:#6b6b6b;
+  --edit_background-color-faded:#6b6b6b33;
+  align-items:center;
+  background-color:var(--edit_background-color-faded);
+  display:flex;
+  justify-content:center;
+  min-height:2rem;
+  outline:1px dashed #6b6b6b80;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-hidden.en__component>:not(.en__component__actions),[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets>:not(.en__component__actions){
+  display:none !important;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-hidden.en__component:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:before{
+  color:var(--edit_background-color);
+  content:var(--hidden_message, "Hidden Block");
+  font-size:.875rem;
+  font-weight:700;
+  padding:0 .75rem;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-hidden.en__component .en__component__actions:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component .en__component__actions:before{
+  display:none;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants{
+  --masked_message:"Event Registrants";
+  --masked_max-height:12rem;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets{
+  --hidden_message:"Event Tickets";
 }
 
 [data-engrid-theme=tnc][data-engrid-multistep]{
