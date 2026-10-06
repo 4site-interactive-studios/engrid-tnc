@@ -61,6 +61,15 @@
   // HERO IMAGE
 
   &:not(#en__pagebuilder) {
+    .event-detail-name,
+    .event-detail-description,
+    .event-detail-start-date,
+    .event-detail-end-date,
+    .event-detail-time,
+    .event-detail-location {
+      display: none;
+    }
+
     .body-banner:has(img) {
       position: relative;
       aspect-ratio: 9 / 2;

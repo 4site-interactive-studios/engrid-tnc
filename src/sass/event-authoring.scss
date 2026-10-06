@@ -109,6 +109,42 @@
     @extend %masked-block;
   }
 
+  @mixin event-detail-block($label) {
+    &::before {
+      content: "#{$label}";
+      display: block;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #ffffff;
+      background-color: #007931;
+    }
+  }
+
+  .event-detail-name.en__component {
+    @include event-detail-block("Event Name");
+  }
+
+  .event-detail-description.en__component {
+    @include event-detail-block("Event Description");
+  }
+
+  .event-detail-start-date.en__component {
+    @include event-detail-block("Event Start Date");
+  }
+
+  .event-detail-end-date.en__component {
+    @include event-detail-block("Event End Date");
+  }
+
+  .event-detail-time.en__component {
+    @include event-detail-block("Event Time");
+  }
+
+  .event-detail-location.en__component {
+    @include event-detail-block("Event Location");
+  }
+
   // Blocks that cannot take a custom class
   .en__component--eventregistrants {
     @include masked-block("Event Registrants", 12rem);

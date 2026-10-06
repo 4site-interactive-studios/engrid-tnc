@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, October 6, 2026 @ 07:52:45 ET
+ *  Date: Tuesday, October 6, 2026 @ 08:57:56 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -33867,39 +33867,47 @@ class MultistepForm {
 ;// CONCATENATED MODULE: ./src/scripts/event-pages.ts
 
 
+const EVENT_DETAIL_BLOCKS = {
+  "event-detail-name": "event_name",
+  "event-detail-description": "description",
+  "event-detail-start-date": "start_date",
+  "event-detail-end-date": "end_date",
+  "event-detail-time": "time",
+  "event-detail-location": "location"
+};
+const EVENT_DETAIL_BLOCK_SELECTOR = Object.keys(EVENT_DETAIL_BLOCKS).map(className => `.${className}`).join(", ");
 class EventPages {
   constructor() {
     _defineProperty(this, "logger", new logger_EngridLogger("Event Pages", "white", "#D62F5B", "📅"));
     _defineProperty(this, "dataLayer", window.dataLayer || []);
-    const eventDetailTable = document.querySelector("table#event-summary");
+    const eventDetailSource = this.findEventDetailSource();
     if (this.shouldRun()) {
-      this.init(eventDetailTable);
-    } else if (eventDetailTable) {
-      // There is at least an event details table on the page, but we're not on an event page. 
+      this.init(eventDetailSource);
+    } else if (eventDetailSource) {
+      // There are event details on the page, but we're not on an event page.
       // This likely means that we're on a waitlist page, which also uses the event block.
       engrid_ENGrid.setBodyData("event-page", "waitlist");
       this.logger.log("On event waitlist page, initializing event block with available event details.");
-      const eventDetails = this.parseEventDetails(eventDetailTable);
-      this.createEventBlock(eventDetailTable, eventDetails);
+      this.createEventBlock(eventDetailSource, this.readEventDetails());
     }
   }
-  init(eventDetailTable) {
+  init(eventDetailSource) {
     this.logger.log("EventPages initialized");
     switch (engrid_ENGrid.getPageNumber()) {
       case 1:
         this.logger.log("On event details page");
         engrid_ENGrid.setBodyData("event-page", "details");
-        if (!eventDetailTable) {
-          this.logger.warn("Could not find event details table.");
+        if (!eventDetailSource) {
+          this.logger.warn("Could not find event details blocks or table.");
           return;
         }
-        const eventDetails = this.parseEventDetails(eventDetailTable);
+        const eventDetails = this.readEventDetails();
         localStorage.setItem("eventDetails." + engrid_ENGrid.getPageID(), JSON.stringify(eventDetails));
         this.showWaitlistLinkIfApplicable();
         this.scrollToTicketsIfApplicable();
         this.showWaitlistConfirm();
         this.updateTicketRows();
-        this.createEventBlock(eventDetailTable, eventDetails);
+        this.createEventBlock(eventDetailSource, eventDetails);
         this.removeEnAdditionalLine();
         this.createAdditionalDonationBlock();
         this.createPromoCodeBlock();
@@ -33975,6 +33983,29 @@ class EventPages {
   getBillingInfo() {
     const data = localStorage.getItem("billingInfo." + engrid_ENGrid.getPageID());
     return data ? JSON.parse(data) : null;
+  }
+  findEventDetailSource() {
+    return document.querySelector(EVENT_DETAIL_BLOCK_SELECTOR) ?? document.querySelector("table#event-summary");
+  }
+
+  // Detail blocks take priority; the legacy table only fills in fields they don't provide.
+  readEventDetails() {
+    const eventDetails = {};
+    const eventDetailTable = document.querySelector("table#event-summary");
+    if (eventDetailTable) {
+      Object.assign(eventDetails, this.parseEventDetails(eventDetailTable));
+    }
+    Object.entries(EVENT_DETAIL_BLOCKS).forEach(([className, key]) => {
+      const value = document.querySelector(`.${className}`)?.textContent?.trim().replace(/[\n\t]+/g, " ");
+      if (value) {
+        this.logger.log(`Parsed event detail block - ${key}: ${value}`);
+        eventDetails[key] = value;
+      }
+    });
+    if (!eventDetails.event_name) {
+      this.logger.warn("No event name found in event details.");
+    }
+    return eventDetails;
   }
   parseEventDetails(eventDetailTable) {
     const eventDetails = {};
@@ -34067,7 +34098,7 @@ class EventPages {
       }
     });
   }
-  createEventBlock(eventDetailTable, eventDetails) {
+  createEventBlock(eventDetailSource, eventDetails) {
     const eventSummary = document.createElement("event-summary");
     const overlay = document.createElement("div");
     overlay.className = "engrid__eventdetails__overlay";
@@ -34103,7 +34134,7 @@ class EventPages {
     locationWrapper.appendChild(time);
     overlay.appendChild(locationWrapper);
     eventSummary.appendChild(overlay);
-    eventDetailTable.parentElement?.insertBefore(eventSummary, eventDetailTable);
+    eventDetailSource.parentElement?.insertBefore(eventSummary, eventDetailSource);
   }
   removeEnAdditionalLine() {
     const additionalLine = document.querySelector(".en__additional");

@@ -23,6 +23,19 @@ interface EventLineItem {
   currency: string;
 }
 
+const EVENT_DETAIL_BLOCKS: Record<string, keyof EventDetails> = {
+  "event-detail-name": "event_name",
+  "event-detail-description": "description",
+  "event-detail-start-date": "start_date",
+  "event-detail-end-date": "end_date",
+  "event-detail-time": "time",
+  "event-detail-location": "location",
+};
+
+const EVENT_DETAIL_BLOCK_SELECTOR = Object.keys(EVENT_DETAIL_BLOCKS)
+  .map((className) => `.${className}`)
+  .join(", ");
+
 declare global {
   interface Window {
     HideAddressFieldsOnFreeEvent?: boolean;
@@ -40,36 +53,35 @@ export class EventPages {
   private dataLayer = (window as any).dataLayer || [];
 
   constructor() {
-    const eventDetailTable = document.querySelector("table#event-summary") as HTMLTableElement | null;
+    const eventDetailSource = this.findEventDetailSource();
     if (this.shouldRun()) {
-      this.init(eventDetailTable);
-    } else if (eventDetailTable) {
-      // There is at least an event details table on the page, but we're not on an event page. 
+      this.init(eventDetailSource);
+    } else if (eventDetailSource) {
+      // There are event details on the page, but we're not on an event page.
       // This likely means that we're on a waitlist page, which also uses the event block.
       ENGrid.setBodyData("event-page", "waitlist");
       this.logger.log("On event waitlist page, initializing event block with available event details.");
-      const eventDetails = this.parseEventDetails(eventDetailTable);
-      this.createEventBlock(eventDetailTable, eventDetails);
+      this.createEventBlock(eventDetailSource, this.readEventDetails());
     }
   }
 
-  private init(eventDetailTable: HTMLTableElement | null) {
+  private init(eventDetailSource: Element | null) {
     this.logger.log("EventPages initialized");
     switch (ENGrid.getPageNumber()) {
       case 1:
         this.logger.log("On event details page");
         ENGrid.setBodyData("event-page", "details");
-        if (!eventDetailTable) {
-          this.logger.warn("Could not find event details table.");
+        if (!eventDetailSource) {
+          this.logger.warn("Could not find event details blocks or table.");
           return;
         }
-        const eventDetails = this.parseEventDetails(eventDetailTable);
+        const eventDetails = this.readEventDetails();
         localStorage.setItem("eventDetails." + ENGrid.getPageID(), JSON.stringify(eventDetails));
         this.showWaitlistLinkIfApplicable();
         this.scrollToTicketsIfApplicable();
         this.showWaitlistConfirm();
         this.updateTicketRows();
-        this.createEventBlock(eventDetailTable, eventDetails);
+        this.createEventBlock(eventDetailSource, eventDetails);
         this.removeEnAdditionalLine();
         this.createAdditionalDonationBlock();
         this.createPromoCodeBlock();
@@ -148,6 +160,36 @@ export class EventPages {
   private getBillingInfo(): BillingInfo | null {
     const data = localStorage.getItem("billingInfo." + ENGrid.getPageID());
     return data ? JSON.parse(data) as BillingInfo : null;
+  }
+
+  private findEventDetailSource(): Element | null {
+    return (
+      document.querySelector(EVENT_DETAIL_BLOCK_SELECTOR) ??
+      document.querySelector("table#event-summary")
+    );
+  }
+
+  // Detail blocks take priority; the legacy table only fills in fields they don't provide.
+  private readEventDetails(): Partial<EventDetails> {
+    const eventDetails: Partial<EventDetails> = {};
+    const eventDetailTable = document.querySelector("table#event-summary") as HTMLTableElement | null;
+    if (eventDetailTable) {
+      Object.assign(eventDetails, this.parseEventDetails(eventDetailTable));
+    }
+    Object.entries(EVENT_DETAIL_BLOCKS).forEach(([className, key]) => {
+      const value = document
+        .querySelector(`.${className}`)
+        ?.textContent?.trim()
+        .replace(/[\n\t]+/g, " ");
+      if (value) {
+        this.logger.log(`Parsed event detail block - ${key}: ${value}`);
+        eventDetails[key] = value;
+      }
+    });
+    if (!eventDetails.event_name) {
+      this.logger.warn("No event name found in event details.");
+    }
+    return eventDetails;
   }
 
   private parseEventDetails(eventDetailTable: HTMLTableElement): Partial<EventDetails> {
@@ -244,7 +286,7 @@ export class EventPages {
     });
   }
 
-  private createEventBlock(eventDetailTable: HTMLTableElement, eventDetails: Partial<EventDetails>) {
+  private createEventBlock(eventDetailSource: Element, eventDetails: Partial<EventDetails>) {
     const eventSummary = document.createElement("event-summary");
 
     const overlay = document.createElement("div");
@@ -291,7 +333,7 @@ export class EventPages {
     overlay.appendChild(locationWrapper);
     eventSummary.appendChild(overlay);
 
-    eventDetailTable.parentElement?.insertBefore(eventSummary, eventDetailTable);
+    eventDetailSource.parentElement?.insertBefore(eventSummary, eventDetailSource);
   }
 
   private removeEnAdditionalLine() {
