@@ -58,6 +58,56 @@
     padding-bottom: 0;
   }
 
+  // HERO IMAGE
+
+  &:not(#en__pagebuilder) {
+    .body-banner:has(img) {
+      position: relative;
+      aspect-ratio: 9 / 2;
+      min-height: 300px;
+      overflow: hidden;
+      grid-template: 100% / 100%;
+
+      &:after {
+        background-color: rgba(0, 0, 0, 0.25);
+      }
+
+      .en__component--imageblock,
+      figure.media-with-attribution {
+        display: block;
+        grid-area: 1 / 1;
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        min-height: 0;
+        margin: 0;
+      }
+
+      img {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 0;
+        object-fit: cover;
+        object-position: center;
+
+        @media screen and (max-width: 767.99px) {
+          &.mobile-image-left {
+            object-position: left;
+          }
+
+          &.mobile-image-right {
+            object-position: right;
+          }
+        }
+      }
+    }
+
+    .body-banner:not(:has(img)) {
+      display: none;
+    }
+  }
+
   // EVENT DETAILS OVERLAY CARD
 
   .engrid__eventdetails__overlay {
@@ -67,7 +117,7 @@
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 2.833rem;
-    margin-top: -10rem;
+    margin-top: 2.5rem;
 
     position: relative;
     --p_font-family: var(--sans-serif-fonts);
@@ -86,6 +136,10 @@
       max-width: 850px;
     }
 
+  }
+
+  &:has(.body-banner img) .engrid__eventdetails__overlay {
+    margin-top: -10rem;
   }
 
   .engrid__eventdetails__title {
