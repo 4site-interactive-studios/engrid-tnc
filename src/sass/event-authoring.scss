@@ -11,6 +11,13 @@
 */
 
 &#en__pagebuilder .en__component--advrow.event-authoring {
+  .content-header,
+  .body-bottom,
+  .content-preFooter,
+  .content-footer {
+    display: none;
+  }
+
   %masked-block {
     --edit_color: #ffffff;
     --edit_background-color: #d97a00;
@@ -147,10 +154,19 @@
 
   // Blocks that cannot take a custom class
   .en__component--eventregistrants {
-    @include masked-block("Event Registrants", 12rem);
+    @include masked-block(
+      "Event Attendees. Use block settings to customize the fields to fill for each attendee",
+      12rem
+    );
   }
 
   .en__component--eventtickets {
-    @include hidden-block("Event Tickets");
+    @include masked-block(
+      "Event Tickets. Use block or page settings to customize."
+    );
+  }
+
+  .event-ticket-header.en__component {
+    @include hidden-block("Table header for event tickets.");
   }
 }

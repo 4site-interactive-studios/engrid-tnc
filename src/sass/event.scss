@@ -3,7 +3,6 @@
 &[data-engrid-event-page="checkout"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"],
 &[data-engrid-event-page="thank-you"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"],
 &[data-engrid-event-page="unknown"][data-engrid-subtheme="hero-banner"][data-engrid-layout="centercenter1col"] {
-
   // STRUCTURAL STYLES FOR BODIES
 
   @media screen and (max-width: 992px) {
@@ -27,10 +26,8 @@
     }
   }
 
-
   // Specifically exclude waitlist page from these styles
   &[data-engrid-page-type="event"] {
-
     .body-main,
     .body-bottom {
       max-width: 900px;
@@ -54,7 +51,7 @@
   .basic-h3-header {
     color: black;
     border: none;
-    margin-bottom: .9375rem;
+    margin-bottom: 0.9375rem;
     padding-bottom: 0;
   }
 
@@ -121,8 +118,8 @@
 
   .engrid__eventdetails__overlay {
     background-color: #fff;
-    border-bottom: .3125rem solid #007931;
-    box-shadow: 0 2px 30px 0 rgba(0, 0, 0, .2);
+    border-bottom: 0.3125rem solid #007931;
+    box-shadow: 0 2px 30px 0 rgba(0, 0, 0, 0.2);
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 2.833rem;
@@ -134,17 +131,16 @@
     --p_font-weight: 400;
     --p_line-height: 34px;
     width: 100%;
-    padding: 1.875rem 2.5rem .75rem;
+    padding: 1.875rem 2.5rem 0.75rem;
 
     @media screen and (min-width: 768px) {
-      padding: 1.875rem 2.5rem .75rem;
+      padding: 1.875rem 2.5rem 0.75rem;
       max-width: 700px;
     }
 
     @media screen and (min-width: 992.01px) {
       max-width: 850px;
     }
-
   }
 
   &:has(.body-banner img) .engrid__eventdetails__overlay {
@@ -288,10 +284,10 @@
 
   .en__ticket__remaining {
     text-align: center;
-    font-size: .875rem;
+    font-size: 0.875rem;
     font-weight: 500;
     line-height: 1.5;
-    margin-top: .25rem;
+    margin-top: 0.25rem;
   }
 
   @media (min-width: 768px) {
@@ -338,11 +334,9 @@
       font-weight: 700;
       text-transform: uppercase;
     }
-
   }
 
   @media screen and (max-width: 600px) {
-
     .en__ticket__remaining {
       padding-top: 0;
     }
@@ -355,10 +349,10 @@
     .en__ticket__selector {
       margin-right: unset;
     }
-
   }
 
-  .input-group> :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+  .input-group
+    > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
     margin-left: -1px;
   }
 
@@ -389,13 +383,12 @@
           color: var(--a_color_hover);
         }
       }
-
     }
   }
 
   .en__ticket__quantity {
     border: 0;
-    font-size: .875rem;
+    font-size: 0.875rem;
     font-weight: 700;
     line-height: 1.1428;
     width: 3em;
@@ -416,7 +409,7 @@
   .en__ticket__plus {
     align-items: center;
     background-image: none;
-    background-size: .625rem;
+    background-size: 0.625rem;
     border: 0;
     display: inline-flex;
     height: 3.25rem;
@@ -498,7 +491,6 @@
   // SUBMIT BUTTONS
 
   .event-buttons {
-
     .en__submit {
       width: 100%;
       display: flex;
@@ -559,7 +551,7 @@
         font-size: 1rem;
         font-weight: 500;
         line-height: 1.375;
-        margin-bottom: .6875rem;
+        margin-bottom: 0.6875rem;
         padding-bottom: 0;
         text-transform: none;
       }
@@ -586,7 +578,6 @@
       --p_font-size: 1rem;
       line-height: 1.5;
     }
-
   }
 
   .en__orderSummary__headers {
@@ -601,24 +592,23 @@
     }
   }
 
-  .en__orderSummary__item> :nth-child(2),
-  .en__orderSummary__headers> :nth-child(2),
-  .en__orderSummary__total> :nth-child(2),
-  .en__orderSummary__additional> :nth-child(2) {
+  .en__orderSummary__item > :nth-child(2),
+  .en__orderSummary__headers > :nth-child(2),
+  .en__orderSummary__total > :nth-child(2),
+  .en__orderSummary__additional > :nth-child(2) {
     display: none;
   }
 
   &[data-engrid-event-has-promo="false"] {
-
-    .en__orderSummary__item> :nth-child(3),
-    .en__orderSummary__headers> :nth-child(3),
-    .en__orderSummary__total> :nth-child(3),
-    .en__orderSummary__additional> :nth-child(3) {
+    .en__orderSummary__item > :nth-child(3),
+    .en__orderSummary__headers > :nth-child(3),
+    .en__orderSummary__total > :nth-child(3),
+    .en__orderSummary__additional > :nth-child(3) {
       display: none;
     }
   }
 
-  .en__orderSummary> :not(:last-child) .en__orderSummary__data {
+  .en__orderSummary > :not(:last-child) .en__orderSummary__data {
     border-bottom: 1px solid #cdcdcd;
   }
 
@@ -627,7 +617,7 @@
   }
 
   .en__orderSummary__data {
-    padding-bottom: .75rem;
+    padding-bottom: 0.75rem;
     padding-top: 1rem;
   }
 
@@ -652,7 +642,7 @@
 
   .event-confirmation-table {
     border: 1px solid #cdcdcd;
-    border-top: .3125rem solid #007931;
+    border-top: 0.3125rem solid #007931;
     margin-top: 1.85rem;
     line-height: 1.6666;
     caption-side: bottom;
@@ -696,7 +686,6 @@
         display: block;
       }
     }
-
   }
 
   // EN NATIVE WAITLIST OVERLAY
@@ -749,7 +738,9 @@
         --button_background-color: var(--submit__button_background-color);
         --button_border-color: var(--submit__button_border-color);
         --button_color: var(--submit__button_color);
-        --button_background-color_hover: var(--submit__button_background-color_hover);
+        --button_background-color_hover: var(
+          --submit__button_background-color_hover
+        );
         --button_border-color_hover: var(--submit__button_border-color_hover);
         --button_color_hover: var(--submit__button_color_hover);
       }
