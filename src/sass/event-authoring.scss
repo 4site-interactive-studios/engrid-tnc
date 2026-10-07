@@ -2,30 +2,34 @@
 * ##########################################################
 * # Event Authoring: Page Builder Block Restrictions
 * Add "event-authoring" to the advanced row to turn these on, remove it to show every block in full.
-* .edit-hidden - collapses the block to a small labelled strip
-* .edit-masked - covers the block with a labelled overlay
-* Blocks that cannot take a custom class are hidden or masked by their component class instead,
-* by adding them to the list at the bottom of this file with @include hidden-block("Label")
-* or @include masked-block("Label", max-height).
+*
+* Add one of these classes to a block, and give it a custom class listed in $block-settings below:
+* .author-hidden - collapses the block to a small labelled strip
+* .author-masked - covers the block with a labelled overlay
+* .author-danger - collapses the block to a red "do not edit" strip
+* .author-label  - adds a label above the block
+* These deliberately avoid "edit-" in the name, because engrid-styles restyles the action bar
+* of any class containing "edit-" and we want the original bar on every block.
+*
+* $block-settings sets --author_label and --author_max-height per custom class, and both work on every type.
+* The page builder does not render code block styles, so these cannot be set there.
+*
 * ##########################################################
 */
 
 &#en__pagebuilder .en__component--advrow.event-authoring {
-  .content-header,
-  .body-bottom,
-  .content-preFooter,
-  .content-footer {
-    display: none;
-  }
-
   %masked-block {
-    --edit_color: #ffffff;
-    --edit_background-color: #d97a00;
-    --edit_background-color-faded: rgba(217, 122, 0, 0.2);
+    --author_color: #ffffff;
+    --author_background-color: #d97a00;
+    --author_background-color-faded: rgba(217, 122, 0, 0.2);
     position: relative;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 
-    > :not(.en__component__actions) {
-      max-height: var(--masked_max-height, none);
+    > :not(.en__component__actions, .messageOverlay) {
+      max-height: var(--author_max-height, none);
       overflow: hidden;
     }
 
@@ -45,11 +49,11 @@
           rgba(217, 122, 0, 0.08) 10px 20px
         ),
         rgba(255, 255, 255, 0.92);
-      outline: 2px dashed var(--edit_background-color);
+      outline: 2px dashed var(--author_background-color);
     }
 
     &::before {
-      content: var(--masked_message, "Masked Block");
+      content: var(--author_label, "Masked Block");
       top: 50%;
       left: 50%;
       z-index: 2;
@@ -60,101 +64,135 @@
       text-align: center;
       font-size: 1rem;
       font-weight: 700;
-      color: var(--edit_color);
-      background-color: var(--edit_background-color);
+      color: var(--author_color);
+      background-color: var(--author_background-color);
     }
   }
 
-  @mixin masked-block($message: "Masked Block", $max-height: none) {
+  @mixin masked-block($label: "Masked Block", $max-height: none) {
     @extend %masked-block;
-    --masked_message: "#{$message}";
-    --masked_max-height: #{$max-height};
+    --author_label: "#{$label}";
+    --author_max-height: #{$max-height};
   }
 
   %hidden-block {
-    --edit_color: #ffffff;
-    --edit_background-color: #6b6b6b;
-    --edit_background-color-faded: rgba(107, 107, 107, 0.2);
+    --author_color: #ffffff;
+    --author_background-color: #6b6b6b;
+    --author_background-color-faded: rgba(107, 107, 107, 0.2);
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 2rem;
-    background-color: var(--edit_background-color-faded);
+    min-height: 4rem;
+    max-height: var(--author_max-height, none);
+    overflow: hidden;
+    background-color: var(--author_background-color-faded);
     outline: 1px dashed rgba(107, 107, 107, 0.5);
 
-    > :not(.en__component__actions) {
+    > :not(.en__component__actions, .messageOverlay) {
       display: none !important;
     }
 
     &::before {
-      content: var(--hidden_message, "Hidden Block");
+      content: var(--author_label, "Hidden Block");
       padding: 0 0.75rem;
       font-size: 0.875rem;
       font-weight: 700;
-      color: var(--edit_background-color);
+      color: var(--author_background-color);
     }
   }
 
-  @mixin hidden-block($message: "Hidden Block") {
+  @mixin hidden-block($label: "Hidden Block", $max-height: none) {
     @extend %hidden-block;
-    --hidden_message: "#{$message}";
+    --author_label: "#{$label}";
+    --author_max-height: #{$max-height};
   }
 
-  .edit-hidden.en__component,
-  .edit-masked.en__component {
-    // The block itself is labelled, so skip the label the shared edit-* styles add to the actions bar
-    .en__component__actions::before {
-      display: none;
+  %danger-block {
+    --author_color: #ffffff;
+    --author_background-color: #f12222;
+    --author_background-color-faded: rgba(241, 34, 34, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 4rem;
+    max-height: var(--author_max-height, none);
+    overflow: hidden;
+    background-color: var(--author_background-color-faded);
+    outline: 1px dashed rgba(241, 34, 34, 0.5);
+
+    > :not(.en__component__actions, .messageOverlay) {
+      display: none !important;
     }
-  }
 
-  .edit-hidden.en__component {
-    @extend %hidden-block;
-  }
-
-  .edit-masked.en__component {
-    @extend %masked-block;
-  }
-
-  @mixin block-label($label) {
     &::before {
-      content: "#{$label}";
+      content: var(--author_label, "Do Not Edit");
+      padding: 0 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--author_background-color);
+    }
+  }
+
+  @mixin danger-block($label: "Do Not Edit", $max-height: none) {
+    @extend %danger-block;
+    --author_label: "#{$label}";
+    --author_max-height: #{$max-height};
+  }
+
+  %label-block {
+    --author_color: #ffffff;
+    --author_background-color: #007931;
+    --author_background-color-faded: rgba(0, 121, 49, 0.2);
+
+    > :not(.en__component__actions, .messageOverlay) {
+      max-height: var(--author_max-height, none);
+      overflow: hidden;
+    }
+
+    &::before {
+      content: var(--author_label, "Set --author_label for this element");
       display: block;
       padding: 0.25rem 0.75rem;
       font-size: 0.875rem;
       font-weight: 700;
-      color: #ffffff;
-      background-color: #007931;
+      color: var(--author_color);
+      background-color: var(--author_background-color);
       text-align: center;
       width: 100%;
     }
   }
 
-  .event-detail-name.en__component {
-    @include block-label("Event Name");
+  @mixin label-block($label, $max-height: none) {
+    @extend %label-block;
+    --author_label: "#{$label}";
+    --author_max-height: #{$max-height};
   }
 
-  .event-detail-description.en__component {
-    @include block-label("Event Description");
+  // Hide some content blocks
+  .content-header,
+  .body-bottom,
+  .content-preFooter,
+  .content-footer {
+    display: none;
   }
 
-  .event-detail-start-date.en__component {
-    @include block-label("Event Start Date");
+  .author-hidden.en__component {
+    @extend %hidden-block;
   }
 
-  .event-detail-end-date.en__component {
-    @include block-label("Event End Date");
+  .author-masked.en__component {
+    @extend %masked-block;
   }
 
-  .event-detail-time.en__component {
-    @include block-label("Event Time");
+  .author-danger.en__component {
+    @extend %danger-block;
   }
 
-  .event-detail-location.en__component {
-    @include block-label("Event Location");
+  .author-label.en__component {
+    @extend %label-block;
   }
 
-  // Blocks that cannot take a custom class
+  // START: Blocks that cannot take a custom class
   .en__component--eventregistrants {
     @include masked-block(
       "Event Attendees. Use block settings to customize the fields to fill for each attendee.",
@@ -172,23 +210,77 @@
     @include masked-block("Order Summary");
   }
 
-  .event-ticket-header.en__component {
-    @include block-label("Table header for event tickets");
-  }
-
-  .event-summary-placeholder.en__component {
-    @include masked-block("Event Summary");
+  .en__component--codeblock {
+    @include hidden-block("Advanced Code Block - Do not move or edit.");
   }
 
   .body-banner.en__component {
     .en__component--imageblock {
-      @include block-label(
-        "Hero Image - Recommended Size 2700×600px. See documentation for more details."
+      @include label-block(
+        "Hero Image - Recommended Size 2700x600px. See documentation for more details."
       );
     }
   }
+  // END: Blocks that cannot take a custom class
 
-  .event-detail-source-code.en__component {
-    @include block-label("Event Source Codes");
+  // Labels for blocks that carry a base class (author-label, author-masked, author-danger, author-hidden)
+  $block-settings: (
+    "pb-event-name-label": (
+      "label": "Event Name",
+    ),
+    "pb-event-description-label": (
+      "label": "Event Description",
+    ),
+    "pb-event-start-date-label": (
+      "label": "Event Start Date",
+    ),
+    "pb-event-end-date-label": (
+      "label": "Event End Date",
+    ),
+    "pb-event-time-label": (
+      "label": "Event Time",
+    ),
+    "pb-event-location-label": (
+      "label": "Event Location",
+    ),
+    "pb-event-source-code-label": (
+      "label": "Event Source Codes",
+    ),
+    "pb-event-details-label": (
+      "label": "Event Details - Write about your event here.",
+      "max-height": 4rem,
+    ),
+    "pb-event-summary-label": (
+      "label": "Event Summary Table - Do not edit.",
+    ),
+    "pb-event-extras-label": (
+      "label":
+        "Additional Donation. Do not edit. Delete if you do not want additional donations.",
+    ),
+    "pb-event-ticket-summary-label": (
+      "label": "Payment Summary - Do not edit.",
+    ),
+    "pb-event-ticket-order-header-label": (
+      "label": "Ticket Order Table Header - Do not edit.",
+    ),
+    "pb-event-checkout-buttons": (
+      "label": "Checkout & Reset buttons. Take care when editing.",
+    ),
+    "pb-back-button-label": (
+      "label": "Back button.",
+    ),
+    "pb-payment-information-label": (
+      "label": "Payment Information - Do not edit.",
+    ),
+  );
+
+  @each $class, $settings in $block-settings {
+    .#{$class} {
+      --author_label: "#{map-get($settings, "label")}";
+
+      @if map-has-key($settings, "max-height") {
+        --author_max-height: #{map-get($settings, "max-height")};
+      }
+    }
   }
 }

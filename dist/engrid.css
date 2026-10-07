@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, October 7, 2026 @ 07:10:27 ET
+ *  Date: Wednesday, October 7, 2026 @ 10:23:36 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -15200,35 +15200,36 @@ body[data-engrid-debug]:before{
   transform:translate(-50%, -50%);
   visibility:visible;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .body-bottom,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-footer,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-header,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-preFooter{
-  display:none;
-}
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:has(.en__orderSummary),[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-summary-placeholder.en__component{
-  --edit_color:#fff;
-  --edit_background-color:#d97a00;
-  --edit_background-color-faded:#d97a0033;
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-masked.en__component,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:has(.en__orderSummary){
+  --author_color:#fff;
+  --author_background-color:#d97a00;
+  --author_background-color-faded:#d97a0033;
+  margin-bottom:1rem;
+  margin-top:1rem;
+  padding-bottom:1rem;
+  padding-top:1rem;
   position:relative;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component>:not(.en__component__actions),[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants>:not(.en__component__actions),[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets>:not(.en__component__actions),[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-summary-placeholder.en__component>:not(.en__component__actions){
-  max-height:var(--masked_max-height, none);
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-masked.en__component>:not(.en__component__actions,.messageOverlay),[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants>:not(.en__component__actions,.messageOverlay),[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets>:not(.en__component__actions,.messageOverlay){
+  max-height:var(--author_max-height, none);
   overflow:hidden;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:has(.en__orderSummary):after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:has(.en__orderSummary):before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-summary-placeholder.en__component:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-summary-placeholder.en__component:before{
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-masked.en__component:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-masked.en__component:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:has(.en__orderSummary):after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:has(.en__orderSummary):before{
   cursor:not-allowed;
   position:absolute;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:has(.en__orderSummary):after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-summary-placeholder.en__component:after{
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-masked.en__component:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:has(.en__orderSummary):after{
   background:repeating-linear-gradient(-45deg, #0000 0 10px, #d97a0014 10px 20px), #ffffffeb;
   content:"";
   inset:0;
-  outline:2px dashed var(--edit_background-color);
+  outline:2px dashed var(--author_background-color);
   z-index:1;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:has(.en__orderSummary):before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-summary-placeholder.en__component:before{
-  background-color:var(--edit_background-color);
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-masked.en__component:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:has(.en__orderSummary):before{
+  background-color:var(--author_background-color);
   border-radius:4px;
-  color:var(--edit_color);
-  content:var(--masked_message, "Masked Block");
+  color:var(--author_color);
+  content:var(--author_label, "Masked Block");
   font-size:1rem;
   font-weight:700;
   left:50%;
@@ -15239,144 +15240,140 @@ body[data-engrid-debug]:before{
   transform:translate(-50%, -50%);
   z-index:2;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-hidden.en__component{
-  --edit_color:#fff;
-  --edit_background-color:#6b6b6b;
-  --edit_background-color-faded:#6b6b6b33;
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-hidden.en__component,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--codeblock{
+  --author_color:#fff;
+  --author_background-color:#6b6b6b;
+  --author_background-color-faded:#6b6b6b33;
   align-items:center;
-  background-color:var(--edit_background-color-faded);
+  background-color:var(--author_background-color-faded);
   display:flex;
   justify-content:center;
-  min-height:2rem;
+  max-height:var(--author_max-height, none);
+  min-height:4rem;
   outline:1px dashed #6b6b6b80;
+  overflow:hidden;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-hidden.en__component>:not(.en__component__actions){
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-hidden.en__component>:not(.en__component__actions,.messageOverlay),[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--codeblock>:not(.en__component__actions,.messageOverlay){
   display:none !important;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-hidden.en__component:before{
-  color:var(--edit_background-color);
-  content:var(--hidden_message, "Hidden Block");
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-hidden.en__component:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--codeblock:before{
+  color:var(--author_background-color);
+  content:var(--author_label, "Hidden Block");
   font-size:.875rem;
   font-weight:700;
   padding:0 .75rem;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-hidden.en__component .en__component__actions:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .edit-masked.en__component .en__component__actions:before{
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-danger.en__component{
+  --author_color:#fff;
+  --author_background-color:#f12222;
+  --author_background-color-faded:#f1222233;
+  align-items:center;
+  background-color:var(--author_background-color-faded);
+  display:flex;
+  justify-content:center;
+  max-height:var(--author_max-height, none);
+  min-height:4rem;
+  outline:1px dashed #f1222280;
+  overflow:hidden;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-danger.en__component>:not(.en__component__actions,.messageOverlay){
+  display:none !important;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-danger.en__component:before{
+  color:var(--author_background-color);
+  content:var(--author_label, "Do Not Edit");
+  font-size:.875rem;
+  font-weight:700;
+  padding:0 .75rem;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-label.en__component,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .body-banner.en__component .en__component--imageblock{
+  --author_color:#fff;
+  --author_background-color:#007931;
+  --author_background-color-faded:#00793133;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-label.en__component>:not(.en__component__actions,.messageOverlay),[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .body-banner.en__component .en__component--imageblock>:not(.en__component__actions,.messageOverlay){
+  max-height:var(--author_max-height, none);
+  overflow:hidden;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-label.en__component:before,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .body-banner.en__component .en__component--imageblock:before{
+  background-color:var(--author_background-color);
+  color:var(--author_color);
+  content:var(--author_label, "Set --author_label for this element");
+  display:block;
+  font-size:.875rem;
+  font-weight:700;
+  padding:.25rem .75rem;
+  text-align:center;
+  width:100%;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .body-bottom,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-footer,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-header,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-preFooter{
   display:none;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-detail-name.en__component:before{
-  background-color:#007931;
-  color:#fff;
-  content:"Event Name";
-  display:block;
-  font-size:.875rem;
-  font-weight:700;
-  padding:.25rem .75rem;
-  text-align:center;
-  width:100%;
-}
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-detail-description.en__component:before{
-  background-color:#007931;
-  color:#fff;
-  content:"Event Description";
-  display:block;
-  font-size:.875rem;
-  font-weight:700;
-  padding:.25rem .75rem;
-  text-align:center;
-  width:100%;
-}
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-detail-start-date.en__component:before{
-  background-color:#007931;
-  color:#fff;
-  content:"Event Start Date";
-  display:block;
-  font-size:.875rem;
-  font-weight:700;
-  padding:.25rem .75rem;
-  text-align:center;
-  width:100%;
-}
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-detail-end-date.en__component:before{
-  background-color:#007931;
-  color:#fff;
-  content:"Event End Date";
-  display:block;
-  font-size:.875rem;
-  font-weight:700;
-  padding:.25rem .75rem;
-  text-align:center;
-  width:100%;
-}
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-detail-time.en__component:before{
-  background-color:#007931;
-  color:#fff;
-  content:"Event Time";
-  display:block;
-  font-size:.875rem;
-  font-weight:700;
-  padding:.25rem .75rem;
-  text-align:center;
-  width:100%;
-}
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-detail-location.en__component:before{
-  background-color:#007931;
-  color:#fff;
-  content:"Event Location";
-  display:block;
-  font-size:.875rem;
-  font-weight:700;
-  padding:.25rem .75rem;
-  text-align:center;
-  width:100%;
-}
 [data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants{
-  --masked_message:"Event Attendees. Use block settings to customize the fields to fill for each attendee.";
-  --masked_max-height:12rem;
+  --author_label:"Event Attendees. Use block settings to customize the fields to fill for each attendee.";
+  --author_max-height:12rem;
 }
 [data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets{
-  --masked_message:"Event Tickets. Use block or page settings to customize.";
-  --masked_max-height:none;
+  --author_label:"Event Tickets. Use block or page settings to customize.";
+  --author_max-height:none;
 }
 [data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:has(.en__orderSummary){
-  --masked_message:"Order Summary";
-  --masked_max-height:none;
+  --author_label:"Order Summary";
+  --author_max-height:none;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-ticket-header.en__component:before{
-  background-color:#007931;
-  color:#fff;
-  content:"Table header for event tickets";
-  display:block;
-  font-size:.875rem;
-  font-weight:700;
-  padding:.25rem .75rem;
-  text-align:center;
-  width:100%;
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--codeblock{
+  --author_label:"Advanced Code Block - Do not move or edit.";
+  --author_max-height:none;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-summary-placeholder.en__component{
-  --masked_message:"Event Summary";
-  --masked_max-height:none;
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .body-banner.en__component .en__component--imageblock{
+  --author_label:"Hero Image - Recommended Size 2700x600px. See documentation for more details.";
+  --author_max-height:none;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .body-banner.en__component .en__component--imageblock:before{
-  background-color:#007931;
-  color:#fff;
-  content:"Hero Image - Recommended Size 2700×600px. See documentation for more details.";
-  display:block;
-  font-size:.875rem;
-  font-weight:700;
-  padding:.25rem .75rem;
-  text-align:center;
-  width:100%;
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-name-label{
+  --author_label:"Event Name";
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .event-detail-source-code.en__component:before{
-  background-color:#007931;
-  color:#fff;
-  content:"Event Source Codes";
-  display:block;
-  font-size:.875rem;
-  font-weight:700;
-  padding:.25rem .75rem;
-  text-align:center;
-  width:100%;
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-description-label{
+  --author_label:"Event Description";
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-start-date-label{
+  --author_label:"Event Start Date";
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-end-date-label{
+  --author_label:"Event End Date";
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-time-label{
+  --author_label:"Event Time";
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-location-label{
+  --author_label:"Event Location";
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-source-code-label{
+  --author_label:"Event Source Codes";
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-details-label{
+  --author_label:"Event Details - Write about your event here.";
+  --author_max-height:4rem;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-summary-label{
+  --author_label:"Event Summary Table - Do not edit.";
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-extras-label{
+  --author_label:"Additional Donation. Do not edit. Delete if you do not want additional donations.";
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-ticket-summary-label{
+  --author_label:"Payment Summary - Do not edit.";
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-ticket-order-header-label{
+  --author_label:"Ticket Order Table Header - Do not edit.";
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-checkout-buttons{
+  --author_label:"Checkout & Reset buttons. Take care when editing.";
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-back-button-label{
+  --author_label:"Back button.";
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-payment-information-label{
+  --author_label:"Payment Information - Do not edit.";
 }
 
 [data-engrid-theme=tnc][data-engrid-multistep]{
