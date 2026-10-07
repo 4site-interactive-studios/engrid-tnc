@@ -116,7 +116,7 @@
     @extend %masked-block;
   }
 
-  @mixin event-detail-block($label) {
+  @mixin block-label($label) {
     &::before {
       content: "#{$label}";
       display: block;
@@ -125,37 +125,39 @@
       font-weight: 700;
       color: #ffffff;
       background-color: #007931;
+      text-align: center;
+      width: 100%;
     }
   }
 
   .event-detail-name.en__component {
-    @include event-detail-block("Event Name");
+    @include block-label("Event Name");
   }
 
   .event-detail-description.en__component {
-    @include event-detail-block("Event Description");
+    @include block-label("Event Description");
   }
 
   .event-detail-start-date.en__component {
-    @include event-detail-block("Event Start Date");
+    @include block-label("Event Start Date");
   }
 
   .event-detail-end-date.en__component {
-    @include event-detail-block("Event End Date");
+    @include block-label("Event End Date");
   }
 
   .event-detail-time.en__component {
-    @include event-detail-block("Event Time");
+    @include block-label("Event Time");
   }
 
   .event-detail-location.en__component {
-    @include event-detail-block("Event Location");
+    @include block-label("Event Location");
   }
 
   // Blocks that cannot take a custom class
   .en__component--eventregistrants {
     @include masked-block(
-      "Event Attendees. Use block settings to customize the fields to fill for each attendee",
+      "Event Attendees. Use block settings to customize the fields to fill for each attendee.",
       12rem
     );
   }
@@ -166,7 +168,27 @@
     );
   }
 
+  .en__component--eventtickets:has(.en__orderSummary) {
+    @include masked-block("Order Summary");
+  }
+
   .event-ticket-header.en__component {
-    @include hidden-block("Table header for event tickets.");
+    @include block-label("Table header for event tickets");
+  }
+
+  .event-summary-placeholder.en__component {
+    @include masked-block("Event Summary");
+  }
+
+  .body-banner.en__component {
+    .en__component--imageblock {
+      @include block-label(
+        "Hero Image - Recommended Size 2700×600px. See documentation for more details."
+      );
+    }
+  }
+
+  .event-detail-source-code.en__component {
+    @include block-label("Event Source Codes");
   }
 }
