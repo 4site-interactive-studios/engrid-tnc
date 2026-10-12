@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, October 12, 2026 @ 11:57:26 ET
+ *  Date: Monday, October 12, 2026 @ 12:49:13 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -13110,6 +13110,9 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top h2,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top h2,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top h2,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top h2,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-top h2{
   font-family:var(--serif-fonts);
 }
+[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-banner:not(:has(img))+.body-bannerOverlay+.body-top,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-banner:not(:has(img))+.body-bannerOverlay+.body-top,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-banner:not(:has(img))+.body-bannerOverlay+.body-top,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-banner:not(:has(img))+.body-bannerOverlay+.body-top,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col] .body-banner:not(:has(img))+.body-bannerOverlay+.body-top{
+  border-top:none;
+}
 [data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=checkout][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=details][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=thank-you][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=unknown][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-bottom,[data-engrid-theme=tnc][data-engrid-event-page=waitlist][data-engrid-subtheme=hero-banner][data-engrid-layout=centercenter1col][data-engrid-page-type=event] .body-main{
   max-width:900px;
   width:100%;
@@ -15303,7 +15306,13 @@ body[data-engrid-debug]:before{
   font-size:.875rem;
   font-weight:700;
   padding:.25rem .75rem;
-  text-align:center;
+  text-align:left;
+  width:100%;
+}
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .body-top{
+  margin-left:auto;
+  margin-right:auto;
+  max-width:630px;
   width:100%;
 }
 [data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .body-bottom,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-footer,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-header,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-preFooter{

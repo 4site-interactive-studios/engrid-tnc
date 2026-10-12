@@ -38,6 +38,10 @@
     }
   }
 
+  .body-banner:not(:has(img)) + .body-bannerOverlay + .body-top {
+    border-top: none;
+  }
+
   // Specifically exclude waitlist page from these styles
   &[data-engrid-page-type="event"] {
     .body-main,

@@ -157,7 +157,7 @@
       font-weight: 700;
       color: var(--author_color);
       background-color: var(--author_background-color);
-      text-align: center;
+      text-align: left;
       width: 100%;
     }
   }
@@ -166,6 +166,13 @@
     @extend %label-block;
     --author_label: "#{$label}";
     --author_max-height: #{$max-height};
+  }
+
+  .body-top {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 630px;
+    width: 100%;
   }
 
   // Hide some content blocks
