@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, October 7, 2026 @ 10:23:36 ET
+ *  Date: Monday, October 12, 2026 @ 11:57:26 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -34978,6 +34978,550 @@ class ContinueYourGift {
     }
   }
 }
+;// CONCATENATED MODULE: ./src/scripts/event-qa-checklist-styles.ts
+// Custom properties inherit through the shadow boundary, so the panel picks up
+// the TNC theme tokens when present and falls back to their values otherwise.
+const eventQaChecklistStyles = `
+  :host {
+    all: initial;
+    --qa-green: var(--color-green, #007931);
+    --qa-red: #b3261e;
+    --qa-red-tint: #fbeaea;
+    --qa-text: var(--default_color, #1a1a1a);
+    --qa-muted: #525252;
+    --qa-border: #cdcdcd;
+    --qa-divider: #ebebeb;
+    --qa-tint: #e6f2ea;
+    --qa-sans: var(--sans-serif-fonts, "Whitney A", "Whitney B", -apple-system,
+      BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+    --qa-serif: var(--serif-fonts, "Chronicle Text G2 A", "Chronicle Text G2 B",
+      Georgia, serif);
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    /* Above the OneTrust cookie banner so QA isn't blocked before consent */
+    z-index: 2147483647;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .panel {
+    width: 420px;
+    max-width: calc(100vw - 32px);
+    /* Leaves room for the sandbox warning banner at the top */
+    max-height: calc(100vh - 76px);
+    overflow-y: auto;
+    background: #fff;
+    color: var(--qa-text);
+    border: 1px solid var(--qa-border);
+    border-top: 4px solid var(--qa-green);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.2);
+    font-family: var(--qa-sans);
+    font-size: 15px;
+    line-height: 1.45;
+    text-align: left;
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 16px 20px;
+    background: #fff;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary::before {
+    content: "";
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--qa-text);
+    border-bottom: 2px solid var(--qa-text);
+    transform: rotate(-45deg);
+    transition: transform 0.15s;
+  }
+
+  .panel[open] summary::before {
+    transform: rotate(45deg) translate(-2px, -2px);
+  }
+
+  .panel[open] summary {
+    border-bottom: 1px solid var(--qa-border);
+  }
+
+  .title {
+    flex-grow: 1;
+    font-family: var(--qa-serif);
+    font-size: 22px;
+    line-height: 1.2;
+  }
+
+  .status {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .status--pass {
+    background: var(--qa-tint);
+    color: var(--qa-green);
+  }
+
+  .status--fail {
+    background: var(--qa-red-tint);
+    color: var(--qa-red);
+  }
+
+  .body {
+    padding: 2px 20px 16px;
+  }
+
+  h4 {
+    margin: 14px 0 2px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--qa-green);
+    color: var(--qa-green);
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    position: relative;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--qa-divider);
+    word-break: break-word;
+  }
+
+  li:last-child {
+    border-bottom: none;
+  }
+
+  .badge {
+    flex-shrink: 0;
+    min-width: 46px;
+    margin-top: 1px;
+    padding: 3px 6px;
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .badge--pass {
+    background: var(--qa-green);
+  }
+
+  .badge--fail {
+    background: var(--qa-red);
+  }
+
+  .result {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .result strong {
+    font-weight: bold;
+  }
+
+  .value {
+    color: var(--qa-muted);
+  }
+
+  .note {
+    margin: 8px 0 0;
+    padding: 10px 12px;
+    background: var(--qa-tint);
+    color: var(--qa-text);
+    font-size: 13px;
+  }
+
+  label {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    cursor: pointer;
+  }
+
+  input[type="checkbox"] {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin: 1px 0 0;
+    accent-color: var(--qa-green);
+    cursor: pointer;
+  }
+
+  .info {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin: 0 0 0 2px;
+    padding: 0;
+    vertical-align: text-bottom;
+    border: 1px solid var(--qa-green);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--qa-green);
+    font-family: var(--qa-serif);
+    font-size: 12px;
+    font-style: italic;
+    font-weight: bold;
+    line-height: 16px;
+    text-align: center;
+    cursor: help;
+  }
+
+  .info:hover,
+  .info:focus-visible {
+    background: var(--qa-green);
+    color: #fff;
+  }
+
+  .tooltip {
+    display: none;
+    position: absolute;
+    top: calc(100% - 4px);
+    left: 30px;
+    right: 0;
+    z-index: 1;
+    padding: 10px 12px;
+    background: var(--qa-text);
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.45;
+    white-space: pre-line;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  li:has(.info:hover) > .tooltip,
+  li:has(.info:focus-visible) > .tooltip {
+    display: block;
+  }
+
+  .copy {
+    width: 100%;
+    margin: 12px 0 0;
+    padding: 15px;
+    border: none;
+    border-radius: 0;
+    background: var(--qa-green);
+    color: #fff;
+    font-family: var(--qa-sans);
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .copy:hover,
+  .copy:focus-visible {
+    background: var(--qa-text);
+  }
+`;
+;// CONCATENATED MODULE: ./src/scripts/event-qa-checklist.ts
+
+
+
+class EventQaChecklist {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("EventQaChecklist", "black", "gold", "✅"));
+    _defineProperty(this, "ticketChecks", []);
+    _defineProperty(this, "paymentChecks", []);
+    _defineProperty(this, "isFreeEvent", false);
+    _defineProperty(this, "manualChecks", [{
+      label: "Cost of Goods / Fair Market Value",
+      tooltip: "Every paid ticket type should have a cost and an associated Cost of Goods/Fair Market Value configured. The Cost of Goods should not be left blank. This can be applied in the Ticket Settings.",
+      checked: false
+    }, {
+      label: "Additional gateways (PayPal, DAF, digital wallets) are live and configured",
+      tooltip: `Manually check that any additional payment types are using their Production gateway under Page Settings > Donation Settings.
+        The Additional Merchants should be:
+          ACH Vantiv Worldpay Production (Payment Type = ACH)
+          PayPal Production (Payment Type = Paypal)
+          Stripe Production (Currency = Any)`,
+      checked: false
+    }, {
+      label: "Receipt autoresponder configured",
+      tooltip: "If the event is paid, in the autoresponder, the ‘Receipt with Advantage’ should be set to the ‘Receipt with Cost of Goods’",
+      checked: false
+    }, {
+      label: "Plain text email generation",
+      tooltip: "If there is an autoresponder configured, within the Plain Text Editor tab, the “Generate Plain Text from HTML” should have been manually executed",
+      checked: false
+    }, {
+      label: "Live status",
+      tooltip: "The page should be set to Live under Page Settings > Status.",
+      checked: false
+    }]);
+    if (!this.shouldRun()) return;
+    this.logger.log("Running event QA checklist");
+    this.runAutomatedChecks();
+    this.render();
+  }
+  shouldRun() {
+    return engrid_ENGrid.demo && engrid_ENGrid.getPageType() === "EVENT" && engrid_ENGrid.getPageNumber() === 1;
+  }
+  runAutomatedChecks() {
+    const tickets = this.getTickets();
+    const hasAdditionalDonation = !!document.querySelector(".en__additional__input");
+    this.ticketChecks = tickets.length > 0 ? tickets.map(t => t.check) : [{
+      label: "Tickets",
+      value: "No tickets found",
+      passed: false
+    }];
+    this.isFreeEvent = tickets.length > 0 && tickets.every(t => t.check.passed && t.price === 0) && !hasAdditionalDonation;
+    if (this.isFreeEvent) return;
+    this.paymentChecks = [this.getFieldCheck("Source Code", "supporter.appealCode"), this.getFieldCheck("Revenue Category", "transaction.othamt4"), this.getFieldCheck("Application Other Type", "transaction.othamt1"), this.getGatewayCheck()];
+  }
+  getTickets() {
+    const tickets = [...document.querySelectorAll(".en__ticket")];
+    // EventPages strips the "/code" suffix from hidden ticket names in the
+    // DOM, so the original names are read from pageJson where possible.
+    const pageJsonTickets = window.pageJson?.tickets || [];
+    const useOriginalNames = pageJsonTickets.length === tickets.length;
+    return tickets.map((ticket, index) => {
+      const rawName = useOriginalNames && pageJsonTickets[index].name?.trim() || ticket.querySelector(".en__ticket__name")?.textContent?.trim() || "Unnamed ticket";
+      const [name, hiddenCode] = rawName.split("/").map(part => part.trim());
+      const priceText = ticket.querySelector(".en__ticket__price")?.textContent?.trim() || "";
+      const currency = ticket.querySelector(".en__ticket__currency")?.textContent?.trim() || "";
+      const numericPrice = priceText.replace(/[^0-9.]/g, "");
+      const price = parseFloat(numericPrice);
+      const passed = numericPrice !== "" && !isNaN(price) && currency !== "";
+      const ticketType = !passed ? "TICKET" : price === 0 ? "FREE TICKET" : "PAID TICKET";
+      const priceValue = passed ? currency === "USD" ? `$${price.toFixed(2)}` : `${price.toFixed(2)} ${currency}` : `${priceText || "no price"} ${currency || "no currency"}`;
+      return {
+        price: passed ? price : 0,
+        check: {
+          label: `${hiddenCode ? "HIDDEN " : ""}${ticketType} – ${name}`,
+          value: hiddenCode ? `${priceValue} – reveal with ?code=${hiddenCode}` : priceValue,
+          passed
+        }
+      };
+    });
+  }
+  getFieldCheck(label, fieldName) {
+    if (!engrid_ENGrid.getField(fieldName)) {
+      return {
+        label,
+        value: "Field not on page",
+        passed: false
+      };
+    }
+    const value = engrid_ENGrid.getFieldValue(fieldName).trim();
+    return {
+      label,
+      value: value || "Empty",
+      passed: value !== ""
+    };
+  }
+  getGatewayCheck() {
+    const label = "Main Payment Gateway";
+    const environment = window.EngagingNetworks?.vault?.environment;
+    if (!environment) {
+      return {
+        label,
+        value: "Gateway info not found",
+        passed: false
+      };
+    }
+    if (environment === "sandbox") {
+      return {
+        label,
+        value: "Test (sandbox)",
+        passed: false
+      };
+    }
+    return {
+      label,
+      value: `Live (${environment})`,
+      passed: true
+    };
+  }
+  render() {
+    const host = document.createElement("div");
+    host.className = "event-qa-checklist";
+    const shadow = host.attachShadow({
+      mode: "open"
+    });
+    const style = document.createElement("style");
+    style.textContent = eventQaChecklistStyles;
+    shadow.appendChild(style);
+    const panel = document.createElement("details");
+    panel.className = "panel";
+    panel.open = true;
+    shadow.appendChild(panel);
+    const summary = document.createElement("summary");
+    const title = document.createElement("span");
+    title.className = "title";
+    title.textContent = "Event QA checklist";
+    const failCount = [...this.ticketChecks, ...this.paymentChecks].filter(check => !check.passed).length;
+    const status = document.createElement("span");
+    status.className = `status status--${failCount ? "fail" : "pass"}`;
+    status.textContent = failCount ? `${failCount} failed` : "All passed";
+    summary.append(title, status);
+    panel.appendChild(summary);
+    const body = document.createElement("div");
+    body.className = "body";
+    panel.appendChild(body);
+    body.appendChild(this.createHeading("Tickets"));
+    body.appendChild(this.createAutomatedList(this.ticketChecks));
+    body.appendChild(this.createHeading("Payment"));
+    if (this.isFreeEvent) {
+      body.appendChild(this.createNote("Free event – payment checks skipped."));
+    } else {
+      body.appendChild(this.createAutomatedList(this.paymentChecks));
+    }
+    body.appendChild(this.createHeading("Manual"));
+    body.appendChild(this.createManualList());
+    const copyButton = document.createElement("button");
+    copyButton.type = "button";
+    copyButton.className = "copy";
+    copyButton.textContent = "Copy QA Checklist to Clipboard";
+    copyButton.addEventListener("click", () => this.copy(copyButton));
+    body.appendChild(copyButton);
+    document.body.appendChild(host);
+  }
+  getPageName() {
+    return window.pageJson?.pageName || document.title;
+  }
+  createHeading(text) {
+    const heading = document.createElement("h4");
+    heading.textContent = text;
+    return heading;
+  }
+  createNote(text) {
+    const note = document.createElement("p");
+    note.className = "note";
+    note.textContent = text;
+    return note;
+  }
+  createResultItem(check) {
+    const item = document.createElement("li");
+    const badge = document.createElement("span");
+    badge.className = `badge badge--${check.passed ? "pass" : "fail"}`;
+    badge.textContent = check.passed ? "PASS" : "FAIL";
+    const text = document.createElement("span");
+    text.className = "result";
+    const label = document.createElement("strong");
+    label.textContent = check.label;
+    const value = document.createElement("span");
+    value.className = "value";
+    value.textContent = check.value;
+    text.append(label, value);
+    item.append(badge, text);
+    return item;
+  }
+  createAutomatedList(checks) {
+    const list = document.createElement("ul");
+    checks.forEach(check => {
+      list.appendChild(this.createResultItem(check));
+    });
+    return list;
+  }
+  createManualList() {
+    const list = document.createElement("ul");
+    this.manualChecks.forEach((check, index) => {
+      const item = document.createElement("li");
+      const label = document.createElement("label");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.addEventListener("change", () => {
+        check.checked = checkbox.checked;
+      });
+      const text = document.createElement("span");
+      text.textContent = check.label;
+      label.append(checkbox, text);
+      item.appendChild(label);
+      if (check.tooltip) {
+        const tooltipId = `manual-check-tooltip-${index}`;
+        const info = document.createElement("button");
+        info.type = "button";
+        info.className = "info";
+        info.textContent = "i";
+        info.setAttribute("aria-label", `More about ${check.label}`);
+        info.setAttribute("aria-describedby", tooltipId);
+        const tooltip = document.createElement("span");
+        tooltip.className = "tooltip";
+        tooltip.id = tooltipId;
+        tooltip.setAttribute("role", "tooltip");
+        tooltip.textContent = check.tooltip;
+        // Inline in the label text so the icon follows the last word when
+        // it wraps; buttons inside a label don't toggle its checkbox.
+        text.append(" ", info);
+        item.appendChild(tooltip);
+      }
+      list.appendChild(item);
+    });
+    return list;
+  }
+  toMarkdownLines(checks) {
+    const lines = [];
+    checks.forEach(check => {
+      lines.push(`- [${check.passed ? "x" : " "}] ${check.passed ? "PASS" : "FAIL"} ${check.label}: ${check.value}`);
+    });
+    return lines;
+  }
+  getMarkdown() {
+    const date = new Date().toISOString().slice(0, 10);
+    const lines = [`### Event QA – ${this.getPageName()} (ID ${engrid_ENGrid.getPageID()}) – ${date}`, "**Tickets**", ...this.toMarkdownLines(this.ticketChecks), "**Payment**"];
+    if (this.isFreeEvent) {
+      lines.push("- Free event – payment checks skipped");
+    } else {
+      lines.push(...this.toMarkdownLines(this.paymentChecks));
+    }
+    lines.push("**Manual**");
+    this.manualChecks.forEach(check => {
+      lines.push(`- [${check.checked ? "x" : " "}] ${check.label}`);
+    });
+    return lines.join("\n");
+  }
+  async copy(button) {
+    const markdown = this.getMarkdown();
+    try {
+      await navigator.clipboard.writeText(markdown);
+      button.textContent = "Copied!";
+    } catch (e) {
+      this.logger.log("Clipboard API unavailable, falling back to execCommand");
+      const textarea = document.createElement("textarea");
+      textarea.value = markdown;
+      document.body.appendChild(textarea);
+      textarea.select();
+      button.textContent = document.execCommand("copy") ? "Copied!" : "Copy failed";
+      textarea.remove();
+    }
+    setTimeout(() => button.textContent = "Copy QA Checklist to Clipboard", 2000);
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -34987,6 +35531,7 @@ class ContinueYourGift {
 //   DonationAmount,
 //   IframeQueue,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -35101,6 +35646,7 @@ const options = {
     new GenerateEmail();
     new Regive();
     new ContinueYourGift();
+    new EventQaChecklist();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");

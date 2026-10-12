@@ -40,6 +40,7 @@ import { SandboxWarning } from "./scripts/sandbox-warning";
 import { GenerateEmail } from "./scripts/generate-email";
 import { Regive } from "./scripts/regive";
 import { ContinueYourGift } from "./scripts/continue-your-gift";
+import { EventQaChecklist } from "./scripts/event-qa-checklist";
 
 declare global {
   interface Window {
@@ -178,6 +179,7 @@ const options: Options = {
     new GenerateEmail();
     new Regive();
     new ContinueYourGift();
+    new EventQaChecklist();
 
     // Restore donation amount from session storage if submission failed
     const donationValue = sessionStorage.getItem("donationValue");
