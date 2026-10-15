@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, October 12, 2026 @ 12:49:13 ET
+ *  Date: Thursday, October 15, 2026 @ 09:19:45 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -35024,7 +35024,7 @@ const eventQaChecklistStyles = `
     text-align: left;
   }
 
-  summary {
+  .panel-heading {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -35037,11 +35037,11 @@ const eventQaChecklistStyles = `
     list-style: none;
   }
 
-  summary::-webkit-details-marker {
+  .panel-heading::-webkit-details-marker {
     display: none;
   }
 
-  summary::before {
+  .panel-heading::before {
     content: "";
     flex-shrink: 0;
     width: 8px;
@@ -35052,11 +35052,11 @@ const eventQaChecklistStyles = `
     transition: transform 0.15s;
   }
 
-  .panel[open] summary::before {
+  .panel[open] > .panel-heading::before {
     transform: rotate(45deg) translate(-2px, -2px);
   }
 
-  .panel[open] summary {
+  .panel[open] > .panel-heading {
     border-bottom: 1px solid var(--qa-border);
   }
 
@@ -35090,7 +35090,8 @@ const eventQaChecklistStyles = `
     padding: 2px 20px 16px;
   }
 
-  h4 {
+  h4,
+  .section-heading {
     margin: 14px 0 2px;
     padding-bottom: 5px;
     border-bottom: 2px solid var(--qa-green);
@@ -35099,6 +35100,51 @@ const eventQaChecklistStyles = `
     font-weight: bold;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .section-heading::-webkit-details-marker {
+    display: none;
+  }
+
+  .section-status {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.06em;
+  }
+
+  .section-status--pass {
+    background: var(--qa-tint);
+    color: var(--qa-green);
+  }
+
+  .section-status--fail {
+    background: var(--qa-red-tint);
+    color: var(--qa-red);
+  }
+
+  .section-heading::after {
+    content: "";
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid var(--qa-green);
+    border-bottom: 2px solid var(--qa-green);
+    transform: rotate(-45deg);
+    transition: transform 0.15s;
+  }
+
+  .section[open] > .section-heading::after {
+    transform: rotate(45deg);
   }
 
   ul {
@@ -35381,6 +35427,7 @@ class EventQaChecklist {
     panel.open = true;
     shadow.appendChild(panel);
     const summary = document.createElement("summary");
+    summary.className = "panel-heading";
     const title = document.createElement("span");
     title.className = "title";
     title.textContent = "Event QA checklist";
@@ -35393,15 +35440,18 @@ class EventQaChecklist {
     const body = document.createElement("div");
     body.className = "body";
     panel.appendChild(body);
-    body.appendChild(this.createHeading("Tickets"));
-    body.appendChild(this.createAutomatedList(this.ticketChecks));
-    body.appendChild(this.createHeading("Payment"));
+    body.appendChild(this.createSection("Tickets", this.createAutomatedList(this.ticketChecks), this.ticketChecks));
     if (this.isFreeEvent) {
+      const paymentHeading = document.createElement("h4");
+      paymentHeading.textContent = "Payment";
+      body.appendChild(paymentHeading);
       body.appendChild(this.createNote("Free event – payment checks skipped."));
     } else {
-      body.appendChild(this.createAutomatedList(this.paymentChecks));
+      body.appendChild(this.createSection("Payment", this.createAutomatedList(this.paymentChecks), this.paymentChecks));
     }
-    body.appendChild(this.createHeading("Manual"));
+    const manualHeading = document.createElement("h4");
+    manualHeading.textContent = "Manual";
+    body.appendChild(manualHeading);
     body.appendChild(this.createManualList());
     const copyButton = document.createElement("button");
     copyButton.type = "button";
@@ -35414,10 +35464,22 @@ class EventQaChecklist {
   getPageName() {
     return window.pageJson?.pageName || document.title;
   }
-  createHeading(text) {
-    const heading = document.createElement("h4");
-    heading.textContent = text;
-    return heading;
+  createSection(heading, content, checks) {
+    const section = document.createElement("details");
+    section.className = "section";
+    const failCount = checks.filter(check => !check.passed).length;
+    // Sections with nothing failing start collapsed so QA only sees problems
+    section.open = failCount > 0;
+    const summary = document.createElement("summary");
+    summary.className = "section-heading";
+    const label = document.createElement("span");
+    label.textContent = heading;
+    const status = document.createElement("span");
+    status.className = `section-status section-status--${failCount ? "fail" : "pass"}`;
+    status.textContent = failCount ? `${failCount} failed` : "All passed";
+    summary.append(label, status);
+    section.append(summary, content);
+    return section;
   }
   createNote(text) {
     const note = document.createElement("p");

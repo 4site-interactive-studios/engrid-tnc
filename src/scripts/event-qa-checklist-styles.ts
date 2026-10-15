@@ -43,7 +43,7 @@ export const eventQaChecklistStyles = `
     text-align: left;
   }
 
-  summary {
+  .panel-heading {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -56,11 +56,11 @@ export const eventQaChecklistStyles = `
     list-style: none;
   }
 
-  summary::-webkit-details-marker {
+  .panel-heading::-webkit-details-marker {
     display: none;
   }
 
-  summary::before {
+  .panel-heading::before {
     content: "";
     flex-shrink: 0;
     width: 8px;
@@ -71,11 +71,11 @@ export const eventQaChecklistStyles = `
     transition: transform 0.15s;
   }
 
-  .panel[open] summary::before {
+  .panel[open] > .panel-heading::before {
     transform: rotate(45deg) translate(-2px, -2px);
   }
 
-  .panel[open] summary {
+  .panel[open] > .panel-heading {
     border-bottom: 1px solid var(--qa-border);
   }
 
@@ -109,7 +109,8 @@ export const eventQaChecklistStyles = `
     padding: 2px 20px 16px;
   }
 
-  h4 {
+  h4,
+  .section-heading {
     margin: 14px 0 2px;
     padding-bottom: 5px;
     border-bottom: 2px solid var(--qa-green);
@@ -118,6 +119,51 @@ export const eventQaChecklistStyles = `
     font-weight: bold;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .section-heading::-webkit-details-marker {
+    display: none;
+  }
+
+  .section-status {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.06em;
+  }
+
+  .section-status--pass {
+    background: var(--qa-tint);
+    color: var(--qa-green);
+  }
+
+  .section-status--fail {
+    background: var(--qa-red-tint);
+    color: var(--qa-red);
+  }
+
+  .section-heading::after {
+    content: "";
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid var(--qa-green);
+    border-bottom: 2px solid var(--qa-green);
+    transform: rotate(-45deg);
+    transition: transform 0.15s;
+  }
+
+  .section[open] > .section-heading::after {
+    transform: rotate(45deg);
   }
 
   ul {

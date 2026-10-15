@@ -188,6 +188,7 @@ export class EventQaChecklist {
     shadow.appendChild(panel);
 
     const summary = document.createElement("summary");
+    summary.className = "panel-heading";
     const title = document.createElement("span");
     title.className = "title";
     title.textContent = "Event QA checklist";
@@ -204,17 +205,32 @@ export class EventQaChecklist {
     body.className = "body";
     panel.appendChild(body);
 
-    body.appendChild(this.createHeading("Tickets"));
-    body.appendChild(this.createAutomatedList(this.ticketChecks));
+    body.appendChild(
+      this.createSection(
+        "Tickets",
+        this.createAutomatedList(this.ticketChecks),
+        this.ticketChecks
+      )
+    );
 
-    body.appendChild(this.createHeading("Payment"));
     if (this.isFreeEvent) {
+      const paymentHeading = document.createElement("h4");
+      paymentHeading.textContent = "Payment";
+      body.appendChild(paymentHeading);
       body.appendChild(this.createNote("Free event – payment checks skipped."));
     } else {
-      body.appendChild(this.createAutomatedList(this.paymentChecks));
+      body.appendChild(
+        this.createSection(
+          "Payment",
+          this.createAutomatedList(this.paymentChecks),
+          this.paymentChecks
+        )
+      );
     }
 
-    body.appendChild(this.createHeading("Manual"));
+    const manualHeading = document.createElement("h4");
+    manualHeading.textContent = "Manual";
+    body.appendChild(manualHeading);
     body.appendChild(this.createManualList());
 
     const copyButton = document.createElement("button");
@@ -231,10 +247,29 @@ export class EventQaChecklist {
     return (window as any).pageJson?.pageName || document.title;
   }
 
-  private createHeading(text: string): HTMLElement {
-    const heading = document.createElement("h4");
-    heading.textContent = text;
-    return heading;
+  private createSection(
+    heading: string,
+    content: HTMLElement,
+    checks: AutomatedCheck[]
+  ): HTMLElement {
+    const section = document.createElement("details");
+    section.className = "section";
+    const failCount = checks.filter((check) => !check.passed).length;
+    // Sections with nothing failing start collapsed so QA only sees problems
+    section.open = failCount > 0;
+
+    const summary = document.createElement("summary");
+    summary.className = "section-heading";
+    const label = document.createElement("span");
+    label.textContent = heading;
+    const status = document.createElement("span");
+    status.className = `section-status section-status--${
+      failCount ? "fail" : "pass"
+    }`;
+    status.textContent = failCount ? `${failCount} failed` : "All passed";
+    summary.append(label, status);
+    section.append(summary, content);
+    return section;
   }
 
   private createNote(text: string): HTMLElement {
