@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 15, 2026 @ 09:19:45 ET
+ *  Date: Thursday, October 29, 2026 @ 14:05:59 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -15222,7 +15222,7 @@ body[data-engrid-debug]:before{
   position:absolute;
 }
 [data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-masked.en__component:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:after,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventtickets:has(.en__orderSummary):after{
-  background:repeating-linear-gradient(-45deg, #0000 0 10px, #d97a0014 10px 20px), #ffffffeb;
+  background:repeating-linear-gradient(-45deg, #0000 0 10px, #d97a0014 10px 20px), #ffffffbf;
   content:"";
   inset:0;
   outline:2px dashed var(--author_background-color);
@@ -15271,7 +15271,7 @@ body[data-engrid-debug]:before{
   --author_background-color:#f12222;
   --author_background-color-faded:#f1222233;
   align-items:center;
-  background-color:var(--author_background-color-faded);
+  background-color:var(--author_background-color-faded) !important;
   display:flex;
   justify-content:center;
   max-height:var(--author_max-height, none);
@@ -15315,7 +15315,7 @@ body[data-engrid-debug]:before{
   max-width:630px;
   width:100%;
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .body-bottom,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-footer,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-header,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-preFooter{
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .author-removed.en__component,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .body-bottom,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-footer,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-header,[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .content-preFooter{
   display:none;
 }
 [data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .en__component--eventregistrants{
@@ -15335,7 +15335,7 @@ body[data-engrid-debug]:before{
   --author_max-height:none;
 }
 [data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .body-banner.en__component .en__component--imageblock{
-  --author_label:"Hero Image - Recommended Size 2700x600px. See documentation for more details.";
+  --author_label:"Hero Image (Optional) - Recommended Size 2700x600px. See documentation for more details.";
   --author_max-height:none;
 }
 [data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-name-label{

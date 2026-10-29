@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 15, 2026 @ 09:19:45 ET
+ *  Date: Thursday, October 29, 2026 @ 14:05:59 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -35323,6 +35323,14 @@ class EventQaChecklist {
     }, {
       label: "Plain text email generation",
       tooltip: "If there is an autoresponder configured, within the Plain Text Editor tab, the “Generate Plain Text from HTML” should have been manually executed",
+      checked: false
+    }, {
+      label: "Event Additional Designation configured",
+      tooltip: "Make sure your event has an Event Additional Designation set under Page Settings > Campaign References.",
+      checked: false
+    }, {
+      label: "Waitlist configured",
+      tooltip: "If your event has a waitlist for tickets, make sure these 3 emails are configured under Right Sidebar > Auto-responders: Join waitlist email, Ticket claim email, and Cancel waitlist email.",
       checked: false
     }, {
       label: "Live status",

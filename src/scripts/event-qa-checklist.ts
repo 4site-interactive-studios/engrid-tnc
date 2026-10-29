@@ -59,6 +59,18 @@ export class EventQaChecklist {
       checked: false,
     },
     {
+      label: "Event Additional Designation configured",
+      tooltip:
+        "Make sure your event has an Event Additional Designation set under Page Settings > Campaign References.",
+      checked: false,
+    },
+    {
+      label: "Waitlist configured",
+      tooltip:
+        "If your event has a waitlist for tickets, make sure these 3 emails are configured under Right Sidebar > Auto-responders: Join waitlist email, Ticket claim email, and Cancel waitlist email.",
+      checked: false,
+    },
+    {
       label: "Live status",
       tooltip: "The page should be set to Live under Page Settings > Status.",
       checked: false,
