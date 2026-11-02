@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 1, 2026 @ 12:12:33 ET
+ *  Date: Monday, November 2, 2026 @ 10:55:07 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
- *  ENGrid scripts: v0.28.5
+ *  ENGrid scripts: v0.28.7
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11125,6 +11125,7 @@ const OptionsDefaults = {
     Debug: false,
     RememberMe: false,
     TidyContact: false,
+    TidyContactEmail: false,
     RegionLongFormat: "",
     CountryDisable: [],
     Placeholders: false,
@@ -13141,6 +13142,10 @@ class App extends engrid_ENGrid {
         // FreshAddress
         if (this.options.FreshAddress)
             new FreshAddress();
+        // TidyContact Email. Must stay below the window.enOnValidate assignment,
+        // so the TC Email bundle wraps ENgrid's hook instead of being overwritten by it.
+        if (this.options.TidyContactEmail)
+            new TidyContactEmail();
         new ShowIfAmount();
         new OtherAmount();
         new MinMaxAmount();
@@ -14761,6 +14766,7 @@ class DataAttributes {
 class iFrame {
     constructor() {
         this._form = en_form_EnForm.getInstance();
+        this.resizeObserver = null;
         this.logger = new logger_EngridLogger("iFrame", "brown", "gray", "📡");
         if (this.inIframe()) {
             // Add the data-engrid-embedded attribute when inside an iFrame if it wasn't already added by a script in the Page Template
@@ -14853,6 +14859,7 @@ class iFrame {
                 if (iframe) {
                     if (event.data.hasOwnProperty("frameHeight")) {
                         iframe.style.height = event.data.frameHeight + "px";
+                        this.logger.log(`iFrame Event - Resized iframe element to ${event.data.frameHeight}px`);
                         if (event.data.frameHeight > 0) {
                             iframe.classList.add("loaded");
                         }
@@ -14892,6 +14899,8 @@ class iFrame {
         // Scroll to top of iFrame
         this.logger.log("iFrame Event - window.onload");
         this.sendIframeHeight();
+        // Continuously re-send the height whenever the body size changes
+        this.observeHeightChanges();
         window.parent.postMessage({
             scroll: this.shouldScroll(),
         }, "*");
@@ -14900,15 +14909,39 @@ class iFrame {
         // matches it by Page ID to advance to the next queued iframe. Fires
         // exactly once per Thank-You-page load. See iframe-queue.ts.
         this.sendIframeQueueThankYouPing();
-        // On click fire the resize event
-        document.addEventListener("click", (e) => {
-            this.logger.log("iFrame Event - click");
-            setTimeout(() => {
-                this.sendIframeHeight();
-            }, 100);
-        });
         // Watch for errors and send the height
         engrid_ENGrid.watchForError(this.sendIframeHeight.bind(this));
+    }
+    /**
+     * Observes document.body for size changes (DOM mutations, font/image
+     * loads, CSS transitions) and re-sends the iframe height to the parent.
+     *
+     * Uses a leading + trailing throttle via debounceWithImmediate: the
+     * first change is sent immediately, and the settled height is always
+     * re-sent once changes stop for 120ms. Animated transitions therefore
+     * don't flood the parent page with one message per frame, but the
+     * parent always ends up matching the final resolved height.
+     */
+    observeHeightChanges() {
+        if (typeof ResizeObserver === "undefined") {
+            this.logger.log("ResizeObserver not supported in this browser");
+            return;
+        }
+        let lastSent = -1;
+        const throttledSend = this.debounceWithImmediate((_entries, _observer, immediate) => {
+            const height = document.body.offsetHeight;
+            // Skip redundant sends when the settled height is unchanged
+            if (height === lastSent) {
+                this.logger.log(`iFrame Event - ResizeObserver settled at unchanged height ${height}px, skipping send`);
+                return;
+            }
+            lastSent = height;
+            this.logger.log(`iFrame Event - ResizeObserver ${immediate ? "leading" : "trailing"} resize: sending height ${height}px`);
+            this.sendIframeHeight();
+        }, 120);
+        this.resizeObserver = new ResizeObserver(throttledSend);
+        this.resizeObserver.observe(document.body);
+        this.logger.log("iFrame Event - Observing body resize");
     }
     /**
      * Posts a `engrid-iframe-queue:thank-you` message to the parent window
@@ -15057,11 +15090,11 @@ class iFrame {
         return (...args) => {
             clearTimeout(timer);
             if (firstEvent) {
-                func.apply(this, args);
+                func.apply(this, [...args, true]);
                 firstEvent = false;
             }
             timer = setTimeout(() => {
-                func.apply(this, args);
+                func.apply(this, [...args, false]);
                 firstEvent = true;
             }, timeout);
         };
@@ -22414,6 +22447,91 @@ class TidyContact {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/tidycontact-email.js
+
+// Same selector the TC Email bundle uses to find its own tag (script-config.ts)
+const TC_EMAIL_SCRIPT = "script[src*='raisemore-email'], script[data-raisemore-email]";
+const DEFAULT_RELAY_URL = "https://email-validator.4sitestudios.com";
+const DEFAULT_VERSION = "v1";
+class TidyContactEmail {
+    constructor() {
+        this.logger = new logger_EngridLogger("TidyContactEmail", "#FFFFFF", "#4d9068", "📧");
+        this.options = null;
+        const options = engrid_ENGrid.getOption("TidyContactEmail");
+        if (!options)
+            return;
+        this.options = options;
+        if (!this.shouldRun())
+            return;
+        this.loadScript();
+    }
+    shouldRun() {
+        var _a, _b;
+        if (!((_a = this.options) === null || _a === void 0 ? void 0 : _a.clientKey)) {
+            this.logger.danger("clientKey not set. TidyContact Email will not load.");
+            return false;
+        }
+        const searchParams = new URLSearchParams(window.location.search);
+        if (searchParams.has("bypassemailvalidation")) {
+            this.logger.log("Bypass Email Validation Enabled - not loading TidyContact Email");
+            return false;
+        }
+        const pageTypes = (_b = this.options.pageTypes) !== null && _b !== void 0 ? _b : [];
+        if (pageTypes.length > 0 &&
+            pageTypes.indexOf(engrid_ENGrid.getPageType()) === -1) {
+            this.logger.log("TidyContact Email is disabled on this page type");
+            return false;
+        }
+        if (!engrid_ENGrid.getField("supporter.emailAddress")) {
+            this.logger.log("E-mail Field Not Found");
+            return false;
+        }
+        if (engrid_ENGrid.getOption("NeverBounceAPI") ||
+            engrid_ENGrid.getOption("FreshAddress")) {
+            this.logger.danger("NeverBounce or FreshAddress is also enabled. Two email validators on one field is not supported, so TidyContact Email will not load.");
+            return false;
+        }
+        if (document.querySelector(TC_EMAIL_SCRIPT)) {
+            this.logger.log("TidyContact Email script already on the page (manual install). Not loading it again.");
+            return false;
+        }
+        return true;
+    }
+    loadScript() {
+        const options = this.options;
+        const relayUrl = (options.relayUrl || DEFAULT_RELAY_URL).replace(/\/+$/, "");
+        const script = document.createElement("script");
+        script.src =
+            options.scriptUrl ||
+                `${relayUrl}/embed/engrid/${options.version || DEFAULT_VERSION}/raisemore-email.js`;
+        script.setAttribute("data-raisemore-email", "");
+        script.setAttribute("data-relay-url", relayUrl);
+        script.setAttribute("data-client-key", options.clientKey);
+        // Only what the client set; everything else keeps TC Email's own defaults
+        const optional = [
+            ["timeout-ms", options.timeoutMs],
+            ["hard-block", options.hardBlock],
+            ["prefill-skip", options.prefillSkip],
+            ["en-recognition", options.enRecognition],
+        ];
+        optional.forEach(([name, value]) => {
+            if (value !== undefined && value !== null) {
+                script.setAttribute(`data-${name}`, String(value));
+            }
+        });
+        script.onload = () => {
+            engrid_ENGrid.setBodyData("tidycontact-email", "loaded");
+            this.logger.success(`Loaded ${script.src}`);
+        };
+        script.onerror = () => {
+            engrid_ENGrid.setBodyData("tidycontact-email", "error");
+            this.logger.danger(`Could not load ${script.src}. The form keeps working without email validation.`);
+        };
+        engrid_ENGrid.setBodyData("tidycontact-email", "loading");
+        document.body.appendChild(script);
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/live-currency.js
 // This script enables live currency symbol and code to the page.
 
@@ -28118,10 +28236,11 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.28.5";
+const AppVersion = "0.28.7";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
 
 
 
