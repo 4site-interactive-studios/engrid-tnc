@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 18, 2026 @ 07:19:46 ET
+ *  Date: Wednesday, November 18, 2026 @ 08:02:33 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.7
@@ -35420,13 +35420,13 @@ const eventQaChecklistStyles = `
 class EventQaChecklist {
   constructor() {
     _defineProperty(this, "logger", new logger_EngridLogger("EventQaChecklist", "black", "gold", "✅"));
-    _defineProperty(this, "ticketChecks", []);
     _defineProperty(this, "paymentChecks", []);
     _defineProperty(this, "isFreeEvent", false);
     _defineProperty(this, "manualChecks", [{
       label: "Cost of Goods / Fair Market Value",
       tooltip: "Every paid ticket type should have a cost and an associated Cost of Goods/Fair Market Value configured. The Cost of Goods should not be left blank. This can be applied in the Ticket Settings.",
-      checked: false
+      checked: false,
+      paidTicketsOnly: true
     }, {
       label: "Additional gateways (PayPal, DAF, digital wallets) are live and configured",
       tooltip: `Manually check that any additional payment types are using their Production gateway under Page Settings > Donation Settings.
@@ -35434,11 +35434,13 @@ class EventQaChecklist {
           ACH Vantiv Worldpay Production (Payment Type = ACH)
           PayPal Production (Payment Type = Paypal)
           Stripe Production (Currency = Any)`,
-      checked: false
+      checked: false,
+      paymentOnly: true
     }, {
       label: "Receipt autoresponder configured",
       tooltip: "If the event is paid, in the autoresponder, the ‘Receipt with Advantage’ should be set to the ‘Receipt with Cost of Goods’",
-      checked: false
+      checked: false,
+      paidTicketsOnly: true
     }, {
       label: "Plain text email generation",
       tooltip: "If there is an autoresponder configured, within the Plain Text Editor tab, the “Generate Plain Text from HTML” should have been manually executed",
@@ -35446,7 +35448,8 @@ class EventQaChecklist {
     }, {
       label: "Event Additional Designation configured",
       tooltip: "Make sure your event has an Event Additional Designation set under Page Settings > Campaign References.",
-      checked: false
+      checked: false,
+      paidTicketsOnly: true
     }, {
       label: "Waitlist configured",
       tooltip: "If your event has a waitlist for tickets, make sure these 3 emails are configured under Right Sidebar > Auto-responders: Join waitlist email, Ticket claim email, and Cancel waitlist email.",
@@ -35467,12 +35470,9 @@ class EventQaChecklist {
   runAutomatedChecks() {
     const tickets = this.getTickets();
     const hasAdditionalDonation = !!document.querySelector(".en__additional__input");
-    this.ticketChecks = tickets.length > 0 ? tickets.map(t => t.check) : [{
-      label: "Tickets",
-      value: "No tickets found",
-      passed: false
-    }];
-    this.isFreeEvent = tickets.length > 0 && tickets.every(t => t.check.passed && t.price === 0) && !hasAdditionalDonation;
+    const hasOnlyFreeTickets = tickets.length > 0 && tickets.every(t => t.check.passed && t.price === 0);
+    this.isFreeEvent = hasOnlyFreeTickets && !hasAdditionalDonation;
+    this.manualChecks = this.manualChecks.filter(check => (!hasOnlyFreeTickets || !check.paidTicketsOnly) && (!this.isFreeEvent || !check.paymentOnly));
     if (this.isFreeEvent) return;
     this.paymentChecks = [this.getFieldCheck("Source Code", "supporter.appealCode"), this.getFieldCheck("Revenue Category", "transaction.othamt4"), this.getFieldCheck("Application Other Type", "transaction.othamt1"), this.getGatewayCheck()];
   }
@@ -35558,7 +35558,7 @@ class EventQaChecklist {
     const title = document.createElement("span");
     title.className = "title";
     title.textContent = "Event QA checklist";
-    const failCount = [...this.ticketChecks, ...this.paymentChecks].filter(check => !check.passed).length;
+    const failCount = this.paymentChecks.filter(check => !check.passed).length;
     const status = document.createElement("span");
     status.className = `status status--${failCount ? "fail" : "pass"}`;
     status.textContent = failCount ? `${failCount} failed` : "All passed";
@@ -35567,7 +35567,6 @@ class EventQaChecklist {
     const body = document.createElement("div");
     body.className = "body";
     panel.appendChild(body);
-    body.appendChild(this.createSection("Tickets", this.createAutomatedList(this.ticketChecks), this.ticketChecks));
     if (this.isFreeEvent) {
       const paymentHeading = document.createElement("h4");
       paymentHeading.textContent = "Payment";
@@ -35682,7 +35681,7 @@ class EventQaChecklist {
   }
   getMarkdown() {
     const date = new Date().toISOString().slice(0, 10);
-    const lines = [`### Event QA – ${this.getPageName()} (ID ${engrid_ENGrid.getPageID()}) – ${date}`, "**Tickets**", ...this.toMarkdownLines(this.ticketChecks), "**Payment**"];
+    const lines = [`### Event QA – ${this.getPageName()} (ID ${engrid_ENGrid.getPageID()}) – ${date}`, "**Payment**"];
     if (this.isFreeEvent) {
       lines.push("- Free event – payment checks skipped");
     } else {

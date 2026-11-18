@@ -17,6 +17,8 @@ interface ManualCheck {
   label: string;
   tooltip: string;
   checked: boolean;
+  paidTicketsOnly?: boolean;
+  paymentOnly?: boolean;
 }
 
 export class EventQaChecklist {
@@ -26,7 +28,6 @@ export class EventQaChecklist {
     "gold",
     "✅"
   );
-  private ticketChecks: AutomatedCheck[] = [];
   private paymentChecks: AutomatedCheck[] = [];
   private isFreeEvent = false;
   private manualChecks: ManualCheck[] = [
@@ -35,6 +36,7 @@ export class EventQaChecklist {
       tooltip:
         "Every paid ticket type should have a cost and an associated Cost of Goods/Fair Market Value configured. The Cost of Goods should not be left blank. This can be applied in the Ticket Settings.",
       checked: false,
+      paidTicketsOnly: true,
     },
     {
       label:
@@ -45,12 +47,14 @@ export class EventQaChecklist {
           PayPal Production (Payment Type = Paypal)
           Stripe Production (Currency = Any)`,
       checked: false,
+      paymentOnly: true,
     },
     {
       label: "Receipt autoresponder configured",
       tooltip:
         "If the event is paid, in the autoresponder, the ‘Receipt with Advantage’ should be set to the ‘Receipt with Cost of Goods’",
       checked: false,
+      paidTicketsOnly: true,
     },
     {
       label: "Plain text email generation",
@@ -63,6 +67,7 @@ export class EventQaChecklist {
       tooltip:
         "Make sure your event has an Event Additional Designation set under Page Settings > Campaign References.",
       checked: false,
+      paidTicketsOnly: true,
     },
     {
       label: "Waitlist configured",
@@ -98,15 +103,16 @@ export class EventQaChecklist {
       ".en__additional__input"
     );
 
-    this.ticketChecks =
-      tickets.length > 0
-        ? tickets.map((t) => t.check)
-        : [{ label: "Tickets", value: "No tickets found", passed: false }];
-
-    this.isFreeEvent =
+    const hasOnlyFreeTickets =
       tickets.length > 0 &&
-      tickets.every((t) => t.check.passed && t.price === 0) &&
-      !hasAdditionalDonation;
+      tickets.every((t) => t.check.passed && t.price === 0);
+    this.isFreeEvent = hasOnlyFreeTickets && !hasAdditionalDonation;
+
+    this.manualChecks = this.manualChecks.filter(
+      (check) =>
+        (!hasOnlyFreeTickets || !check.paidTicketsOnly) &&
+        (!this.isFreeEvent || !check.paymentOnly)
+    );
 
     if (this.isFreeEvent) return;
 
@@ -204,7 +210,7 @@ export class EventQaChecklist {
     const title = document.createElement("span");
     title.className = "title";
     title.textContent = "Event QA checklist";
-    const failCount = [...this.ticketChecks, ...this.paymentChecks].filter(
+    const failCount = this.paymentChecks.filter(
       (check) => !check.passed
     ).length;
     const status = document.createElement("span");
@@ -216,14 +222,6 @@ export class EventQaChecklist {
     const body = document.createElement("div");
     body.className = "body";
     panel.appendChild(body);
-
-    body.appendChild(
-      this.createSection(
-        "Tickets",
-        this.createAutomatedList(this.ticketChecks),
-        this.ticketChecks
-      )
-    );
 
     if (this.isFreeEvent) {
       const paymentHeading = document.createElement("h4");
@@ -371,8 +369,6 @@ export class EventQaChecklist {
     const date = new Date().toISOString().slice(0, 10);
     const lines = [
       `### Event QA – ${this.getPageName()} (ID ${ENGrid.getPageID()}) – ${date}`,
-      "**Tickets**",
-      ...this.toMarkdownLines(this.ticketChecks),
       "**Payment**",
     ];
 
