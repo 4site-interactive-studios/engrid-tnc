@@ -204,16 +204,20 @@
     display: none;
   }
 
+  // Hide all tickets in pagebuilder except the first one. Prevents an excessively large page.
+  .en__component--eventregistrants .en__registrants__ticket:not(:first-child) {
+    display: none;
+  }
+
   // START: Blocks that cannot take a custom class
   .en__component--eventregistrants {
-    @include masked-block(
-      "Event Attendees. Use block settings to customize the fields to fill for each attendee.",
-      12rem
+    @include label-block(
+      "Event Attendees. Use block settings to customize the fields to fill for each attendee."
     );
   }
 
   .en__component--eventtickets {
-    @include masked-block(
+    @include label-block(
       "Event Tickets. Use block or page settings to customize."
     );
   }
