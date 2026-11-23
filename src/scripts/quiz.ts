@@ -246,11 +246,11 @@ export class Quiz {
   }
 
   private getFormType(form: Element) {
-    const emailOptInChecked = isOptedInToEmail(form);
+    const emailOptInChecked = isOptedInToEmail();
     const mobilePhoneField = form.querySelector(
       "#en__field_supporter_phoneNumber2:not(:placeholder-shown)"
     );
-    const textOptInChecked = isOptedInToMobilePhone(form);
+    const textOptInChecked = isOptedInToMobilePhone();
 
     let formType = {
       lightbox_name: `lightbox-${utag_data.page_name ?? ""}`,
