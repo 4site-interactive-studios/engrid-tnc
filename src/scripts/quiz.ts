@@ -1,6 +1,10 @@
 import { ENGrid, EngridLogger } from "@4site/engrid-scripts";
 import { QuizLeadGenModal } from "./quiz-lead-gen-modal";
-import { trackEvent } from "./tracking";
+import {
+  isOptedInToEmail,
+  isOptedInToMobilePhone,
+  trackEvent,
+} from "./tracking";
 
 export class Quiz {
   private logger: EngridLogger = new EngridLogger(
@@ -242,17 +246,11 @@ export class Quiz {
   }
 
   private getFormType(form: Element) {
-    const emailUnsubscribeField = form.querySelector(
-      ".en__field--unsubscribe-from-emails:not(.en__hidden) .en__field__input--checkbox"
-    ) as HTMLFormElement;
-    const emailUnsubscribeChecked = emailUnsubscribeField?.checked || false;
+    const emailOptInChecked = isOptedInToEmail(form);
     const mobilePhoneField = form.querySelector(
       "#en__field_supporter_phoneNumber2:not(:placeholder-shown)"
     );
-    const textOptInField = form.querySelector(
-      ".en__field--home-phone-opt-in .en__field__input--checkbox"
-    ) as HTMLFormElement;
-    const textOptInChecked = textOptInField?.checked || false;
+    const textOptInChecked = isOptedInToMobilePhone(form);
 
     let formType = {
       lightbox_name: `lightbox-${utag_data.page_name ?? ""}`,
@@ -263,31 +261,31 @@ export class Quiz {
       text_signup_location: "",
     };
 
-    //Unsubscribe not checked, mobile phone field exists and optin checked
-    if (!emailUnsubscribeChecked && mobilePhoneField && textOptInChecked) {
+    //Email opt-in checked, mobile phone entered and optin checked
+    if (emailOptInChecked && mobilePhoneField && textOptInChecked) {
       formType.event_name = "frm_ltbx_emt_emo_txt_txto_submit";
       formType.form_type = "email_text_signup";
       formType.text_signup_location = `lightbox-${utag_data.page_name ?? ""}`;
-      //Unsubscribe not checked, mobile phone field exists (and optin not checked)
-    } else if (!emailUnsubscribeChecked && mobilePhoneField) {
+      //Email opt-in checked, mobile phone entered (and optin not checked)
+    } else if (emailOptInChecked && mobilePhoneField) {
       formType.event_name = "frm_ltbx_emt_emo_txt_submit";
       formType.form_type = "email_text_signup";
       formType.text_signup_location = `lightbox-${utag_data.page_name ?? ""}`;
-      //Unsubscribe not checked, no mobile phone field
-    } else if (!emailUnsubscribeChecked) {
+      //Email opt-in checked, no mobile phone entered
+    } else if (emailOptInChecked) {
       formType.event_name = "frm_ltbx_emt_emo_submit";
       formType.form_type = "email_signup";
-      //Unsubscribe checked, mobile phone field exists and optin checked
+      //Email opt-in not checked, mobile phone entered and optin checked
     } else if (mobilePhoneField && textOptInChecked) {
-      formType.event_name = "rm_ltbx_emt_txt_txto_submit";
+      formType.event_name = "frm_ltbx_emt_txt_txto_submit";
       formType.form_type = "email_text_signup";
       formType.text_signup_location = `lightbox-${utag_data.page_name ?? ""}`;
-      //Unsubscribe checked, mobile phone field exists and optin not checked
+      //Email opt-in not checked, mobile phone entered and optin not checked
     } else if (mobilePhoneField) {
       formType.event_name = "frm_ltbx_emt_txt_submit";
       formType.form_type = "email_text_signup";
       formType.text_signup_location = `lightbox-${utag_data.page_name ?? ""}`;
-      //Unsubscribe checked, mobile phone field doesn't exist
+      //Email opt-in not checked, no mobile phone entered
     } else {
       formType.event_name = "frm_ltbx_emt_submit";
       formType.form_type = "email_signup";

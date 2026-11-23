@@ -7,6 +7,36 @@
  * @property {String} pageJson.pageType
  */
 
+import { gdcpFields } from "./gdcp/config/gdcp-fields";
+
+// GDCP mirrors its visible consent checkboxes onto these EN opt-in
+// questions, so reading them from the GDCP config keeps tracking in step
+// with whichever questions are actually on the form.
+/**
+ * @param {"email" | "mobile_phone"} channel
+ * @param {ParentNode} [scope]
+ */
+function isOptedIn(channel, scope = document) {
+  const { optInFieldNames } = gdcpFields.find(
+    (field) => field.channel === channel
+  );
+  return optInFieldNames.some((name) => {
+    /** @type {HTMLInputElement | null} */
+    const el = scope.querySelector(`[name="${name}"]`);
+    return !!el && el.checked;
+  });
+}
+
+/** @param {ParentNode} [scope] */
+export function isOptedInToEmail(scope = document) {
+  return isOptedIn("email", scope);
+}
+
+/** @param {ParentNode} [scope] */
+export function isOptedInToMobilePhone(scope = document) {
+  return isOptedIn("mobile_phone", scope);
+}
+
 export function trackEvent(eventName, eventData) {
   if (typeof utag !== "undefined") {
     utag.link({
@@ -50,17 +80,7 @@ export function setDonationDataSessionStorage(App, DonationAmount) {
   donationData.city = App.getFieldValue("supporter.city");
   donationData.country = App.getFieldValue("supporter.country");
   donationData.phoneNumber = App.getFieldValue("supporter.phoneNumber2");
-  donationData.isEmailOptInChecked = [
-    "supporter.questions.848518",
-    "supporter.questions.848520",
-    "supporter.questions.848521",
-    "supporter.questions.848522",
-    "supporter.questions.848523",
-  ].some((field) => {
-    /** @type {HTMLInputElement} */
-    const el = App.getField(field);
-    return el && el.checked;
-  });
+  donationData.isEmailOptInChecked = isOptedInToEmail();
 
   /** @type {HTMLInputElement} */
   //If fee cover is checked, set extra amount to 3% of donation amount and subtract from original donation amount
@@ -106,15 +126,29 @@ export function trackFormSubmit(App, DonationAmount) {
 
   //Track ETT, petition, survey and data capture submits
   if (["ADVOCACY", "EMAILTOTARGET", "SURVEY"].includes(App.getPageType())) {
-    if (App.getFieldValue("supporter.emailAddress") === "") {
-      return;
-    }
-
     // Tealium (utag_data) isn't loaded on every page type — notably,
     // the QCB data-capture iframes processed by the IframeQueue
     // don't include it. Bail out cleanly instead of throwing
     // ReferenceError, which would abort the form submission.
     if (typeof utag_data === "undefined") {
+      return;
+    }
+
+    // The quiz lead-gen modal's fields are part of the quiz step's form,
+    // and Quiz already tracks that signup when the modal is submitted.
+    const isSignupTrackedByQuizModal =
+      document.querySelector(".modal--lead-gen") !== null;
+
+    if (
+      App.getFieldValue("supporter.emailAddress") === "" ||
+      isSignupTrackedByQuizModal
+    ) {
+      if (isFinalQuizStep(App)) {
+        trackEvent("form_submitted", {
+          form_type: pageJson.pageType,
+          form_name: utag_data.page_name.slice(0, -2),
+        });
+      }
       return;
     }
 
@@ -148,45 +182,43 @@ export function trackFormSubmit(App, DonationAmount) {
   }
 }
 
+function isFinalQuizStep(App) {
+  return (
+    document.body.dataset.engridSubpagetype === "quiz" &&
+    App.getPageNumber() === App.getPageCount() - 1
+  );
+}
+
+function hasMobilePhoneOptIn(App) {
+  return (
+    isOptedInToMobilePhone() &&
+    App.getFieldValue("supporter.phoneNumber2") !== ""
+  );
+}
+
+// Some forms use the home phone field as the mobile number.
+function hasHomePhoneAsMobileOptIn(App) {
+  /** @type {HTMLInputElement | null} */
+  const homePhoneAsMobileOptIn = App.getField("supporter.questions.891102");
+  return (
+    !!homePhoneAsMobileOptIn &&
+    homePhoneAsMobileOptIn.checked &&
+    App.getFieldValue("supporter.phoneNumber") !== ""
+  );
+}
+
 function getSubmitEventName(App) {
-  const isOptedInToPhone = [
-    "supporter.questions.848528",
-    "supporter.questions.1952175",
-    "supporter.questions.848527",
-    "supporter.questions.891102",
-  ].some((field) => {
-    /** @type {HTMLInputElement} */
-    const el = App.getField(field);
-    return (
-      (el &&
-        el.checked &&
-        App.getFieldValue("supporter.phoneNumber2") !== "") ||
-      (el &&
-        el.checked &&
-        field.split(".")[2] === "891102" &&
-        App.getFieldValue("supporter.phoneNumber"))
-    );
-  });
+  const isOptedInToPhone =
+    hasMobilePhoneOptIn(App) || hasHomePhoneAsMobileOptIn(App);
+  const isOptedInToEmailUpdates = isOptedInToEmail();
 
-  const isOptedInToEmail = [
-    "supporter.questions.848518",
-    "supporter.questions.848520",
-    "supporter.questions.848521",
-    "supporter.questions.848522",
-    "supporter.questions.848523",
-  ].some((field) => {
-    /** @type {HTMLInputElement} */
-    const el = App.getField(field);
-    return el && el.checked;
-  });
-
-  if (isOptedInToEmail && isOptedInToPhone) {
+  if (isOptedInToEmailUpdates && isOptedInToPhone) {
     return "frm_emt_emo_txt_submit";
   }
   if (isOptedInToPhone) {
     return "frm_emt_txt_submit";
   }
-  if (isOptedInToEmail) {
+  if (isOptedInToEmailUpdates) {
     return "frm_emt_emo_submit";
   }
   return "frm_emt_submit";
