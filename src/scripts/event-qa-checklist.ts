@@ -14,6 +14,7 @@ interface AutomatedCheck {
 }
 
 interface ManualCheck {
+  id: string;
   label: string;
   tooltip: string;
   checked: boolean;
@@ -32,6 +33,7 @@ export class EventQaChecklist {
   private isFreeEvent = false;
   private manualChecks: ManualCheck[] = [
     {
+      id: "cost-of-goods",
       label: "Cost of Goods / Fair Market Value",
       tooltip:
         "Every paid ticket type should have a cost and an associated Cost of Goods/Fair Market Value configured. The Cost of Goods should not be left blank. This can be applied in the Ticket Settings.",
@@ -39,6 +41,7 @@ export class EventQaChecklist {
       paidTicketsOnly: true,
     },
     {
+      id: "additional-gateways",
       label:
         "Additional gateways (PayPal, DAF, digital wallets) are live and configured",
       tooltip: `Manually check that any additional payment types are using their Production gateway under Page Settings > Donation Settings.
@@ -50,6 +53,7 @@ export class EventQaChecklist {
       paymentOnly: true,
     },
     {
+      id: "receipt-autoresponder",
       label: "Receipt autoresponder configured",
       tooltip:
         "If the event is paid, in the autoresponder, the ‘Receipt with Advantage’ should be set to the ‘Receipt with Cost of Goods’",
@@ -57,12 +61,14 @@ export class EventQaChecklist {
       paidTicketsOnly: true,
     },
     {
+      id: "plain-text-email",
       label: "Plain text email generation",
       tooltip:
         "If there is an autoresponder configured, within the Plain Text Editor tab, the “Generate Plain Text from HTML” should have been manually executed",
       checked: false,
     },
     {
+      id: "additional-designation",
       label: "Event Additional Designation configured",
       tooltip:
         "Make sure your event has an Event Additional Designation set under Page Settings > Campaign References.",
@@ -70,18 +76,21 @@ export class EventQaChecklist {
       paymentOnly: true,
     },
     {
+      id: "waitlist",
       label: "Waitlist configured - If Applicable",
       tooltip:
         "If your event has a waitlist for tickets, make sure these 3 emails are configured under Right Sidebar > Auto-responders: Join waitlist email, Ticket claim email, and Cancel waitlist email.",
       checked: false,
     },
     {
+      id: "automatic-expiration",
       label: "Automatic expiration date configured",
       tooltip:
         "In the event page settings, configure the page to automatically expire after the event date has passed.",
       checked: false,
     },
     {
+      id: "live-status",
       label: "Live status",
       tooltip: "The page should be set to Live under Page Settings > Status.",
       checked: false,
@@ -92,6 +101,7 @@ export class EventQaChecklist {
     if (!this.shouldRun()) return;
     this.logger.log("Running event QA checklist");
     this.runAutomatedChecks();
+    this.restoreManualChecks();
     this.render();
   }
 
@@ -128,6 +138,54 @@ export class EventQaChecklist {
       this.getFieldCheck("Application Other Type", "transaction.othamt1"),
       this.getGatewayCheck(),
     ];
+  }
+
+  private get storageKey(): string {
+    return `eventQaChecklist.${ENGrid.getPageID()}`;
+  }
+
+  private restoreManualChecks() {
+    let savedState: string | null;
+    try {
+      savedState = localStorage.getItem(this.storageKey);
+    } catch (error) {
+      this.logger.warn("Unable to read saved manual checklist state", error);
+      return;
+    }
+
+    if (!savedState) return;
+
+    try {
+      const parsedState: unknown = JSON.parse(savedState);
+      if (
+        !parsedState ||
+        typeof parsedState !== "object" ||
+        Array.isArray(parsedState)
+      ) {
+        this.logger.warn("Ignoring invalid saved manual checklist state");
+        return;
+      }
+
+      const checkedById = parsedState as Record<string, unknown>;
+      this.manualChecks.forEach((check) => {
+        check.checked = checkedById[check.id] === true;
+      });
+    } catch (error) {
+      this.logger.warn("Unable to parse saved manual checklist state", error);
+    }
+  }
+
+  private saveManualChecks() {
+    const checkedById: Record<string, boolean> = {};
+    this.manualChecks.forEach((check) => {
+      checkedById[check.id] = check.checked;
+    });
+
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(checkedById));
+    } catch (error) {
+      this.logger.warn("Unable to save manual checklist state", error);
+    }
   }
 
   private getTickets(): { price: number; check: AutomatedCheck }[] {
@@ -246,8 +304,8 @@ export class EventQaChecklist {
 
     const manualHeading = document.createElement("h4");
     manualHeading.textContent = "Manual";
-    body.appendChild(manualHeading);
-    body.appendChild(this.createManualList());
+    const manualList = this.createManualList();
+    body.append(manualHeading, manualList);
 
     const copyButton = document.createElement("button");
     copyButton.type = "button";
@@ -255,6 +313,21 @@ export class EventQaChecklist {
     copyButton.textContent = "Copy QA Checklist to Clipboard";
     copyButton.addEventListener("click", () => this.copy(copyButton));
     body.appendChild(copyButton);
+
+    const resetButton = document.createElement("button");
+    resetButton.type = "button";
+    resetButton.className = "reset";
+    resetButton.innerHTML = `
+      <svg class="reset-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+        <path d="M3 3v5h5" />
+      </svg>
+      Reset manual checks
+    `;
+    resetButton.addEventListener("click", () =>
+      this.resetManualChecks(manualList)
+    );
+    body.appendChild(resetButton);
 
     document.body.appendChild(host);
   }
@@ -327,8 +400,10 @@ export class EventQaChecklist {
       const label = document.createElement("label");
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
+      checkbox.checked = check.checked;
       checkbox.addEventListener("change", () => {
         check.checked = checkbox.checked;
+        this.saveManualChecks();
       });
       const text = document.createElement("span");
       text.textContent = check.label;
@@ -357,6 +432,23 @@ export class EventQaChecklist {
       list.appendChild(item);
     });
     return list;
+  }
+
+  private resetManualChecks(list: HTMLElement) {
+    this.manualChecks.forEach((check) => {
+      check.checked = false;
+    });
+    list
+      .querySelectorAll<HTMLInputElement>('input[type="checkbox"]')
+      .forEach((checkbox) => {
+        checkbox.checked = false;
+      });
+
+    try {
+      localStorage.removeItem(this.storageKey);
+    } catch (error) {
+      this.logger.warn("Unable to clear saved manual checklist state", error);
+    }
   }
 
   private toMarkdownLines(checks: AutomatedCheck[]): string[] {

@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 24, 2026 @ 08:10:47 ET
+ *  Date: Tuesday, November 24, 2026 @ 09:47:38 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.7
@@ -35412,6 +35412,47 @@ const eventQaChecklistStyles = `
   .copy:focus-visible {
     background: var(--qa-text);
   }
+
+  .reset {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: auto;
+    min-height: 36px;
+    margin: 12px 0 0 auto;
+    padding: 8px 12px;
+    border: 1px solid var(--qa-red);
+    border-radius: 0;
+    background: #fff;
+    color: var(--qa-red);
+    font-family: var(--qa-sans);
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .reset-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .reset:hover {
+    background: var(--qa-red-tint);
+  }
+
+  .reset:focus-visible {
+    outline: 2px solid var(--qa-red);
+    outline-offset: 2px;
+  }
 `;
 ;// CONCATENATED MODULE: ./src/scripts/event-qa-checklist.ts
 
@@ -35423,11 +35464,13 @@ class EventQaChecklist {
     _defineProperty(this, "paymentChecks", []);
     _defineProperty(this, "isFreeEvent", false);
     _defineProperty(this, "manualChecks", [{
+      id: "cost-of-goods",
       label: "Cost of Goods / Fair Market Value",
       tooltip: "Every paid ticket type should have a cost and an associated Cost of Goods/Fair Market Value configured. The Cost of Goods should not be left blank. This can be applied in the Ticket Settings.",
       checked: false,
       paidTicketsOnly: true
     }, {
+      id: "additional-gateways",
       label: "Additional gateways (PayPal, DAF, digital wallets) are live and configured",
       tooltip: `Manually check that any additional payment types are using their Production gateway under Page Settings > Donation Settings.
         The Additional Merchants should be:
@@ -35437,28 +35480,34 @@ class EventQaChecklist {
       checked: false,
       paymentOnly: true
     }, {
+      id: "receipt-autoresponder",
       label: "Receipt autoresponder configured",
       tooltip: "If the event is paid, in the autoresponder, the ‘Receipt with Advantage’ should be set to the ‘Receipt with Cost of Goods’",
       checked: false,
       paidTicketsOnly: true
     }, {
+      id: "plain-text-email",
       label: "Plain text email generation",
       tooltip: "If there is an autoresponder configured, within the Plain Text Editor tab, the “Generate Plain Text from HTML” should have been manually executed",
       checked: false
     }, {
+      id: "additional-designation",
       label: "Event Additional Designation configured",
       tooltip: "Make sure your event has an Event Additional Designation set under Page Settings > Campaign References.",
       checked: false,
       paymentOnly: true
     }, {
+      id: "waitlist",
       label: "Waitlist configured - If Applicable",
       tooltip: "If your event has a waitlist for tickets, make sure these 3 emails are configured under Right Sidebar > Auto-responders: Join waitlist email, Ticket claim email, and Cancel waitlist email.",
       checked: false
     }, {
+      id: "automatic-expiration",
       label: "Automatic expiration date configured",
       tooltip: "In the event page settings, configure the page to automatically expire after the event date has passed.",
       checked: false
     }, {
+      id: "live-status",
       label: "Live status",
       tooltip: "The page should be set to Live under Page Settings > Status.",
       checked: false
@@ -35466,6 +35515,7 @@ class EventQaChecklist {
     if (!this.shouldRun()) return;
     this.logger.log("Running event QA checklist");
     this.runAutomatedChecks();
+    this.restoreManualChecks();
     this.render();
   }
   shouldRun() {
@@ -35479,6 +35529,43 @@ class EventQaChecklist {
     this.manualChecks = this.manualChecks.filter(check => (!hasOnlyFreeTickets || !check.paidTicketsOnly) && (!this.isFreeEvent || !check.paymentOnly));
     if (this.isFreeEvent) return;
     this.paymentChecks = [this.getFieldCheck("Source Code", "supporter.appealCode"), this.getFieldCheck("Revenue Category", "transaction.othamt4"), this.getFieldCheck("Application Other Type", "transaction.othamt1"), this.getGatewayCheck()];
+  }
+  get storageKey() {
+    return `eventQaChecklist.${engrid_ENGrid.getPageID()}`;
+  }
+  restoreManualChecks() {
+    let savedState;
+    try {
+      savedState = localStorage.getItem(this.storageKey);
+    } catch (error) {
+      this.logger.warn("Unable to read saved manual checklist state", error);
+      return;
+    }
+    if (!savedState) return;
+    try {
+      const parsedState = JSON.parse(savedState);
+      if (!parsedState || typeof parsedState !== "object" || Array.isArray(parsedState)) {
+        this.logger.warn("Ignoring invalid saved manual checklist state");
+        return;
+      }
+      const checkedById = parsedState;
+      this.manualChecks.forEach(check => {
+        check.checked = checkedById[check.id] === true;
+      });
+    } catch (error) {
+      this.logger.warn("Unable to parse saved manual checklist state", error);
+    }
+  }
+  saveManualChecks() {
+    const checkedById = {};
+    this.manualChecks.forEach(check => {
+      checkedById[check.id] = check.checked;
+    });
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(checkedById));
+    } catch (error) {
+      this.logger.warn("Unable to save manual checklist state", error);
+    }
   }
   getTickets() {
     const tickets = [...document.querySelectorAll(".en__ticket")];
@@ -35581,14 +35668,26 @@ class EventQaChecklist {
     }
     const manualHeading = document.createElement("h4");
     manualHeading.textContent = "Manual";
-    body.appendChild(manualHeading);
-    body.appendChild(this.createManualList());
+    const manualList = this.createManualList();
+    body.append(manualHeading, manualList);
     const copyButton = document.createElement("button");
     copyButton.type = "button";
     copyButton.className = "copy";
     copyButton.textContent = "Copy QA Checklist to Clipboard";
     copyButton.addEventListener("click", () => this.copy(copyButton));
     body.appendChild(copyButton);
+    const resetButton = document.createElement("button");
+    resetButton.type = "button";
+    resetButton.className = "reset";
+    resetButton.innerHTML = `
+      <svg class="reset-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+        <path d="M3 3v5h5" />
+      </svg>
+      Reset manual checks
+    `;
+    resetButton.addEventListener("click", () => this.resetManualChecks(manualList));
+    body.appendChild(resetButton);
     document.body.appendChild(host);
   }
   getPageName() {
@@ -35647,8 +35746,10 @@ class EventQaChecklist {
       const label = document.createElement("label");
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
+      checkbox.checked = check.checked;
       checkbox.addEventListener("change", () => {
         check.checked = checkbox.checked;
+        this.saveManualChecks();
       });
       const text = document.createElement("span");
       text.textContent = check.label;
@@ -35675,6 +35776,19 @@ class EventQaChecklist {
       list.appendChild(item);
     });
     return list;
+  }
+  resetManualChecks(list) {
+    this.manualChecks.forEach(check => {
+      check.checked = false;
+    });
+    list.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+      checkbox.checked = false;
+    });
+    try {
+      localStorage.removeItem(this.storageKey);
+    } catch (error) {
+      this.logger.warn("Unable to clear saved manual checklist state", error);
+    }
   }
   toMarkdownLines(checks) {
     const lines = [];

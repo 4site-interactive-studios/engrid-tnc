@@ -312,4 +312,45 @@ export const eventQaChecklistStyles = `
   .copy:focus-visible {
     background: var(--qa-text);
   }
+
+  .reset {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: auto;
+    min-height: 36px;
+    margin: 12px 0 0 auto;
+    padding: 8px 12px;
+    border: 1px solid var(--qa-red);
+    border-radius: 0;
+    background: #fff;
+    color: var(--qa-red);
+    font-family: var(--qa-sans);
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .reset-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .reset:hover {
+    background: var(--qa-red-tint);
+  }
+
+  .reset:focus-visible {
+    outline: 2px solid var(--qa-red);
+    outline-offset: 2px;
+  }
 `;
