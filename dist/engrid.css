@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 24, 2026 @ 07:57:58 ET
+ *  Date: Tuesday, November 24, 2026 @ 08:10:47 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.7
@@ -15355,8 +15355,8 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-source-code-label{
   --author_label:"Event Source Codes";
 }
-[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-details-label{
-  --author_label:"Event Details - Write about your event here.";
+[data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-overview-label{
+  --author_label:"Event Overview - Write about your event here.";
   --author_max-height:4rem;
 }
 [data-engrid-theme=tnc]#en__pagebuilder .en__component--advrow.event-authoring .pb-event-summary-label{
