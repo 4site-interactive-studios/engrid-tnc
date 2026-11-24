@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 18, 2026 @ 08:02:33 ET
+ *  Date: Tuesday, November 24, 2026 @ 07:50:54 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.7
@@ -35449,7 +35449,7 @@ class EventQaChecklist {
       label: "Event Additional Designation configured",
       tooltip: "Make sure your event has an Event Additional Designation set under Page Settings > Campaign References.",
       checked: false,
-      paidTicketsOnly: true
+      paymentOnly: true
     }, {
       label: "Waitlist configured",
       tooltip: "If your event has a waitlist for tickets, make sure these 3 emails are configured under Right Sidebar > Auto-responders: Join waitlist email, Ticket claim email, and Cancel waitlist email.",

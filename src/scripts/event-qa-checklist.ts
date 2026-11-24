@@ -67,7 +67,7 @@ export class EventQaChecklist {
       tooltip:
         "Make sure your event has an Event Additional Designation set under Page Settings > Campaign References.",
       checked: false,
-      paidTicketsOnly: true,
+      paymentOnly: true,
     },
     {
       label: "Waitlist configured",

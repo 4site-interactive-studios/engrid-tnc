@@ -200,7 +200,8 @@
     @extend %label-block;
   }
 
-  .author-removed.en__component {
+  .author-removed.en__component,
+  .en__component--codeblock {
     display: none;
   }
 
@@ -224,10 +225,6 @@
 
   .en__component--eventtickets:has(.en__orderSummary) {
     @include masked-block("Order Summary");
-  }
-
-  .en__component--codeblock {
-    @include hidden-block("Advanced Code Block - Do not move or edit.");
   }
 
   .body-banner.en__component {
