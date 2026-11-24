@@ -70,9 +70,15 @@ export class EventQaChecklist {
       paymentOnly: true,
     },
     {
-      label: "Waitlist configured",
+      label: "Waitlist configured - If Applicable",
       tooltip:
         "If your event has a waitlist for tickets, make sure these 3 emails are configured under Right Sidebar > Auto-responders: Join waitlist email, Ticket claim email, and Cancel waitlist email.",
+      checked: false,
+    },
+    {
+      label: "Automatic expiration date configured",
+      tooltip:
+        "In the event page settings, configure the page to automatically expire after the event date has passed.",
       checked: false,
     },
     {
