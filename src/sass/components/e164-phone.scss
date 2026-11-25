@@ -1,0 +1,204 @@
+.en__field__element.e164-phone--enhanced {
+  position: relative;
+  overflow: visible;
+
+  // Any EN field type; a phone field set up as Text renders --text, not --telephone.
+  input.en__field__input {
+    padding-left: calc(
+      var(--e164-phone-selector-width, 96px) + 6px
+    ) !important;
+  }
+}
+
+.en__component--formblock.e164-phone--enhanced-form {
+  overflow: visible;
+}
+
+.e164-phone {
+  position: absolute;
+  top: var(--e164-phone-margin-top, 0);
+  bottom: var(--e164-phone-margin-bottom, 0);
+  left: 0;
+  z-index: 5;
+  font-family: inherit;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}
+
+.e164-phone--open {
+  z-index: 1000;
+}
+
+.e164-phone__selected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: auto;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0 7px 0 9px;
+  appearance: none;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--e164-phone-font-size, inherit);
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background: rgba(0, 0, 0, 0.05);
+    box-shadow: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #007931;
+    outline-offset: -3px;
+  }
+}
+
+.e164-phone__selected-flag,
+.e164-phone__flag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 16px;
+  line-height: 0;
+}
+
+.e164-phone__selected-flag {
+  flex: 0 0 auto;
+  min-width: 24px;
+}
+
+.e164-phone__flag {
+  flex: 0 0 24px;
+  width: 24px;
+
+  &--failed {
+    flex-basis: auto;
+    width: auto;
+    min-width: 24px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 16px;
+    white-space: nowrap;
+  }
+}
+
+.e164-phone__selected-flag,
+.e164-phone__flag {
+  picture,
+  img {
+    display: block;
+    width: 24px;
+    height: 16px;
+    max-width: 100%;
+    object-fit: cover;
+  }
+}
+
+.e164-phone__selected-dial-code {
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.e164-phone__arrow {
+  width: 0;
+  height: 0;
+  border-top: 4px solid #555;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  transition: transform 120ms ease;
+}
+
+.e164-phone__selected[aria-expanded="true"] .e164-phone__arrow {
+  transform: rotate(180deg);
+}
+
+.e164-phone__list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  width: 300px;
+  max-width: calc(100vw - 32px);
+  max-height: 240px;
+  margin: 0;
+  padding: 4px 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+  color: #222;
+  list-style: none;
+  text-align: left;
+  -webkit-overflow-scrolling: touch;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.e164-phone__country {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 22px;
+  cursor: pointer;
+
+  &:hover,
+  &--highlighted {
+    background: #f1f1f1;
+  }
+
+  &--selected {
+    font-weight: 600;
+  }
+}
+
+.e164-phone__country-name {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.e164-phone__dial-code {
+  flex: 0 0 auto;
+  margin-left: -4px;
+  color: #666;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.e164-phone__divider {
+  margin: 4px 0;
+  padding: 0;
+  border-bottom: 1px solid #ccc;
+}
+
+@media (max-width: 600px) {
+  .e164-phone__list {
+    max-height: 220px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .e164-phone__arrow {
+    transition: none;
+  }
+}

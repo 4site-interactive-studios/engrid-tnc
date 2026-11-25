@@ -1123,8 +1123,12 @@ export const customScript = function (App, DonationFrequency, DonationAmount) {
   };
 
   const updatePlaceholder = (field) => {
-    if (field.name === "transaction.donationAmt.other") {
-      return; // Exclude specific field
+    if (
+      field.name === "transaction.donationAmt.other" ||
+      (field.name === "supporter.phoneNumber2" &&
+        field.closest(".en__field__element.e164-phone--enhanced"))
+    ) {
+      return;
     }
 
     const isFieldRequired =
