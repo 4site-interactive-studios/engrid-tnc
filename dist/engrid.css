@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 25, 2026 @ 16:09:41 ET
+ *  Date: Thursday, November 26, 2026 @ 12:51:24 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.7
@@ -15156,7 +15156,7 @@ body[data-engrid-debug]:before{
   position:relative;
 }
 [data-engrid-theme=tnc] .en__field__element.e164-phone--enhanced input.en__field__input{
-  padding-left:calc(var(--e164-phone-selector-width, 96px) + 6px) !important;
+  padding-left:58px !important;
 }
 [data-engrid-theme=tnc] .en__component--formblock.e164-phone--enhanced-form{
   overflow:visible;
@@ -15186,7 +15186,6 @@ body[data-engrid-debug]:before{
   cursor:pointer;
   display:flex;
   font:inherit;
-  font-size:var(--e164-phone-font-size, inherit);
   gap:5px;
   height:100%;
   justify-content:center;
@@ -15233,10 +15232,6 @@ body[data-engrid-debug]:before{
   max-width:100%;
   object-fit:cover;
   width:24px;
-}
-[data-engrid-theme=tnc] .e164-phone__selected-dial-code{
-  line-height:1;
-  white-space:nowrap;
 }
 [data-engrid-theme=tnc] .e164-phone__arrow{
   border-left:4px solid #0000;

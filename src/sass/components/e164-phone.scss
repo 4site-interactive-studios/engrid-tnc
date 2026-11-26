@@ -4,9 +4,7 @@
 
   // Any EN field type; a phone field set up as Text renders --text, not --telephone.
   input.en__field__input {
-    padding-left: calc(
-      var(--e164-phone-selector-width, 96px) + 6px
-    ) !important;
+    padding-left: 58px !important;
   }
 }
 
@@ -50,7 +48,6 @@
   box-shadow: none;
   color: inherit;
   font: inherit;
-  font-size: var(--e164-phone-font-size, inherit);
   cursor: pointer;
 
   &:hover,
@@ -104,11 +101,6 @@
     max-width: 100%;
     object-fit: cover;
   }
-}
-
-.e164-phone__selected-dial-code {
-  line-height: 1;
-  white-space: nowrap;
 }
 
 .e164-phone__arrow {

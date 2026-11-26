@@ -1,51 +1,17 @@
-import {
-  AsYouType,
-  CountryCode,
-  getCountries,
-  getCountryCallingCode,
-  getExampleNumber,
-} from "libphonenumber-js";
-import examples from "libphonenumber-js/mobile/examples";
 import { ENGrid, EnForm, EngridLogger } from "@4site/engrid-scripts";
+import { PHONE_COUNTRIES, PhoneCountry } from "./e164-phone-countries";
 
-interface PhoneCountry {
-  code: string;
-  libraryCode: CountryCode;
-  name: string;
-  dialCode: string;
-  placeholder: string;
-}
-
-interface PendingSubmission {
+interface SavedSubmission {
   pageId: string;
-  fieldName: string;
   displayValue: string;
   countryCode: string;
 }
 
-interface DisplayNamesInstance {
-  of(code: string): string | undefined;
-}
+const PREFERRED_COUNTRY_CODES = ["us", "ca", "gb"];
 
-interface DisplayNamesConstructor {
-  new (
-    locales: string[],
-    options: { type: "region"; fallback: "code" }
-  ): DisplayNamesInstance;
-}
-
-// The project's TypeScript DOM lib predates ResizeObserver.
-interface ResizeObserverConstructor {
-  new (callback: () => void): { observe(target: Element): void };
-}
-
-const PREFERRED_COUNTRY_ORDER: Record<string, number> = {
-  us: 0,
-  ca: 1,
-  gb: 2,
-};
-
-const PRIMARY_COUNTRY_BY_CALLING_CODE: Record<string, string> = {
+// A + number with a shared calling code shows this country, unless the
+// selected country already uses that code.
+const PRIMARY_COUNTRY_BY_DIAL_CODE: Record<string, string> = {
   "1": "us",
   "7": "ru",
   "39": "it",
@@ -54,11 +20,44 @@ const PRIMARY_COUNTRY_BY_CALLING_CODE: Record<string, string> = {
   "61": "au",
   "212": "ma",
   "262": "re",
-  "290": "sh",
   "358": "fi",
   "590": "gp",
   "599": "cw",
 };
+
+// The digits from the calling code on, or null for a national number. The +
+// can follow a bracket, as in "(+44) 7400 123456".
+function getInternationalDigits(number: string): string | null {
+  const digits = number.replace(/\D/g, "");
+  if (/^\D*\+/.test(number)) return digits;
+  if (number.startsWith("00")) return digits.slice(2);
+  return null;
+}
+
+// Reformats only; the number is not validated.
+function toE164(value: string, country: PhoneCountry): string {
+  const number = value
+    .replace(/\s*(?:ext|x)\.?\s*\d+\s*$/i, "")
+    // UK-style "+44 (0)20 ..." shows the trunk prefix in brackets.
+    .replace(/\(0\)/, "")
+    .trim();
+  const digits = number.replace(/\D/g, "");
+  if (!digits) return "";
+  const internationalDigits = getInternationalDigits(number);
+  if (internationalDigits !== null) return `+${internationalDigits}`;
+
+  const { trunkPrefix, dialCode } = country;
+  const nationalNumber =
+    trunkPrefix && digits.startsWith(trunkPrefix)
+      ? digits.slice(trunkPrefix.length)
+      : digits;
+  return `+${dialCode}${nationalNumber}`;
+}
+
+function preferredRank(country: PhoneCountry): number {
+  const index = PREFERRED_COUNTRY_CODES.indexOf(country.code);
+  return index === -1 ? PREFERRED_COUNTRY_CODES.length : index;
+}
 
 export class E164Phone {
   private readonly fieldName = "supporter.phoneNumber2";
@@ -70,229 +69,109 @@ export class E164Phone {
     "#4d9068",
     "☎"
   );
-  private readonly countries: PhoneCountry[];
-  private readonly input: HTMLInputElement | null;
-  private readonly originalPlaceholder: string;
   private readonly pageId = String(ENGrid.getPageID() || "");
-  private selectedCountry: PhoneCountry;
-  private countrySelector: HTMLElement | null = null;
-  private countryButton: HTMLButtonElement | null = null;
-  private countryList: HTMLUListElement | null = null;
-  private pendingSubmission: PendingSubmission | null = null;
-  private convertedValue: string | null = null;
-  // Set once the supporter picks a country or gives an international number;
-  // automatic guesses (IP, hints) must not replace it after that.
-  private countryCameFromSupporter = false;
-  private ipCountry: PhoneCountry | null = null;
-  private supporterCountryHint: PhoneCountry | null = null;
-  private isSettingDisplayValue = false;
+  private readonly countries = [...PHONE_COUNTRIES].sort(
+    (a, b) =>
+      preferredRank(a) - preferredRank(b) || a.name.localeCompare(b.name)
+  );
+  private readonly selector = document.createElement("div");
+  private readonly button = document.createElement("button");
+  private readonly selectedFlag = document.createElement("span");
+  private readonly list = document.createElement("ul");
+  private input: HTMLInputElement | null = null;
+  // The list starts with the preferred countries, United States first.
+  private selectedCountry = this.countries[0];
   private highlightedCountry: PhoneCountry | null = null;
-
-  // --- Initialization ---------------------------------------------------------
+  // Set once the supporter picks a country or the field holds a + number, so
+  // the IP lookup doesn't replace it.
+  private countryFromSupporter = false;
+  // While the field holds the E.164 value, what the supporter typed.
+  private submittedValue: string | null = null;
+  private convertedValue: string | null = null;
 
   constructor() {
-    const field = ENGrid.getField(this.fieldName);
-    if (!this.shouldRun(field)) {
-      this.input = null;
-      this.countries = [];
-      this.originalPlaceholder = "";
-      this.selectedCountry = this.createFallbackCountry();
+    const input = ENGrid.getField(this.fieldName);
+    const fieldElement = input?.closest(".en__field__element");
+    if (
+      !(input instanceof HTMLInputElement) ||
+      !(fieldElement instanceof HTMLElement) ||
+      document.querySelector(
+        ".en__component--formblock.engrid-phone-no-country-select"
+      )
+    ) {
       this.logger.log(
         "Phone enhancement is disabled or the phone field is missing"
       );
       return;
     }
 
-    // Restore only matching failed submissions; clear other stale state.
-    const savedSubmission = this.readSavedSubmission();
-    const restoreValue =
-      this.submissionFailed() &&
-      savedSubmission &&
-      savedSubmission.pageId === this.pageId &&
-      savedSubmission.fieldName === this.fieldName
-        ? savedSubmission
-        : null;
-    if (!restoreValue) this.clearSavedSubmission();
-
-    this.input = field;
-    this.originalPlaceholder = field.placeholder;
-    this.countries = this.createCountryList();
-    this.selectedCountry =
-      this.getCountryByCode("us") || this.createFallbackCountry();
-
-    // Build the UI before applying restored or automatic country evidence.
-    this.renderCountrySelector();
-    this.addEventListeners();
-
-    if (restoreValue) {
-      this.pendingSubmission = restoreValue;
-      this.restoreDisplayValue();
-      return;
-    }
-
-    // A recognised supporter country can break shared-code ties.
-    const supporterId = (
-      window as unknown as {
-        pageJson?: { supporterId?: string | number };
-      }
-    ).pageJson?.supporterId;
-    if (Boolean(supporterId)) {
-      this.supporterCountryHint =
-        this.getCountryByCode(ENGrid.getFieldValue("supporter.country")) ||
-        null;
-    }
+    this.input = input;
+    this.renderCountrySelector(fieldElement, input);
+    this.addEventListeners(input);
     this.setSelectedCountry(this.selectedCountry);
 
-    // A prefilled international number settles the country before the IP lookup.
-    this.moveCallingCodeToSelector();
+    if (this.restoreFailedSubmission()) return;
+    this.updateCountryFromNumber();
     void this.setCountryFromIp();
   }
 
-  private shouldRun(field: Element | null): field is HTMLInputElement {
-    return (
-      field instanceof HTMLInputElement &&
-      !document.querySelector(
-        ".en__component--formblock.engrid-phone-no-country-select"
-      )
-    );
-  }
+  // --- Selector ---------------------------------------------------------------
 
-  // --- Country data -----------------------------------------------------------
-
-  private createFallbackCountry(): PhoneCountry {
-    return {
-      code: "us",
-      libraryCode: "US",
-      name: "United States",
-      dialCode: "1",
-      placeholder: "(201) 555-0123",
-    };
-  }
-
-  private createCountryList(): PhoneCountry[] {
-    const intlWithDisplayNames = Intl as typeof Intl & {
-      DisplayNames?: DisplayNamesConstructor;
-    };
-    let displayNames: DisplayNamesInstance | null = null;
-    if (intlWithDisplayNames.DisplayNames) {
-      try {
-        displayNames = new intlWithDisplayNames.DisplayNames(
-          [document.documentElement.lang || "en"],
-          { type: "region", fallback: "code" }
-        );
-      } catch (_error) {
-        displayNames = null;
-      }
-    }
-
-    return getCountries()
-      .map((libraryCode) => {
-        const code = libraryCode.toLowerCase();
-        const example = getExampleNumber(libraryCode, examples);
-        return {
-          code,
-          libraryCode,
-          name: displayNames?.of(libraryCode) || libraryCode,
-          dialCode: getCountryCallingCode(libraryCode),
-          placeholder: example?.formatNational() || this.originalPlaceholder,
-        };
-      })
-      .sort((a, b) => {
-        const aPriority = PREFERRED_COUNTRY_ORDER[a.code] ?? Infinity;
-        const bPriority = PREFERRED_COUNTRY_ORDER[b.code] ?? Infinity;
-        return aPriority === bPriority
-          ? a.name.localeCompare(b.name)
-          : aPriority - bPriority;
-      });
-  }
-
-  // --- Selector rendering -----------------------------------------------------
-
-  private renderCountrySelector() {
-    if (!this.input) return;
-    const fieldElement = this.input.closest(".en__field__element");
-    if (!(fieldElement instanceof HTMLElement)) return;
-
+  private renderCountrySelector(
+    fieldElement: HTMLElement,
+    input: HTMLInputElement
+  ) {
     fieldElement.classList.add("e164-phone--enhanced");
-    this.input
+    input
       .closest(".en__component--formblock")
       ?.classList.add("e164-phone--enhanced-form");
 
-    const computedStyle = window.getComputedStyle(this.input);
+    // The selector sits over the input, so it needs the input's margins.
+    const inputStyle = window.getComputedStyle(input);
     fieldElement.style.setProperty(
       "--e164-phone-margin-top",
-      computedStyle.marginTop
+      inputStyle.marginTop
     );
     fieldElement.style.setProperty(
       "--e164-phone-margin-bottom",
-      computedStyle.marginBottom
-    );
-    fieldElement.style.setProperty(
-      "--e164-phone-font-size",
-      computedStyle.fontSize
+      inputStyle.marginBottom
     );
 
-    const container = document.createElement("div");
-    container.className = "e164-phone";
+    this.selector.className = "e164-phone";
 
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "e164-phone__selected";
-    // Select-only combobox pattern; aria-activedescendant isn't supported on a plain button.
-    button.setAttribute("role", "combobox");
-    button.setAttribute("aria-haspopup", "listbox");
-    button.setAttribute("aria-expanded", "false");
-    button.setAttribute("aria-controls", "e164-phone-country-list");
-
-    const selectedFlag = document.createElement("span");
-    selectedFlag.className = "e164-phone__selected-flag";
-    const selectedDialCode = document.createElement("span");
-    selectedDialCode.className = "e164-phone__selected-dial-code";
-    selectedDialCode.setAttribute("aria-hidden", "true");
+    this.button.type = "button";
+    this.button.className = "e164-phone__selected";
+    // Select-only combobox pattern; aria-activedescendant isn't supported on a
+    // plain button.
+    this.button.setAttribute("role", "combobox");
+    this.button.setAttribute("aria-haspopup", "listbox");
+    this.button.setAttribute("aria-expanded", "false");
+    this.button.setAttribute("aria-controls", "e164-phone-country-list");
+    this.selectedFlag.className = "e164-phone__selected-flag";
     const arrow = document.createElement("span");
     arrow.className = "e164-phone__arrow";
     arrow.setAttribute("aria-hidden", "true");
-    button.append(selectedFlag, selectedDialCode, arrow);
+    this.button.append(this.selectedFlag, arrow);
 
-    const list = document.createElement("ul");
-    list.id = "e164-phone-country-list";
-    list.className = "e164-phone__list";
-    list.setAttribute("role", "listbox");
-    list.setAttribute("aria-label", "Countries and territories");
-    list.hidden = true;
-
+    this.list.id = "e164-phone-country-list";
+    this.list.className = "e164-phone__list";
+    this.list.setAttribute("role", "listbox");
+    this.list.setAttribute("aria-label", "Countries and territories");
+    this.list.hidden = true;
+    const lastPreferredCode =
+      PREFERRED_COUNTRY_CODES[PREFERRED_COUNTRY_CODES.length - 1];
     this.countries.forEach((country) => {
-      list.appendChild(this.createCountryOption(country));
-      if (country.code === "gb") {
+      this.list.appendChild(this.createCountryOption(country));
+      if (country.code === lastPreferredCode) {
         const divider = document.createElement("li");
         divider.className = "e164-phone__divider";
         divider.setAttribute("role", "separator");
-        list.appendChild(divider);
+        this.list.appendChild(divider);
       }
     });
 
-    container.append(button, list);
-    fieldElement.insertBefore(container, this.input);
-
-    // Dial codes vary from +1 to +998, so the input padding follows the
-    // selector's rendered width.
-    const ResizeObserverClass = (
-      window as Window & { ResizeObserver?: ResizeObserverConstructor }
-    ).ResizeObserver;
-    if (ResizeObserverClass) {
-      new ResizeObserverClass(() => {
-        if (!container.offsetWidth) return;
-        fieldElement.style.setProperty(
-          "--e164-phone-selector-width",
-          `${container.offsetWidth}px`
-        );
-      }).observe(container);
-    }
-
-    this.countrySelector = container;
-    this.countryButton = button;
-    this.countryList = list;
-    this.updateSelectedCountryUI();
+    this.selector.append(this.button, this.list);
+    fieldElement.insertBefore(this.selector, input);
   }
 
   private createCountryOption(country: PhoneCountry): HTMLLIElement {
@@ -318,91 +197,86 @@ export class E164Phone {
     wrapper.className = "e164-phone__flag";
     wrapper.setAttribute("aria-hidden", "true");
 
+    const flagUrl = (height: number, format: string) =>
+      `https://flagcdn.com/h${height}/${country.code}.${format}`;
     const picture = document.createElement("picture");
     const webp = document.createElement("source");
     webp.type = "image/webp";
-    webp.srcset = `https://flagcdn.com/h20/${country.code}.webp, https://flagcdn.com/h40/${country.code}.webp 2x, https://flagcdn.com/h60/${country.code}.webp 3x`;
+    webp.srcset = `${flagUrl(20, "webp")}, ${flagUrl(40, "webp")} 2x, ${flagUrl(
+      60,
+      "webp"
+    )} 3x`;
     const png = document.createElement("source");
     png.type = "image/png";
-    png.srcset = `https://flagcdn.com/h20/${country.code}.png, https://flagcdn.com/h40/${country.code}.png 2x, https://flagcdn.com/h60/${country.code}.png 3x`;
+    png.srcset = `${flagUrl(20, "png")}, ${flagUrl(40, "png")} 2x, ${flagUrl(
+      60,
+      "png"
+    )} 3x`;
     const image = document.createElement("img");
-    image.src = `https://flagcdn.com/h20/${country.code}.png`;
+    image.src = flagUrl(20, "png");
     image.alt = "";
     image.width = 24;
     image.height = 16;
     image.setAttribute("loading", "lazy");
     image.addEventListener("error", () => {
       wrapper.classList.add("e164-phone__flag--failed");
-      while (wrapper.firstChild) {
-        wrapper.removeChild(wrapper.firstChild);
-      }
-      wrapper.textContent = country.libraryCode;
+      wrapper.textContent = country.code.toUpperCase();
     });
     picture.append(webp, png, image);
     wrapper.appendChild(picture);
     return wrapper;
   }
 
-  // --- Event wiring -----------------------------------------------------------
+  private setSelectedCountry(country: PhoneCountry) {
+    if (this.input) this.input.placeholder = country.placeholder;
+    if (this.button.dataset.countryCode === country.code) return;
 
-  private addEventListeners() {
-    if (!this.input || !this.countryButton || !this.countryList) return;
-    this.addInputListeners();
-    this.addCountrySelectorListeners();
-    this.addSubmissionListeners();
-  }
-
-  private addInputListeners() {
-    if (!this.input) return;
-    // Rewriting the field mid-keystroke moves the cursor, and shared calling
-    // codes need the digits after them to settle the country, so typing only
-    // updates the flag. The code moves into the selector on paste, autofill
-    // or blur.
-    this.input.addEventListener("input", (event) => {
-      if (this.isSettingDisplayValue) return;
-      this.discardPendingSubmission();
-      if (this.isTyping(event)) {
-        this.updateCountryFromInternationalInput();
-      } else {
-        this.moveCallingCodeToSelector();
-      }
-    });
-    this.input.addEventListener("change", () => {
-      if (this.isSettingDisplayValue) return;
-      this.moveCallingCodeToSelector();
-    });
-  }
-
-  private isTyping(event: Event): boolean {
-    return (
-      event instanceof InputEvent &&
-      Boolean(event.inputType) &&
-      !["insertFromPaste", "insertFromDrop", "insertReplacementText"].includes(
-        event.inputType
-      )
+    this.selectedCountry = country;
+    this.button.dataset.countryCode = country.code;
+    this.selectedFlag.textContent = "";
+    this.selectedFlag.appendChild(this.createFlag(country));
+    this.button.setAttribute(
+      "aria-label",
+      `Select country. Current selection: ${country.name}, +${country.dialCode}`
     );
+    this.button.title = `Select country (${country.name}, +${country.dialCode})`;
+    this.list
+      .querySelectorAll<HTMLLIElement>("li[data-country-code]")
+      .forEach((item) => {
+        const selected = item.dataset.countryCode === country.code;
+        item.setAttribute("aria-selected", String(selected));
+        item.classList.toggle("e164-phone__country--selected", selected);
+      });
   }
 
-  private addCountrySelectorListeners() {
-    if (!this.countryButton || !this.countryList) return;
-    const button = this.countryButton;
-    const list = this.countryList;
+  private selectCountryManually(country: PhoneCountry) {
+    this.countryFromSupporter = true;
+    this.setSelectedCountry(country);
+    this.closeCountrySelector();
+    this.input?.focus();
+  }
 
-    button.addEventListener("click", () => {
-      if (list.hidden) {
+  // --- Selector interaction ---------------------------------------------------
+
+  private addEventListeners(input: HTMLInputElement) {
+    input.addEventListener("input", () => {
+      this.forgetSubmission();
+      this.updateCountryFromNumber();
+    });
+
+    this.button.addEventListener("click", () => {
+      if (this.list.hidden) {
         this.openCountrySelector();
       } else {
         this.closeCountrySelector();
       }
     });
-    button.addEventListener("keydown", (event) =>
+    this.button.addEventListener("keydown", (event) =>
       this.handleSelectorKeydown(event)
     );
-    list.addEventListener("mousedown", (event) => {
-      // Keep keyboard focus on the selector button while choosing an option.
-      event.preventDefault();
-    });
-    list.addEventListener("click", (event) => {
+    // Keeps focus on the button while an option is clicked.
+    this.list.addEventListener("mousedown", (event) => event.preventDefault());
+    this.list.addEventListener("click", (event) => {
       const item = (event.target as HTMLElement).closest<HTMLLIElement>(
         "li[data-country-code]"
       );
@@ -410,27 +284,18 @@ export class E164Phone {
       if (country) this.selectCountryManually(country);
     });
     document.addEventListener("click", (event) => {
-      if (
-        !list.hidden &&
-        !this.countrySelector?.contains(event.target as Node)
-      ) {
+      if (!this.list.hidden && !this.selector.contains(event.target as Node)) {
         this.closeCountrySelector();
       }
     });
-  }
 
-  private addSubmissionListeners() {
     this.form.onIntentSubmit.subscribe(() => this.convertForSubmission());
-    this.form.onError.subscribe(this.restoreSubmissionOnError);
-    ENGrid.watchForError(this.restoreSubmissionOnError);
+    this.form.onError.subscribe(this.restoreSubmittedValue);
+    ENGrid.watchForError(this.restoreSubmittedValue);
   }
-
-  // --- Selector interaction ---------------------------------------------------
 
   private handleSelectorKeydown(event: KeyboardEvent) {
-    if (!this.countryList) return;
-
-    if (this.countryList.hidden) {
+    if (this.list.hidden) {
       if (["ArrowDown", "ArrowUp", "Enter", " "].includes(event.key)) {
         event.preventDefault();
         this.openCountrySelector();
@@ -440,229 +305,107 @@ export class E164Phone {
 
     if (event.key === "Tab") {
       this.closeCountrySelector();
-      return;
-    }
-    if (event.key === "Escape") {
+    } else if (event.key === "Escape") {
       event.preventDefault();
       this.closeCountrySelector(true);
-      return;
-    }
-    if (event.key === "Enter" || event.key === " ") {
+    } else if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       if (this.highlightedCountry) {
         this.selectCountryManually(this.highlightedCountry);
       }
-      return;
-    }
-    if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+    } else if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
       event.preventDefault();
       this.moveHighlight(event.key);
-      return;
     }
   }
 
   private openCountrySelector() {
-    if (!this.countryList || !this.countryButton) return;
-    this.countryList.hidden = false;
-    this.countrySelector?.classList.add("e164-phone--open");
-    this.countryButton.setAttribute("aria-expanded", "true");
+    this.list.hidden = false;
+    this.selector.classList.add("e164-phone--open");
+    this.button.setAttribute("aria-expanded", "true");
     this.highlightCountry(this.selectedCountry);
   }
 
   private closeCountrySelector(returnFocus = false) {
-    if (!this.countryList || !this.countryButton) return;
-    this.countryList.hidden = true;
-    this.countrySelector?.classList.remove("e164-phone--open");
-    this.countryButton.setAttribute("aria-expanded", "false");
-    this.countryButton.removeAttribute("aria-activedescendant");
-    if (returnFocus) this.countryButton.focus();
+    this.list.hidden = true;
+    this.selector.classList.remove("e164-phone--open");
+    this.button.setAttribute("aria-expanded", "false");
+    this.button.removeAttribute("aria-activedescendant");
+    if (returnFocus) this.button.focus();
   }
 
   private moveHighlight(key: string) {
-    const currentIndex = this.highlightedCountry
-      ? this.countries.indexOf(this.highlightedCountry)
-      : this.countries.indexOf(this.selectedCountry);
-    let nextIndex = currentIndex;
-    if (key === "Home") nextIndex = 0;
-    if (key === "End") nextIndex = this.countries.length - 1;
-    if (key === "ArrowDown") {
-      nextIndex = Math.min(this.countries.length - 1, currentIndex + 1);
-    }
-    if (key === "ArrowUp") nextIndex = Math.max(0, currentIndex - 1);
+    const lastIndex = this.countries.length - 1;
+    const currentIndex = this.countries.indexOf(
+      this.highlightedCountry || this.selectedCountry
+    );
+    const nextIndex =
+      key === "Home"
+        ? 0
+        : key === "End"
+        ? lastIndex
+        : key === "ArrowDown"
+        ? Math.min(lastIndex, currentIndex + 1)
+        : Math.max(0, currentIndex - 1);
     this.highlightCountry(this.countries[nextIndex]);
   }
 
-  private highlightCountry(country: PhoneCountry | undefined) {
-    if (!country || !this.countryList || !this.countryButton) return;
+  private highlightCountry(country: PhoneCountry) {
     this.highlightedCountry = country;
-    this.countryList
+    this.list
       .querySelectorAll(".e164-phone__country--highlighted")
       .forEach((item) =>
         item.classList.remove("e164-phone__country--highlighted")
       );
-    const item = this.countryList.querySelector<HTMLElement>(
+    const item = this.list.querySelector<HTMLElement>(
       `li[data-country-code="${country.code}"]`
     );
     item?.classList.add("e164-phone__country--highlighted");
-    this.countryButton.setAttribute(
+    item?.scrollIntoView({ block: "nearest" });
+    this.button.setAttribute(
       "aria-activedescendant",
       `e164-phone-country-${country.code}`
     );
-    item?.scrollIntoView({ block: "nearest" });
   }
 
-  private setSelectedCountry(country: PhoneCountry) {
-    const shouldUpdateUI =
-      this.countryButton?.dataset.countryCode !== country.code;
-    this.selectedCountry = country;
-    if (this.input) {
-      this.input.placeholder = country.placeholder || this.originalPlaceholder;
-    }
-    if (shouldUpdateUI) this.updateSelectedCountryUI();
-  }
+  // --- Country ----------------------------------------------------------------
 
-  private updateSelectedCountryUI() {
-    if (!this.countryButton || !this.countryList) return;
-    this.countryButton.dataset.countryCode = this.selectedCountry.code;
-    const selectedFlag = this.countryButton.querySelector(
-      ".e164-phone__selected-flag"
-    );
-    if (selectedFlag) {
-      while (selectedFlag.firstChild) {
-        selectedFlag.removeChild(selectedFlag.firstChild);
-      }
-      selectedFlag.appendChild(this.createFlag(this.selectedCountry));
-    }
-    const selectedDialCode = this.countryButton.querySelector(
-      ".e164-phone__selected-dial-code"
-    );
-    if (selectedDialCode) {
-      selectedDialCode.textContent = `+${this.selectedCountry.dialCode}`;
-    }
-    this.countryButton.setAttribute(
-      "aria-label",
-      `Select country. Current selection: ${this.selectedCountry.name}, +${this.selectedCountry.dialCode}`
-    );
-    this.countryButton.title = `Select country (${this.selectedCountry.name})`;
-    this.countryList
-      .querySelectorAll<HTMLLIElement>("li[data-country-code]")
-      .forEach((item) => {
-        const selected = item.dataset.countryCode === this.selectedCountry.code;
-        item.setAttribute("aria-selected", String(selected));
-        item.classList.toggle("e164-phone__country--selected", selected);
-      });
-  }
-
-  private selectCountryManually(country: PhoneCountry) {
-    if (!this.input) return;
-    this.discardPendingSubmission();
-    this.countryCameFromSupporter = true;
-    this.setSelectedCountry(country);
-    this.closeCountrySelector();
-    this.input.focus();
-  }
-
-  // --- Country resolution -----------------------------------------------------
-
-  private isInternational(value: string): boolean {
-    return value.trimStart().startsWith("+");
-  }
-
-  private extractPhoneValue(value: string): string {
-    const firstPhoneCharacter = value.search(/[+\d]/);
-    const phoneValue =
-      firstPhoneCharacter > 0 ? value.slice(firstPhoneCharacter) : value;
-    // 00 is the international prefix in most of the world, but under US/CA
-    // libphonenumber would read it as part of a national number.
-    return phoneValue.startsWith("00") ? `+${phoneValue.slice(2)}` : phoneValue;
-  }
-
-  // The selector is the only place the country shows, so an international
-  // number sets the flag and its calling code is removed from the field.
-  private moveCallingCodeToSelector() {
-    if (!this.input) return;
-    const phoneValue = this.extractPhoneValue(this.input.value);
-    if (!this.isInternational(phoneValue)) return;
-
-    const formatter = new AsYouType();
-    formatter.input(phoneValue);
-    const callingCode = formatter.getCallingCode();
-    const e164 = formatter.getNumberValue();
-    const country = this.resolveInternationalCountry(formatter);
-    if (!callingCode || !e164 || !country) return;
-
-    this.countryCameFromSupporter = true;
-    this.setSelectedCountry(country);
-
-    const nationalValue = phoneValue
-      .trimStart()
-      .replace(new RegExp(`^\\+\\s*${callingCode}[\\s.-]*`), "");
-    // Keep the code if the rest alone would submit a different number.
-    const check = new AsYouType(country.libraryCode);
-    check.input(nationalValue);
-    if (check.getNumberValue() !== e164) return;
-
-    this.setDisplayValue(nationalValue);
-  }
-
-  private updateCountryFromInternationalInput() {
-    if (!this.input) return;
-    const value = this.extractPhoneValue(this.input.value);
-    if (!this.isInternational(value)) return;
-
-    const formatter = new AsYouType();
-    formatter.input(value);
-    const detectedCountry = this.resolveInternationalCountry(formatter);
-    if (detectedCountry) this.setSelectedCountry(detectedCountry);
-  }
-
-  private getCountryByCode(
-    code: string | null | undefined
-  ): PhoneCountry | undefined {
+  private getCountryByCode(code: string | null | undefined) {
     if (!code) return undefined;
     return this.countries.find(
       (country) => country.code === code.toLowerCase()
     );
   }
 
-  private getCountryByDialCode(
-    dialCode: string | null | undefined
-  ): PhoneCountry | undefined {
-    if (!dialCode) return undefined;
-    const primaryCode = PRIMARY_COUNTRY_BY_CALLING_CODE[dialCode];
-    return (
-      this.getCountryByCode(primaryCode) ||
-      this.countries.find((country) => country.dialCode === dialCode)
-    );
+  private updateCountryFromNumber() {
+    if (!this.input) return;
+    const country = this.getCountryFromCallingCode(this.input.value);
+    if (!country) return;
+    this.countryFromSupporter = true;
+    this.setSelectedCountry(country);
   }
 
-  private getCompatibleCountry(
-    country: PhoneCountry | null | undefined,
-    dialCode: string | null | undefined
-  ): PhoneCountry | undefined {
-    return country && dialCode && country.dialCode === dialCode
-      ? country
-      : undefined;
-  }
+  private getCountryFromCallingCode(value: string): PhoneCountry | undefined {
+    const internationalDigits = getInternationalDigits(value.trim()) || "";
 
-  private resolveInternationalCountry(
-    formatter: AsYouType
-  ): PhoneCountry | undefined {
-    const callingCode = formatter.getCallingCode();
-    // Unique phone evidence wins; the supporter's own choice, then hints,
-    // break shared-code ties.
-    return (
-      this.getCountryByCode(formatter.getCountry()) ||
-      (this.countryCameFromSupporter
-        ? this.getCompatibleCountry(this.selectedCountry, callingCode)
-        : undefined) ||
-      this.getCompatibleCountry(this.supporterCountryHint, callingCode) ||
-      this.getCompatibleCountry(this.ipCountry, callingCode) ||
-      this.getCountryByDialCode(callingCode)
-    );
+    // Calling codes are 1 to 3 digits and prefix-free, so the first match is
+    // the only one.
+    const maxLength = Math.min(3, internationalDigits.length);
+    for (let length = 1; length <= maxLength; length++) {
+      const dialCode = internationalDigits.slice(0, length);
+      if (this.selectedCountry.dialCode === dialCode) {
+        return this.selectedCountry;
+      }
+      const country =
+        this.getCountryByCode(PRIMARY_COUNTRY_BY_DIAL_CODE[dialCode]) ||
+        this.countries.find((country) => country.dialCode === dialCode);
+      if (country) return country;
+    }
+    return undefined;
   }
 
   private async setCountryFromIp() {
+    let country: PhoneCountry | undefined;
     try {
       const response = await fetch(
         `https://${window.location.hostname}/cdn-cgi/trace`
@@ -673,111 +416,68 @@ export class E164Phone {
         .split("\n")
         .find((line) => line.startsWith("loc="))
         ?.slice(4);
-      const country = this.getCountryByCode(location);
-      if (!country) throw new Error("Unsupported IP country");
-      this.ipCountry = country;
-      this.applyIpCountry(country);
+      country = this.getCountryByCode(location);
     } catch (error) {
       this.logger.log("Unable to determine phone country from IP", error);
-      const fallback =
-        this.getCountryByCode(ENGrid.getFieldValue("supporter.country")) ||
-        this.getCountryByCode("us");
-      if (fallback) this.applyIpCountry(fallback);
+    }
+    country =
+      country ||
+      this.getCountryByCode(ENGrid.getFieldValue("supporter.country"));
+    if (country && !this.countryFromSupporter) {
+      this.setSelectedCountry(country);
     }
   }
 
-  private applyIpCountry(country: PhoneCountry) {
-    if (!this.input || this.countryCameFromSupporter) return;
-    const value = this.extractPhoneValue(this.input.value);
-    if (this.isInternational(value)) {
-      // Re-evaluate international evidence instead of replacing its country.
-      const formatter = new AsYouType();
-      formatter.input(value);
-      const detectedCountry =
-        this.resolveInternationalCountry(formatter) || country;
-      this.setSelectedCountry(detectedCountry);
-      return;
-    }
-
-    this.setSelectedCountry(country);
-  }
-
-  // --- Submission and restoration ---------------------------------------------
-
-  private getE164Value(displayValue: string): string {
-    const value = this.extractPhoneValue(displayValue);
-    const international = this.isInternational(value);
-    const formatter = international
-      ? new AsYouType()
-      : new AsYouType(this.selectedCountry.libraryCode);
-    formatter.input(value);
-
-    const e164 = formatter.getNumberValue();
-    if (e164) return e164;
-
-    const digits = value.replace(/\D/g, "");
-    if (!digits) return "";
-    return international
-      ? `+${digits}`
-      : `+${this.selectedCountry.dialCode}${digits}`;
-  }
+  // --- Submission -------------------------------------------------------------
 
   private convertForSubmission() {
     if (!this.input) return;
-    const displayValue = this.input.value;
-    if (!displayValue.trim()) return;
-    if (this.pendingSubmission && this.convertedValue === displayValue) {
-      return;
-    }
+    const value = this.input.value;
+    // Submit hooks can run more than once; keep what the supporter typed.
+    if (!value.trim() || value === this.convertedValue) return;
 
-    // Preserve the exact display value before writing E.164 for EN.
-    this.pendingSubmission = {
+    this.submittedValue = value;
+    this.saveSubmission({
       pageId: this.pageId,
-      fieldName: this.fieldName,
-      displayValue,
+      displayValue: value,
       countryCode: this.selectedCountry.code,
-    };
-    this.savePendingSubmission();
-
-    const e164 = this.getE164Value(displayValue);
-    this.input.value = e164;
-    this.convertedValue = e164;
-    this.logger.log(`Formatted phone for submission: ${e164}`);
+    });
+    this.convertedValue = toE164(value, this.selectedCountry);
+    this.input.value = this.convertedValue;
+    this.logger.log(`Formatted phone for submission: ${this.convertedValue}`);
   }
 
-  private restoreSubmissionOnError = () => {
-    this.restoreDisplayValue();
+  private restoreSubmittedValue = () => {
+    if (!this.input || this.submittedValue === null) return;
+    if (this.input.value === this.convertedValue) {
+      this.input.value = this.submittedValue;
+      this.logger.log("Restored phone display value after submission error");
+    }
+    this.forgetSubmission();
   };
 
-  private restoreDisplayValue() {
-    if (!this.input || !this.pendingSubmission) return;
-    const pending = this.pendingSubmission;
-    const country = this.getCountryByCode(pending.countryCode);
+  // EN reloads the page after a server-side error, with the E.164 value in
+  // the field.
+  private restoreFailedSubmission(): boolean {
+    const saved = this.readSavedSubmission();
+    this.forgetSubmission();
+    if (!this.input || !saved || saved.pageId !== this.pageId) return false;
+    if (!this.submissionFailed()) return false;
+
+    const country = this.getCountryByCode(saved.countryCode);
     if (country) this.setSelectedCountry(country);
-    this.countryCameFromSupporter = true;
-    this.setDisplayValue(pending.displayValue);
-    // A + number submitted with Enter never blurred, so it still has its code.
-    this.moveCallingCodeToSelector();
-    this.discardPendingSubmission();
+    this.input.value = saved.displayValue;
     this.logger.log("Restored phone display value after submission error");
+    return true;
   }
 
-  private discardPendingSubmission() {
-    this.pendingSubmission = null;
+  private forgetSubmission() {
+    this.submittedValue = null;
     this.convertedValue = null;
-    this.clearSavedSubmission();
-  }
-
-  // Notifies other listeners without re-running country detection, which
-  // would override a country the component has just chosen.
-  private setDisplayValue(value: string) {
-    if (!this.input) return;
-    this.isSettingDisplayValue = true;
     try {
-      this.input.value = value;
-      this.input.dispatchEvent(new Event("input", { bubbles: true }));
-    } finally {
-      this.isSettingDisplayValue = false;
+      sessionStorage.removeItem(this.storageKey);
+    } catch (_error) {
+      // Storage can be unavailable in privacy-restricted browsing contexts.
     }
   }
 
@@ -793,47 +493,34 @@ export class E164Phone {
     );
   }
 
-  // --- Session storage --------------------------------------------------------
-
-  private savePendingSubmission() {
-    if (!this.pendingSubmission) return;
+  private saveSubmission(submission: SavedSubmission) {
     try {
-      sessionStorage.setItem(
-        this.storageKey,
-        JSON.stringify(this.pendingSubmission)
-      );
+      sessionStorage.setItem(this.storageKey, JSON.stringify(submission));
     } catch (error) {
       this.logger.log("Unable to save phone display state", error);
     }
   }
 
-  private readSavedSubmission(): PendingSubmission | null {
+  private readSavedSubmission(): SavedSubmission | null {
     try {
       const value = sessionStorage.getItem(this.storageKey);
-      if (!value) return null;
-      const parsed: unknown = JSON.parse(value);
+      const parsed: unknown = value ? JSON.parse(value) : null;
       if (!parsed || typeof parsed !== "object") return null;
-      const candidate = parsed as Partial<PendingSubmission>;
+      const { pageId, displayValue, countryCode } = parsed as Record<
+        string,
+        unknown
+      >;
       if (
-        typeof candidate.pageId !== "string" ||
-        typeof candidate.fieldName !== "string" ||
-        typeof candidate.displayValue !== "string" ||
-        typeof candidate.countryCode !== "string"
+        typeof pageId !== "string" ||
+        typeof displayValue !== "string" ||
+        typeof countryCode !== "string"
       ) {
         return null;
       }
-      return candidate as PendingSubmission;
+      return { pageId, displayValue, countryCode };
     } catch (error) {
       this.logger.log("Unable to read phone display state", error);
       return null;
-    }
-  }
-
-  private clearSavedSubmission() {
-    try {
-      sessionStorage.removeItem(this.storageKey);
-    } catch (_error) {
-      // Storage can be unavailable in privacy-restricted browsing contexts.
     }
   }
 }
